@@ -8,34 +8,33 @@ import app.inputFields.ServiceDataCustomer;
 import app.inputFields.ServiceNumberFiled;
 import app.repositories.InputData;
 import app.repositories.UsersRepo;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
-import com.vaadin.flow.component.notification.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+import static app.inputFields.ServiceNotification.getNotificationError;
+import static app.inputFields.ServiceNotification.getNotificationSucces;
 
 @Service
 public class SaveUsers {
 
     private UsersRepo usersRepo;
     private ServiceNumberFiled serviceNumberFiled;
+    @Autowired
     private ServiceDataCustomer serviceDataCustomer;
 
     private InputData inputData;
-    private NazwaCennika nazwaCennika;
     private CalculateTiles calculateTiles;
     ShowTableTiles inputUser = new ShowTableTiles();
 
     @Autowired
     public SaveUsers(UsersRepo usersRepo, ServiceNumberFiled serviceNumberFiled,
-                     ServiceDataCustomer serviceDataCustomer, InputData inputData, NazwaCennika nazwaCennika,
-                     CalculateTiles calculateTiles) {
+                     ServiceDataCustomer serviceDataCustomer, InputData inputData, CalculateTiles calculateTiles) {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
         this.serviceDataCustomer = Objects.requireNonNull(serviceDataCustomer);
         this.inputData = Objects.requireNonNull(inputData);
-        this.nazwaCennika = Objects.requireNonNull(nazwaCennika);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
     }
 
@@ -75,41 +74,34 @@ public class SaveUsers {
             newUser.setSurname(serviceDataCustomer.getSurname().getValue());
             newUser.setAdress(serviceDataCustomer.getAdress().getValue());
             newUser.setTelephoneNumber(serviceDataCustomer.getTelephoneNumber().getValue());
-            newUser.setDateOfMeeting(serviceDataCustomer.getDateOfMeeting().getValue());
+            /*newUser.setDateOfMeeting(serviceDataCustomer.getDateOfMeeting().getValue());*/
             newUser.setEntityInputData(entityInputDataList);
             newUser.setPriceListName(inputUser.priceListCB.getValue());
             List<EntityUser> sprawdzanaLista = allUser();
             if (sprawdzanaLista.size() == 0) {
                 usersRepo.save(newUser);
-                getNotification("Zapisałem użytkownika wraz z danymi");
+                getNotificationSucces("Zapisałem użytkownika wraz z danymi");
             }
             if (sprawdzanaLista.size() > 0) {
                 for (EntityUser oldUser : sprawdzanaLista) {
                     if (!oldUser.getName().equals(newUser.getName()) && !oldUser.getSurname().equals(newUser.getSurname())
                             && !oldUser.getAdress().equals(newUser.getAdress())) {
                         usersRepo.save(newUser);
-                        getNotification("Zapisałem użytkownika wraz z danymi");
+                        getNotificationSucces("Zapisałem użytkownika wraz z danymi");
                     } else if (oldUser.getName().equals(newUser.getName()) && oldUser.getSurname().equals(newUser.getSurname())
                             && oldUser.getAdress().equals(newUser.getAdress()) && !oldUser.getPriceListName().contains(newUser.getPriceListName())) {
-
-                        ConfirmDialog editUserDialog = new ConfirmDialog("Podany użytkownik już istnieje"
-                                , "Czy chcesz dodać nowy cennik ?"
-                                , "Dodaj", event -> {
-                            EntityUser editUser = new EntityUser();
-                            editUser.setName(oldUser.getName());
-                            editUser.setSurname(oldUser.getSurname());
-                            editUser.setAdress(oldUser.getAdress());
-                            editUser.setDateOfMeeting(oldUser.getDateOfMeeting());
-                            editUser.setEntityInputData(oldUser.getEntityInputData());
-                            editUser.setPriceListName(oldUser.getPriceListName() + " , " + inputUser.priceListCB.getValue());
-                            usersRepo.delete(oldUser);
-                            usersRepo.save(editUser);
-                            getNotification("Dodałem do użytkownika nowy cennik");
-                        }
-                                , "Nie dodawaj", event -> getNotification("Anulowano"));
-                        editUserDialog.open();
+                        EntityUser editUser = new EntityUser();
+                        editUser.setName(oldUser.getName());
+                        editUser.setSurname(oldUser.getSurname());
+                        editUser.setAdress(oldUser.getAdress());
+                        editUser.setDateOfMeeting(oldUser.getDateOfMeeting());
+                        editUser.setEntityInputData(oldUser.getEntityInputData());
+                        editUser.setPriceListName(oldUser.getPriceListName() + " , " + inputUser.priceListCB.getValue());
+                        usersRepo.delete(oldUser);
+                        usersRepo.save(editUser);
+                        getNotificationSucces("Dodałem do użytkownika nowy cennik");
                     } else {
-                        getNotification("Podany użytkownik jest już w bazie");
+                        getNotificationError("Podany użytkownik jest już w bazie");
                     }
                 }
             }
@@ -121,9 +113,10 @@ public class SaveUsers {
                 && !serviceDataCustomer.getAdress().getValue().isEmpty() && !serviceDataCustomer.getTelephoneNumber().getValue().isEmpty()) {
             return true;
         } else {
-            Notification notification = new Notification("Uzupełnij wszystkie dane !!", 4000);
+            /*Notification notification = new Notification("Uzupełnij wszystkie dane !!", 4000);
             notification.setPosition(Notification.Position.TOP_CENTER);
-            notification.open();
+            notification.open();*/
+            getNotificationError("Uzupełnij wszystkie dane !!");
             return false;
         }
     }
@@ -135,11 +128,11 @@ public class SaveUsers {
         return entityUserList;
     }
 
-    private Notification getNotification(String komunikat) {
+    /*private Notification getNotification(String komunikat) {
         Notification notification = new Notification(komunikat, 5000);
         notification.setPosition(Notification.Position.BOTTOM_CENTER);
         notification.open();
         return notification;
-    }
+    }*/
 
 }

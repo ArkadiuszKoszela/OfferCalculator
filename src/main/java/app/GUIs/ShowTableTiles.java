@@ -6,14 +6,13 @@ import app.entities.EntityResultTiles;
 import app.entities.EntityTiles;
 import app.repositories.ResultTiles;
 import app.repositories.Tiles;
-import app.service.NazwaCennika;
+import app.service.Layout;
 import app.service.SaveUsers;
-import com.vaadin.flow.component.board.Board;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static app.inputFields.ServiceNotification.getNotificationError;
+import static app.inputFields.ServiceNotification.getNotificationSucces;
+import static app.inputFields.ServiceSplitLayout.getSideMenuSettings;
+import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
+
 @Route(value = ShowTableTiles.SHOW_TABLE_TILES)
-public class ShowTableTiles extends SplitLayout {
+public class ShowTableTiles extends SplitLayout implements Layout {
 
     public static final String SHOW_TABLE_TILES = "ShowTableTiles";
 
@@ -33,55 +37,45 @@ public class ShowTableTiles extends SplitLayout {
     private ResultTiles resultTiles;
     private SaveUsers saveUser;
 
-    private NazwaCennika nazwaCennika;
     public ComboBox<String> priceListCB = new ComboBox<>();
+    private FormLayout board;
+    private Grid<EntityResultTiles> wynikiGrid;
 
     public ShowTableTiles() {
     }
 
     @Autowired
     public ShowTableTiles(ControllerVaadin controllerVaadin, Tiles tiles, CalculateTiles calculateTiles,
-                          ResultTiles resultTiles, NazwaCennika nazwaCennika, SaveUsers saveUser) {
+                          ResultTiles resultTiles, SaveUsers saveUser) {
         this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
         this.tiles = Objects.requireNonNull(tiles);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
         this.resultTiles = Objects.requireNonNull(resultTiles);
-        this.nazwaCennika = Objects.requireNonNull(nazwaCennika);
         this.saveUser = Objects.requireNonNull(saveUser);
 
         Button saveUserWithCalculations = new Button("Zapisz użytkownika");
-        ConfirmDialog confirmDialog = dialogSaveNewUser();
-        saveUserWithCalculations.addClickListener(buttonClickEvent -> confirmDialog.open());
+        saveUserWithCalculations.addClickListener(buttonClickEvent -> saveUser.saveUser());
         setOrientation(Orientation.VERTICAL);
-        addToPrimary(controllerVaadin.routerLink());
-        nazwaCennika.createTable();
-        Board board = new Board();
+        addToPrimary(ustawieniaStrony(controllerVaadin));
+        createTable();
+
+        board = new FormLayout();
         Label label = new Label("Podaj nazwę cennika:");
         Label label1 = new Label(" ");
-        board.addRow(label, label1);
-        board.addRow(priceListCB, saveUserWithCalculations);
-        InputUser inputUser = new InputUser();
+        board.add(label, label1);
+        board.add(priceListCB, saveUserWithCalculations);
 
         Button calculateProfit = new Button("Oblicz zysk");
         calculateProfit.addClickListener(buttonClickEvent -> loadResultTableTiles(tiles));
-        board.addRow(calculateProfit);
-        board.addRow(nazwaCennika.wynikiGrid);
+        board.add(calculateProfit);
+        board.add(wynikiGrid);
 
 
         if (!calculateTiles.getAvailablePriceList().isEmpty()) {
             priceListCB.setItems(calculateTiles.getAvailablePriceList());
         }
 
-        addToSecondary(board);
-
-        ustawieniaStrony();
-    }
-
-    private ConfirmDialog dialogSaveNewUser() {
-        return new ConfirmDialog("Zapisywanie użytkownika"
-                , "Czy chcesz zapisać użtkownika ?"
-                , "Zapisz", event -> saveUser.saveUser()
-                , "Nie zapisuj", event -> System.out.println("nic sie nie stalo"));
+        addToSecondary(getSideMenu(controllerVaadin));
     }
 
     private List<EntityResultTiles> listResultTiles() {
@@ -107,21 +101,36 @@ public class ShowTableTiles extends SplitLayout {
         return listResultTiles;
     }
 
-    void loadResultTableTiles(Tiles tiles) {
+    private void createTable() {
+        wynikiGrid = new Grid<>(EntityResultTiles.class);
+        wynikiGrid.getColumnByKey("name").setHeader("Kategoria");
+        wynikiGrid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
+        wynikiGrid.getColumnByKey("priceAfterDiscount").setHeader("Cena Netto Po rabacie");
+        wynikiGrid.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
+        wynikiGrid.getColumnByKey("profit").setHeader("Zysk");
+        wynikiGrid.setColumns("name", "priceListName", "priceAfterDiscount", "purchasePrice", "profit");
+    }
+
+    private void loadResultTableTiles(Tiles tiles) {
         if (allTilesFromRespository(tiles).size() > 0) {
-            nazwaCennika.wynikiGrid.setItems(listResultTiles());
-            Notification notification = new Notification("Obliczono kalkulację", 4000, Notification.Position.BOTTOM_CENTER);
-            notification.open();
+            wynikiGrid.setItems(listResultTiles());
+            /*Notification notification = new Notification("Obliczono kalkulację", 4000, Notification.Position.BOTTOM_CENTER);
+            notification.open();*/
+            getNotificationSucces("Obliczono kalkulację");
         } else if (allTilesFromRespository(tiles).size() == 0) {
-            Notification notification = new Notification("Zaimportuj cenniki", 4000, Notification.Position.BOTTOM_CENTER);
-            notification.getElement().getStyle().set("color", "red");
-            notification.open();
+            /*Notification notification = new Notification("Zaimportuj cenniki", 4000, Notification.Position.BOTTOM_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.open();*/
+            getNotificationError("Zaimportuj cenniki");
         } else {
-            Notification notification = new Notification("Wybierz cennik", 4000, Notification.Position.BOTTOM_CENTER);
+            /*Notification notification = new Notification("Wybierz cennik", 4000, Notification.Position.BOTTOM_CENTER);
             notification.getElement().getStyle().set("color", "red");
-            notification.open();
+            notification.open();*/
+            getNotificationError("Wybierz cennik");
         }
     }
+
+
     private List<EntityTiles> allTilesFromRespository(Tiles tiles) {
         Iterable<EntityTiles> allTilesFromRepository = tiles.findAll();
         List<EntityTiles> allTiles = new ArrayList<>();
@@ -129,18 +138,12 @@ public class ShowTableTiles extends SplitLayout {
         return allTiles;
     }
 
-    private void ustawieniaStrony() {
-        Board board = new Board();
-        board.addRow(controllerVaadin.routerLink());
-        board.getStyle().set("background", "#DCDCDC");
-        addToPrimary(board);
-        setPrimaryStyle("minWidth", "1280px");
-        setPrimaryStyle("maxWidth", "1280px");
-        setPrimaryStyle("minHeight", "70px");
-        setPrimaryStyle("maxHeight", "700px");
-        setSecondaryStyle("minWidth", "1280px");
-        setSecondaryStyle("maxWidth", "1280px");
-        setSecondaryStyle("minHeight", "500px");
-        setSecondaryStyle("maxHeight", "500px");
+    @Override
+    public SplitLayout getSideMenu(ControllerVaadin controllerVaadin) {
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.addToPrimary(controllerVaadin.sideMenuTiles());
+        splitLayout.addToSecondary(board);
+        getSideMenuSettings(splitLayout);
+        return splitLayout;
     }
 }

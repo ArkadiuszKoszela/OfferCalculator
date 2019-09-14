@@ -1,35 +1,12 @@
 package app.GUIs;
 
-import app.entities.EntityResultTiles;
-import app.repositories.ResultTiles;
-import app.repositories.UsersRepo;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.board.Board;
-import com.vaadin.flow.component.crud.BinderCrudEditor;
-import com.vaadin.flow.component.crud.Crud;
-import com.vaadin.flow.component.crud.CrudEditor;
-import com.vaadin.flow.component.crud.CrudI18n;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Tag("image")
-@Route(value = Druk.DRUK)
-public class Druk extends Users {
+/*@Route(value = Druk.DRUK)*/
+public class Druk {
 
-    public static final String DRUK = "druk";
+    /*public static final String DRUK = "druk";
     private UsersRepo repositoryUsersRepo;
     private ResultTiles repositoryResultTiles;
 
@@ -121,7 +98,7 @@ public class Druk extends Users {
                 "dla tego modelu.");
         label6.getElement().getStyle().set("width", "750px");
         horizontalLayout.add(lewyGornyrog, label5, image);
-        SplitLayout splitLayout1 = new SplitLayout();
+        Layout splitLayout1 = new Layout();
         splitLayout1.setOrientation(Orientation.VERTICAL);
         splitLayout1.addToPrimary(horizontalLayout);
         splitLayout1.addToSecondary(label6);
@@ -177,7 +154,7 @@ public class Druk extends Users {
         return new BinderCrudEditor<>(binder, tablica);
     }
 
-    private void setColspan(Component component, int colspan) {
+    private void setColspan(Layout component, int colspan) {
         component.getElement().setAttribute("colspan", Integer.toString(colspan));
-    }
+    }*/
 }

@@ -23,70 +23,55 @@ public class ServiceNumberFiled {
         this.accesories = Objects.requireNonNull(accesories);
     }
 
-    public NumberField numberField1;
-    public NumberField numberField2;
-    public NumberField numberField3;
-    public NumberField numberField4;
-    public NumberField numberField5;
-    public NumberField numberField6;
-    public NumberField numberField7;
-    public NumberField numberField8;
-    public NumberField numberField9;
-    public NumberField numberField10;
-    public NumberField numberField11;
-    public NumberField numberField12;
-    public NumberField numberField13;
-    public NumberField numberField14;
-    public NumberField numberField15;
-    public NumberField numberField16;
-    public NumberField numberField17;
-    public NumberField numberField18;
-    public NumberField numberField19;
+    public NumberField numberField1 = new NumberField("Powierzchnia połaci");
+    public NumberField numberField2 = new NumberField("Długość kalenic");
+    public NumberField numberField3 = new NumberField("Długość kalenic skośnych");
+    public NumberField numberField4 = new NumberField("Długość kalenic prostych");
+    public NumberField numberField5 = new NumberField("Długość koszy");
+    public NumberField numberField6 = new NumberField("Długość krawędzi lewych");
+    public NumberField numberField7 = new NumberField("Długość krawędzi prawych");
+    public NumberField numberField8 = new NumberField("Obwód komina");
+    public NumberField numberField9 = new NumberField("Długość okapu");
+    public NumberField numberField10 = new NumberField("Dachówka wentylacyjna");
+    public NumberField numberField11 = new NumberField("Komplet kominka wentylacyjnego");
+    public NumberField numberField12 = new NumberField("Gąsior początkowy kalenica prosta");
+    public NumberField numberField13 = new NumberField("Gąsior końcowy kalenica prosta");
+    public NumberField numberField14 = new NumberField("Gąsior zaokrąglony");
+    public NumberField numberField15 = new NumberField("Trójnik");
+    public NumberField numberField16 = new NumberField("Czwórnik");
+    public NumberField numberField17 = new NumberField("Gąsior z podwójną mufą");
+    public NumberField numberField18 = new NumberField("Dachówka dwufalowa");
+    public NumberField numberField19 = new NumberField("Okno połaciowe");
 
     private NumberField customerDiscount;
 
     private List<NumberField> listOfNumberFields;
 
-    public void createNumberFields() {
-        setNumberField1(new NumberField("Powierzchnia połaci: "));
+    public void setValuesNumberFields() {
         setValues(getNumberField1(), "m²", 300d);
-        setNumberField2(new NumberField("Długość kalenic"));
         setValues(getNumberField2(), "mb", 65d);
-        setNumberField3(new NumberField("Długość kalenic skośnych"));
         setValues(getNumberField3(), "mb", 65d);
-        setNumberField4(new NumberField("Długość kalenic prostych"));
         setValues(getNumberField4(), "mb", 1d);
-        setNumberField5(new NumberField("Długość koszy"));
         setValues(getNumberField5(), "mb", 8d);
-        setNumberField6(new NumberField("Długość krawędzi lewych"));
         setValues(getNumberField6(), "mb", 5d);
-        setNumberField7(new NumberField("Długość krawędzi prawych"));
         setValues(getNumberField7(), "mb", 5d);
-        setNumberField8(new NumberField("Obwód komina"));
         setValues(getNumberField8(), "mb", 3d);
-        setNumberField9(new NumberField("Długość okapu"));
         setValues(getNumberField9(), "mb", 38d);
-        setNumberField10(new NumberField("Dachówka wentylacyjna"));
         setValues(getNumberField10(), "szt", 1d);
-        setNumberField11(new NumberField("Komplet kominka wentylacyjnego"));
         setValues(getNumberField11(), "szt", 1d);
-        setNumberField12(new NumberField("Gąsior początkowy kalenica prosta "));
         setValues(getNumberField12(), "szt", 1d);
-        setNumberField13(new NumberField("Gąsior końcowy kalenica prosta"));
         setValues(getNumberField13(), "mb", 1d);
-        setNumberField14(new NumberField("Gąsior zaokrąglony"));
         setValues(getNumberField14(), "mb", 6d);
-        setNumberField15(new NumberField("Trójnik"));
         setValues(getNumberField15(), "szt", 1d);
-        setNumberField16(new NumberField("Czwórnik"));
         setValues(getNumberField16(), "szt", 1d);
-        setNumberField17(new NumberField("Gąsior z podwójną mufą"));
         setValues(getNumberField17(), "mb", 1d);
-        setNumberField18(new NumberField("Dachówka dwufalowa"));
         setValues(getNumberField18(), "szt", 1d);
-        setNumberField19(new NumberField("Okno połaciowe"));
         setValues(getNumberField19(), "szt", 1d);
         setTitle();
+        getListNumberFields();
+    }
+
+    private void getListNumberFields() {
         listOfNumberFields = Arrays.asList(getNumberField1(), getNumberField2(), getNumberField3(), getNumberField4(), getNumberField5(), getNumberField6(), getNumberField7(),
                 getNumberField8(), getNumberField9(), getNumberField10(), getNumberField11(), getNumberField12(), getNumberField13(), getNumberField14(), getNumberField15(), getNumberField16(),
                 getNumberField17(), getNumberField18(), getNumberField19());

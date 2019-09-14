@@ -2,17 +2,19 @@ package app.importFiles;
 
 import app.DAOs.DaoAccesories;
 import app.DAOs.DaoTiles;
-import app.GUIs.LoadUser;
+import app.GUIs.EnterTiles;
 import app.calculate.CalculateTiles;
 import app.repositories.Accesories;
 import app.repositories.Tiles;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.page.History;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+
+import static app.inputFields.ServiceNotification.getNotificationError;
+import static app.inputFields.ServiceNotification.getNotificationSucces;
 
 @Service
 public class ImportFiles {
@@ -57,16 +59,18 @@ public class ImportFiles {
             daoTiles.save("C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 12 czerwona angoba.csv");
             daoAccesories.save("C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\akcesoria.csv");
             calculateTiles.getAvailablePriceList();
-            Notification zaimportowano = new Notification("Zaimportowano cenniki", 3000);
-            zaimportowano.setPosition(Notification.Position.TOP_CENTER);
-            zaimportowano.open();
+            getNotificationSucces("Zaimportowano cenniki");
             History history = UI.getCurrent().getPage().getHistory();
-            history.getUI().navigate(LoadUser.class);
+            history.getUI().navigate(EnterTiles.class);
         } else {
-            Notification zaimportowano = new Notification("Cenniki są już zaimportowane", 3000);
-            zaimportowano.setPosition(Notification.Position.TOP_CENTER);
-            zaimportowano.open();
+            getNotificationError("Cenniki są już zaimportowane");
         }
 
     }
+
+    /*private void getNotification(String s) {
+        Notification notification = new Notification(s, 3000);
+        notification.setPosition(Notification.Position.TOP_CENTER);
+        notification.open();
+    }*/
 }

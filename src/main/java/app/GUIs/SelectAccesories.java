@@ -3,9 +3,10 @@ package app.GUIs;
 import app.controllers.ControllerVaadin;
 import app.entities.EntityAccesories;
 import app.repositories.Accesories;
-import com.vaadin.flow.component.board.Board;
+import app.service.Layout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
@@ -15,10 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static app.service.AllFields.*;
+import static app.inputFields.ServiceDataCustomer.*;
+import static app.inputFields.ServiceSplitLayout.getSideMenuSettings;
+import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
 
 @Route(value = SelectAccesories.SELECT_ACCESORIES)
-public class SelectAccesories extends SplitLayout {
+public class SelectAccesories extends SplitLayout implements Layout {
 
     public static final String SELECT_ACCESORIES = "SelectAccesories";
     private ControllerVaadin controllerVaadin;
@@ -56,29 +59,27 @@ public class SelectAccesories extends SplitLayout {
 
         setOrientation(Orientation.VERTICAL);
 
-        addToPrimary(controllerVaadin.routerLink());
-        addToSecondary(formLayoutAccesories());
-
-        ustawieniaStrony();
+        addToPrimary(ustawieniaStrony(controllerVaadin));
+        addToSecondary(getSideMenu(controllerVaadin));
     }
 
-    private Board formLayoutAccesories() {
-        Board board = new Board();
+    private FormLayout formLayoutAccesories() {
+        FormLayout board = new FormLayout();
         createValueComboBoxes();
         Label label = new Label(" ");
-        board.addRow(calculateAccesories, label);
+        board.add(calculateAccesories, label);
 
-        board.addRow(comboBoxtasmaKalenicowa, comboBoxwspornikLatyKalenicowej,
+        board.add(comboBoxtasmaKalenicowa, comboBoxwspornikLatyKalenicowej,
                 comboBoxtasmaDoObrobkiKomina, comboBoxlistwaWykonczeniowaAluminiowa);
-        board.addRow(comboBoxkoszDachowyAluminiowy2mb, comboBoxklamraDoMocowaniaKosza,
+        board.add(comboBoxkoszDachowyAluminiowy2mb, comboBoxklamraDoMocowaniaKosza,
                 comboBoxklinUszczelniajacyKosz, comboBoxgrzebienOkapowy);
-        board.addRow(comboBoxkratkaZabezpieczajacaPrzedPtactwem, comboBoxpasOkapowy,
+        board.add(comboBoxkratkaZabezpieczajacaPrzedPtactwem, comboBoxpasOkapowy,
                 comboBoxklamraDoGasiora, comboBoxspinkaDoDachowki);
-        board.addRow(comboBoxspinkaDoDachowkiCietej, comboBoxlawaKominiarska,
+        board.add(comboBoxspinkaDoDachowkiCietej, comboBoxlawaKominiarska,
                 comboBoxstopienKominiarski, comboBoxplotekPrzeciwsniegowy155mmx2mb);
-        board.addRow(comboBoxplotekPrzeciwsniegowy155mmx3mb, comboBoxmembranaDachowa,
+        board.add(comboBoxplotekPrzeciwsniegowy155mmx3mb, comboBoxmembranaDachowa,
                 comboBoxtasmaDoLaczeniaMembarnIFolii, comboBoxtasmaReparacyjna);
-        board.addRow(comboBoxblachaAluminiowa, comboBoxceglaKlinkierowa);
+        board.add(comboBoxblachaAluminiowa, comboBoxceglaKlinkierowa);
         return board;
     }
 
@@ -140,19 +141,13 @@ public class SelectAccesories extends SplitLayout {
         return listaNazw.subList(poczatek, koniec);
     }
 
-    private void ustawieniaStrony() {
-        Board board = new Board();
-        board.addRow(controllerVaadin.routerLink());
-        board.getStyle().set("background", "#DCDCDC");
-        addToPrimary(board);
-        setPrimaryStyle("minWidth", "1280px");
-        setPrimaryStyle("maxWidth", "1280px");
-        setPrimaryStyle("minHeight", "70px");
-        setPrimaryStyle("maxHeight", "700px");
-        setSecondaryStyle("minWidth", "1280px");
-        setSecondaryStyle("maxWidth", "1280px");
-        setSecondaryStyle("minHeight", "500px");
-        setSecondaryStyle("maxHeight", "500px");
+    @Override
+    public SplitLayout getSideMenu(ControllerVaadin controllerVaadin) {
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.addToPrimary(controllerVaadin.sideMenuAccesories());
+        splitLayout.addToSecondary(formLayoutAccesories());
+        getSideMenuSettings(splitLayout);
+        return splitLayout;
     }
 }
 

@@ -5,7 +5,6 @@ import app.entities.EntityTiles;
 import app.inputFields.ServiceNumberFiled;
 import app.repositories.ResultTiles;
 import app.repositories.Tiles;
-import app.service.AllFields;
 import com.vaadin.flow.component.textfield.NumberField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,15 +19,12 @@ public class CalculateTiles {
     private Tiles tiles;
     private ResultTiles resultTiles;
     private ServiceNumberFiled serviceNumberFiled;
-    private AllFields allFields;
 
     @Autowired
-    public CalculateTiles(Tiles tiles, ResultTiles resultTiles, ServiceNumberFiled serviceNumberFiled, AllFields allFields) {
+    public CalculateTiles(Tiles tiles, ResultTiles resultTiles, ServiceNumberFiled serviceNumberFiled) {
         this.tiles = Objects.requireNonNull(tiles);
         this.resultTiles = Objects.requireNonNull(resultTiles);
         this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
-        this.allFields = Objects.requireNonNull(allFields);
-        /*priceListCB = new ComboBox<>();*/
     }
 
     public List<String> getAvailablePriceList() {
@@ -157,7 +153,7 @@ public class CalculateTiles {
     }
 
     public void cos(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList) {
-        serviceNumberFiled.createNumberFields();
+        serviceNumberFiled.setValuesNumberFields();
         for (int i = 0; i < tilesList.size(); i++) {
             for (NumberField numberField : serviceNumberFiled.getListOfNumberFields()) {
                 /*if(numberField.getTitle().contains("Taśma kalenicowa")) {
