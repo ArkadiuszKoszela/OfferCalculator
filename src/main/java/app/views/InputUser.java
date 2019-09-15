@@ -1,5 +1,6 @@
-package app.GUIs;
+package app.views;
 
+import app.calculate.CalculateTiles;
 import app.controllers.ControllerVaadin;
 import app.entities.EntityUser;
 import app.inputFields.ServiceDataCustomer;
@@ -26,53 +27,68 @@ import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
 @Route(value = InputUser.INPUT_USER)
 public class InputUser extends SplitLayout implements Layout {
 
-    public static final String INPUT_USER = "InputUser";
+    public static final String INPUT_USER = "users/inputUser";
 
     private ControllerVaadin controllerVaadin;
     private SaveUsers saveUser;
     private ServiceDataCustomer serviceDataCustomer;
+    private CalculateTiles calculateTiles;
     private UsersRepo usersRepo;
     private ServiceNumberFiled serviceNumberFiled;
 
-    private FormLayout board;
+    private FormLayout board = new FormLayout();
 
-    private ComboBox<String> comboBoxUsers;
+    private ComboBox<String> comboBoxUsers = new ComboBox<>();
+
+    public ComboBox<String> priceListCB = new ComboBox<>();
 
     public InputUser() {
     }
 
     @Autowired
     public InputUser(ControllerVaadin controllerVaadin, SaveUsers saveUser, ServiceDataCustomer serviceDataCustomer, UsersRepo usersRepo,
-                     ServiceNumberFiled serviceNumberFiled) {
+                     ServiceNumberFiled serviceNumberFiled, CalculateTiles calculateTiles) {
         this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
         this.saveUser = Objects.requireNonNull(saveUser);
         this.serviceDataCustomer = Objects.requireNonNull(serviceDataCustomer);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
+        this.calculateTiles = Objects.requireNonNull(calculateTiles);
 
-        setOrientation(Orientation.VERTICAL);
-
+        setOrientation(SplitLayout.Orientation.VERTICAL);
         Button selectUser = new Button("Wczytaj pola z usera");
         selectUser.addClickListener(buttonClickEvent -> loadUser());
 
-        comboBoxUsers = new ComboBox<>();
-        board = new FormLayout();
         Label label = new Label(" ");
 
         /*serviceDataCustomer.createTextFieldsForUser();*/
         board.add(serviceDataCustomer.getName(), serviceDataCustomer.getSurname(), serviceDataCustomer.getAdress(), serviceDataCustomer.getTelephoneNumber());
         /*board.add(serviceDataCustomer.getDateOfMeeting(),label );*/
 
-        loadUserComboBox(comboBoxUsers);
+        loadUserComboBox();
 
-        Label label2 = new Label("Wczytaj użytkownika: ");
-        Label label3 = new Label(" ");
+        Label label1 = new Label("Wczytaj użytkownika: ");
+        Label label2 = new Label(" ");
+        Label label3 = new Label("Podaj nazwę cennika:");
+        Label label4 = new Label(" ");
 
-        board.add(label2, label3);
+        board.add(label1, label2);
         board.add(comboBoxUsers, selectUser);
+        board.add(label3, label4);
+        board.add(priceListCB, saveUser(saveUser));
+
+        if (!calculateTiles.getAvailablePriceList().isEmpty()) {
+            priceListCB.setItems(calculateTiles.getAvailablePriceList());
+        }
 
         addToPrimary(ustawieniaStrony(controllerVaadin));
         addToSecondary(getSideMenu(controllerVaadin));
+    }
+
+    private Button saveUser(SaveUsers saveUser) {
+        Button saveUserWithCalculations = new Button("Zapisz użytkownika");
+        saveUserWithCalculations.addClickListener(buttonClickEvent -> saveUser.saveUser(priceListCB));
+        return saveUserWithCalculations;
     }
 
     @Override
@@ -84,14 +100,17 @@ public class InputUser extends SplitLayout implements Layout {
         return splitLayout;
     }
 
-    private void loadUserComboBox(ComboBox<String> comboBoxUsers) {
+    public String getValueComboBox (){
+        String value = priceListCB.getValue();
+        return value;
+    }
+
+    private void loadUserComboBox() {
 
         Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
-        List<EntityUser> allUser = new ArrayList<>();
-        allUsersFromRepository.forEach(allUser::add);
-        if (allUser.size() > 0) {
-            List<String> nameAndSurname = new ArrayList<>();
-            allUser.forEach(user -> nameAndSurname.add(user.getName() + " " + user.getSurname()));
+        List<String> nameAndSurname = new ArrayList<>();
+        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getName().concat(" ").concat(user.getSurname())));
+        if (nameAndSurname.size() > 0) {
             comboBoxUsers.setItems(nameAndSurname);
         }
     }
@@ -127,11 +146,4 @@ public class InputUser extends SplitLayout implements Layout {
 
         }
     }
-
-    /*private void getNotificationSucces(String komunikat) {
-        Notification notification = new Notification(komunikat, 5000);
-        notification.setPosition(Notification.Position.BOTTOM_CENTER);
-        notification.open();
-    }*/
-
 }

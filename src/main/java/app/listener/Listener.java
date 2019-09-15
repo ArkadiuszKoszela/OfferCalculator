@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MyListener {
+public class Listener {
 
     @Autowired
     private ResultTiles resultTiles;

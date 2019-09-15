@@ -25,12 +25,12 @@ public class DaoTiles implements Dao {
     }
 
     @Override
-    public final void save(String sciezkaDostepu) {
+    public final void save(String filePath) {
         String line = "";
         BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new FileReader(sciezkaDostepu));
+            br = new BufferedReader(new FileReader(filePath));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 EntityTiles entityTiles = new EntityTiles();

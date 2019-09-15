@@ -5,13 +5,13 @@ import app.repositories.UsersRepo;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EditExcel {
+public class EditExcel2Testowy {
 
     private ResultTiles resultTiles;
     private UsersRepo usersRepo;
 
-   /* @Autowired
-    public void editFile(ResultTiles resultTiles, UsersRepo usersRepo) throws IOException {
+    /*@Autowired
+    public XSSFWorkbook editFile(ResultTiles resultTiles, UsersRepo usersRepo) throws IOException {
         this.resultTiles = resultTiles;
         this.usersRepo = usersRepo;
 
@@ -27,12 +27,12 @@ public class EditExcel {
         Iterable<EntityResultTiles> wynikiEntityIterable = resultTiles.findAll();
 
         Map<String, Object[]> entityMap = new TreeMap<>();
-        wynikiEntityIterable.forEach(cos -> entityMap.put(cos.getName(), new Object[]{cos.getName(), cos.getPriceAfterDiscount(), cos.getPurchasePrice(), cos.getProfit()}));
+        wynikiEntityIterable.forEach(getPurchase -> entityMap.put(getPurchase.getName(), new Object[]{getPurchase.getName(), getPurchase.getPriceAfterDiscount(), getPurchase.getPurchasePrice(), getPurchase.getProfit()}));
 
         LoadUser wprowadzDane = new LoadUser();
         String nameISurname = null;
         EntityUser user = null;
-        if(wprowadzDane.comboBoxUsers != null) {
+        if (wprowadzDane.comboBoxUsers != null) {
             nameISurname = wprowadzDane.comboBoxUsers.getValue();
 
             String[] rozdzielone = nameISurname.split(" ");
@@ -74,14 +74,12 @@ public class EditExcel {
         try {
             //Write the workbook in file system
             FileOutputStream out = new FileOutputStream(new File(excelEdytowalny));
-            workbook.write(out);
-            out.close();
-            System.out.println(excel + " written successfully on disk.");
+            return workbook;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }*/
 
-    }
-*/
 }

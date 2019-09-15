@@ -24,6 +24,7 @@ public class ServiceSplitLayout {
         FormLayout board = new FormLayout();
         board.add(controllerVaadin.mainMenu());
         board.getStyle().set("background", "#DCDCDC");
+        /*splitLayout.setOrientation(SplitLayout.Orientation.VERTICAL);*/
         splitLayout.addToPrimary(board);
         splitLayout.setPrimaryStyle("minWidth", "1280px");
         splitLayout.setPrimaryStyle("maxWidth", "1280px");

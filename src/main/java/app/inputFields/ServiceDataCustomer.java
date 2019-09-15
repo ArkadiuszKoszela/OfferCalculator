@@ -38,32 +38,6 @@ public class ServiceDataCustomer {
     private TextField telephoneNumber = new TextField("Numer kontaktowy", "12345678", "Numer kontaktowy");
     /*private DatePicker dateOfMeeting = new DatePicker("Data spotkania");*/
 
-  /*  public ServiceDataCustomer() {
-        this.name = new TextField("Imię", "Arek", "Imię");
-        this.surname = new TextField("Nazwisko", "Koszela", "Nazwisko");
-        this.adress = new TextField("Adres zamieszkania", "Szczecin", "Adres zamieszkania");
-        this.telephoneNumber = new TextField("Numer kontaktowy", "12345678", "Numer kontaktowy");
-        this.dateOfMeeting = new DatePicker("Data"*//*, LocalDate.of(1995, 3, 3)*//*);
-    }*/
-
-    /*public void createTextFieldsForUser() {
-        setName(new TextField("Imię"));
-        getName().setValue("Arek");
-        getName().setRequired(true);
-        setSurname(new TextField("Nazwisko"));
-        getSurname().setValue("Koszela");
-        getSurname().setRequired(true);
-        setAdress(new TextField("Adres zamieszkania"));
-        getAdress().setValue("Szczecin");
-        getAdress().setRequired(true);
-        setTelephoneNumber(new TextField("Numer kontaktowy"));
-        getTelephoneNumber().setValue("1234");
-        getTelephoneNumber().setRequired(true);
-        setDateOfMeeting(new DatePicker("Data spotkania"));
-        getDateOfMeeting().setLocale(Locale.getDefault());
-        getDateOfMeeting().setRequired(true);
-    }*/
-
     public TextField getName() {
         return name;
     }

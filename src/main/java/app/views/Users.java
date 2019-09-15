@@ -1,4 +1,4 @@
-package app.GUIs;
+package app.views;
 
 import app.controllers.ControllerVaadin;
 import app.entities.EntityUser;
@@ -19,7 +19,7 @@ import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
 @Route(value = Users.USERS)
 public class Users extends SplitLayout implements Layout {
 
-    public static final String USERS = "Users";
+    public static final String USERS = "users/allUsers";
 
     private UsersRepo usersRepo;
     private ControllerVaadin controllerVaadin;
@@ -30,17 +30,14 @@ public class Users extends SplitLayout implements Layout {
     public Users(UsersRepo usersRepo, ControllerVaadin controllerVaadin) {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
-
-        setOrientation(Orientation.VERTICAL);
-
-        createGridd();
+        setOrientation(SplitLayout.Orientation.VERTICAL);
+        createGrid();
         addToPrimary(ustawieniaStrony(controllerVaadin));
         addToSecondary(getSideMenu(controllerVaadin));
-
     }
 
 
-    private Grid<EntityUser> createGridd() {
+    private Grid<EntityUser> createGrid() {
         grid = new Grid<>(EntityUser.class);
         grid.getColumnByKey("name").setHeader("Nazwa Cennika");
         grid.getColumnByKey("surname").setHeader("Typ dachówki");

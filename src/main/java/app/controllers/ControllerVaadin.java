@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.GUIs.*;
+import app.views.*;
 import app.importFiles.ImportFiles;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.tabs.Tab;
@@ -48,9 +48,9 @@ public class ControllerVaadin {
 
     public Tabs sideMenuTiles() {
         Tabs sideMenu = new Tabs();
-        sideMenu.add(new Tab(new RouterLink("Pokaż tabelę", ShowTableTiles.class)),
+        sideMenu.add(new Tab(new RouterLink("Pokaż tabelę", TableResultTiles.class)),
                 new Tab(new RouterLink("Wprowadź dane", EnterTiles.class)),
-                new Tab(new RouterLink("Cennik", Cennik.class)));
+                new Tab(new RouterLink("Cennik", PriceList.class)));
 
         sideMenu.setOrientation(Tabs.Orientation.VERTICAL);
         return sideMenu;

@@ -1,4 +1,4 @@
-package app.GUIs;
+package app.views;
 
 import app.controllers.ControllerVaadin;
 import app.entities.EntityTiles;
@@ -17,26 +17,25 @@ import java.util.Objects;
 import static app.inputFields.ServiceSplitLayout.getSideMenuSettings;
 import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
 
-@Route(value = Cennik.CENNIK)
-public class Cennik extends SplitLayout implements Layout {
+@Route(value = PriceList.ALL_TILES)
+public class PriceList extends SplitLayout implements Layout {
 
-    public static final String CENNIK = "Cennik";
+    public static final String ALL_TILES = "tiles/allTiles";
 
     private Tiles tiles;
     private ControllerVaadin controllerVaadin;
 
     private Grid<EntityTiles> grid;
 
-    public Cennik() {
+    public PriceList() {
     }
 
     @Autowired
-    public Cennik(Tiles tiles, ServiceTextFieldData serviceTextFieldData,
-                  ControllerVaadin controllerVaadin) {
+    public PriceList(Tiles tiles, ServiceTextFieldData serviceTextFieldData,
+                     ControllerVaadin controllerVaadin) {
         this.tiles = Objects.requireNonNull(tiles);
         this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
-
-        setOrientation(Orientation.VERTICAL);
+        setOrientation(SplitLayout.Orientation.VERTICAL);
         createGridd();
 
         addToPrimary(ustawieniaStrony(controllerVaadin));

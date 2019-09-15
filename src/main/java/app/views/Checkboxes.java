@@ -1,10 +1,12 @@
-package app.GUIs;
+package app.views;
 
 import app.controllers.ControllerVaadin;
 import app.service.Layout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,34 +23,32 @@ import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
 @Route(value = Checkboxes.CHECKBOXES)
 public class Checkboxes extends SplitLayout implements Layout {
 
-    public static final String CHECKBOXES = "Checkboxes";
+    public static final String CHECKBOXES = "accesories/checkboxes";
     private static final String LABEL_CHECKBOXES = "ALL CHECKBOXES";
 
-    private CheckboxGroup<String> checkboxes;
+    private CheckboxGroup<String> checkboxes = new CheckboxGroup<>();
 
     private ControllerVaadin controllerVaadin;
 
     private List<String> allLabelsToComboBox = new ArrayList<>();
-    private FormLayout board;
+    private VerticalLayout verticalLayout = new VerticalLayout();
 
 
     @Autowired
     public Checkboxes(ControllerVaadin controllerVaadin) {
         this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
-
-        setOrientation(Orientation.VERTICAL);
-
+        setOrientation(SplitLayout.Orientation.VERTICAL);
         addToPrimary(ustawieniaStrony(controllerVaadin));
 
-        board = new FormLayout();
-        setCheckboxes(new CheckboxGroup<>());
         createListOfLabels();
         getCheckboxes().setItems(allLabelsToComboBox);
         getCheckboxes().setLabel(LABEL_CHECKBOXES);
-        board.add(clearButton());
-        Button createComboboxes = new Button("Utwórz ComboBoxy");
-        board.add(createComboboxes);
-        board.add(getCheckboxes());
+        Label label = new Label(" ");
+        FormLayout board = new FormLayout();
+        board.add(clearButton(), label);
+        verticalLayout.add(board);
+        verticalLayout.add(getCheckboxes());
+        /*board.add(getCheckboxes());*/
 
         addToSecondary(getSideMenu(controllerVaadin));
     }
@@ -64,7 +64,7 @@ public class Checkboxes extends SplitLayout implements Layout {
     public SplitLayout getSideMenu(ControllerVaadin controllerVaadin) {
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.addToPrimary(controllerVaadin.sideMenuAccesories());
-        splitLayout.addToSecondary(board);
+        splitLayout.addToSecondary(verticalLayout);
         getSideMenuSettings(splitLayout);
         return splitLayout;
     }

@@ -1,17 +1,19 @@
 package app.service;
 
-import app.GUIs.ShowTableTiles;
-import app.calculate.CalculateTiles;
 import app.entities.EntityInputData;
 import app.entities.EntityUser;
 import app.inputFields.ServiceDataCustomer;
 import app.inputFields.ServiceNumberFiled;
 import app.repositories.InputData;
 import app.repositories.UsersRepo;
+import app.views.InputUser;
+import com.vaadin.flow.component.combobox.ComboBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import static app.inputFields.ServiceNotification.getNotificationError;
 import static app.inputFields.ServiceNotification.getNotificationSucces;
@@ -25,20 +27,37 @@ public class SaveUsers {
     private ServiceDataCustomer serviceDataCustomer;
 
     private InputData inputData;
-    private CalculateTiles calculateTiles;
-    ShowTableTiles inputUser = new ShowTableTiles();
+    InputUser inputUser = new InputUser();
 
     @Autowired
     public SaveUsers(UsersRepo usersRepo, ServiceNumberFiled serviceNumberFiled,
-                     ServiceDataCustomer serviceDataCustomer, InputData inputData, CalculateTiles calculateTiles) {
+                     ServiceDataCustomer serviceDataCustomer, InputData inputData) {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
         this.serviceDataCustomer = Objects.requireNonNull(serviceDataCustomer);
         this.inputData = Objects.requireNonNull(inputData);
-        this.calculateTiles = Objects.requireNonNull(calculateTiles);
     }
 
-    public void saveUser() {
+    public void saveUser(ComboBox<String> comboBox) {
+
+        if (allDataIsCompleted()) {
+
+            EntityUser newUser = new EntityUser();
+
+            newUser.setName(serviceDataCustomer.getName().getValue());
+            newUser.setSurname(serviceDataCustomer.getSurname().getValue());
+            newUser.setAdress(serviceDataCustomer.getAdress().getValue());
+            newUser.setTelephoneNumber(serviceDataCustomer.getTelephoneNumber().getValue());
+            /*newUser.setDateOfMeeting(serviceDataCustomer.getDateOfMeeting().getValue());*/
+            newUser.setEntityInputData(saveInputData());
+            newUser.setPriceListName(comboBox.getValue());
+
+            usersRepo.save(newUser);
+            getNotificationSucces("Zapisałem użytkownika wraz z danymi");
+        }
+    }
+
+    private Set<EntityInputData> saveInputData() {
         EntityInputData entityInputData = new EntityInputData();
 
         entityInputData.setPowierzchniaPolaci(String.valueOf(serviceNumberFiled.numberField1.getValue()));
@@ -60,79 +79,21 @@ public class SaveUsers {
         entityInputData.setGasiarZPodwojnaMufa(String.valueOf(serviceNumberFiled.numberField17.getValue()));
         entityInputData.setDachowkaDwufalowa(String.valueOf(serviceNumberFiled.numberField18.getValue()));
         entityInputData.setOknoPolaciowe(String.valueOf(serviceNumberFiled.numberField19.getValue()));
+        Set<EntityInputData> entityInputDataList = new LinkedHashSet<>();
+        entityInputDataList.add(entityInputData);
 
-        if (czyWszystkieDane()) {
-
-            // SAVE TO DATABASE
-            inputData.save(entityInputData);
-            Set<EntityInputData> entityInputDataList = new LinkedHashSet<>();
-            entityInputDataList.add(entityInputData);
-            // SAVE TO DATABASE
-            EntityUser newUser = new EntityUser();
-
-            newUser.setName(serviceDataCustomer.getName().getValue());
-            newUser.setSurname(serviceDataCustomer.getSurname().getValue());
-            newUser.setAdress(serviceDataCustomer.getAdress().getValue());
-            newUser.setTelephoneNumber(serviceDataCustomer.getTelephoneNumber().getValue());
-            /*newUser.setDateOfMeeting(serviceDataCustomer.getDateOfMeeting().getValue());*/
-            newUser.setEntityInputData(entityInputDataList);
-            newUser.setPriceListName(inputUser.priceListCB.getValue());
-            List<EntityUser> sprawdzanaLista = allUser();
-            if (sprawdzanaLista.size() == 0) {
-                usersRepo.save(newUser);
-                getNotificationSucces("Zapisałem użytkownika wraz z danymi");
-            }
-            if (sprawdzanaLista.size() > 0) {
-                for (EntityUser oldUser : sprawdzanaLista) {
-                    if (!oldUser.getName().equals(newUser.getName()) && !oldUser.getSurname().equals(newUser.getSurname())
-                            && !oldUser.getAdress().equals(newUser.getAdress())) {
-                        usersRepo.save(newUser);
-                        getNotificationSucces("Zapisałem użytkownika wraz z danymi");
-                    } else if (oldUser.getName().equals(newUser.getName()) && oldUser.getSurname().equals(newUser.getSurname())
-                            && oldUser.getAdress().equals(newUser.getAdress()) && !oldUser.getPriceListName().contains(newUser.getPriceListName())) {
-                        EntityUser editUser = new EntityUser();
-                        editUser.setName(oldUser.getName());
-                        editUser.setSurname(oldUser.getSurname());
-                        editUser.setAdress(oldUser.getAdress());
-                        editUser.setDateOfMeeting(oldUser.getDateOfMeeting());
-                        editUser.setEntityInputData(oldUser.getEntityInputData());
-                        editUser.setPriceListName(oldUser.getPriceListName() + " , " + inputUser.priceListCB.getValue());
-                        usersRepo.delete(oldUser);
-                        usersRepo.save(editUser);
-                        getNotificationSucces("Dodałem do użytkownika nowy cennik");
-                    } else {
-                        getNotificationError("Podany użytkownik jest już w bazie");
-                    }
-                }
-            }
-        }
+        inputData.save(entityInputData);
+        return entityInputDataList;
     }
 
-    private boolean czyWszystkieDane() {
+    private boolean allDataIsCompleted() {
         if (!serviceDataCustomer.getName().getValue().isEmpty() && !serviceDataCustomer.getSurname().getValue().isEmpty()
                 && !serviceDataCustomer.getAdress().getValue().isEmpty() && !serviceDataCustomer.getTelephoneNumber().getValue().isEmpty()) {
             return true;
         } else {
-            /*Notification notification = new Notification("Uzupełnij wszystkie dane !!", 4000);
-            notification.setPosition(Notification.Position.TOP_CENTER);
-            notification.open();*/
             getNotificationError("Uzupełnij wszystkie dane !!");
             return false;
         }
     }
-
-    private List<EntityUser> allUser() {
-        Iterable<EntityUser> usersEntityIterable = usersRepo.findAll();
-        List<EntityUser> entityUserList = new ArrayList<>();
-        usersEntityIterable.forEach(entityUserList::add);
-        return entityUserList;
-    }
-
-    /*private Notification getNotification(String komunikat) {
-        Notification notification = new Notification(komunikat, 5000);
-        notification.setPosition(Notification.Position.BOTTOM_CENTER);
-        notification.open();
-        return notification;
-    }*/
 
 }

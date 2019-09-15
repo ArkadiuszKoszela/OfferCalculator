@@ -43,7 +43,7 @@ public class ServiceNumberFiled {
     public NumberField numberField18 = new NumberField("Dachówka dwufalowa");
     public NumberField numberField19 = new NumberField("Okno połaciowe");
 
-    private NumberField customerDiscount;
+    private NumberField customerDiscount = new NumberField("Podaj rabat dla klienta:");
 
     private List<NumberField> listOfNumberFields;
 
@@ -79,49 +79,41 @@ public class ServiceNumberFiled {
 
     private void setTitle() {
         Iterable<EntityAccesories> iterable = accesories.findAll();
-        List<EntityAccesories> list = new ArrayList<>();
-        iterable.forEach(list::add);
-        List<String> listaNazw = new ArrayList<>();
-        list.forEach(e -> listaNazw.add(e.getName()));
-        if (listaNazw.size() != 0) {
-            String joined = Joiner.on(" ").join(getSubList(listaNazw, 0, 9));
-            String joined1 = Joiner.on(" ").join(getSubList(listaNazw, 9, 14));
-            String joined2 = Joiner.on(" ").join(getSubList(listaNazw, 35, 39));
-            String joined3 = Joiner.on(" ").join(getSubList(listaNazw, 39, 44));
-            String joined4 = Joiner.on(" ").join(getSubList(listaNazw, 59, 64));
-            String joined5 = Joiner.on(" ").join(getSubList(listaNazw, 21, 23));
-            String joined6 = Joiner.on(" ").join(getSubList(listaNazw, 24, 25));
-            String joined7 = Joiner.on(" ").join(getSubList(listaNazw, 25, 27));
-            String joined8 = Joiner.on(" ").join(getSubList(listaNazw, 44, 46));
-            String joined9 = Joiner.on(" ").join(getSubList(listaNazw, 14, 20));
-            String joined10 = Joiner.on(" ").join(getSubList(listaNazw, 20, 21));
-            String joined11 = Joiner.on(" ").join(getSubList(listaNazw, 27, 31));
-            String joined12 = Joiner.on(" ").join(getSubList(listaNazw, 31, 33));
-            String joined13 = Joiner.on(" ").join(getSubList(listaNazw, 33, 35));
-            getNumberField1().setTitle(joined3 + joined4);
-            getNumberField2().setTitle(joined + joined1 + joined2);
-            getNumberField5().setTitle(joined5 + joined6 + joined7 + joined8);
-            getNumberField8().setTitle(joined9 + joined10);
-            getNumberField9().setTitle(joined11 + joined12 + joined13);
+        List<String> names = new ArrayList<>();
+        iterable.forEach(e -> names.add(e.getName()));
+        if (names.size() != 0) {
+            getNumberField1().setTitle(getString(names, 39, 44)
+                    .concat(getString(names, 59, 64)));
+
+            getNumberField2().setTitle(getString(names, 0, 9)
+                    .concat(getString(names, 9, 14))
+                    .concat(getString(names, 35, 39)));
+
+            getNumberField5().setTitle(getString(names, 21, 23)
+                    .concat(getString(names, 24, 25))
+                    .concat(getString(names, 25, 27))
+                    .concat(getString(names, 44, 46)));
+
+            getNumberField8().setTitle(getString(names, 14, 20)
+                    .concat(getString(names, 20, 21)));
+
+            getNumberField9().setTitle(getString(names, 27, 31)
+                    .concat(getString(names, 31, 33))
+                    .concat(getString(names, 33, 35)));
         }
     }
 
-    public NumberField createPoleRabat() {
-        setCustomerDiscount(new NumberField("Podaj rabat dla klienta:"));
+    private String getString(List<String> listaNazw, int i, int i2) {
+        return Joiner.on(" ").join(getSubList(listaNazw, i, i2));
+    }
+
+    public NumberField setValuesCustomerDiscount() {
         getCustomerDiscount().setValue(0d);
         getCustomerDiscount().setMin(0);
         getCustomerDiscount().setMax(30);
         getCustomerDiscount().setHasControls(true);
         getCustomerDiscount().setSuffixComponent(new Span("%"));
         return getCustomerDiscount();
-    }
-
-    public NumberField getCustomerDiscount() {
-        return customerDiscount;
-    }
-
-    private void setCustomerDiscount(NumberField customerDiscount) {
-        this.customerDiscount = customerDiscount;
     }
 
     private List<String> getSubList(List<String> listaNazw, int poczatek, int koniec) {
@@ -142,6 +134,14 @@ public class ServiceNumberFiled {
 
     public void setListOfNumberFields(List<NumberField> listOfNumberFields) {
         this.listOfNumberFields = listOfNumberFields;
+    }
+
+    public NumberField getCustomerDiscount() {
+        return customerDiscount;
+    }
+
+    private void setCustomerDiscount(NumberField customerDiscount) {
+        this.customerDiscount = customerDiscount;
     }
 
     public NumberField getNumberField1() {

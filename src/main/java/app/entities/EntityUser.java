@@ -14,15 +14,10 @@ public class EntityUser {
     private Long id;
 
     private String name;
-
     private String surname;
-
     private String adress;
-
     private String telephoneNumber;
-
     private LocalDate dateOfMeeting;
-
     private String priceListName;
 
     @OneToMany(fetch = FetchType.EAGER)

@@ -2,7 +2,7 @@ package app.importFiles;
 
 import app.DAOs.DaoAccesories;
 import app.DAOs.DaoTiles;
-import app.GUIs.EnterTiles;
+import app.views.EnterTiles;
 import app.calculate.CalculateTiles;
 import app.repositories.Accesories;
 import app.repositories.Tiles;
@@ -18,6 +18,11 @@ import static app.inputFields.ServiceNotification.getNotificationSucces;
 
 @Service
 public class ImportFiles {
+
+    private static final String BOGEN_INNOVO_10_CZERWONA_ANGOBA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 10 czerwona angoba.csv";
+    private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 10 miedziano-brązowa angoba.csv";
+    private static final String BOGEN_INNOVO_12_CZERWONA_ANGOBA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 12 czerwona angoba.csv";
+    private static final String AKCESORIA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\akcesoria.csv";
 
     private Tiles tiles;
     private Accesories accesories;
@@ -54,10 +59,10 @@ public class ImportFiles {
     public void csv() {
         if (this.tiles.count() == 0 && this.accesories.count() == 0) {
 
-            daoTiles.save("C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 10 czerwona angoba.csv");
-            daoTiles.save("C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 10 miedziano-brązowa angoba.csv");
-            daoTiles.save("C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 12 czerwona angoba.csv");
-            daoAccesories.save("C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\akcesoria.csv");
+            daoTiles.save(BOGEN_INNOVO_10_CZERWONA_ANGOBA);
+            daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);
+            daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA);
+            daoAccesories.save(AKCESORIA);
             calculateTiles.getAvailablePriceList();
             getNotificationSucces("Zaimportowano cenniki");
             History history = UI.getCurrent().getPage().getHistory();
@@ -67,10 +72,4 @@ public class ImportFiles {
         }
 
     }
-
-    /*private void getNotification(String s) {
-        Notification notification = new Notification(s, 3000);
-        notification.setPosition(Notification.Position.TOP_CENTER);
-        notification.open();
-    }*/
 }

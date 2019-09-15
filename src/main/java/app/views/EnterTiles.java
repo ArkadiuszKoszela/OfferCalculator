@@ -1,9 +1,10 @@
-package app.GUIs;
+package app.views;
 
 import app.controllers.ControllerVaadin;
 import app.inputFields.ServiceNumberFiled;
 import app.service.Layout;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
 @Route(value = EnterTiles.ENTER_TILES)
 public class EnterTiles extends SplitLayout implements Layout {
 
-    public static final String ENTER_TILES = "EnterTiles";
+    public static final String ENTER_TILES = "tiles/enterTiles";
 
     private ControllerVaadin controllerVaadin;
     private ServiceNumberFiled serviceNumberFiled;
@@ -25,9 +26,7 @@ public class EnterTiles extends SplitLayout implements Layout {
     public EnterTiles(ControllerVaadin controllerVaadin, ServiceNumberFiled serviceNumberFiled) {
         this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
         this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
-
-        setOrientation(Orientation.VERTICAL);
-
+        setOrientation(SplitLayout.Orientation.VERTICAL);
         addToPrimary(ustawieniaStrony(controllerVaadin));
         addToSecondary(getSideMenu(controllerVaadin));
     }
@@ -36,7 +35,8 @@ public class EnterTiles extends SplitLayout implements Layout {
     private FormLayout createInputFields() {
         serviceNumberFiled.setValuesNumberFields();
         FormLayout board = new FormLayout();
-        board.add(serviceNumberFiled.createPoleRabat());
+        Label label = new Label(" ");
+        board.add(serviceNumberFiled.setValuesCustomerDiscount(), label);
         board.add(serviceNumberFiled.getNumberField1(), serviceNumberFiled.getNumberField2(), serviceNumberFiled.getNumberField3(), serviceNumberFiled.getNumberField4());
         board.add(serviceNumberFiled.getNumberField5(), serviceNumberFiled.getNumberField6(), serviceNumberFiled.getNumberField7(), serviceNumberFiled.getNumberField8());
         board.add(serviceNumberFiled.getNumberField9(), serviceNumberFiled.getNumberField10(), serviceNumberFiled.getNumberField11(), serviceNumberFiled.getNumberField12());

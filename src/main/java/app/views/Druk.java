@@ -1,4 +1,4 @@
-package app.GUIs;
+package app.views;
 
 import com.vaadin.flow.component.Tag;
 
