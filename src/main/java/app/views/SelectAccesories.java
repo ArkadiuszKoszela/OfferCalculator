@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +27,8 @@ public class SelectAccesories extends SplitLayout implements Layout {
     public static final String SELECT_ACCESORIES = "accesories/select";
     private ControllerVaadin controllerVaadin;
     private Accesories accesories;
+
+    List<ComboBox<String>> boxList = new ArrayList<>();
 
     private ComboBox<String> comboBoxtasmaKalenicowa = new ComboBox<>(TASMA_KELNICOWA);
     private ComboBox<String> comboBoxwspornikLatyKalenicowej = new ComboBox<>(WSPORNIK_LATY_KALENICOWEJ);
@@ -61,23 +64,23 @@ public class SelectAccesories extends SplitLayout implements Layout {
         addToSecondary(getSideMenu(controllerVaadin));
     }
 
+    private void createListBox() {
+        boxList = Arrays.asList(comboBoxtasmaKalenicowa, comboBoxwspornikLatyKalenicowej, comboBoxtasmaDoObrobkiKomina,
+                comboBoxlistwaWykonczeniowaAluminiowa, comboBoxkoszDachowyAluminiowy2mb, comboBoxklamraDoMocowaniaKosza,
+                comboBoxklinUszczelniajacyKosz, comboBoxgrzebienOkapowy, comboBoxkratkaZabezpieczajacaPrzedPtactwem,
+                comboBoxpasOkapowy, comboBoxklamraDoGasiora, comboBoxspinkaDoDachowki, comboBoxspinkaDoDachowkiCietej,
+                comboBoxlawaKominiarska, comboBoxstopienKominiarski, comboBoxplotekPrzeciwsniegowy155mmx2mb,
+                comboBoxplotekPrzeciwsniegowy155mmx3mb, comboBoxmembranaDachowa, comboBoxtasmaDoLaczeniaMembarnIFolii,
+                comboBoxtasmaReparacyjna, comboBoxblachaAluminiowa, comboBoxceglaKlinkierowa);
+    }
+
     private FormLayout formLayoutAccesories() {
         FormLayout board = new FormLayout();
         createValueComboBoxes();
+        createListBox();
         Label label = new Label(" ");
         board.add(calculateAccesories, label);
-
-        board.add(comboBoxtasmaKalenicowa, comboBoxwspornikLatyKalenicowej,
-                comboBoxtasmaDoObrobkiKomina, comboBoxlistwaWykonczeniowaAluminiowa);
-        board.add(comboBoxkoszDachowyAluminiowy2mb, comboBoxklamraDoMocowaniaKosza,
-                comboBoxklinUszczelniajacyKosz, comboBoxgrzebienOkapowy);
-        board.add(comboBoxkratkaZabezpieczajacaPrzedPtactwem, comboBoxpasOkapowy,
-                comboBoxklamraDoGasiora, comboBoxspinkaDoDachowki);
-        board.add(comboBoxspinkaDoDachowkiCietej, comboBoxlawaKominiarska,
-                comboBoxstopienKominiarski, comboBoxplotekPrzeciwsniegowy155mmx2mb);
-        board.add(comboBoxplotekPrzeciwsniegowy155mmx3mb, comboBoxmembranaDachowa,
-                comboBoxtasmaDoLaczeniaMembarnIFolii, comboBoxtasmaReparacyjna);
-        board.add(comboBoxblachaAluminiowa, comboBoxceglaKlinkierowa);
+        boxList.forEach(board::add);
         return board;
     }
 

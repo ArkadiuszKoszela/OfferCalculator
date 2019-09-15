@@ -1,5 +1,6 @@
 package app.inputFields;
 
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class ServiceDataCustomer {
     private TextField surname = new TextField("Nazwisko", "Koszela", "Nazwisko");
     private TextField adress = new TextField("Adres zamieszkania", "Szczecin", "Adres zamieszkania");
     private TextField telephoneNumber = new TextField("Numer kontaktowy", "12345678", "Numer kontaktowy");
+    private EmailField email = new EmailField("E-mail");
     /*private DatePicker dateOfMeeting = new DatePicker("Data spotkania");*/
 
     public TextField getName() {
@@ -68,6 +70,14 @@ public class ServiceDataCustomer {
 
     private void setTelephoneNumber(TextField telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public EmailField getEmail() {
+        return email;
+    }
+
+    public void setEmail(EmailField email) {
+        this.email = email;
     }
 
     /*public DatePicker getDateOfMeeting() {

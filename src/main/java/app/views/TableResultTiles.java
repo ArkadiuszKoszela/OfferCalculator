@@ -105,10 +105,10 @@ public class TableResultTiles extends SplitLayout implements Layout {
         resultTilesGrid = new Grid<>(EntityResultTiles.class);
         resultTilesGrid.getColumnByKey("name").setHeader("Kategoria");
         resultTilesGrid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
-        resultTilesGrid.getColumnByKey("priceAfterDiscount").setHeader("Cena Netto Po rabacie");
+        resultTilesGrid.getColumnByKey("priceAfterDiscount").setHeader("Cena sprzedaży");
         resultTilesGrid.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
         resultTilesGrid.getColumnByKey("profit").setHeader("Zysk");
-        resultTilesGrid.setColumns("name", "priceListName", "priceAfterDiscount", "purchasePrice", "profit");
+        resultTilesGrid.removeColumnByKey("id");
     }
 
     private void loadResultTableTiles(Tiles tiles) {

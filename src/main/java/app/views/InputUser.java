@@ -63,6 +63,7 @@ public class InputUser extends SplitLayout implements Layout {
 
         /*serviceDataCustomer.createTextFieldsForUser();*/
         board.add(serviceDataCustomer.getName(), serviceDataCustomer.getSurname(), serviceDataCustomer.getAdress(), serviceDataCustomer.getTelephoneNumber());
+        board.add(serviceDataCustomer.getEmail(), label);
         /*board.add(serviceDataCustomer.getDateOfMeeting(),label );*/
 
         loadUserComboBox();
@@ -98,11 +99,6 @@ public class InputUser extends SplitLayout implements Layout {
         splitLayout.addToSecondary(board);
         getSideMenuSettings(splitLayout);
         return splitLayout;
-    }
-
-    public String getValueComboBox (){
-        String value = priceListCB.getValue();
-        return value;
     }
 
     private void loadUserComboBox() {

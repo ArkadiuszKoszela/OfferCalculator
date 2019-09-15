@@ -49,6 +49,7 @@ public class SaveUsers {
             newUser.setAdress(serviceDataCustomer.getAdress().getValue());
             newUser.setTelephoneNumber(serviceDataCustomer.getTelephoneNumber().getValue());
             /*newUser.setDateOfMeeting(serviceDataCustomer.getDateOfMeeting().getValue());*/
+            newUser.setEmail(serviceDataCustomer.getEmail().getValue());
             newUser.setEntityInputData(saveInputData());
             newUser.setPriceListName(comboBox.getValue());
 

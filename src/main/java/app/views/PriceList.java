@@ -62,8 +62,7 @@ public class PriceList extends SplitLayout implements Layout {
         grid.getColumnByKey("supplierDiscount").setHeader("Promocja").setWidth("30px");
         grid.getColumnByKey("additionalDiscount").setHeader("Rabat dodatkowy").setWidth("30px");
         grid.getColumnByKey("skontoDiscount").setHeader("Skonto").setWidth("30px");
-        grid.setColumns("priceListName", "type", "name", "unitRetailPrice", "profit", "basicDiscount",
-                "supplierDiscount", "additionalDiscount", "skontoDiscount");
+        grid.removeColumnByKey("id");
         grid.setItems(allDachowki(tiles));
     }
 

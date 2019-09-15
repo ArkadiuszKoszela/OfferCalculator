@@ -18,6 +18,7 @@ public class EntityUser {
     private String adress;
     private String telephoneNumber;
     private LocalDate dateOfMeeting;
+    private String email;
     private String priceListName;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -26,31 +27,34 @@ public class EntityUser {
     public EntityUser() {
     }
 
-    public EntityUser(String name, String surname, String adress, String telephoneNumber, LocalDate date, String priceListName) {
+    public EntityUser(String name, String surname, String adress, String telephoneNumber, LocalDate date, String email, String priceListName) {
         this.name = name;
         this.surname = surname;
         this.adress = adress;
         this.telephoneNumber = telephoneNumber;
         this.dateOfMeeting = date;
+        this.email = email;
         this.priceListName = priceListName;
     }
 
-    public EntityUser(String name, String surname, String adress, String telephoneNumber, LocalDate date,
+    public EntityUser(String name, String surname, String adress, String telephoneNumber, LocalDate date, String email,
                       Set<EntityInputData> entityInputData) {
         this.name = name;
         this.surname = surname;
         this.adress = adress;
         this.telephoneNumber = telephoneNumber;
         this.dateOfMeeting = date;
+        this.email = email;
         this.entityInputData = entityInputData;
     }
 
-    public EntityUser(String name, String surname, String adress, String telephoneNumber, LocalDate date, String priceListName, Set<EntityInputData> entityInputData) {
+    public EntityUser(String name, String surname, String adress, String telephoneNumber, LocalDate date, String email, String priceListName, Set<EntityInputData> entityInputData) {
         this.name = name;
         this.surname = surname;
         this.adress = adress;
         this.telephoneNumber = telephoneNumber;
         this.dateOfMeeting = date;
+        this.email = email;
         this.priceListName = priceListName;
         this.entityInputData = entityInputData;
     }
@@ -103,6 +107,14 @@ public class EntityUser {
         this.dateOfMeeting = dateOfMeeting;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPriceListName() {
         return priceListName;
     }
@@ -128,6 +140,7 @@ public class EntityUser {
                 ", adress='" + adress + '\'' +
                 ", telephoneNumber='" + telephoneNumber + '\'' +
                 ", dateOfMeeting=" + dateOfMeeting +
+                ", email='" + email + '\'' +
                 ", priceListName='" + priceListName + '\'' +
                 ", entityInputData=" + entityInputData +
                 '}';
