@@ -10,23 +10,13 @@ public class EntityAccesories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-
     private String name;
-
     private BigDecimal purchasePrice;
     private Integer margin;
     private Double firstMultiplier;
     private Double secondMultiplier;
 
     public EntityAccesories() {
-    }
-
-    public EntityAccesories(String name, BigDecimal purchasePrice, Integer margin, Double firstMultiplier, Double secondMultiplier) {
-        this.name = name;
-        this.purchasePrice = purchasePrice;
-        this.margin = margin;
-        this.firstMultiplier = firstMultiplier;
-        this.secondMultiplier = secondMultiplier;
     }
 
     public long getId() {
@@ -75,17 +65,5 @@ public class EntityAccesories {
 
     public void setSecondMultiplier(Double secondMultiplier) {
         this.secondMultiplier = secondMultiplier;
-    }
-
-    @Override
-    public String toString() {
-        return "EntityAccesories{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", purchasePrice=" + purchasePrice +
-                ", margin=" + margin +
-                ", firstMultiplier=" + firstMultiplier +
-                ", secondMultiplier=" + secondMultiplier +
-                '}';
     }
 }

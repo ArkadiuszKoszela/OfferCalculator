@@ -1,11 +1,10 @@
-package app.inputFields;
+package app.service;
 
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.html.Label;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServiceDataCustomer {
+public class Labels {
 
     public static final String TASMA_KELNICOWA = "Taśma kalenicowa";
     public static final String WSPORNIK_LATY_KALENICOWEJ = "Wspornik łaty kalenicowej";
@@ -33,58 +32,7 @@ public class ServiceDataCustomer {
     public static final String KONTRLATA = "Kontrłata";
     public static final String WYLAZ_DACHOWY = "Wyłaz dachowy";
 
-    private TextField name = new TextField("Imię", "Arek", "Imię");
-    private TextField surname = new TextField("Nazwisko", "Koszela", "Nazwisko");
-    private TextField adress = new TextField("Adres zamieszkania", "Szczecin", "Adres zamieszkania");
-    private TextField telephoneNumber = new TextField("Numer kontaktowy", "12345678", "Numer kontaktowy");
-    private EmailField email = new EmailField("E-mail");
-    /*private DatePicker dateOfMeeting = new DatePicker("Data spotkania");*/
-
-    public TextField getName() {
-        return name;
+    public static Label getLabel(String name){
+        return new Label(name);
     }
-
-    private void setName(TextField name) {
-        this.name = name;
-    }
-
-    public TextField getSurname() {
-        return surname;
-    }
-
-    private void setSurname(TextField surname) {
-        this.surname = surname;
-    }
-
-    public TextField getAdress() {
-        return adress;
-    }
-
-    private void setAdress(TextField adress) {
-        this.adress = adress;
-    }
-
-    public TextField getTelephoneNumber() {
-        return telephoneNumber;
-    }
-
-    private void setTelephoneNumber(TextField telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
-    }
-
-    public EmailField getEmail() {
-        return email;
-    }
-
-    public void setEmail(EmailField email) {
-        this.email = email;
-    }
-
-    /*public DatePicker getDateOfMeeting() {
-        return dateOfMeeting;
-    }
-
-    private void setDateOfMeeting(DatePicker dateOfMeeting) {
-        this.dateOfMeeting = dateOfMeeting;
-    }*/
 }

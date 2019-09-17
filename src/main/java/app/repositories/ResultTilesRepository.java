@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository("result_tiles")
-public interface ResultTiles extends CrudRepository<EntityResultTiles, Long> {
+public interface ResultTilesRepository extends CrudRepository<EntityResultTiles, Long> {
 
-    List<EntityResultTiles> findAllByPriceListName(String nazwaCennika);
+    List<EntityResultTiles> findAllByPriceListName(String priceList);
 }

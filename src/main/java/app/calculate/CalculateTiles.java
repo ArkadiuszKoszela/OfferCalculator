@@ -2,9 +2,9 @@ package app.calculate;
 
 import app.entities.EntityResultTiles;
 import app.entities.EntityTiles;
-import app.inputFields.ServiceNumberFiled;
-import app.repositories.ResultTiles;
-import app.repositories.Tiles;
+import app.repositories.AccesoriesRepository;
+import app.repositories.ResultTilesRepository;
+import app.repositories.TilesRepository;
 import com.vaadin.flow.component.textfield.NumberField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,19 +16,20 @@ import java.util.*;
 @Service
 public class CalculateTiles {
 
-    private Tiles tiles;
-    private ResultTiles resultTiles;
-    private ServiceNumberFiled serviceNumberFiled;
+    private TilesRepository tilesRepository;
+    private ResultTilesRepository resultTilesRepository;
+    private AccesoriesRepository accesoriesRepository;
 
     @Autowired
-    public CalculateTiles(Tiles tiles, ResultTiles resultTiles, ServiceNumberFiled serviceNumberFiled) {
-        this.tiles = Objects.requireNonNull(tiles);
-        this.resultTiles = Objects.requireNonNull(resultTiles);
-        this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
+    public CalculateTiles(TilesRepository tilesRepository, ResultTilesRepository resultTilesRepository,
+                          AccesoriesRepository accesoriesRepository) {
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.resultTilesRepository = Objects.requireNonNull(resultTilesRepository);
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
     }
 
     public List<String> getAvailablePriceList() {
-        Iterable<EntityTiles> allTilesFromRepository = tiles.findAll();
+        Iterable<EntityTiles> allTilesFromRepository = tilesRepository.findAll();
         Set<String> allTiles = new TreeSet<>();
         allTilesFromRepository.forEach(e -> allTiles
                 .add(e.getPriceListName()
@@ -55,10 +56,10 @@ public class CalculateTiles {
         });
     }
 
-    public void getPurchase(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList) {
-        serviceNumberFiled.setValuesNumberFields();
+    public void getPurchase(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, List<NumberField> listOfNumberFields) {
+        /*enterTiles.setValuesNumberFields();*/
         for (int i = 0; i < tilesList.size(); i++) {
-            for (NumberField numberField : serviceNumberFiled.getListOfNumberFields()) {
+            for (NumberField numberField : listOfNumberFields) {
                 if (numberField.getLabel().contains("Powierzchnia")) {
                     calculatePurchasePowierzchnia(resultTiles, tilesList, i, numberField);
                 } else {
@@ -85,29 +86,29 @@ public class CalculateTiles {
         resultTiles.get(i).setPurchasePrice(String.valueOf(bigDecimal));
     }
 
-    public void getRetail(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList) {
-        serviceNumberFiled.setValuesNumberFields();
+    public void getRetail(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, NumberField customerDiscount, List<NumberField> listOfNumberFields) {
+        /*enterTiles.setValuesNumberFields();*/
         for (int i = 0; i < tilesList.size(); i++) {
-            for (NumberField numberField : serviceNumberFiled.getListOfNumberFields()) {
+            for (NumberField numberField : listOfNumberFields) {
                 if (numberField.getLabel().contains("Powierzchnia")) {
-                    calculateRetailPowierzchnia(resultTiles, tilesList, i, numberField);
+                    calculateRetailPowierzchnia(resultTiles, tilesList, i, numberField, customerDiscount);
                 } else {
-                    calculateRetail(resultTiles, tilesList, i, numberField);
+                    calculateRetail(resultTiles, tilesList, i, numberField, customerDiscount);
                 }
             }
         }
     }
 
-    private void calculateRetail(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField) {
-        BigDecimal rabat = new BigDecimal(serviceNumberFiled.getCustomerDiscount().getValue()).add(new BigDecimal(100));
+    private void calculateRetail(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField, NumberField customerDiscount) {
+        BigDecimal rabat = new BigDecimal(customerDiscount.getValue()).add(new BigDecimal(100));
         BigDecimal bigDecimal = new BigDecimal(numberField.getValue())
                 .multiply(tilesList.get(i).getUnitRetailPrice())
                 .multiply(new BigDecimal(100)).divide(rabat, 2, RoundingMode.HALF_UP);
         resultTiles.get(i).setPriceAfterDiscount(String.valueOf(bigDecimal));
     }
 
-    private void calculateRetailPowierzchnia(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField) {
-        BigDecimal rabat = new BigDecimal(serviceNumberFiled.getCustomerDiscount().getValue()).add(new BigDecimal(100));
+    private void calculateRetailPowierzchnia(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField, NumberField customerDiscount) {
+        BigDecimal rabat = new BigDecimal(customerDiscount.getValue()).add(new BigDecimal(100));
         BigDecimal bigDecimal = new BigDecimal(numberField.getValue())
                 .multiply(BigDecimal.valueOf(12))
                 .multiply(tilesList.get(i).getUnitRetailPrice())

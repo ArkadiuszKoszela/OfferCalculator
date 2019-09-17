@@ -10,5 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UsersRepo extends CrudRepository<EntityUser, Long> {
 
     EntityUser findUsersEntityByNameAndSurnameEquals(String name, String surname);
+    EntityUser findEntityUserByNameAndSurnameContains (String name, String surname);
 
 }

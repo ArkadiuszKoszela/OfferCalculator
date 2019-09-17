@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository("input_data")
-public interface InputData extends CrudRepository<EntityInputData, TextField> {
+public interface InputDataRepository extends CrudRepository<EntityInputData, TextField> {
 
 }

@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository(value = "result_accesories")
-public interface ResultAccesories extends CrudRepository<EntityResultAccesories, Long> {
+public interface ResultAccesoriesRepository extends CrudRepository<EntityResultAccesories, Long> {
 
 }

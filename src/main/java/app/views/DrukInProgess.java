@@ -3,21 +3,21 @@ package app.views;
 import com.vaadin.flow.component.Tag;
 
 @Tag("image")
-/*@Route(value = Druk.DRUK)*/
-public class Druk {
+/*@Route(value = DrukInProgess.DRUK)*/
+public class DrukInProgess {
 
     /*public static final String DRUK = "druk";
     private UsersRepo repositoryUsersRepo;
-    private ResultTiles repositoryResultTiles;
+    private ResultTilesRepository repositoryResultTiles;
 
     private Crud<EntityResultTiles> crud;
     ListDataProvider<EntityResultTiles> listDataProvider;
 
-    public Druk() {
+    public DrukInProgess() {
     }
 
     @Autowired
-    public Druk(ResultTiles repositoryResultTiles, UsersRepo repositoryUsersRepo) {
+    public DrukInProgess(ResultTilesRepository repositoryResultTiles, UsersRepo repositoryUsersRepo) {
         this.repositoryResultTiles = repositoryResultTiles;
         this.repositoryUsersRepo = repositoryUsersRepo;
 

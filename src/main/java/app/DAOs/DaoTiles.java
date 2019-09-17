@@ -1,7 +1,7 @@
 package app.DAOs;
 
 import app.entities.EntityTiles;
-import app.repositories.Tiles;
+import app.repositories.TilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +14,11 @@ import java.util.Objects;
 @Service
 public class DaoTiles implements Dao {
 
-    private Tiles tiles;
-
-    public DaoTiles() {
-    }
+    private final TilesRepository tilesRepository;
 
     @Autowired
-    public DaoTiles(Tiles tiles) {
-        this.tiles = Objects.requireNonNull(tiles);
+    public DaoTiles(TilesRepository tilesRepository) {
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
     }
 
     @Override
@@ -45,7 +42,7 @@ public class DaoTiles implements Dao {
                 entityTiles.setAdditionalDiscount(Integer.valueOf(data[7]));
                 entityTiles.setSkontoDiscount(Integer.valueOf(data[8]));
 
-                tiles.save(entityTiles);
+                tilesRepository.save(entityTiles);
             }
         } catch (IOException e) {
             e.printStackTrace();

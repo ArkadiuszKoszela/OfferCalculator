@@ -2,10 +2,10 @@ package app.importFiles;
 
 import app.DAOs.DaoAccesories;
 import app.DAOs.DaoTiles;
+import app.repositories.AccesoriesRepository;
+import app.repositories.TilesRepository;
 import app.views.EnterTiles;
 import app.calculate.CalculateTiles;
-import app.repositories.Accesories;
-import app.repositories.Tiles;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.page.History;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ import static app.inputFields.ServiceNotification.getNotificationSucces;
 @Service
 public class ImportFiles {
 
-    private static final String BOGEN_INNOVO_10_CZERWONA_ANGOBA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 10 czerwona angoba.csv";
-    private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 10 miedziano-brązowa angoba.csv";
-    private static final String BOGEN_INNOVO_12_CZERWONA_ANGOBA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\Bogen Innovo 12 czerwona angoba.csv";
-    private static final String AKCESORIA = "C:\\Users\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\springapp\\src\\main\\resources\\akcesoria.csv";
+    private static final String BOGEN_INNOVO_10_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 czerwona angoba.csv";
+    private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 miedziano-brązowa angoba.csv";
+    private static final String BOGEN_INNOVO_12_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 12 czerwona angoba.csv";
+    private static final String AKCESORIA = "src/main/resources/assets/akcesoria.csv";
 
-    private Tiles tiles;
-    private Accesories accesories;
+    private TilesRepository tilesRepository;
+    private AccesoriesRepository accesoriesRepository;
 
     private DaoTiles daoTiles;
     private DaoAccesories daoAccesories;
@@ -36,9 +36,9 @@ public class ImportFiles {
     }
 
     @Autowired
-    public ImportFiles(Tiles tiles, Accesories accesories) {
-        this.tiles = Objects.requireNonNull(tiles);
-        this.accesories = Objects.requireNonNull(accesories);
+    public ImportFiles(TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository) {
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
     }
 
     @Autowired
@@ -54,10 +54,10 @@ public class ImportFiles {
     @Autowired
     public void setDaoAccesories(DaoAccesories daoAccesories) {
         this.daoAccesories = Objects.requireNonNull(daoAccesories);
-        }
+    }
 
     public void csv() {
-        if (this.tiles.count() == 0 && this.accesories.count() == 0) {
+        if (this.tilesRepository.count() == 0 && this.accesoriesRepository.count() == 0) {
 
             daoTiles.save(BOGEN_INNOVO_10_CZERWONA_ANGOBA);
             daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);

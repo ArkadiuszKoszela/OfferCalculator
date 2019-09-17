@@ -11,12 +11,10 @@ public class EntityTiles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String priceListName;
     private String type;
     private String name;
     private BigDecimal unitRetailPrice;
-
     private Integer profit;
     private Integer basicDiscount;
     private Integer supplierDiscount;
@@ -24,18 +22,6 @@ public class EntityTiles {
     private Integer skontoDiscount;
 
     public EntityTiles() {
-    }
-
-    public EntityTiles(String priceListName, String type, String name, BigDecimal unitRetailPrice, Integer profit, Integer basicDiscount, Integer supplierDiscount, Integer additionalDiscount, Integer skontoDiscount) {
-        this.priceListName = priceListName;
-        this.type = type;
-        this.name = name;
-        this.unitRetailPrice = unitRetailPrice;
-        this.profit = profit;
-        this.basicDiscount = basicDiscount;
-        this.supplierDiscount = supplierDiscount;
-        this.additionalDiscount = additionalDiscount;
-        this.skontoDiscount = skontoDiscount;
     }
 
     public Long getId() {
@@ -116,43 +102,5 @@ public class EntityTiles {
 
     public void setSkontoDiscount(Integer skontoDiscount) {
         this.skontoDiscount = skontoDiscount;
-    }
-
-    @Override
-    public String toString() {
-        return "EntityTiles{" +
-                "id=" + id +
-                ", priceListName='" + priceListName + '\'' +
-                ", type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", unitRetailPrice=" + unitRetailPrice +
-                ", profit=" + profit +
-                ", basicDiscount=" + basicDiscount +
-                ", supplierDiscount=" + supplierDiscount +
-                ", additionalDiscount=" + additionalDiscount +
-                ", skontoDiscount=" + skontoDiscount +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityTiles that = (EntityTiles) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(priceListName, that.priceListName) &&
-                Objects.equals(type, that.type) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(unitRetailPrice, that.unitRetailPrice) &&
-                Objects.equals(profit, that.profit) &&
-                Objects.equals(basicDiscount, that.basicDiscount) &&
-                Objects.equals(supplierDiscount, that.supplierDiscount) &&
-                Objects.equals(additionalDiscount, that.additionalDiscount) &&
-                Objects.equals(skontoDiscount, that.skontoDiscount);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, priceListName, type, name, unitRetailPrice, profit, basicDiscount, supplierDiscount, additionalDiscount, skontoDiscount);
     }
 }

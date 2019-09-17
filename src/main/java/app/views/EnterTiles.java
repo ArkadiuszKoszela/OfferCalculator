@@ -1,56 +1,369 @@
 package app.views;
 
-import app.controllers.ControllerVaadin;
-import app.inputFields.ServiceNumberFiled;
-import app.service.Layout;
+import app.calculate.CalculateTiles;
+import app.entities.*;
+import app.repositories.*;
+import app.service.MenuBarInterface;
+import com.google.common.base.Joiner;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-import static app.inputFields.ServiceSplitLayout.getSideMenuSettings;
-import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
+import static app.inputFields.ServiceNotification.getNotificationError;
+import static app.inputFields.ServiceNotification.getNotificationSucces;
 
-@Route(value = EnterTiles.ENTER_TILES)
-public class EnterTiles extends SplitLayout implements Layout {
+@Route(value = EnterTiles.ENTER_TILES, layout = MainView.class)
+public class EnterTiles extends VerticalLayout implements MenuBarInterface {
 
     public static final String ENTER_TILES = "tiles/enterTiles";
 
-    private ControllerVaadin controllerVaadin;
-    private ServiceNumberFiled serviceNumberFiled;
+    private AccesoriesRepository accesoriesRepository;
+    private UsersRepo usersRepo;
+    private InputDataRepository inputDataRepository;
+    private CalculateTiles calculateTiles;
+    private TilesRepository tilesRepository;
+    private ResultTilesRepository resultTilesRepository;
 
-    @Autowired
-    public EnterTiles(ControllerVaadin controllerVaadin, ServiceNumberFiled serviceNumberFiled) {
-        this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
-        this.serviceNumberFiled = Objects.requireNonNull(serviceNumberFiled);
-        setOrientation(SplitLayout.Orientation.VERTICAL);
-        addToPrimary(ustawieniaStrony(controllerVaadin));
-        addToSecondary(getSideMenu(controllerVaadin));
+    private NumberField numberField1 = new NumberField("Powierzchnia połaci");
+    private NumberField numberField2 = new NumberField("Długość kalenic");
+    private NumberField numberField3 = new NumberField("Długość kalenic skośnych");
+    private NumberField numberField4 = new NumberField("Długość kalenic prostych");
+    private NumberField numberField5 = new NumberField("Długość koszy");
+    private NumberField numberField6 = new NumberField("Długość krawędzi lewych");
+    private NumberField numberField7 = new NumberField("Długość krawędzi prawych");
+    private NumberField numberField8 = new NumberField("Obwód komina");
+    private NumberField numberField9 = new NumberField("Długość okapu");
+    private NumberField numberField10 = new NumberField("Dachówka wentylacyjna");
+    private NumberField numberField11 = new NumberField("Komplet kominka wentylacyjnego");
+    private NumberField numberField12 = new NumberField("Gąsior początkowy kalenica prosta");
+    private NumberField numberField13 = new NumberField("Gąsior końcowy kalenica prosta");
+    private NumberField numberField14 = new NumberField("Gąsior zaokrąglony");
+    private NumberField numberField15 = new NumberField("Trójnik");
+    private NumberField numberField16 = new NumberField("Czwórnik");
+    private NumberField numberField17 = new NumberField("Gąsior z podwójną mufą");
+    private NumberField numberField18 = new NumberField("Dachówka dwufalowa");
+    private NumberField numberField19 = new NumberField("Okno połaciowe");
+    private NumberField customerDiscount = new NumberField("Podaj rabat dla klienta:");
+
+    private ComboBox<String> comboBoxViewTable = new ComboBox<>("Podaj nazwę cennika: ");
+    private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
+    private ComboBox<String> comboBoxUsers = new ComboBox<>("Wczytaj użytkownika: ");
+    private List<NumberField> listOfNumberFields = new ArrayList<>();
+
+    private VerticalLayout tabela = new VerticalLayout();
+    private VerticalLayout dane = new VerticalLayout();
+    private VerticalLayout cennik = new VerticalLayout();
+
+    private Button selectUser = new Button("Zapisz dane");
+    private Button calculateProfit = new Button("Oblicz zysk");
+
+    private Grid<EntityResultTiles> resultTilesGrid = new Grid<>(EntityResultTiles.class);
+    private Grid<EntityTiles> grid = new Grid<>(EntityTiles.class);
+
+    public EnterTiles() {
     }
 
+    @Autowired
+    public EnterTiles(AccesoriesRepository accesoriesRepository, UsersRepo usersRepo, InputDataRepository inputDataRepository,
+                      CalculateTiles calculateTiles, TilesRepository tilesRepository,
+                      ResultTilesRepository resultTilesRepository) {
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
+        this.usersRepo = Objects.requireNonNull(usersRepo);
+        this.inputDataRepository = Objects.requireNonNull(inputDataRepository);
+        this.calculateTiles = Objects.requireNonNull(calculateTiles);
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.resultTilesRepository = Objects.requireNonNull(resultTilesRepository);
 
-    private FormLayout createInputFields() {
-        serviceNumberFiled.setValuesNumberFields();
-        FormLayout board = new FormLayout();
-        Label label = new Label(" ");
-        board.add(serviceNumberFiled.setValuesCustomerDiscount(), label);
-        board.add(serviceNumberFiled.getNumberField1(), serviceNumberFiled.getNumberField2(), serviceNumberFiled.getNumberField3(), serviceNumberFiled.getNumberField4());
-        board.add(serviceNumberFiled.getNumberField5(), serviceNumberFiled.getNumberField6(), serviceNumberFiled.getNumberField7(), serviceNumberFiled.getNumberField8());
-        board.add(serviceNumberFiled.getNumberField9(), serviceNumberFiled.getNumberField10(), serviceNumberFiled.getNumberField11(), serviceNumberFiled.getNumberField12());
-        board.add(serviceNumberFiled.getNumberField13(), serviceNumberFiled.getNumberField14(), serviceNumberFiled.getNumberField15(), serviceNumberFiled.getNumberField16());
-        board.add(serviceNumberFiled.getNumberField17(), serviceNumberFiled.getNumberField18(), serviceNumberFiled.getNumberField19());
-        return board;
+        loadUserComboBox();
+        add(menu());
+        add(createInputFields());
+        add(addFormLayout());
+        add(createGrid());
+
+    }
+
+    private VerticalLayout addFormLayout() {
+        calculateProfit.addClickListener(buttonClickEvent -> loadResultTableTiles());
+        FormLayout formLayout = new FormLayout();
+        formLayout.add(comboBoxViewTable, calculateProfit);
+        tabela.add(formLayout);
+        tabela.add(createTable());
+        getAvailablePriceList(comboBoxViewTable);
+        return tabela;
+    }
+
+    private void getAvailablePriceList(ComboBox<String> comboBox) {
+        if (!calculateTiles.getAvailablePriceList().isEmpty()) {
+            comboBox.setItems(calculateTiles.getAvailablePriceList());
+        }
+    }
+
+    private VerticalLayout createInputFields() {
+        setValuesNumberFields();
+        selectUser.addClickListener(buttonClickEvent -> loadUser());
+        FormLayout formLayout = new FormLayout();
+        formLayout.add(getCustomerDiscount(), comboBoxInput);
+        formLayout.add(comboBoxUsers, selectUser);
+        listOfNumberFields.forEach(formLayout::add);
+        getAvailablePriceList(comboBoxInput);
+        dane.add(formLayout);
+        return dane;
+    }
+
+    private List<EntityResultTiles> listResultTiles() {
+        String[] spliString = comboBoxViewTable.getValue().split(" ");
+
+        List<EntityTiles> priceListFromRepository = tilesRepository.findByPriceListNameAndType(spliString[0] + " " + spliString[1] + " " + spliString[2], spliString[3] + " " + spliString[4]);
+        List<EntityResultTiles> listResultTiles = getEntityResultTiles();
+        listResultTiles.forEach(e -> e.setPriceListName(comboBoxViewTable.getValue()));
+
+        calculateTiles.getRetail(listResultTiles, priceListFromRepository, customerDiscount, listOfNumberFields);
+        calculateTiles.getPurchase(listResultTiles, priceListFromRepository, listOfNumberFields);
+        calculateTiles.getProfit(listResultTiles);
+
+        resultTilesRepository.saveAll(listResultTiles);
+        return listResultTiles;
+    }
+
+    private List<EntityResultTiles> getEntityResultTiles() {
+        Iterable<EntityResultTiles> resultTilesFromRepository = resultTilesRepository.findAll();
+        List<EntityResultTiles> listResultTiles = new ArrayList<>();
+        resultTilesFromRepository.forEach(listResultTiles::add);
+        return listResultTiles;
+    }
+
+    private Grid<EntityResultTiles> createTable() {
+        resultTilesGrid.getColumnByKey("name").setHeader("Kategoria");
+        resultTilesGrid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
+        resultTilesGrid.getColumnByKey("priceAfterDiscount").setHeader("Cena sprzedaży");
+        resultTilesGrid.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
+        resultTilesGrid.getColumnByKey("profit").setHeader("Zysk");
+        resultTilesGrid.removeColumnByKey("id");
+        return resultTilesGrid;
+    }
+
+    private void loadResultTableTiles() {
+        if (allTilesFromRespository().size() > 0) {
+            resultTilesGrid.setItems(listResultTiles());
+            getNotificationSucces("Obliczono kalkulację");
+        } else if (allTilesFromRespository().size() == 0) {
+            getNotificationError("Zaimportuj cenniki");
+        } else {
+            getNotificationError("Wybierz cennik");
+        }
+    }
+
+    private List<EntityTiles> allTilesFromRespository() {
+        Iterable<EntityTiles> allTilesFromRepository = tilesRepository.findAll();
+        List<EntityTiles> allTiles = new ArrayList<>();
+        allTilesFromRepository.forEach(allTiles::add);
+        return allTiles;
+    }
+
+    EntityInputData saveInputData() {
+        EntityInputData entityInputData = new EntityInputData();
+        EntityInputData.builder()
+                .powierzchniaPolaci(numberField1.getValue())
+                .dlugoscKalenic(numberField2.getValue())
+                .dlugoscKalenicProstych(numberField3.getValue())
+                .dlugoscKalenicSkosnych(numberField4.getValue())
+                .dlugoscKoszy(numberField5.getValue())
+                .dlugoscKrawedziLewych(numberField6.getValue())
+                .dlugoscKrawedziPrawych(numberField7.getValue())
+                .obwodKomina(numberField8.getValue())
+                .dlugoscOkapu(numberField9.getValue())
+                .dachowkaWentylacyjna(numberField10.getValue())
+                .kompletKominkaWentylacyjnego(numberField11.getValue())
+                .gasiarPoczatkowyKalenicaProsta(numberField12.getValue())
+                .gasiarKoncowyKalenicaProsta(numberField13.getValue())
+                .gasiarZaokraglony(numberField14.getValue())
+                .trojnik(numberField15.getValue())
+                .czwornik(numberField16.getValue())
+                .gasiarZPodwojnaMufa(numberField17.getValue())
+                .dachowkaDwufalowa(numberField18.getValue())
+                .oknoPolaciowe(numberField19.getValue())
+                .build();
+        inputDataRepository.save(entityInputData);
+        return entityInputData;
+    }
+
+    private void setValuesNumberFields() {
+        setValues(numberField1, "m²", 300d);
+        setValues(numberField2, "mb", 65d);
+        setValues(numberField3, "mb", 65d);
+        setValues(numberField4, "mb", 1d);
+        setValues(numberField5, "mb", 8d);
+        setValues(numberField6, "mb", 5d);
+        setValues(numberField7, "mb", 5d);
+        setValues(numberField8, "mb", 3d);
+        setValues(numberField9, "mb", 38d);
+        setValues(numberField10, "szt", 1d);
+        setValues(numberField11, "szt", 1d);
+        setValues(numberField12, "szt", 1d);
+        setValues(numberField13, "mb", 1d);
+        setValues(numberField14, "mb", 6d);
+        setValues(numberField15, "szt", 1d);
+        setValues(numberField16, "szt", 1d);
+        setValues(numberField17, "mb", 1d);
+        setValues(numberField18, "szt", 1d);
+        setValues(numberField19, "szt", 1d);
+        setTitle();
+        getListNumberFields();
+    }
+
+    private void getListNumberFields() {
+        listOfNumberFields = Arrays.asList(numberField1, numberField2, numberField3, numberField4, numberField5, numberField6, numberField7,
+                numberField8, numberField9, numberField10, numberField11, numberField12, numberField13, numberField14, numberField15, numberField16,
+                numberField17, numberField18, numberField19);
+    }
+
+    private String getString(List<String> listaNazw, int i, int i2) {
+        return Joiner.on(" ").join(getSubList(listaNazw, i, i2));
+    }
+
+    private void setTitle() {
+        if(accesoriesRepository != null) {
+            Iterable<EntityAccesories> iterable = accesoriesRepository.findAll();
+            List<String> names = new ArrayList<>();
+            iterable.forEach(e -> names.add(e.getName()));
+            if (names.size() != 0) {
+                numberField1.setTitle(getString(names, 39, 44)
+                        .concat(getString(names, 59, 64)));
+
+                numberField2.setTitle(getString(names, 0, 9)
+                        .concat(getString(names, 9, 14))
+                        .concat(getString(names, 35, 39)));
+
+                numberField5.setTitle(getString(names, 21, 23)
+                        .concat(getString(names, 24, 25))
+                        .concat(getString(names, 25, 27))
+                        .concat(getString(names, 44, 46)));
+
+                numberField8.setTitle(getString(names, 14, 20)
+                        .concat(getString(names, 20, 21)));
+
+                numberField9.setTitle(getString(names, 27, 31)
+                        .concat(getString(names, 31, 33))
+                        .concat(getString(names, 33, 35)));
+            }
+        }
+    }
+
+    private void loadUserComboBox() {
+        if (nameAndSurname().size() > 0) {
+            comboBoxUsers.setItems(nameAndSurname());
+        }
+    }
+
+    private List<String> nameAndSurname() {
+        Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
+        List<String> nameAndSurname = new ArrayList<>();
+        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getName().concat(" ").concat(user.getSurname())));
+        return nameAndSurname;
+    }
+
+    private NumberField getCustomerDiscount() {
+        customerDiscount.setValue(0d);
+        customerDiscount.setMin(0);
+        customerDiscount.setMax(30);
+        customerDiscount.setHasControls(true);
+        customerDiscount.setSuffixComponent(new Span("%"));
+        return customerDiscount;
+    }
+
+    private List<String> getSubList(List<String> nameList, int begin, int end) {
+        return nameList.subList(begin, end);
+    }
+
+    private void setValues(NumberField numberField, String unit, Double defaultValue) {
+        numberField.setValue(defaultValue);
+        numberField.setMin(0);
+        numberField.setMax(500);
+        numberField.setHasControls(true);
+        numberField.setSuffixComponent(new Span(unit));
+    }
+
+    private void loadUser() {
+        String nameISurname = comboBoxUsers.getValue();
+        String[] strings = nameISurname.split(" ");
+        EntityUser entityUser = usersRepo.findUsersEntityByNameAndSurnameEquals(strings[0], strings[1]);
+
+        /*if (entityUser.getEntityInputData() != null) {
+            numberField1.setValue(entityUser.getEntityInputData().getPowierzchniaPolaci());
+            numberField2.setValue(entityUser.getEntityInputData().getDlugoscKalenic());
+            numberField3.setValue(entityUser.getEntityInputData().getDlugoscKalenicSkosnych());
+            numberField4.setValue(entityUser.getEntityInputData().getDlugoscKalenicProstych());
+            numberField5.setValue(entityUser.getEntityInputData().getDlugoscKoszy());
+            numberField6.setValue(entityUser.getEntityInputData().getDlugoscKrawedziLewych());
+            numberField7.setValue(entityUser.getEntityInputData().getDlugoscKrawedziPrawych());
+            numberField8.setValue(entityUser.getEntityInputData().getObwodKomina());
+            numberField9.setValue(entityUser.getEntityInputData().getDlugoscOkapu());
+            numberField10.setValue(entityUser.getEntityInputData().getDachowkaWentylacyjna());
+            numberField11.setValue(entityUser.getEntityInputData().getKompletKominkaWentylacyjnego());
+            numberField12.setValue(entityUser.getEntityInputData().getGasiarPoczatkowyKalenicaProsta());
+            numberField13.setValue(entityUser.getEntityInputData().getGasiarKoncowyKalenicaProsta());
+            numberField14.setValue(entityUser.getEntityInputData().getGasiarZaokraglony());
+            numberField15.setValue(entityUser.getEntityInputData().getTrojnik());
+            numberField16.setValue(entityUser.getEntityInputData().getCzwornik());
+            numberField17.setValue(entityUser.getEntityInputData().getGasiarZPodwojnaMufa());
+            numberField18.setValue(entityUser.getEntityInputData().getDachowkaDwufalowa());
+            numberField19.setValue(entityUser.getEntityInputData().getOknoPolaciowe());*/
+
+            entityUser.setEntityInputData(saveInputData());
+            usersRepo.save(entityUser);
+            getNotificationSucces("Dane przypisane do klienta");
+       /* }*/
+    }
+
+    private VerticalLayout createGrid() {
+        grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
+        grid.getColumnByKey("type").setHeader("Typ dachówki");
+        grid.getColumnByKey("name").setHeader("Kategoria");
+        grid.getColumnByKey("unitRetailPrice").setHeader("Cena detaliczna").setWidth("30px");
+        grid.getColumnByKey("profit").setHeader("Marża").setWidth("30px");
+        grid.getColumnByKey("basicDiscount").setHeader("Rabat podstawowy").setWidth("30px");
+        grid.getColumnByKey("supplierDiscount").setHeader("Promocja").setWidth("30px");
+        grid.getColumnByKey("additionalDiscount").setHeader("Rabat dodatkowy").setWidth("30px");
+        grid.getColumnByKey("skontoDiscount").setHeader("Skonto").setWidth("30px");
+        grid.removeColumnByKey("id");
+        grid.setItems(allTilesFromRespository());
+        cennik.add(grid);
+        return cennik;
     }
 
     @Override
-    public SplitLayout getSideMenu(ControllerVaadin controllerVaadin) {
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.addToPrimary(controllerVaadin.sideMenuTiles());
-        splitLayout.addToSecondary(createInputFields());
-        getSideMenuSettings(splitLayout);
-        return splitLayout;
+    public MenuBar menu() {
+        MenuBar menuBar = new MenuBar();
+        menuBar.addItem("Pokaż tabelę", e -> {
+            tabela.setVisible(true);
+            resultTilesGrid.setVisible(true);
+            dane.setVisible(false);
+            cennik.setVisible(false);
+        });
+        menuBar.addItem("Wprowadź dane", e -> {
+            tabela.setVisible(false);
+            resultTilesGrid.setVisible(false);
+            dane.setVisible(true);
+            cennik.setVisible(false);
+        });
+        menuBar.addItem("Cennik", e -> {
+            tabela.setVisible(false);
+            resultTilesGrid.setVisible(false);
+            dane.setVisible(false);
+            cennik.setVisible(true);
+        });
+        return menuBar;
     }
 }

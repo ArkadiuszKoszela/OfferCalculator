@@ -1,7 +1,7 @@
 package app.DAOs;
 
 import app.entities.EntityAccesories;
-import app.repositories.Accesories;
+import app.repositories.AccesoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,18 +9,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Service
 public class DaoAccesories implements Dao {
 
-    private Accesories accesories;
-
-    public DaoAccesories() {
-    }
+    private final AccesoriesRepository accesoriesRepository;
 
     @Autowired
-    public DaoAccesories(Accesories accesories) {
-        this.accesories = accesories;
+    public DaoAccesories(AccesoriesRepository accesoriesRepository) {
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
     }
 
     @Override
@@ -40,7 +38,7 @@ public class DaoAccesories implements Dao {
                 entityAccesories.setFirstMultiplier(Double.valueOf(data[3]));
                 entityAccesories.setSecondMultiplier(Double.valueOf(data[4]));
 
-                accesories.save(entityAccesories);
+                accesoriesRepository.save(entityAccesories);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,14 +1,12 @@
 package app.views;
 
-import app.controllers.ControllerVaadin;
 import app.entities.EntityAccesories;
-import app.repositories.Accesories;
-import app.service.Layout;
+import app.repositories.AccesoriesRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,16 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static app.inputFields.ServiceDataCustomer.*;
-import static app.inputFields.ServiceSplitLayout.getSideMenuSettings;
-import static app.inputFields.ServiceSplitLayout.ustawieniaStrony;
+import static app.service.Labels.*;
 
-@Route(value = SelectAccesories.SELECT_ACCESORIES)
-public class SelectAccesories extends SplitLayout implements Layout {
+@Route(value = SelectAccesories.SELECT_ACCESORIES, layout = MainView.class)
+public class SelectAccesories extends VerticalLayout {
 
-    public static final String SELECT_ACCESORIES = "accesories/select";
-    private ControllerVaadin controllerVaadin;
-    private Accesories accesories;
+    public static final String SELECT_ACCESORIES = "accesoriesRepository/select";
+    private AccesoriesRepository accesoriesRepository;
 
     List<ComboBox<String>> boxList = new ArrayList<>();
 
@@ -53,15 +48,13 @@ public class SelectAccesories extends SplitLayout implements Layout {
     private ComboBox<String> comboBoxblachaAluminiowa = new ComboBox<>(BLACHA_ALUMINIOWA);
     private ComboBox<String> comboBoxceglaKlinkierowa = new ComboBox<>(CEGLA_KLINKIEROWA);
 
-    private Button calculateAccesories = new Button("Oblicz Accesories");
+    private Button calculateAccesories = new Button("Oblicz AccesoriesRepository");
 
     @Autowired
-    public SelectAccesories(ControllerVaadin controllerVaadin, Accesories accesories) {
-        this.controllerVaadin = Objects.requireNonNull(controllerVaadin);
-        this.accesories = Objects.requireNonNull(accesories);
-        setOrientation(SplitLayout.Orientation.VERTICAL);
-        addToPrimary(ustawieniaStrony(controllerVaadin));
-        addToSecondary(getSideMenu(controllerVaadin));
+    public SelectAccesories(AccesoriesRepository accesoriesRepository) {
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
+
+        add(formLayoutAccesories());
     }
 
     private void createListBox() {
@@ -85,46 +78,42 @@ public class SelectAccesories extends SplitLayout implements Layout {
     }
 
     private void createValueComboBoxes() {
-        Iterable<EntityAccesories> iterable = accesories.findAll();
+        Iterable<EntityAccesories> iterable = accesoriesRepository.findAll();
         List<String> names = new ArrayList<>();
         iterable.forEach(search -> names.add(search.getName()));
         if (names.size() > 0) {
-            comboBoxtasmaKalenicowa.setItems(getSubList(names, 0, 9));
-            comboBoxwspornikLatyKalenicowej.setItems(getSubList(names, 9, 14));
-            comboBoxtasmaDoObrobkiKomina.setItems(getSubList(names, 14, 20));
-            comboBoxlistwaWykonczeniowaAluminiowa.setItems(getSubList(names, 20, 21));
-            comboBoxkoszDachowyAluminiowy2mb.setItems(getSubList(names, 21, 23));
-            comboBoxklamraDoMocowaniaKosza.setItems(getSubList(names, 24, 25));
-            comboBoxklinUszczelniajacyKosz.setItems(getSubList(names, 25, 27));
-            comboBoxgrzebienOkapowy.setItems(getSubList(names, 27, 31));
-            comboBoxkratkaZabezpieczajacaPrzedPtactwem.setItems(getSubList(names, 31, 33));
-            comboBoxpasOkapowy.setItems(getSubList(names, 33, 35));
-            comboBoxklamraDoGasiora.setItems(getSubList(names, 35, 39));
-            comboBoxspinkaDoDachowki.setItems(getSubList(names, 39, 44));
-            comboBoxspinkaDoDachowkiCietej.setItems(getSubList(names, 44, 46));
-            comboBoxlawaKominiarska.setItems(getSubList(names, 46, 54));
-            comboBoxstopienKominiarski.setItems(getSubList(names, 55, 56));
-            comboBoxplotekPrzeciwsniegowy155mmx2mb.setItems(getSubList(names, 56, 57));
-            comboBoxplotekPrzeciwsniegowy155mmx3mb.setItems(getSubList(names, 57, 59));
-            comboBoxmembranaDachowa.setItems(getSubList(names, 59, 64));
-            comboBoxtasmaDoLaczeniaMembarnIFolii.setItems(getSubList(names, 64, 67));
-            comboBoxtasmaReparacyjna.setItems(getSubList(names, 67, 69));
-            comboBoxblachaAluminiowa.setItems(getSubList(names, 69, 72));
-            comboBoxceglaKlinkierowa.setItems(getSubList(names, 72, 73));
+            setValues(comboBoxtasmaKalenicowa, names, 0, 9);
+            setValues(comboBoxwspornikLatyKalenicowej, names, 9, 14);
+            setValues(comboBoxtasmaDoObrobkiKomina, names, 14, 20);
+            setValues(comboBoxlistwaWykonczeniowaAluminiowa, names, 20, 21);
+            setValues(comboBoxkoszDachowyAluminiowy2mb, names, 21, 23);
+            setValues(comboBoxklamraDoMocowaniaKosza, names, 24, 25);
+            setValues(comboBoxklinUszczelniajacyKosz, names, 25, 27);
+            setValues(comboBoxgrzebienOkapowy, names, 27, 31);
+            setValues(comboBoxkratkaZabezpieczajacaPrzedPtactwem, names, 31, 33);
+            setValues(comboBoxpasOkapowy, names, 33, 35);
+            setValues(comboBoxklamraDoGasiora, names, 35, 39);
+            setValues(comboBoxspinkaDoDachowki, names, 39, 44);
+            setValues(comboBoxspinkaDoDachowkiCietej, names, 44, 46);
+            setValues(comboBoxlawaKominiarska, names, 46, 54);
+            setValues(comboBoxstopienKominiarski, names, 55, 56);
+            setValues(comboBoxplotekPrzeciwsniegowy155mmx2mb, names, 56, 57);
+            setValues(comboBoxplotekPrzeciwsniegowy155mmx3mb, names, 57, 59);
+            setValues(comboBoxmembranaDachowa, names, 59, 64);
+            setValues(comboBoxtasmaDoLaczeniaMembarnIFolii, names, 64, 67);
+            setValues(comboBoxtasmaReparacyjna, names, 67, 69);
+            setValues(comboBoxblachaAluminiowa, names, 69, 72);
+            setValues(comboBoxceglaKlinkierowa, names, 72, 73);
         }
+    }
+
+    private void setValues(ComboBox<String> comboBox, List<String> listaNazw, int poczatek, int koniec){
+        comboBox.setItems(getSubList(listaNazw, poczatek, koniec));
+        comboBox.setValue(listaNazw.get(poczatek));
     }
 
     private List<String> getSubList(List<String> listaNazw, int poczatek, int koniec) {
         return listaNazw.subList(poczatek, koniec);
-    }
-
-    @Override
-    public SplitLayout getSideMenu(ControllerVaadin controllerVaadin) {
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.addToPrimary(controllerVaadin.sideMenuAccesories());
-        splitLayout.addToSecondary(formLayoutAccesories());
-        getSideMenuSettings(splitLayout);
-        return splitLayout;
     }
 }
 

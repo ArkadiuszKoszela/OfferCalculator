@@ -1,7 +1,6 @@
 package app.entities;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "result_tiles")
@@ -10,23 +9,17 @@ public class EntityResultTiles {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String priceListName;
     private String priceAfterDiscount;
     private String purchasePrice;
     private String profit;
 
-
     public EntityResultTiles() {
     }
 
-    public EntityResultTiles(String name, String priceListName, String priceAfterDiscount, String purchasePrice, String profit) {
-        this.name = name;
-        this.priceListName = priceListName;
-        this.priceAfterDiscount = priceAfterDiscount;
-        this.purchasePrice = purchasePrice;
-        this.profit = profit;
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -77,33 +70,46 @@ public class EntityResultTiles {
         this.profit = profit;
     }
 
-    @Override
-    public String toString() {
-        return "EntityResultTiles{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", priceListName='" + priceListName + '\'' +
-                ", priceAfterDiscount='" + priceAfterDiscount + '\'' +
-                ", purchasePrice='" + purchasePrice + '\'' +
-                ", profit='" + profit + '\'' +
-                '}';
-    }
+    public static final class Builder {
+        private String name;
+        private String priceListName;
+        private String priceAfterDiscount;
+        private String purchasePrice;
+        private String profit;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityResultTiles that = (EntityResultTiles) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(priceListName, that.priceListName) &&
-                Objects.equals(priceAfterDiscount, that.priceAfterDiscount) &&
-                Objects.equals(purchasePrice, that.purchasePrice) &&
-                Objects.equals(profit, that.profit);
-    }
+        public EntityResultTiles build() {
+            EntityResultTiles entityResultTiles = new EntityResultTiles();
+            entityResultTiles.name = this.name;
+            entityResultTiles.priceListName = this.priceListName;
+            entityResultTiles.priceAfterDiscount = this.priceAfterDiscount;
+            entityResultTiles.purchasePrice = this.purchasePrice;
+            entityResultTiles.profit = this.profit;
+            return entityResultTiles;
+        }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, priceListName, priceAfterDiscount, purchasePrice, profit);
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder priceListName(String priceListName) {
+            this.priceListName = priceListName;
+            return this;
+        }
+
+        public Builder priceAfterDiscount(String priceAfterDiscount) {
+            this.priceAfterDiscount = priceAfterDiscount;
+            return this;
+        }
+
+        public Builder purchasePrice(String purchasePrice) {
+            this.purchasePrice = purchasePrice;
+            return this;
+        }
+
+        public Builder profit(String profit) {
+            this.profit = profit;
+            return this;
+        }
     }
 }
