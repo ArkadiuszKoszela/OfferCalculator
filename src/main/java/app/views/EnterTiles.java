@@ -14,6 +14,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -27,11 +28,11 @@ import static app.inputFields.ServiceNotification.getNotificationSucces;
 @Route(value = EnterTiles.ENTER_TILES, layout = MainView.class)
 public class EnterTiles extends VerticalLayout implements MenuBarInterface {
 
-    public static final String ENTER_TILES = "tiles/enterTiles";
+    public static final String ENTER_TILES = "tiles";
 
     private AccesoriesRepository accesoriesRepository;
     private UsersRepo usersRepo;
-    private InputDataRepository inputDataRepository;
+    private InputDataTilesRepository inputDataTilesRepository;
     private CalculateTiles calculateTiles;
     private TilesRepository tilesRepository;
     private ResultTilesRepository resultTilesRepository;
@@ -66,7 +67,7 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     private VerticalLayout dane = new VerticalLayout();
     private VerticalLayout cennik = new VerticalLayout();
 
-    private Button selectUser = new Button("Zapisz dane");
+    private Button save = new Button("Zapisz dane");
     private Button calculateProfit = new Button("Oblicz zysk");
 
     private Grid<EntityResultTiles> resultTilesGrid = new Grid<>(EntityResultTiles.class);
@@ -76,12 +77,12 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     }
 
     @Autowired
-    public EnterTiles(AccesoriesRepository accesoriesRepository, UsersRepo usersRepo, InputDataRepository inputDataRepository,
+    public EnterTiles(AccesoriesRepository accesoriesRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository,
                       CalculateTiles calculateTiles, TilesRepository tilesRepository,
                       ResultTilesRepository resultTilesRepository) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
-        this.inputDataRepository = Objects.requireNonNull(inputDataRepository);
+        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.resultTilesRepository = Objects.requireNonNull(resultTilesRepository);
@@ -91,7 +92,6 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
         add(createInputFields());
         add(addFormLayout());
         add(createGrid());
-
     }
 
     private VerticalLayout addFormLayout() {
@@ -111,11 +111,11 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     }
 
     private VerticalLayout createInputFields() {
-        setValuesNumberFields();
-        selectUser.addClickListener(buttonClickEvent -> loadUser());
+        setDefaultValues();
+        save.addClickListener(buttonClickEvent -> loadUser());
         FormLayout formLayout = new FormLayout();
         formLayout.add(getCustomerDiscount(), comboBoxInput);
-        formLayout.add(comboBoxUsers, selectUser);
+        formLayout.add(comboBoxUsers, save);
         listOfNumberFields.forEach(formLayout::add);
         getAvailablePriceList(comboBoxInput);
         dane.add(formLayout);
@@ -172,9 +172,8 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
         return allTiles;
     }
 
-    EntityInputData saveInputData() {
-        EntityInputData entityInputData = new EntityInputData();
-        EntityInputData.builder()
+    private EntityInputDataTiles saveInputData() {
+        EntityInputDataTiles entityInputDataTiles = EntityInputDataTiles.builder()
                 .powierzchniaPolaci(numberField1.getValue())
                 .dlugoscKalenic(numberField2.getValue())
                 .dlugoscKalenicProstych(numberField3.getValue())
@@ -195,11 +194,11 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
                 .dachowkaDwufalowa(numberField18.getValue())
                 .oknoPolaciowe(numberField19.getValue())
                 .build();
-        inputDataRepository.save(entityInputData);
-        return entityInputData;
+        inputDataTilesRepository.save(entityInputDataTiles);
+        return entityInputDataTiles;
     }
 
-    private void setValuesNumberFields() {
+    private void setDefaultValues() {
         setValues(numberField1, "m²", 300d);
         setValues(numberField2, "mb", 65d);
         setValues(numberField3, "mb", 65d);
@@ -234,7 +233,7 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     }
 
     private void setTitle() {
-        if(accesoriesRepository != null) {
+        if (accesoriesRepository != null) {
             Iterable<EntityAccesories> iterable = accesoriesRepository.findAll();
             List<String> names = new ArrayList<>();
             iterable.forEach(e -> names.add(e.getName()));
@@ -300,31 +299,14 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
         String[] strings = nameISurname.split(" ");
         EntityUser entityUser = usersRepo.findUsersEntityByNameAndSurnameEquals(strings[0], strings[1]);
 
-        /*if (entityUser.getEntityInputData() != null) {
-            numberField1.setValue(entityUser.getEntityInputData().getPowierzchniaPolaci());
-            numberField2.setValue(entityUser.getEntityInputData().getDlugoscKalenic());
-            numberField3.setValue(entityUser.getEntityInputData().getDlugoscKalenicSkosnych());
-            numberField4.setValue(entityUser.getEntityInputData().getDlugoscKalenicProstych());
-            numberField5.setValue(entityUser.getEntityInputData().getDlugoscKoszy());
-            numberField6.setValue(entityUser.getEntityInputData().getDlugoscKrawedziLewych());
-            numberField7.setValue(entityUser.getEntityInputData().getDlugoscKrawedziPrawych());
-            numberField8.setValue(entityUser.getEntityInputData().getObwodKomina());
-            numberField9.setValue(entityUser.getEntityInputData().getDlugoscOkapu());
-            numberField10.setValue(entityUser.getEntityInputData().getDachowkaWentylacyjna());
-            numberField11.setValue(entityUser.getEntityInputData().getKompletKominkaWentylacyjnego());
-            numberField12.setValue(entityUser.getEntityInputData().getGasiarPoczatkowyKalenicaProsta());
-            numberField13.setValue(entityUser.getEntityInputData().getGasiarKoncowyKalenicaProsta());
-            numberField14.setValue(entityUser.getEntityInputData().getGasiarZaokraglony());
-            numberField15.setValue(entityUser.getEntityInputData().getTrojnik());
-            numberField16.setValue(entityUser.getEntityInputData().getCzwornik());
-            numberField17.setValue(entityUser.getEntityInputData().getGasiarZPodwojnaMufa());
-            numberField18.setValue(entityUser.getEntityInputData().getDachowkaDwufalowa());
-            numberField19.setValue(entityUser.getEntityInputData().getOknoPolaciowe());*/
-
-            entityUser.setEntityInputData(saveInputData());
+        if (saveInputData() != null) {
+            entityUser.setEntityInputDataTiles(saveInputData());
+            entityUser.setHasTiles(true);
             usersRepo.save(entityUser);
-            getNotificationSucces("Dane przypisane do klienta");
-       /* }*/
+            getNotificationSucces("Dachówki zapisane");
+        } else {
+            getNotificationError("Dachówki nizapisane");
+        }
     }
 
     private VerticalLayout createGrid() {
@@ -364,6 +346,7 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
             dane.setVisible(false);
             cennik.setVisible(true);
         });
+        menuBar.addItem(new RouterLink("Kolejne dane", SelectAccesories.class));
         return menuBar;
     }
 }
