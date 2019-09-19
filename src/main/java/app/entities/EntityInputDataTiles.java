@@ -3,8 +3,8 @@ package app.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "input_data")
-public class EntityInputData {
+@Table(name = "input_data_tiles")
+public class EntityInputDataTiles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +29,87 @@ public class EntityInputData {
     private Double dachowkaDwufalowa;
     private Double oknoPolaciowe;
 
-    public EntityInputData() {
+    public Double getPowierzchniaPolaci() {
+        return powierzchniaPolaci;
     }
 
-    public static EntityInputData.Builder builder() {
-        return new EntityInputData.Builder();
+    public Double getDlugoscKalenic() {
+        return dlugoscKalenic;
+    }
+
+    public Double getDlugoscKalenicSkosnych() {
+        return dlugoscKalenicSkosnych;
+    }
+
+    public Double getDlugoscKalenicProstych() {
+        return dlugoscKalenicProstych;
+    }
+
+    public Double getDlugoscKoszy() {
+        return dlugoscKoszy;
+    }
+
+    public Double getDlugoscKrawedziLewych() {
+        return dlugoscKrawedziLewych;
+    }
+
+    public Double getDlugoscKrawedziPrawych() {
+        return dlugoscKrawedziPrawych;
+    }
+
+    public Double getObwodKomina() {
+        return obwodKomina;
+    }
+
+    public Double getDlugoscOkapu() {
+        return dlugoscOkapu;
+    }
+
+    public Double getDachowkaWentylacyjna() {
+        return dachowkaWentylacyjna;
+    }
+
+    public Double getKompletKominkaWentylacyjnego() {
+        return kompletKominkaWentylacyjnego;
+    }
+
+    public Double getGasiarPoczatkowyKalenicaProsta() {
+        return gasiarPoczatkowyKalenicaProsta;
+    }
+
+    public Double getGasiarKoncowyKalenicaProsta() {
+        return gasiarKoncowyKalenicaProsta;
+    }
+
+    public Double getGasiarZaokraglony() {
+        return gasiarZaokraglony;
+    }
+
+    public Double getTrojnik() {
+        return trojnik;
+    }
+
+    public Double getCzwornik() {
+        return czwornik;
+    }
+
+    public Double getGasiarZPodwojnaMufa() {
+        return gasiarZPodwojnaMufa;
+    }
+
+    public Double getDachowkaDwufalowa() {
+        return dachowkaDwufalowa;
+    }
+
+    public Double getOknoPolaciowe() {
+        return oknoPolaciowe;
+    }
+
+    public EntityInputDataTiles() {
+    }
+
+    public static EntityInputDataTiles.Builder builder() {
+        return new EntityInputDataTiles.Builder();
     }
 
     public Long getId() {
@@ -42,158 +118,6 @@ public class EntityInputData {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Double getPowierzchniaPolaci() {
-        return powierzchniaPolaci;
-    }
-
-    public void setPowierzchniaPolaci(Double powierzchniaPolaci) {
-        this.powierzchniaPolaci = powierzchniaPolaci;
-    }
-
-    public Double getDlugoscKalenic() {
-        return dlugoscKalenic;
-    }
-
-    public void setDlugoscKalenic(Double dlugoscKalenic) {
-        this.dlugoscKalenic = dlugoscKalenic;
-    }
-
-    public Double getDlugoscKalenicSkosnych() {
-        return dlugoscKalenicSkosnych;
-    }
-
-    public void setDlugoscKalenicSkosnych(Double dlugoscKalenicSkosnych) {
-        this.dlugoscKalenicSkosnych = dlugoscKalenicSkosnych;
-    }
-
-    public Double getDlugoscKalenicProstych() {
-        return dlugoscKalenicProstych;
-    }
-
-    public void setDlugoscKalenicProstych(Double dlugoscKalenicProstych) {
-        this.dlugoscKalenicProstych = dlugoscKalenicProstych;
-    }
-
-    public Double getDlugoscKoszy() {
-        return dlugoscKoszy;
-    }
-
-    public void setDlugoscKoszy(Double dlugoscKoszy) {
-        this.dlugoscKoszy = dlugoscKoszy;
-    }
-
-    public Double getDlugoscKrawedziLewych() {
-        return dlugoscKrawedziLewych;
-    }
-
-    public void setDlugoscKrawedziLewych(Double dlugoscKrawedziLewych) {
-        this.dlugoscKrawedziLewych = dlugoscKrawedziLewych;
-    }
-
-    public Double getDlugoscKrawedziPrawych() {
-        return dlugoscKrawedziPrawych;
-    }
-
-    public void setDlugoscKrawedziPrawych(Double dlugoscKrawedziPrawych) {
-        this.dlugoscKrawedziPrawych = dlugoscKrawedziPrawych;
-    }
-
-    public Double getObwodKomina() {
-        return obwodKomina;
-    }
-
-    public void setObwodKomina(Double obwodKomina) {
-        this.obwodKomina = obwodKomina;
-    }
-
-    public Double getDlugoscOkapu() {
-        return dlugoscOkapu;
-    }
-
-    public void setDlugoscOkapu(Double dlugoscOkapu) {
-        this.dlugoscOkapu = dlugoscOkapu;
-    }
-
-    public Double getDachowkaWentylacyjna() {
-        return dachowkaWentylacyjna;
-    }
-
-    public void setDachowkaWentylacyjna(Double dachowkaWentylacyjna) {
-        this.dachowkaWentylacyjna = dachowkaWentylacyjna;
-    }
-
-    public Double getKompletKominkaWentylacyjnego() {
-        return kompletKominkaWentylacyjnego;
-    }
-
-    public void setKompletKominkaWentylacyjnego(Double kompletKominkaWentylacyjnego) {
-        this.kompletKominkaWentylacyjnego = kompletKominkaWentylacyjnego;
-    }
-
-    public Double getGasiarPoczatkowyKalenicaProsta() {
-        return gasiarPoczatkowyKalenicaProsta;
-    }
-
-    public void setGasiarPoczatkowyKalenicaProsta(Double gasiarPoczatkowyKalenicaProsta) {
-        this.gasiarPoczatkowyKalenicaProsta = gasiarPoczatkowyKalenicaProsta;
-    }
-
-    public Double getGasiarKoncowyKalenicaProsta() {
-        return gasiarKoncowyKalenicaProsta;
-    }
-
-    public void setGasiarKoncowyKalenicaProsta(Double gasiarKoncowyKalenicaProsta) {
-        this.gasiarKoncowyKalenicaProsta = gasiarKoncowyKalenicaProsta;
-    }
-
-    public Double getGasiarZaokraglony() {
-        return gasiarZaokraglony;
-    }
-
-    public void setGasiarZaokraglony(Double gasiarZaokraglony) {
-        this.gasiarZaokraglony = gasiarZaokraglony;
-    }
-
-    public Double getTrojnik() {
-        return trojnik;
-    }
-
-    public void setTrojnik(Double trojnik) {
-        this.trojnik = trojnik;
-    }
-
-    public Double getCzwornik() {
-        return czwornik;
-    }
-
-    public void setCzwornik(Double czwornik) {
-        this.czwornik = czwornik;
-    }
-
-    public Double getGasiarZPodwojnaMufa() {
-        return gasiarZPodwojnaMufa;
-    }
-
-    public void setGasiarZPodwojnaMufa(Double gasiarZPodwojnaMufa) {
-        this.gasiarZPodwojnaMufa = gasiarZPodwojnaMufa;
-    }
-
-    public Double getDachowkaDwufalowa() {
-        return dachowkaDwufalowa;
-    }
-
-    public void setDachowkaDwufalowa(Double dachowkaDwufalowa) {
-        this.dachowkaDwufalowa = dachowkaDwufalowa;
-    }
-
-    public Double getOknoPolaciowe() {
-        return oknoPolaciowe;
-    }
-
-    public void setOknoPolaciowe(Double oknoPolaciowe) {
-        this.oknoPolaciowe = oknoPolaciowe;
     }
 
     public static final class Builder {
@@ -217,28 +141,28 @@ public class EntityInputData {
         private Double dachowkaDwufalowa;
         private Double oknoPolaciowe;
 
-        public EntityInputData build() {
-            EntityInputData entityInputData = new EntityInputData();
-            entityInputData.powierzchniaPolaci = this.powierzchniaPolaci;
-            entityInputData.dlugoscKalenic = this.dlugoscKalenic;
-            entityInputData.dlugoscKalenicSkosnych = this.dlugoscKalenicSkosnych;
-            entityInputData.dlugoscKalenicProstych = this.dlugoscKalenicProstych;
-            entityInputData.dlugoscKoszy = this.dlugoscKoszy;
-            entityInputData.dlugoscKrawedziLewych = this.dlugoscKrawedziLewych;
-            entityInputData.dlugoscKrawedziPrawych = this.dlugoscKrawedziPrawych;
-            entityInputData.obwodKomina = this.obwodKomina;
-            entityInputData.dlugoscOkapu = this.dlugoscOkapu;
-            entityInputData.dachowkaWentylacyjna = this.dachowkaWentylacyjna;
-            entityInputData.kompletKominkaWentylacyjnego = this.kompletKominkaWentylacyjnego;
-            entityInputData.gasiarPoczatkowyKalenicaProsta = this.gasiarPoczatkowyKalenicaProsta;
-            entityInputData.gasiarKoncowyKalenicaProsta = this.gasiarKoncowyKalenicaProsta;
-            entityInputData.gasiarZaokraglony = this.gasiarZaokraglony;
-            entityInputData.trojnik = this.trojnik;
-            entityInputData.czwornik = this.czwornik;
-            entityInputData.gasiarZPodwojnaMufa = this.gasiarZPodwojnaMufa;
-            entityInputData.dachowkaDwufalowa = this.dachowkaDwufalowa;
-            entityInputData.oknoPolaciowe = this.oknoPolaciowe;
-            return entityInputData;
+        public EntityInputDataTiles build() {
+            EntityInputDataTiles entityInputDataTiles = new EntityInputDataTiles();
+            entityInputDataTiles.powierzchniaPolaci = this.powierzchniaPolaci;
+            entityInputDataTiles.dlugoscKalenic = this.dlugoscKalenic;
+            entityInputDataTiles.dlugoscKalenicSkosnych = this.dlugoscKalenicSkosnych;
+            entityInputDataTiles.dlugoscKalenicProstych = this.dlugoscKalenicProstych;
+            entityInputDataTiles.dlugoscKoszy = this.dlugoscKoszy;
+            entityInputDataTiles.dlugoscKrawedziLewych = this.dlugoscKrawedziLewych;
+            entityInputDataTiles.dlugoscKrawedziPrawych = this.dlugoscKrawedziPrawych;
+            entityInputDataTiles.obwodKomina = this.obwodKomina;
+            entityInputDataTiles.dlugoscOkapu = this.dlugoscOkapu;
+            entityInputDataTiles.dachowkaWentylacyjna = this.dachowkaWentylacyjna;
+            entityInputDataTiles.kompletKominkaWentylacyjnego = this.kompletKominkaWentylacyjnego;
+            entityInputDataTiles.gasiarPoczatkowyKalenicaProsta = this.gasiarPoczatkowyKalenicaProsta;
+            entityInputDataTiles.gasiarKoncowyKalenicaProsta = this.gasiarKoncowyKalenicaProsta;
+            entityInputDataTiles.gasiarZaokraglony = this.gasiarZaokraglony;
+            entityInputDataTiles.trojnik = this.trojnik;
+            entityInputDataTiles.czwornik = this.czwornik;
+            entityInputDataTiles.gasiarZPodwojnaMufa = this.gasiarZPodwojnaMufa;
+            entityInputDataTiles.dachowkaDwufalowa = this.dachowkaDwufalowa;
+            entityInputDataTiles.oknoPolaciowe = this.oknoPolaciowe;
+            return entityInputDataTiles;
         }
 
         public Builder powierzchniaPolaci(Double powierzchniaPolaci) {

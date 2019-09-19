@@ -14,7 +14,7 @@ import java.util.Objects;
 @Route(value = Users.USERS, layout = MainView.class)
 public class Users extends VerticalLayout {
 
-    public static final String USERS = "users/allUsers";
+    public static final String USERS = "users/all";
 
     private UsersRepo usersRepo;
 
@@ -35,9 +35,10 @@ public class Users extends VerticalLayout {
         grid.getColumnByKey("surname").setHeader("Typ dachówki");
         grid.getColumnByKey("adress").setHeader("Kategoria");
         grid.getColumnByKey("telephoneNumber").setHeader("Cena detaliczna");
-        grid.getColumnByKey("dateOfMeeting").setHeader("Marża");
+        grid.getColumnByKey("hasTiles").setHeader("Dachówki");
+        grid.getColumnByKey("hasAccesories").setHeader("Akcesoria");
         grid.getColumnByKey("priceListName").setHeader("Rabat podstawowy");
-        grid.setColumns("name", "surname", "adress", "telephoneNumber", "dateOfMeeting", "priceListName");
+        grid.setColumns("name", "surname", "adress", "telephoneNumber", "hasTiles", "hasAccesories", "priceListName");
         grid.setItems(allUser(usersRepo));
         return grid;
     }

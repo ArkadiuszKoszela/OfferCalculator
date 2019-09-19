@@ -25,7 +25,6 @@ public class Checkboxes extends VerticalLayout {
     private VerticalLayout verticalLayout = new VerticalLayout();
 
     Checkboxes() {
-
         createListOfLabels();
         getCheckboxes().setItems(allLabelsToComboBox);
         getCheckboxes().setLabel(LABEL_CHECKBOXES);

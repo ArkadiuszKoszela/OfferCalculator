@@ -36,7 +36,7 @@ public class SaveUsers {
             newUser.setTelephoneNumber(telephoneNumber.getValue());
             /*newUser.setDateOfMeeting(serviceDataCustomer.getDateOfMeeting().getValue());*/
             newUser.setEmail(email.getValue());
-            /*newUser.setEntityInputData(entityInputData);*/
+            /*newUser.setEntityInputDataTiles(entityInputData);*/
             newUser.setPriceListName(comboBox.getValue());
 
             usersRepo.save(newUser);

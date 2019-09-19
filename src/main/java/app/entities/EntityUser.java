@@ -17,9 +17,16 @@ public class EntityUser {
     private LocalDate dateOfMeeting;
     private String email;
     private String priceListName;
+    private boolean hasTiles;
+    private boolean hasAccesories;
+    private boolean hasWindows;
 
     @OneToOne
-    private EntityInputData entityInputData;
+    private EntityInputDataTiles entityInputDataTiles;
+    @OneToOne
+    private EntityInputDataAccesories entityInputDataAccesories;
+    @OneToOne
+    private EntityWindows entityWindows;
 
     public EntityUser() {
     }
@@ -88,11 +95,51 @@ public class EntityUser {
         this.priceListName = priceListName;
     }
 
-    public EntityInputData getEntityInputData() {
-        return entityInputData;
+    public EntityInputDataTiles getEntityInputDataTiles() {
+        return entityInputDataTiles;
     }
 
-    public void setEntityInputData(EntityInputData entityInputData) {
-        this.entityInputData = entityInputData;
+    public void setEntityInputDataTiles(EntityInputDataTiles entityInputDataTiles) {
+        this.entityInputDataTiles = entityInputDataTiles;
+    }
+
+    public EntityInputDataAccesories getEntityInputDataAccesories() {
+        return entityInputDataAccesories;
+    }
+
+    public void setEntityInputDataAccesories(EntityInputDataAccesories entityInputDataAccesories) {
+        this.entityInputDataAccesories = entityInputDataAccesories;
+    }
+
+    public EntityWindows getEntityWindows() {
+        return entityWindows;
+    }
+
+    public void setEntityWindows(EntityWindows entityWindows) {
+        this.entityWindows = entityWindows;
+    }
+
+    public boolean isHasTiles() {
+        return hasTiles;
+    }
+
+    public void setHasTiles(boolean hasTiles) {
+        this.hasTiles = hasTiles;
+    }
+
+    public boolean isHasAccesories() {
+        return hasAccesories;
+    }
+
+    public void setHasAccesories(boolean hasAccesories) {
+        this.hasAccesories = hasAccesories;
+    }
+
+    public boolean isHasWindows() {
+        return hasWindows;
+    }
+
+    public void setHasWindows(boolean hasWindows) {
+        this.hasWindows = hasWindows;
     }
 }
