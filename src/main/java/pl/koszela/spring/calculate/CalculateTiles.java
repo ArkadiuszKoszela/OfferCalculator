@@ -3,10 +3,8 @@ package pl.koszela.spring.calculate;
 import com.vaadin.flow.component.textfield.NumberField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityResultTiles;
 import pl.koszela.spring.entities.EntityTiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
-import pl.koszela.spring.repositories.ResultTilesRepository;
 import pl.koszela.spring.repositories.TilesRepository;
 
 import java.math.BigDecimal;
@@ -17,15 +15,10 @@ import java.util.*;
 public class CalculateTiles {
 
     private TilesRepository tilesRepository;
-    private ResultTilesRepository resultTilesRepository;
-    private AccesoriesRepository accesoriesRepository;
 
     @Autowired
-    public CalculateTiles(TilesRepository tilesRepository, ResultTilesRepository resultTilesRepository,
-                          AccesoriesRepository accesoriesRepository) {
+    public CalculateTiles(TilesRepository tilesRepository) {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
-        this.resultTilesRepository = Objects.requireNonNull(resultTilesRepository);
-        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
     }
 
     public List<String> getAvailablePriceList() {
@@ -48,71 +41,63 @@ public class CalculateTiles {
     }
 
 
-    public void getProfit(List<EntityResultTiles> resultTiles) {
+    public void getProfit(List<EntityTiles> resultTiles) {
         resultTiles.forEach(e -> {
             BigDecimal retailPrice = new BigDecimal(e.getPriceAfterDiscount());
             BigDecimal purchasePrice = new BigDecimal(e.getPurchasePrice());
-            e.setProfit(String.valueOf(retailPrice.subtract(purchasePrice)));
+            e.setProfitCalculate(String.valueOf(retailPrice.subtract(purchasePrice)));
         });
     }
 
-    public void getPurchase(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, List<NumberField> listOfNumberFields) {
-        /*enterTiles.setValuesNumberFields();*/
+    public void getPurchase(List<EntityTiles> tilesList, List<Double> listOfNumberFields) {
         for (int i = 0; i < tilesList.size(); i++) {
-            for (NumberField numberField : listOfNumberFields) {
-                if (numberField.getLabel().contains("Powierzchnia")) {
-                    calculatePurchasePowierzchnia(resultTiles, tilesList, i, numberField);
-                } else {
-                    calculatePurchase(resultTiles, tilesList, i, numberField);
-                }
+            for (Double value : listOfNumberFields) {
+                calculatePurchase(tilesList, i, value);
             }
         }
     }
 
-    private void calculatePurchase(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField) {
+    private void calculatePurchase(List<EntityTiles> tilesList, int i, Double value) {
         BigDecimal profit = new BigDecimal(tilesList.get(i).getProfit()).add(new BigDecimal(100));
-        BigDecimal bigDecimal = new BigDecimal(numberField.getValue())
+        BigDecimal bigDecimal = new BigDecimal(value)
                 .multiply(tilesList.get(i).getUnitRetailPrice())
                 .multiply(BigDecimal.valueOf(100)).divide(profit, 2, RoundingMode.HALF_UP);
-        resultTiles.get(i).setPurchasePrice(String.valueOf(bigDecimal));
+        tilesList.get(i).setPurchasePrice(String.valueOf(bigDecimal));
     }
 
-    private void calculatePurchasePowierzchnia(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField) {
+    private void calculatePurchasePowierzchnia(List<EntityTiles> tilesList, int i, NumberField numberField) {
         BigDecimal profit = new BigDecimal(tilesList.get(i).getProfit()).add(new BigDecimal(100));
         BigDecimal bigDecimal = new BigDecimal(numberField.getValue())
                 .multiply(BigDecimal.valueOf(12))
                 .multiply(tilesList.get(i).getUnitRetailPrice())
                 .multiply(BigDecimal.valueOf(100)).divide(profit, 2, RoundingMode.HALF_UP);
-        resultTiles.get(i).setPurchasePrice(String.valueOf(bigDecimal));
+        tilesList.get(i).setPurchasePrice(String.valueOf(bigDecimal));
     }
 
-    public void getRetail(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, NumberField customerDiscount, List<NumberField> listOfNumberFields) {
+    public void getRetail(List<EntityTiles> tilesList, NumberField customerDiscount, List<Double> listOfNumberFields) {
         /*enterTiles.setValuesNumberFields();*/
         for (int i = 0; i < tilesList.size(); i++) {
-            for (NumberField numberField : listOfNumberFields) {
-                if (numberField.getLabel().contains("Powierzchnia")) {
-                    calculateRetailPowierzchnia(resultTiles, tilesList, i, numberField, customerDiscount);
-                } else {
-                    calculateRetail(resultTiles, tilesList, i, numberField, customerDiscount);
-                }
+            for (Double value : listOfNumberFields) {
+                calculateRetail(tilesList, i, value, customerDiscount);
+
             }
         }
     }
 
-    private void calculateRetail(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField, NumberField customerDiscount) {
+    private void calculateRetail(List<EntityTiles> tilesList, int i, Double value, NumberField customerDiscount) {
         BigDecimal rabat = new BigDecimal(customerDiscount.getValue()).add(new BigDecimal(100));
-        BigDecimal bigDecimal = new BigDecimal(numberField.getValue())
+        BigDecimal bigDecimal = new BigDecimal(value)
                 .multiply(tilesList.get(i).getUnitRetailPrice())
                 .multiply(new BigDecimal(100)).divide(rabat, 2, RoundingMode.HALF_UP);
-        resultTiles.get(i).setPriceAfterDiscount(String.valueOf(bigDecimal));
+        tilesList.get(i).setPriceAfterDiscount(String.valueOf(bigDecimal));
     }
 
-    private void calculateRetailPowierzchnia(List<EntityResultTiles> resultTiles, List<EntityTiles> tilesList, int i, NumberField numberField, NumberField customerDiscount) {
+    private void calculateRetailPowierzchnia(List<EntityTiles> tilesList, int i, NumberField numberField, NumberField customerDiscount) {
         BigDecimal rabat = new BigDecimal(customerDiscount.getValue()).add(new BigDecimal(100));
         BigDecimal bigDecimal = new BigDecimal(numberField.getValue())
                 .multiply(BigDecimal.valueOf(12))
                 .multiply(tilesList.get(i).getUnitRetailPrice())
                 .multiply(new BigDecimal(100)).divide(rabat, 2, RoundingMode.HALF_UP);
-        resultTiles.get(i).setPurchasePrice(String.valueOf(bigDecimal));
+        tilesList.get(i).setPurchasePrice(String.valueOf(bigDecimal));
     }
 }

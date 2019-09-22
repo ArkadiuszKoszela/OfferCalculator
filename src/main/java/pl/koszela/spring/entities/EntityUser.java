@@ -2,6 +2,7 @@ package pl.koszela.spring.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +28,10 @@ public class EntityUser {
     private EntityInputDataAccesories entityInputDataAccesories;
     @OneToOne
     private EntityWindows entityWindows;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<EntityAccesories> entityAccesories;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<EntityTiles> entityTiles;
 
     public EntityUser() {
     }
@@ -117,6 +122,22 @@ public class EntityUser {
 
     public void setEntityWindows(EntityWindows entityWindows) {
         this.entityWindows = entityWindows;
+    }
+
+    public List<EntityAccesories> getEntityAccesories() {
+        return entityAccesories;
+    }
+
+    public void setEntityAccesories(List<EntityAccesories> entityAccesories) {
+        this.entityAccesories = entityAccesories;
+    }
+
+    public List<EntityTiles> getEntityTiles() {
+        return entityTiles;
+    }
+
+    public void setEntityTiles(List<EntityTiles> entityTiles) {
+        this.entityTiles = entityTiles;
     }
 
     public boolean isHasTiles() {

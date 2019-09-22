@@ -1,23 +1,14 @@
 package pl.koszela.spring.views;
 
-/*
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.AppLayoutMenu;
-import com.vaadin.flow.component.applayout.AppLayoutMenuItem;
-*/
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.importFiles.ImportFiles;
 
@@ -25,7 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.vaadin.flow.component.icon.VaadinIcon.TRENDING_UP;
+import static pl.koszela.spring.views.EnterTiles.ENTER_TILES;
+import static pl.koszela.spring.views.InputUser.INPUT_USER;
+import static pl.koszela.spring.views.SelectAccesories.SELECT_ACCESORIES;
 
 public class MainView extends AppLayout {
 
@@ -40,45 +33,28 @@ public class MainView extends AppLayout {
         img.setHeight("44px");
         addToNavbar(new DrawerToggle(), img);
         MenuBar menuBar = new MenuBar();
+        Tabs tabs = new Tabs(false, new Tab("Klienci"), new Tab("Dachówki"), new Tab("Akcesoria"));
+        tabs.setFlexGrowForEnclosedTabs(1);
+        tabs.addSelectedChangeListener(e -> {
+            if (e.getSelectedTab().getLabel().equalsIgnoreCase("Klienci")) {
+                getUI().ifPresent(ui -> ui.navigate(INPUT_USER));
+                tabs.setSelectedTab(e.getSelectedTab());
+            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Dachówki")) {
+                getUI().ifPresent(ui -> ui.navigate(ENTER_TILES));
+                tabs.setSelectedTab(e.getSelectedTab());
+            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Akcesoria")) {
+                getUI().ifPresent(ui -> ui.navigate(SELECT_ACCESORIES));
+                tabs.setSelectedTab(e.getSelectedTab());
+            }
+        });
 
+        menuBar.addItem(tabs);
         Button button = new Button("Zaimportuj pliki");
         button.addClickListener(e -> importFiles.csv());
-        MenuItem users = menuBar.addItem("Klienci");
-        MenuItem tiles = menuBar.addItem(new RouterLink("Dachówki", EnterTiles.class));
-        MenuItem accesories = menuBar.addItem("Akcesoria");
-        MenuItem importFile = menuBar.addItem(button);
-
-        users.getSubMenu().addItem(new RouterLink("Tabela", Users.class));
-        users.getSubMenu().addItem(new RouterLink("Wprowadź dane", InputUser.class));
-
-        accesories.getSubMenu().addItem(new RouterLink("Wybierz akcesoria", SelectAccesories.class));
-        accesories.getSubMenu().addItem(new RouterLink("Checkboxy", Checkboxes.class));
-
+        if (isDrawerOpened()) {
+            setDrawerOpened(false);
+        }
         addToNavbar(menuBar);
-        final Tabs tabs = new Tabs(enterTiles(), checkboxes());
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.addSelectedChangeListener(event -> {
-            final Tab selectedTab = event.getSelectedTab();
-            final Component component = tab2Workspace.get(selectedTab);
-            setContent(component);
-        });
-        addToDrawer(tabs);
-
-    }
-
-    private Tab checkboxes() {
-        final Span label = new Span(getTranslation(Checkboxes.CHECKBOXES));
-        final Icon icon = TRENDING_UP.create();
-        final Tab tab = new Tab(new RouterLink("checkboxes", Checkboxes.class));
-        tab2Workspace.put(tab, new Checkboxes());
-        return tab;
-    }
-
-    private Tab enterTiles() {
-        final Span label = new Span(getTranslation(EnterTiles.ENTER_TILES));
-        final Icon icon = TRENDING_UP.create();
-        final Tab tab = new Tab(new RouterLink("enter", EnterTiles.class));
-        tab2Workspace.put(tab, new EnterTiles());
-        return tab;
+        addToDrawer(button);
     }
 }

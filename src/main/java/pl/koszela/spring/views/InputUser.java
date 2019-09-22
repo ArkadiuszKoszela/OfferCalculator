@@ -1,14 +1,13 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.repositories.UsersRepo;
@@ -17,6 +16,8 @@ import pl.koszela.spring.service.MenuBarInterface;
 import pl.koszela.spring.service.SaveUsers;
 
 import java.util.Objects;
+
+import static pl.koszela.spring.views.EnterTiles.ENTER_TILES;
 
 @Route(value = InputUser.INPUT_USER, layout = MainView.class)
 public class InputUser extends VerticalLayout implements MenuBarInterface {
@@ -36,8 +37,6 @@ public class InputUser extends VerticalLayout implements MenuBarInterface {
 
     private FormLayout board = new FormLayout();
 
-    private ComboBox<String> priceListCB = new ComboBox<>("Podaj nazwę cennika: ");
-
     @Autowired
     public InputUser(SaveUsers saveUser, Labels serviceDataCustomer, UsersRepo usersRepo, CalculateTiles calculateTiles) {
         this.saveUser = Objects.requireNonNull(saveUser);
@@ -45,30 +44,37 @@ public class InputUser extends VerticalLayout implements MenuBarInterface {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
 
+        email.setErrorMessage("Popraw E-mail");
+        email.setAutoselect(true);
+        email.addThemeVariants(TextFieldVariant.LUMO_SMALL);
         add(menu());
-        if (!calculateTiles.getAvailablePriceList().isEmpty()) {
-            priceListCB.setItems(calculateTiles.getAvailablePriceList());
-        }
         add(getLayout());
     }
 
-    private FormLayout getLayout() {
-        board.add(name, surname, adress, telephoneNumber);
-        board.add(email, Labels.getLabel(" "));
-        board.add(priceListCB, saveUser());
-        return board;
+    private TextField setValidation(TextField textField) {
+        textField.setRequired(true);
+        textField.setAutoselect(true);
+        textField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        return textField;
     }
 
-    private Button saveUser() {
-        Button saveUserWithCalculations = new Button("Zapisz użytkownika");
-        saveUserWithCalculations.addClickListener(buttonClickEvent -> saveUser.saveUser(priceListCB, name, surname, adress, telephoneNumber, email));
-        return saveUserWithCalculations;
+    private FormLayout getLayout() {
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 5);
+        board.setResponsiveSteps(responsiveStep);
+        board.add(setValidation(name), setValidation(surname), setValidation(adress), setValidation(telephoneNumber));
+        board.add(email);
+        return board;
     }
 
     @Override
     public MenuBar menu() {
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem(new RouterLink("Kolejne dane", EnterTiles.class));
+        Button button = new Button("Dalej");
+        button.addClickListener(event -> {
+            saveUser.saveUser(name, surname, adress, telephoneNumber, email);
+            getUI().ifPresent(ui -> ui.navigate(ENTER_TILES));
+        });
+        menuBar.addItem(button);
         return menuBar;
     }
 }

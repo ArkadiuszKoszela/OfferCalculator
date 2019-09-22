@@ -19,6 +19,9 @@ public class EntityTiles {
     private Integer supplierDiscount;
     private Integer additionalDiscount;
     private Integer skontoDiscount;
+    private String priceAfterDiscount;
+    private String purchasePrice;
+    private String profitCalculate;
 
     public EntityTiles() {
     }
@@ -101,5 +104,29 @@ public class EntityTiles {
 
     public void setSkontoDiscount(Integer skontoDiscount) {
         this.skontoDiscount = skontoDiscount;
+    }
+
+    public String getPriceAfterDiscount() {
+        return priceAfterDiscount;
+    }
+
+    public void setPriceAfterDiscount(String priceAfterDiscount) {
+        this.priceAfterDiscount = priceAfterDiscount;
+    }
+
+    public String getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(String purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public String getProfitCalculate() {
+        return profitCalculate;
+    }
+
+    public void setProfitCalculate(String profitCalculate) {
+        this.profitCalculate = profitCalculate;
     }
 }

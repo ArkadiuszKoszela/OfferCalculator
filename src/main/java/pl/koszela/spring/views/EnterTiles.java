@@ -1,16 +1,23 @@
 package pl.koszela.spring.views;
 
 import com.google.common.base.Joiner;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinResponse;
+import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.entities.*;
@@ -18,10 +25,14 @@ import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.*;
 import pl.koszela.spring.service.MenuBarInterface;
 
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static pl.koszela.spring.service.Labels.getLabel;
+import static pl.koszela.spring.views.SelectAccesories.SELECT_ACCESORIES;
 
 @Route(value = EnterTiles.ENTER_TILES, layout = MainView.class)
 public class EnterTiles extends VerticalLayout implements MenuBarInterface {
@@ -29,11 +40,9 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     public static final String ENTER_TILES = "tiles";
 
     private AccesoriesRepository accesoriesRepository;
-    private UsersRepo usersRepo;
     private InputDataTilesRepository inputDataTilesRepository;
     private CalculateTiles calculateTiles;
     private TilesRepository tilesRepository;
-    private ResultTilesRepository resultTilesRepository;
 
     private NumberField numberField1 = new NumberField("Powierzchnia połaci");
     private NumberField numberField2 = new NumberField("Długość kalenic");
@@ -58,109 +67,60 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
 
     private ComboBox<String> comboBoxViewTable = new ComboBox<>("Podaj nazwę cennika: ");
     private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
-    private ComboBox<String> comboBoxUsers = new ComboBox<>("Wczytaj użytkownika: ");
-    private List<NumberField> listOfNumberFields = new ArrayList<>();
 
-    private VerticalLayout tabela = new VerticalLayout();
+    private List<NumberField> listOfNumberFields = new ArrayList<>();
+    private List<Double> listValueOfNumberFields = new ArrayList<>();
+
     private VerticalLayout dane = new VerticalLayout();
     private VerticalLayout cennik = new VerticalLayout();
 
-    private Button save = new Button("Zapisz dane");
-    private Button calculateProfit = new Button("Oblicz zysk");
-
-    private Grid<EntityResultTiles> resultTilesGrid = new Grid<>(EntityResultTiles.class);
     private Grid<EntityTiles> grid = new Grid<>(EntityTiles.class);
 
-    public EnterTiles() {
-    }
-
     @Autowired
-    public EnterTiles(AccesoriesRepository accesoriesRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository,
-                      CalculateTiles calculateTiles, TilesRepository tilesRepository,
-                      ResultTilesRepository resultTilesRepository) {
+    public EnterTiles(AccesoriesRepository accesoriesRepository, InputDataTilesRepository inputDataTilesRepository,
+                      CalculateTiles calculateTiles, TilesRepository tilesRepository) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
-        this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
-        this.resultTilesRepository = Objects.requireNonNull(resultTilesRepository);
 
-        loadUserComboBox();
         add(menu());
         add(createInputFields());
-        add(addFormLayout());
         add(createGrid());
-    }
-
-    private VerticalLayout addFormLayout() {
-        calculateProfit.addClickListener(buttonClickEvent -> loadResultTableTiles());
-        FormLayout formLayout = new FormLayout();
-        formLayout.add(comboBoxViewTable, calculateProfit);
-        tabela.add(formLayout);
-        tabela.add(createTable());
-        getAvailablePriceList(comboBoxViewTable);
-        return tabela;
     }
 
     private void getAvailablePriceList(ComboBox<String> comboBox) {
         if (!calculateTiles.getAvailablePriceList().isEmpty()) {
-            comboBox.setItems(calculateTiles.getAvailablePriceList());
+            VaadinSession.getCurrent().setAttribute("availablePriceList", calculateTiles.getAvailablePriceList());
+            List list = (List) VaadinSession.getCurrent().getAttribute("availablePriceList");
+            comboBox.setItems(list);
         }
     }
 
     private VerticalLayout createInputFields() {
         setDefaultValues();
-        save.addClickListener(buttonClickEvent -> loadUser());
         FormLayout formLayout = new FormLayout();
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
+        formLayout.setResponsiveSteps(responsiveStep);
         formLayout.add(getCustomerDiscount(), comboBoxInput);
-        formLayout.add(comboBoxUsers, save);
         listOfNumberFields.forEach(formLayout::add);
         getAvailablePriceList(comboBoxInput);
         dane.add(formLayout);
         return dane;
     }
 
-    private List<EntityResultTiles> listResultTiles() {
-        String[] spliString = comboBoxViewTable.getValue().split(" ");
+    private List<EntityTiles> listResultTiles() {
+        String[] spliString = comboBoxInput.getValue().split(" ");
 
         List<EntityTiles> priceListFromRepository = tilesRepository.findByPriceListNameAndType(spliString[0] + " " + spliString[1] + " " + spliString[2], spliString[3] + " " + spliString[4]);
-        List<EntityResultTiles> listResultTiles = getEntityResultTiles();
-        listResultTiles.forEach(e -> e.setPriceListName(comboBoxViewTable.getValue()));
+        priceListFromRepository.forEach(e -> e.setPriceListName(comboBoxInput.getValue()));
 
-        calculateTiles.getRetail(listResultTiles, priceListFromRepository, customerDiscount, listOfNumberFields);
-        calculateTiles.getPurchase(listResultTiles, priceListFromRepository, listOfNumberFields);
-        calculateTiles.getProfit(listResultTiles);
+        calculateTiles.getRetail(priceListFromRepository, customerDiscount, listValueOfNumberFields);
+        calculateTiles.getPurchase(priceListFromRepository, listValueOfNumberFields);
+        calculateTiles.getProfit(priceListFromRepository);
 
-        resultTilesRepository.saveAll(listResultTiles);
-        return listResultTiles;
-    }
-
-    private List<EntityResultTiles> getEntityResultTiles() {
-        Iterable<EntityResultTiles> resultTilesFromRepository = resultTilesRepository.findAll();
-        List<EntityResultTiles> listResultTiles = new ArrayList<>();
-        resultTilesFromRepository.forEach(listResultTiles::add);
-        return listResultTiles;
-    }
-
-    private Grid<EntityResultTiles> createTable() {
-        resultTilesGrid.getColumnByKey("name").setHeader("Kategoria");
-        resultTilesGrid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
-        resultTilesGrid.getColumnByKey("priceAfterDiscount").setHeader("Cena sprzedaży");
-        resultTilesGrid.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
-        resultTilesGrid.getColumnByKey("profit").setHeader("Zysk");
-        resultTilesGrid.removeColumnByKey("id");
-        return resultTilesGrid;
-    }
-
-    private void loadResultTableTiles() {
-        if (allTilesFromRespository().size() > 0) {
-            resultTilesGrid.setItems(listResultTiles());
-            ServiceNotification.getNotificationSucces("Obliczono kalkulację");
-        } else if (allTilesFromRespository().size() == 0) {
-            ServiceNotification.getNotificationError("Zaimportuj cenniki");
-        } else {
-            ServiceNotification.getNotificationError("Wybierz cennik");
-        }
+        tilesRepository.saveAll(priceListFromRepository);
+        return priceListFromRepository;
     }
 
     private List<EntityTiles> allTilesFromRespository() {
@@ -216,8 +176,8 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
         setValues(numberField17, "mb", 1d);
         setValues(numberField18, "szt", 1d);
         setValues(numberField19, "szt", 1d);
-        setTitle();
         getListNumberFields();
+        getListValueOfNumberFields();
     }
 
     private void getListNumberFields() {
@@ -226,49 +186,8 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
                 numberField17, numberField18, numberField19);
     }
 
-    private String getString(List<String> listaNazw, int i, int i2) {
-        return Joiner.on(" ").join(getSubList(listaNazw, i, i2));
-    }
-
-    private void setTitle() {
-        if (accesoriesRepository != null) {
-            Iterable<EntityAccesories> iterable = accesoriesRepository.findAll();
-            List<String> names = new ArrayList<>();
-            iterable.forEach(e -> names.add(e.getName()));
-            if (names.size() != 0) {
-                numberField1.setTitle(getString(names, 39, 44)
-                        .concat(getString(names, 59, 64)));
-
-                numberField2.setTitle(getString(names, 0, 9)
-                        .concat(getString(names, 9, 14))
-                        .concat(getString(names, 35, 39)));
-
-                numberField5.setTitle(getString(names, 21, 23)
-                        .concat(getString(names, 24, 25))
-                        .concat(getString(names, 25, 27))
-                        .concat(getString(names, 44, 46)));
-
-                numberField8.setTitle(getString(names, 14, 20)
-                        .concat(getString(names, 20, 21)));
-
-                numberField9.setTitle(getString(names, 27, 31)
-                        .concat(getString(names, 31, 33))
-                        .concat(getString(names, 33, 35)));
-            }
-        }
-    }
-
-    private void loadUserComboBox() {
-        if (nameAndSurname().size() > 0) {
-            comboBoxUsers.setItems(nameAndSurname());
-        }
-    }
-
-    private List<String> nameAndSurname() {
-        Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
-        List<String> nameAndSurname = new ArrayList<>();
-        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getName().concat(" ").concat(user.getSurname())));
-        return nameAndSurname;
+    private void getListValueOfNumberFields() {
+        listOfNumberFields.forEach(e -> listValueOfNumberFields.add(e.getValue()));
     }
 
     private NumberField getCustomerDiscount() {
@@ -280,27 +199,20 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
         return customerDiscount;
     }
 
-    private List<String> getSubList(List<String> nameList, int begin, int end) {
-        return nameList.subList(begin, end);
-    }
-
     private void setValues(NumberField numberField, String unit, Double defaultValue) {
         numberField.setValue(defaultValue);
         numberField.setMin(0);
         numberField.setMax(500);
-        numberField.setHasControls(true);
         numberField.setSuffixComponent(new Span(unit));
     }
 
     private void loadUser() {
-        String nameISurname = comboBoxUsers.getValue();
-        String[] strings = nameISurname.split(" ");
-        EntityUser entityUser = usersRepo.findUsersEntityByNameAndSurnameEquals(strings[0], strings[1]);
-
-        if (saveInputData() != null) {
-            entityUser.setEntityInputDataTiles(saveInputData());
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        EntityInputDataTiles result = saveInputData();
+        if (result != null) {
+            entityUser.setEntityInputDataTiles(result);
+            entityUser.setEntityTiles(listResultTiles());
             entityUser.setHasTiles(true);
-            usersRepo.save(entityUser);
             ServiceNotification.getNotificationSucces("Dachówki zapisane");
         } else {
             ServiceNotification.getNotificationError("Dachówki nizapisane");
@@ -311,14 +223,15 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
         grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
         grid.getColumnByKey("type").setHeader("Typ dachówki");
         grid.getColumnByKey("name").setHeader("Kategoria");
-        grid.getColumnByKey("unitRetailPrice").setHeader("Cena detaliczna").setWidth("30px");
-        grid.getColumnByKey("profit").setHeader("Marża").setWidth("30px");
-        grid.getColumnByKey("basicDiscount").setHeader("Rabat podstawowy").setWidth("30px");
-        grid.getColumnByKey("supplierDiscount").setHeader("Promocja").setWidth("30px");
-        grid.getColumnByKey("additionalDiscount").setHeader("Rabat dodatkowy").setWidth("30px");
-        grid.getColumnByKey("skontoDiscount").setHeader("Skonto").setWidth("30px");
+        grid.getColumnByKey("unitRetailPrice").setHeader("Cena detaliczna");
+        grid.getColumnByKey("profit").setHeader("Marża");
+        grid.getColumnByKey("basicDiscount").setHeader("Rabat podstawowy");
+        grid.getColumnByKey("supplierDiscount").setHeader("Promocja");
+        grid.getColumnByKey("additionalDiscount").setHeader("Rabat dodatkowy");
+        grid.getColumnByKey("skontoDiscount").setHeader("Skonto");
         grid.removeColumnByKey("id");
         grid.setItems(allTilesFromRespository());
+        grid.getColumns().forEach(column -> column.setAutoWidth(true));
         cennik.add(grid);
         return cennik;
     }
@@ -326,25 +239,25 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     @Override
     public MenuBar menu() {
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem("Pokaż tabelę", e -> {
-            tabela.setVisible(true);
-            resultTilesGrid.setVisible(true);
-            dane.setVisible(false);
-            cennik.setVisible(false);
-        });
         menuBar.addItem("Wprowadź dane", e -> {
-            tabela.setVisible(false);
-            resultTilesGrid.setVisible(false);
             dane.setVisible(true);
             cennik.setVisible(false);
         });
         menuBar.addItem("Cennik", e -> {
-            tabela.setVisible(false);
-            resultTilesGrid.setVisible(false);
             dane.setVisible(false);
             cennik.setVisible(true);
         });
-        menuBar.addItem(new RouterLink("Kolejne dane", SelectAccesories.class));
+        Button button = new Button("Dalej");
+        button.addClickListener(buttonClickEvent -> {
+            loadUser();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            getUI().ifPresent(ui -> ui.navigate(SELECT_ACCESORIES));
+        });
+        menuBar.addItem(button);
         return menuBar;
     }
 }

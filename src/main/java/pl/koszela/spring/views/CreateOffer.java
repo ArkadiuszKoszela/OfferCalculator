@@ -1,12 +1,20 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
-import pl.koszela.spring.entities.EntityResultTiles;
+import pl.koszela.spring.entities.EntityAccesories;
+import pl.koszela.spring.entities.EntityTiles;
 import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.repositories.InputDataTilesRepository;
+import pl.koszela.spring.repositories.TilesRepository;
 import pl.koszela.spring.repositories.UsersRepo;
 
 import java.util.ArrayList;
@@ -20,35 +28,86 @@ public class CreateOffer extends VerticalLayout {
 
     private UsersRepo usersRepo;
     private CalculateTiles calculateTiles;
+    private TilesRepository tilesRepository;
+    private InputDataTilesRepository inputDataTilesRepository;
 
     private ComboBox<String> selectUser = new ComboBox<>("Wybierz klienta: ");
     private ComboBox<String> priceList = new ComboBox<>("Dostępne cenniki: ");
 
-    private Grid<EntityResultTiles> resultTiles = new Grid<>();
+    private Grid<EntityTiles> resultTiles = new Grid<>(EntityTiles.class);
+    private Grid<EntityAccesories> resultAccesories = new Grid<>(EntityAccesories.class);
+    private NumberField customerDiscount = new NumberField("Rabat na dachówki");
+    private VerticalLayout layout = new VerticalLayout();
 
-    public CreateOffer(UsersRepo usersRepo, CalculateTiles calculateTiles) {
+    private Button calculateProfit = new Button("Oblicz zyski");
+
+    @Autowired
+    public CreateOffer(UsersRepo usersRepo, CalculateTiles calculateTiles, TilesRepository tilesRepository,
+                       InputDataTilesRepository inputDataTilesRepository) {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
 
         loadUserComboBox();
-        add(selectUser, getAvailablePriceList());
-
+        add(addLayout());
     }
 
-    private Grid<EntityResultTiles> createGrid() {
-        resultTiles.getColumnByKey("name").setWidth("Nazwa");
-        resultTiles.getColumnByKey("priceListName").setWidth("Nazwa cennika");
-        resultTiles.getColumnByKey("priceAfterDiscount").setWidth("Cena po rabacie");
-        resultTiles.getColumnByKey("purchasePrice").setWidth("Cena Detaliczna");
-        resultTiles.getColumnByKey("profit").setWidth("Zysk");
+    private VerticalLayout addLayout() {
+        FormLayout formLayout = new FormLayout();
+        calculateProfit.addClickListener(buttonClickEvent -> {
+            resultTiles.setItems(resultTiles());
+            resultAccesories.setItems(resultAccesories());
+        });
+        formLayout.add(selectUser, getAvailablePriceList());
+        formLayout.add(customerDiscount, calculateProfit);
+        layout.add(formLayout);
+        layout.add(createGridTiles());
+        layout.add(createGridAccesories());
+        return layout;
+    }
+
+    private Grid<EntityTiles> createGridTiles() {
+        resultTiles.getColumnByKey("name").setHeader("Kategoria");
+        resultTiles.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
+        resultTiles.getColumnByKey("priceAfterDiscount").setHeader("Cena sprzedaży");
+        resultTiles.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
+        resultTiles.getColumnByKey("profitCalculate").setHeader("Zysk");
         resultTiles.removeColumnByKey("id");
+        resultTiles.removeColumnByKey("type");
+        resultTiles.removeColumnByKey("unitRetailPrice");
+        resultTiles.removeColumnByKey("profit");
+        resultTiles.removeColumnByKey("basicDiscount");
+        resultTiles.removeColumnByKey("supplierDiscount");
+        resultTiles.removeColumnByKey("additionalDiscount");
+        resultTiles.removeColumnByKey("skontoDiscount");
+        resultTiles.getColumns().forEach(column -> column.setAutoWidth(true));
         return resultTiles;
     }
 
-    private void loadUser() {
-        String nameISurname = selectUser.getValue();
-        String[] strings = nameISurname.split(" ");
-        EntityUser entityUser = usersRepo.findUsersEntityByNameAndSurnameEquals(strings[0], strings[1]);
+    private Grid<EntityAccesories> createGridAccesories(){
+        resultAccesories.getColumnByKey("name").setHeader("Nazwa");
+        resultAccesories.getColumnByKey("purchasePrice").setHeader("Cena zakupu");
+        resultAccesories.getColumnByKey("margin").setHeader("Ilość");
+        resultAccesories.getColumnByKey("unitRetailPrice").setHeader("Cena Detaliczna (szt.");
+        resultAccesories.getColumnByKey("totalRetail").setHeader("Cena Detaliczna total");
+        resultAccesories.getColumnByKey("unitPurchasePrice").setHeader("Cena zakupu (szt.)");
+        resultAccesories.getColumnByKey("totalPurchase").setHeader("Cena zakupu total");
+        resultAccesories.removeColumnByKey("id");
+        resultAccesories.removeColumnByKey("firstMultiplier");
+        resultAccesories.removeColumnByKey("secondMultiplier");
+        resultAccesories.getColumns().forEach(column -> column.setAutoWidth(true));
+        return resultAccesories;
+    }
+
+    private List<EntityTiles> resultTiles() {
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        return entityUser.getEntityTiles();
+    }
+
+    private List<EntityAccesories> resultAccesories(){
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        return entityUser.getEntityAccesories();
     }
 
     private void loadUserComboBox() {
@@ -72,10 +131,5 @@ public class CreateOffer extends VerticalLayout {
             priceList.setItems("Brak zaimportowanych cenników");
             return priceList;
         }
-    }
-
-    private void putDataToGrid() {
-
-        resultTiles.setItems();
     }
 }

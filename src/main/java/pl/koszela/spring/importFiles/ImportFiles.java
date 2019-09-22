@@ -79,8 +79,8 @@ public class ImportFiles {
             /*daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);
             daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA);*/
             daoAccesories.save(AKCESORIA);
-            daoWindows.save(OKNA_OKPOL_DAKEA);
-            daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA);
+            /*daoWindows.save(OKNA_OKPOL_DAKEA);
+            daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA);*/
             calculateTiles.getAvailablePriceList();
             getNotificationSucces("Zaimportowano cenniki");
             History history = UI.getCurrent().getPage().getHistory();

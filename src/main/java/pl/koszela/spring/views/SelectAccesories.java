@@ -3,11 +3,13 @@ package pl.koszela.spring.views;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.EntityAccesories;
 import pl.koszela.spring.entities.EntityInputDataAccesories;
@@ -16,12 +18,14 @@ import pl.koszela.spring.entities.EntityUser;
 import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.repositories.InputDataAccesoriesRespository;
-import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.service.MenuBarInterface;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static pl.koszela.spring.service.Labels.*;
+import static pl.koszela.spring.views.InputWindows.WINDOWS;
 
 @Route(value = SelectAccesories.SELECT_ACCESORIES, layout = MainView.class)
 public class SelectAccesories extends VerticalLayout implements MenuBarInterface {
@@ -29,9 +33,6 @@ public class SelectAccesories extends VerticalLayout implements MenuBarInterface
     public static final String SELECT_ACCESORIES = "accesories/select";
     private AccesoriesRepository accesoriesRepository;
     private InputDataAccesoriesRespository inputDataAccesoriesRespository;
-
-    private List<ComboBox<String>> boxList = new ArrayList<>();
-    private List<NumberField> listOfNumberFields = new ArrayList<>();
 
     private ComboBox<String> comboBoxtasmaKalenicowa = new ComboBox<>(TASMA_KELNICOWA);
     private ComboBox<String> comboBoxwspornikLatyKalenicowej = new ComboBox<>(WSPORNIK_LATY_KALENICOWEJ);
@@ -75,49 +76,107 @@ public class SelectAccesories extends VerticalLayout implements MenuBarInterface
     private NumberField numberField17 = new NumberField("Gąsior z podwójną mufą");
     private NumberField numberField18 = new NumberField("Dachówka dwufalowa");
     private NumberField numberField19 = new NumberField("Okno połaciowe");
+    private NumberField numberField20 = new NumberField("Okno połaciowe");
+    private NumberField numberField21 = new NumberField("Okno połaciowe");
+    private NumberField numberField22 = new NumberField("Okno połaciowe");
 
-    private ComboBox<String> comboBoxUsers = new ComboBox<>("Wczytaj użytkownika: ");
-    private Button selectUser = new Button("Zapisz dane");
-    private Button wczytajDaneZDachowek = new Button("Wczytaj dane z dachówek");
+    private List<ComboBox<String>> boxList = new ArrayList<>();
+    private List<NumberField> listOfNumberFields = new ArrayList<>();
+    private List<Double> valuesFromRepo;
+    private List<Double> valuePriceAccesories = new ArrayList<>();
 
     private FormLayout board = new FormLayout();
 
-    private Button calculateAccesories = new Button("Oblicz AccesoriesRepository");
-    private UsersRepo usersRepo;
 
     @Autowired
     public SelectAccesories(AccesoriesRepository accesoriesRepository,
-                            InputDataAccesoriesRespository inputDataAccesoriesRespository, UsersRepo usersRepo) {
+                            InputDataAccesoriesRespository inputDataAccesoriesRespository) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.inputDataAccesoriesRespository = Objects.requireNonNull(inputDataAccesoriesRespository);
-        this.usersRepo = Objects.requireNonNull(usersRepo);
 
-        loadUserComboBox();
         add(menu());
         add(formLayoutAccesories());
     }
 
     private FormLayout formLayoutAccesories() {
-        selectUser.addClickListener(buttonClickEvent -> saveInputDataAccesories());
         createValueComboBoxes();
-        createListBox();
-        getListNumberFields();
-        wczytajDaneZDachowek.addClickListener(buttonClickEvent -> getValuesTiles());
-        board.add(calculateAccesories, getLabel(" "));
-        board.add(comboBoxUsers, selectUser);
-        board.add(wczytajDaneZDachowek, getLabel(" "));
+        getValuesTiles();
         Iterator<ComboBox<String>> iter1 = boxList.iterator();
         Iterator<NumberField> iter2 = listOfNumberFields.iterator();
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
+        board.setResponsiveSteps(responsiveStep);
         while (iter1.hasNext() && iter2.hasNext()) {
             board.add(iter1.next(), iter2.next());
         }
         return board;
     }
 
+    private void setValue(List<NumberField> list) {
+        list.forEach(e -> {
+            e.setAutoselect(true);
+            e.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
+            e.setMin(0);
+            e.setSuffixComponent(new Span("szt"));
+        });
+    }
+
+    private void createValueComboBoxes() {
+        List<EntityAccesories> repositoryAll = getAllAccesories();
+        List<String> names = new ArrayList<>();
+        List<Double> value = new ArrayList<>();
+        repositoryAll.forEach(search -> names.add(search.getName()));
+        repositoryAll.forEach(e -> value.add(e.getFirstMultiplier() * e.getSecondMultiplier()));
+        if (names.size() > 0) {
+            setValues(comboBoxtasmaKalenicowa, names, value, 0, 9);
+            setValues(comboBoxwspornikLatyKalenicowej, names, value, 9, 14);
+            setValues(comboBoxtasmaDoObrobkiKomina, names, value, 14, 20);
+            setValues(comboBoxlistwaWykonczeniowaAluminiowa, names, value, 20, 21);
+            setValues(comboBoxkoszDachowyAluminiowy2mb, names, value, 21, 23);
+            setValues(comboBoxklamraDoMocowaniaKosza, names, value, 24, 25);
+            setValues(comboBoxklinUszczelniajacyKosz, names, value, 25, 27);
+            setValues(comboBoxgrzebienOkapowy, names, value, 27, 31);
+            setValues(comboBoxkratkaZabezpieczajacaPrzedPtactwem, names, value, 31, 33);
+            setValues(comboBoxpasOkapowy, names, value, 33, 35);
+            setValues(comboBoxklamraDoGasiora, names, value, 35, 39);
+            setValues(comboBoxspinkaDoDachowki, names, value, 39, 44);
+            setValues(comboBoxspinkaDoDachowkiCietej, names, value, 44, 46);
+            setValues(comboBoxlawaKominiarska, names, value, 46, 54);
+            setValues(comboBoxstopienKominiarski, names, value, 55, 56);
+            setValues(comboBoxplotekPrzeciwsniegowy155mmx2mb, names, value, 56, 57);
+            setValues(comboBoxplotekPrzeciwsniegowy155mmx3mb, names, value, 57, 59);
+            setValues(comboBoxmembranaDachowa, names, value, 59, 64);
+            setValues(comboBoxtasmaDoLaczeniaMembarnIFolii, names, value, 64, 67);
+            setValues(comboBoxtasmaReparacyjna, names, value, 67, 69);
+            setValues(comboBoxblachaAluminiowa, names, value, 69, 72);
+            setValues(comboBoxceglaKlinkierowa, names, value, 72, 73);
+        }
+    }
+
+    private void setValues(ComboBox<String> comboBox, List<String> listaNazw, List<Double> value, int poczatek, int koniec) {
+        comboBox.setItems(getSubList(listaNazw, poczatek, koniec));
+        comboBox.setValue(listaNazw.get(poczatek));
+        boxList.add(comboBox);
+        valuePriceAccesories.add(value.get(poczatek));
+    }
+
+    private List<NumberField> getListNumberFields() {
+        return listOfNumberFields = Arrays.asList(numberField1, numberField2, numberField3, numberField4, numberField5, numberField6, numberField7,
+                numberField8, numberField9, numberField10, numberField11, numberField12, numberField13, numberField14, numberField15, numberField16,
+                numberField17, numberField18, numberField19, numberField20, numberField21, numberField22);
+    }
+
+    private List<EntityAccesories> getAllAccesories() {
+        Iterable<EntityAccesories> repositoryAll = accesoriesRepository.findAll();
+        List<EntityAccesories> allAccesories = new ArrayList<>();
+        repositoryAll.forEach(allAccesories::add);
+        return allAccesories;
+    }
+
     private void getValuesTiles() {
-        EntityUser entityUser = findUserByNameAndSurname();
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
         EntityInputDataTiles dataTiles = entityUser.getEntityInputDataTiles();
-        List<Double> valuesFromRepo = Arrays.asList(dataTiles.getPowierzchniaPolaci(), dataTiles.getDlugoscKalenic(),
+        setValue(getListNumberFields());
+        valuesFromRepo = Arrays.asList(dataTiles.getPowierzchniaPolaci(), dataTiles.getDlugoscKalenic(),
                 dataTiles.getDlugoscKalenicProstych(), dataTiles.getDlugoscKalenicSkosnych(),
                 dataTiles.getDlugoscKoszy(), dataTiles.getDlugoscKrawedziLewych(), dataTiles.getDlugoscKrawedziPrawych(),
                 dataTiles.getObwodKomina(), dataTiles.getDlugoscOkapu(), dataTiles.getDachowkaWentylacyjna(),
@@ -126,28 +185,13 @@ public class SelectAccesories extends VerticalLayout implements MenuBarInterface
                 dataTiles.getTrojnik(), dataTiles.getCzwornik(), dataTiles.getGasiarZPodwojnaMufa(),
                 dataTiles.getDachowkaDwufalowa(), dataTiles.getOknoPolaciowe());
         for (int i = 0; i < valuesFromRepo.size(); i++) {
-            listOfNumberFields.get(i).setValue(valuesFromRepo.get(i));
+            listOfNumberFields.get(i).setValue(valuesFromRepo.get(i) * valuePriceAccesories.get(i));
         }
-    }
 
-    private void createListBox() {
-        boxList = Arrays.asList(comboBoxtasmaKalenicowa, comboBoxwspornikLatyKalenicowej, comboBoxtasmaDoObrobkiKomina,
-                comboBoxlistwaWykonczeniowaAluminiowa, comboBoxkoszDachowyAluminiowy2mb, comboBoxklamraDoMocowaniaKosza,
-                comboBoxklinUszczelniajacyKosz, comboBoxgrzebienOkapowy, comboBoxkratkaZabezpieczajacaPrzedPtactwem,
-                comboBoxpasOkapowy, comboBoxklamraDoGasiora, comboBoxspinkaDoDachowki, comboBoxspinkaDoDachowkiCietej,
-                comboBoxlawaKominiarska, comboBoxstopienKominiarski, comboBoxplotekPrzeciwsniegowy155mmx2mb,
-                comboBoxplotekPrzeciwsniegowy155mmx3mb, comboBoxmembranaDachowa, comboBoxtasmaDoLaczeniaMembarnIFolii,
-                comboBoxtasmaReparacyjna, comboBoxblachaAluminiowa, comboBoxceglaKlinkierowa);
-    }
-
-    private void getListNumberFields() {
-        listOfNumberFields = Arrays.asList(numberField1, numberField2, numberField3, numberField4, numberField5, numberField6, numberField7,
-                numberField8, numberField9, numberField10, numberField11, numberField12, numberField13, numberField14, numberField15, numberField16,
-                numberField17, numberField18, numberField19);
     }
 
     private void saveInputDataAccesories() {
-        EntityUser entityUser = findUserByNameAndSurname();
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
 
         EntityInputDataAccesories entityInputDataAccesories = EntityInputDataAccesories.builder()
                 .tasmaKalenicowa(comboBoxtasmaKalenicowa.getValue())
@@ -174,68 +218,37 @@ public class SelectAccesories extends VerticalLayout implements MenuBarInterface
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
         inputDataAccesoriesRespository.save(entityInputDataAccesories);
-        if (entityInputDataAccesories != null) {
-            entityUser.setHasAccesories(true);
-            entityUser.setEntityInputDataAccesories(entityInputDataAccesories);
-            usersRepo.save(entityUser);
-            ServiceNotification.getNotificationSucces("Akcesoria zapisane");
-        } else {
-            ServiceNotification.getNotificationError("Akcesoria niezapisane");
+        entityUser.setHasAccesories(true);
+        entityUser.setEntityInputDataAccesories(entityInputDataAccesories);
+        entityUser.setEntityAccesories(resultAccesories());
+        ServiceNotification.getNotificationSucces("Akcesoria zapisane");
+    }
+
+    private List<EntityAccesories> resultAccesories() {
+        List<EntityAccesories> allNameAccesories = getAllAccesories();
+        List<EntityAccesories> selected = new ArrayList<>();
+
+        for (int i = 0; i < valuesFromRepo.size(); i++) {
+            for (EntityAccesories accesories : allNameAccesories) {
+                if (accesories.getName().equalsIgnoreCase(boxList.get(i).getValue())) {
+
+                    BigDecimal bigDecimal = accesories.getPurchasePrice().multiply(new BigDecimal(accesories.getMargin()))
+                            .divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
+
+                    BigDecimal unitRetailPrice = bigDecimal.add(accesories.getPurchasePrice());
+                    accesories.setUnitRetailPrice(unitRetailPrice);
+
+                    BigDecimal totalRetail = accesories.getUnitRetailPrice().multiply(new BigDecimal(valuesFromRepo.get(i)));
+                    accesories.setTotalRetail(totalRetail);
+
+                    BigDecimal totalPurchase = accesories.getPurchasePrice().multiply(new BigDecimal(valuesFromRepo.get(i)));
+                    accesories.setTotalPurchase(totalPurchase);
+
+                    selected.add(accesories);
+                }
+            }
         }
-    }
-
-    private EntityUser findUserByNameAndSurname() {
-        String nameISurname = comboBoxUsers.getValue();
-        String[] strings = nameISurname.split(" ");
-        return usersRepo.findUsersEntityByNameAndSurnameEquals(strings[0], strings[1]);
-    }
-
-    private void loadUserComboBox() {
-        if (nameAndSurname().size() > 0) {
-            comboBoxUsers.setItems(nameAndSurname());
-        }
-    }
-
-    private List<String> nameAndSurname() {
-        Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
-        List<String> nameAndSurname = new ArrayList<>();
-        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getName().concat(" ").concat(user.getSurname())));
-        return nameAndSurname;
-    }
-
-    private void createValueComboBoxes() {
-        Iterable<EntityAccesories> iterable = accesoriesRepository.findAll();
-        List<String> names = new ArrayList<>();
-        iterable.forEach(search -> names.add(search.getName()));
-        if (names.size() > 0) {
-            setValues(comboBoxtasmaKalenicowa, names, 0, 9);
-            setValues(comboBoxwspornikLatyKalenicowej, names, 9, 14);
-            setValues(comboBoxtasmaDoObrobkiKomina, names, 14, 20);
-            setValues(comboBoxlistwaWykonczeniowaAluminiowa, names, 20, 21);
-            setValues(comboBoxkoszDachowyAluminiowy2mb, names, 21, 23);
-            setValues(comboBoxklamraDoMocowaniaKosza, names, 24, 25);
-            setValues(comboBoxklinUszczelniajacyKosz, names, 25, 27);
-            setValues(comboBoxgrzebienOkapowy, names, 27, 31);
-            setValues(comboBoxkratkaZabezpieczajacaPrzedPtactwem, names, 31, 33);
-            setValues(comboBoxpasOkapowy, names, 33, 35);
-            setValues(comboBoxklamraDoGasiora, names, 35, 39);
-            setValues(comboBoxspinkaDoDachowki, names, 39, 44);
-            setValues(comboBoxspinkaDoDachowkiCietej, names, 44, 46);
-            setValues(comboBoxlawaKominiarska, names, 46, 54);
-            setValues(comboBoxstopienKominiarski, names, 55, 56);
-            setValues(comboBoxplotekPrzeciwsniegowy155mmx2mb, names, 56, 57);
-            setValues(comboBoxplotekPrzeciwsniegowy155mmx3mb, names, 57, 59);
-            setValues(comboBoxmembranaDachowa, names, 59, 64);
-            setValues(comboBoxtasmaDoLaczeniaMembarnIFolii, names, 64, 67);
-            setValues(comboBoxtasmaReparacyjna, names, 67, 69);
-            setValues(comboBoxblachaAluminiowa, names, 69, 72);
-            setValues(comboBoxceglaKlinkierowa, names, 72, 73);
-        }
-    }
-
-    private void setValues(ComboBox<String> comboBox, List<String> listaNazw, int poczatek, int koniec) {
-        comboBox.setItems(getSubList(listaNazw, poczatek, koniec));
-        comboBox.setValue(listaNazw.get(poczatek));
+        return selected;
     }
 
     private List<String> getSubList(List<String> listaNazw, int poczatek, int koniec) {
@@ -245,7 +258,12 @@ public class SelectAccesories extends VerticalLayout implements MenuBarInterface
     @Override
     public MenuBar menu() {
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem(new RouterLink("Kolejne dane", InputWindows.class));
+        Button button = new Button("Dalej");
+        button.addClickListener(buttonClickEvent -> {
+            saveInputDataAccesories();
+            getUI().ifPresent(ui -> ui.navigate(WINDOWS));
+        });
+        menuBar.addItem(button);
         return menuBar;
     }
 }
