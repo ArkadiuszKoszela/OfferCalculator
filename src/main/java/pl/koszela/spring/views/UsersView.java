@@ -17,10 +17,10 @@ import pl.koszela.spring.service.SaveUsers;
 
 import java.util.Objects;
 
-import static pl.koszela.spring.views.EnterTiles.ENTER_TILES;
+import static pl.koszela.spring.views.TilesView.ENTER_TILES;
 
-@Route(value = InputUser.INPUT_USER, layout = MainView.class)
-public class InputUser extends VerticalLayout implements MenuBarInterface {
+@Route(value = UsersView.INPUT_USER, layout = MainView.class)
+public class UsersView extends VerticalLayout implements MenuBarInterface {
 
     public static final String INPUT_USER = "users/input";
 
@@ -38,7 +38,7 @@ public class InputUser extends VerticalLayout implements MenuBarInterface {
     private FormLayout board = new FormLayout();
 
     @Autowired
-    public InputUser(SaveUsers saveUser, Labels serviceDataCustomer, UsersRepo usersRepo, CalculateTiles calculateTiles) {
+    public UsersView(SaveUsers saveUser, Labels serviceDataCustomer, UsersRepo usersRepo, CalculateTiles calculateTiles) {
         this.saveUser = Objects.requireNonNull(saveUser);
         this.serviceDataCustomer = Objects.requireNonNull(serviceDataCustomer);
         this.usersRepo = Objects.requireNonNull(usersRepo);

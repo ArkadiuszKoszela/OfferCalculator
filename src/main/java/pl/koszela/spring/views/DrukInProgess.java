@@ -1,160 +1,144 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.Tag;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import com.vaadin.flow.server.VaadinSession;
+import pl.koszela.spring.entities.EntityTiles;
+import pl.koszela.spring.entities.EntityUser;
 
-@Tag("image")
-/*@Route(value = DrukInProgess.DRUK)*/
+import javax.swing.text.html.parser.Entity;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+
 public class DrukInProgess {
 
-    /*public static final String DRUK = "druk";
-    private UsersRepo repositoryUsersRepo;
-    private ResultTilesRepository repositoryResultTiles;
+    private static final String FILE_NAME = "src/main/resources/templates/itext.pdf";
+    private static final String TABLE = "src/main/resources/templates/Tabela.png";
+    private static final String PREMIUM = "src/main/resources/templates/premium.png";
+    private static final String LUX_PLUS = "src/main/resources/templates/luxPlus.png";
+    private static final String STANDARD = "src/main/resources/templates/standard.png";
 
-    private Crud<EntityResultTiles> crud;
-    ListDataProvider<EntityResultTiles> listDataProvider;
-
-    public DrukInProgess() {
+    public static void main(String[] args) {
+        writeUsingIText();
     }
 
-    @Autowired
-    public DrukInProgess(ResultTilesRepository repositoryResultTiles, UsersRepo repositoryUsersRepo) {
-        this.repositoryResultTiles = repositoryResultTiles;
-        this.repositoryUsersRepo = repositoryUsersRepo;
+    private static void writeUsingIText() {
 
-        Iterable<EntityResultTiles> wynikiEntityIterable = repositoryResultTiles.findAll();
-        List<EntityResultTiles> entityResultTilesList = new ArrayList<>();
-        wynikiEntityIterable.forEach(entityResultTilesList::add);
+        Document document = new Document();
 
-        setOrientation(Orientation.VERTICAL);
-        TextField filterText = new TextField();
-        filterText.setPlaceholder("Filter by nazwa cennika");
-        filterText.setClearButtonVisible(true);
+        /*EntityUser user = (EntityUser) VaadinSession.getCurrent().getAttribute("user");*/
+        EntityTiles entityTiles = new EntityTiles();
+        entityTiles.setPriceListName("Bogen Innovo 10");
+        entityTiles.setType("Czerwona Angoba");
+        entityTiles.setName("Dachówka podstawowa");
+        entityTiles.setUnitRetailPrice(new BigDecimal(3.45));
+        entityTiles.setProfit(20);
+        entityTiles.setBasicDiscount(40);
+        entityTiles.setSupplierDiscount(34);
+        entityTiles.setAdditionalDiscount(23);
+        entityTiles.setSkontoDiscount(4);
+        entityTiles.setPriceAfterDiscount("po rabacie");
+        entityTiles.setPurchasePrice("zakup");
+        entityTiles.setProfitCalculate("zysk");
 
+        try {
 
-        crud = new Crud<>(EntityResultTiles.class, createGrid(), createCompanyEditor());
+            PdfWriter.getInstance(document, new FileOutputStream(new File(FILE_NAME)));
 
-        listDataProvider = new ListDataProvider<>(entityResultTilesList);
-        crud.setHeightFull();
+            //open
+            document.open();
 
-        crud.setDataProvider(listDataProvider);
+            BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.EMBEDDED);
 
-        addToSecondary(filterText, crud);
+            Font font = new Font(baseFont, 8);
+            Paragraph p = new Paragraph("www.nowoczesnebudowanie.pl\n" +
+                    "ul. Chemiczna 2\n" +
+                    "65-713 Zielona Góra                                                              OFERTA HANDLOWA\n" +
+                    "robert@nowoczesnebudowanie.pl\n" +
+                    "tel. 502680330", font);
+            p.setAlignment(Element.ALIGN_LEFT);
+            document.add(p);
 
-        CrudI18n customI18n = CrudI18n.createDefault();
-        customI18n.setEditItem("Update User");
-        customI18n.setNewItem("New User");
-        crud.setI18n(customI18n);
+            Font font12 = new Font(baseFont, 12);
+            Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: ", font12);
 
-        crud.addEditListener(editEvent -> {
-            EntityResultTiles toEdit = editEvent.getItem();
-            Optional<EntityResultTiles> wyniki = repositoryResultTiles.findById(toEdit.getId());
-            EntityResultTiles entityResultTiles = new EntityResultTiles();
-            entityResultTiles.setPriceListName(wyniki.get().getPriceListName());
-            entityResultTiles.setName(wyniki.get().getName());
-            entityResultTiles.setPriceAfterDiscount(wyniki.get().getPriceAfterDiscount());
-            entityResultTiles.setPurchasePrice(wyniki.get().getPurchasePrice());
-            entityResultTiles.setProfit(wyniki.get().getProfit());
+            document.add(informacje);
 
-            entityResultTiles.setPriceListName(toEdit.getPriceListName());
-            entityResultTiles.setName(toEdit.getName());
-            entityResultTiles.setPriceAfterDiscount(toEdit.getPriceAfterDiscount());
-            entityResultTiles.setPurchasePrice(toEdit.getPurchasePrice());
-            entityResultTiles.setProfit(toEdit.getProfit());
+            Font font10 = new Font(baseFont, 10);
+            Paragraph producent = new Paragraph("\n\nDachówki ceramiczne Nelskamrubp produkowane są z najwyższej jakości surowców w nowoczesnej technologii." +
+                    "Sprawdzone na przestrzeni wieków – dachówki ceramiczne zalicza się do najstarszych pokryć dachowych " +
+                    "–po dziś dzień stanowią synonim piękna, naturalności i bezpieczeństwa. Dachówki ceramiczne Braas " +
+                    "powstają z gliny, której wysoka jakość porównywalna jest z zaletami glinek leczniczych. Dachówki " +
+                    "te dodają dachom klasycznego uroku i ciepła. Zachwycają mnogością barw, dzięki którym mogą Państwo " +
+                    "nadać swojemu dachowi indywidualny charakter - zgodnie z własnym smakiem i pomysłem. " +
+                    "Rubin11V(K) to połączenie klasycznego piękna z innowacyjnymi rozwiązaniami technologicznymi opracowanymi " +
+                    "wraz z dekarskimi mistrzami. Model ten należy do grupy przesuwnych dachówek dużego formatu. " +
+                    "Godne zwrócenia uwagi są kolory bukowy i szary kryształ – dostępny tylko dla tego modelu.", font10);
 
+            document.add(producent);
 
-            repositoryResultTiles.save(entityResultTiles);
-        });
+            Image img = Image.getInstance("http://www.nowoczesnebudowanie.pl/wp-content/uploads/2016/10/logo-nowoczesne-budowanie-1200x857.png");
+            img.scaleAbsolute(80f,50f);
+            img.setAbsolutePosition(450f, 750f);
+            document.add(img);
 
+            float [] pointColumnWidths = {250F, 100F, 100F,100F,100F,100F};
+            PdfPTable table = new PdfPTable(pointColumnWidths);
+            
+            table.addCell(new Paragraph(entityTiles.getType()));
+            table.addCell(new Paragraph(entityTiles.getName()));
+            table.addCell(new Paragraph(entityTiles.getPriceListName()));
+            table.addCell(new Paragraph(entityTiles.getPriceAfterDiscount()));
+            table.addCell(new Paragraph(entityTiles.getPurchasePrice()));
+            table.addCell(new Paragraph(entityTiles.getProfitCalculate()));
 
-        Board lewyGornyrog = new Board();
-        Label label = new Label("www.nowoczesnebudowanie.pl");
-        Label label1 = new Label("ul. Chemiczna 2");
-        Label label2 = new Label("65-713 Zielona Góra");
-        Label label3 = new Label("robert@nowoczesnebudowanie.pl");
-        Label label4 = new Label("tel. 502 680 330");
-        lewyGornyrog.addRow(label);
-        lewyGornyrog.addRow(label1);
-        lewyGornyrog.addRow(label2);
-        lewyGornyrog.addRow(label3);
-        lewyGornyrog.addRow(label4);
-        lewyGornyrog.setMaxWidth("250px");
+            document.add(table);
 
-        Label label5 = new Label("OFERTA HANDLOWA");
-        Image image = new Image();
-        image.setSrc("C:\\UsersRepo\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\spring\\src\\main\\resources\\logo.png");
+            Paragraph paragraph = new Paragraph("\n\n                   DODATKI DACHOWE:  jakaś cena\n" +
+                    "                   CEGŁA KLINKIEROWA + zaprawa:  jakaś cena\n" +
+                    "                   Łata i kontrłata:  jakaś cena\n" +
+                    "                   Okna dachowe + kołnierze:  jakaś cena\n" +
+                    "                   System rynnowy:  jakaś cena\n" +
+                    "                   Podbitka:  jakaś cena\n" +
+                    "                   System odgromowy:  jakaś cena\n" +
+                    "                   Elementy montażowe:  jakaś cena\n" +
+                    "                   Elementy dachówkowe:  jakaś cena\n" +
+                    "                   RAZEM netto:  jakaś cena\n" +
+                    "                   Wykonastwo:  jakaś cena\n" +
+                    "                   Transport:  jakaś cena", font10);
 
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        label5.setWidth("300px");
-        label5.getElement().getStyle().set("text-align", "center");
-        Label label6 = new Label("Dachówki ceramiczne Nelskamrubp produkowane są z najwyższej jakości surowców " +
-                "w nowoczesnej technologii. Sprawdzone na przestrzeni wieków – dachówki ceramiczne zalicza się " +
-                "do najstarszych pokryć dachowych – po dziś dzień stanowią synonim piękna, naturalności i bezpieczeństwa. " +
-                "Dachówki ceramiczne Braas powstają z gliny, której wysoka jakość porównywalna jest z zaletami " +
-                "glinek leczniczych. Dachówki te dodają dachom klasycznego uroku i ciepła. Zachwycają mnogością barw, " +
-                "dzięki którym mogą Państwo nadać swojemu dachowi indywidualny charakter - zgodnie z własnym smakiem " +
-                "i pomysłem. Rubin 11V (K) to połączenie klasycznego piękna z innowacyjnymi rozwiązaniami " +
-                "technologicznymi opracowanymi wraz z dekarskimi mistrzami. Model ten należy do grupy przesuwnych " +
-                "dachówek dużego formatu. Godne zwrócenia uwagi są kolory bukowy i szary kryształ – dostępny tylko " +
-                "dla tego modelu.");
-        label6.getElement().getStyle().set("width", "750px");
-        horizontalLayout.add(lewyGornyrog, label5, image);
-        Layout splitLayout1 = new Layout();
-        splitLayout1.setOrientation(Orientation.VERTICAL);
-        splitLayout1.addToPrimary(horizontalLayout);
-        splitLayout1.addToSecondary(label6);
-        splitLayout1.setSecondaryStyle("minWidht", "750px");
-        splitLayout1.setSecondaryStyle("maxWidht", "750px");
-        addToPrimary(splitLayout1);
+            document.add(paragraph);
 
-        Image image1 = new Image();
-        image1.setSrc("C:\\UsersRepo\\Arkadiusz Koszela\\Desktop\\demo\\projekt_zaliczeniowy\\spring\\src\\main\\resources\\oferta.pdf");
+            Paragraph pakiety = new Paragraph("\n\nPakiety, które przygotowaliśmy dla Państawa: ", font10);
+            Image image = Image.getInstance(TABLE);
+            image.scaleAbsolute(400f, 200f);
+            Image luxPlus = Image.getInstance(LUX_PLUS);
+            luxPlus.scaleAbsolute(50f, 50f);
+            luxPlus.setAbsolutePosition(200f, 0f);
+            Image premium = Image.getInstance(PREMIUM);
+            premium.scaleAbsolute(60f, 60f);
+            premium.setAbsolutePosition(270f, 0f);
+            Image standard = Image.getInstance(STANDARD);
+            standard.scaleAbsolute(50f, 50f);
+            standard.setAbsolutePosition(340f, 0f);
 
-        setSecondaryStyle("minWidth", "750px");
-        setSecondaryStyle("maxWidth", "750px");
-        setSecondaryStyle("minHeight", "5000px");
-        setSecondaryStyle("maxHeight", "5000px");
+            document.add(pakiety);
+            document.add(standard);
+            document.add(premium);
+            document.add(luxPlus);
+            document.add(image);
+
+            //close
+            document.close();
+
+            System.out.println("Done");
+
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+
     }
-
-    private Grid<EntityResultTiles> createGrid() {
-        Grid<EntityResultTiles> grid = new Grid<>();
-        grid.addColumn(EntityResultTiles::getPriceListName).setHeader("Nazwa cennika");
-        grid.addColumn(EntityResultTiles::getName).setHeader("Nazwa");
-        grid.addColumn(EntityResultTiles::getPriceAfterDiscount).setHeader("Cena Netto po rabacie");
-        grid.addColumn(EntityResultTiles::getPurchasePrice).setHeader("Cena zakupu");
-        grid.addColumn(EntityResultTiles::getProfit).setHeader("Zysk");
-        Crud.addEditColumn(grid);
-        return grid;
-    }
-
-    private CrudEditor<EntityResultTiles> createCompanyEditor() {
-        TextField nazwaCennika = new TextField("nazwa");
-        setColspan(nazwaCennika, 4);
-        TextField nazwa = new TextField("nazwa");
-        nazwa.setRequiredIndicatorVisible(true);
-        setColspan(nazwa, 2);
-        TextField cenaNettoPoRabacie = new TextField("cenaNettoPoRabacie");
-        cenaNettoPoRabacie.setRequiredIndicatorVisible(true);
-        setColspan(cenaNettoPoRabacie, 2);
-        TextField cenaZakupu = new TextField("cenaZakupu");
-        cenaZakupu.setRequiredIndicatorVisible(true);
-        setColspan(cenaZakupu, 2);
-        TextField zysk = new TextField("zysk");
-        zysk.setRequiredIndicatorVisible(true);
-        setColspan(zysk, 2);
-
-        Binder<EntityResultTiles> binder = new Binder<>(EntityResultTiles.class);
-        binder.bind(nazwaCennika, EntityResultTiles::getPriceListName, EntityResultTiles::setPriceListName);
-        binder.bind(nazwa, EntityResultTiles::getName, EntityResultTiles::setName);
-        binder.bind(cenaNettoPoRabacie, EntityResultTiles::getPriceAfterDiscount, EntityResultTiles::setPriceAfterDiscount);
-        binder.bind(cenaZakupu, EntityResultTiles::getPurchasePrice, EntityResultTiles::setPurchasePrice);
-        binder.bind(zysk, EntityResultTiles::getProfit, EntityResultTiles::setProfit);
-        Board tablica = new Board();
-        tablica.addRow(nazwaCennika, nazwa, cenaNettoPoRabacie);
-        tablica.addRow(cenaZakupu, zysk);
-        return new BinderCrudEditor<>(binder, tablica);
-    }
-
-    private void setColspan(Layout component, int colspan) {
-        component.getElement().setAttribute("colspan", Integer.toString(colspan));
-    }*/
 }

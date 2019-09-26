@@ -11,7 +11,8 @@ import pl.koszela.spring.DAOs.DaoWindows;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.repositories.TilesRepository;
-import pl.koszela.spring.views.EnterTiles;
+import pl.koszela.spring.views.TilesView;
+import pl.koszela.spring.views.UsersView;
 
 import java.util.Objects;
 
@@ -76,15 +77,15 @@ public class ImportFiles {
         if (this.tilesRepository.count() == 0 && this.accesoriesRepository.count() == 0) {
 
             daoTiles.save(BOGEN_INNOVO_10_CZERWONA_ANGOBA);
-            /*daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);
-            daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA);*/
+            daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);
+            daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA);
             daoAccesories.save(AKCESORIA);
-            /*daoWindows.save(OKNA_OKPOL_DAKEA);
-            daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA);*/
+            daoWindows.save(OKNA_OKPOL_DAKEA);
+            daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA);
             calculateTiles.getAvailablePriceList();
             getNotificationSucces("Zaimportowano cenniki");
-            History history = UI.getCurrent().getPage().getHistory();
-            history.getUI().navigate(EnterTiles.class);
+            UI.getCurrent().getPage().reload();
+            /*history.getUI().navigate(UsersView.class);*/
         } else {
             getNotificationError("Cenniki są już zaimportowane");
         }

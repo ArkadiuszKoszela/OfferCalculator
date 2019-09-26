@@ -6,7 +6,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.koszela.spring.entities.EntityPersonalData;
 import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.repositories.PersonalDataRepository;
 import pl.koszela.spring.repositories.UsersRepo;
 
 import java.util.ArrayList;
@@ -19,11 +21,11 @@ import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationS
 @Service
 public class SaveUsers {
 
-    private UsersRepo usersRepo;
+    private PersonalDataRepository personalDataRepository;
 
     @Autowired
-    public SaveUsers(UsersRepo usersRepo) {
-        this.usersRepo = Objects.requireNonNull(usersRepo);
+    public SaveUsers(PersonalDataRepository personalDataRepository) {
+        this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
     }
 
     public void saveUser(TextField name, TextField surname,
@@ -31,11 +33,15 @@ public class SaveUsers {
         if (allDataIsCompleted(name, surname)) {
 
             EntityUser newUser = new EntityUser();
-            newUser.setName(name.getValue());
-            newUser.setSurname(surname.getValue());
-            newUser.setAdress(adress.getValue());
-            newUser.setTelephoneNumber(telephoneNumber.getValue());
-            newUser.setEmail(email.getValue());
+            EntityPersonalData personalData = EntityPersonalData.builder()
+                    .name(name.getValue())
+                    .surname(surname.getValue())
+                    .adress(adress.getValue())
+                    .telephoneNumber(telephoneNumber.getValue())
+                    .email(email.getValue())
+                    .build();
+            newUser.setEntityPersonalData(personalData);
+
             VaadinSession.getCurrent().setAttribute("user", newUser);
             getNotificationSucces("Zapisałem użytkownika wraz z danymi");
         }
@@ -54,13 +60,13 @@ public class SaveUsers {
     }
 
     private boolean isUserInDatabase(TextField name, TextField surname) {
-        EntityUser entityUser = usersRepo.findUsersEntityByNameAndSurnameEquals(name.getValue(), surname.getValue());
-        return entityUser != null;
+        EntityPersonalData personalData = personalDataRepository.findUsersEntityByNameAndSurnameEquals(name.getValue(), surname.getValue());
+        return personalData != null;
     }
 
-    private List<EntityUser> allUsers() {
-        Iterable<EntityUser> iterable = usersRepo.findAll();
-        List<EntityUser> userList = new ArrayList<>();
+    private List<EntityPersonalData> allUsers() {
+        Iterable<EntityPersonalData> iterable = personalDataRepository.findAll();
+        List<EntityPersonalData> userList = new ArrayList<>();
         iterable.forEach(userList::add);
         return userList;
     }

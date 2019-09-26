@@ -7,4 +7,5 @@ import pl.koszela.spring.entities.EntityWindows;
 @Repository
 public interface WindowsRepository extends CrudRepository<EntityWindows, Long> {
 
+    EntityWindows findByName (String name);
 }

@@ -4,11 +4,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.w3c.dom.Entity;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.entities.EntityAccesories;
 import pl.koszela.spring.entities.EntityTiles;
@@ -16,13 +18,14 @@ import pl.koszela.spring.entities.EntityUser;
 import pl.koszela.spring.repositories.InputDataTilesRepository;
 import pl.koszela.spring.repositories.TilesRepository;
 import pl.koszela.spring.repositories.UsersRepo;
+import pl.koszela.spring.service.MenuBarInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Route(value = CreateOffer.CREATE_OFFER, layout = MainView.class)
-public class CreateOffer extends VerticalLayout {
+@Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
+public class OfferView extends VerticalLayout implements MenuBarInterface {
 
     public static final String CREATE_OFFER = "createOffer";
 
@@ -36,20 +39,23 @@ public class CreateOffer extends VerticalLayout {
 
     private Grid<EntityTiles> resultTiles = new Grid<>(EntityTiles.class);
     private Grid<EntityAccesories> resultAccesories = new Grid<>(EntityAccesories.class);
+    private Grid<EntityUser> resultUser = new Grid<>(EntityUser.class);
     private NumberField customerDiscount = new NumberField("Rabat na dachówki");
     private VerticalLayout layout = new VerticalLayout();
 
     private Button calculateProfit = new Button("Oblicz zyski");
+    private Button viewUSer = new Button("Pokaż klienta");
 
     @Autowired
-    public CreateOffer(UsersRepo usersRepo, CalculateTiles calculateTiles, TilesRepository tilesRepository,
-                       InputDataTilesRepository inputDataTilesRepository) {
+    public OfferView(UsersRepo usersRepo, CalculateTiles calculateTiles, TilesRepository tilesRepository,
+                     InputDataTilesRepository inputDataTilesRepository) {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
 
         loadUserComboBox();
+        add(menu());
         add(addLayout());
     }
 
@@ -59,12 +65,21 @@ public class CreateOffer extends VerticalLayout {
             resultTiles.setItems(resultTiles());
             resultAccesories.setItems(resultAccesories());
         });
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        viewUSer.addClickListener(buttonClickEvent -> resultUser.setItems(entityUser));
         formLayout.add(selectUser, getAvailablePriceList());
         formLayout.add(customerDiscount, calculateProfit);
+        formLayout.add(viewUSer);
         layout.add(formLayout);
+        layout.add(createGridUsers());
         layout.add(createGridTiles());
         layout.add(createGridAccesories());
         return layout;
+    }
+
+    private Grid<EntityUser> createGridUsers() {
+        resultUser.getColumns().forEach(column -> column.setAutoWidth(true));
+        return resultUser;
     }
 
     private Grid<EntityTiles> createGridTiles() {
@@ -85,7 +100,7 @@ public class CreateOffer extends VerticalLayout {
         return resultTiles;
     }
 
-    private Grid<EntityAccesories> createGridAccesories(){
+    private Grid<EntityAccesories> createGridAccesories() {
         resultAccesories.getColumnByKey("name").setHeader("Nazwa");
         resultAccesories.getColumnByKey("purchasePrice").setHeader("Cena zakupu");
         resultAccesories.getColumnByKey("margin").setHeader("Ilość");
@@ -105,7 +120,7 @@ public class CreateOffer extends VerticalLayout {
         return entityUser.getEntityTiles();
     }
 
-    private List<EntityAccesories> resultAccesories(){
+    private List<EntityAccesories> resultAccesories() {
         EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
         return entityUser.getEntityAccesories();
     }
@@ -117,9 +132,12 @@ public class CreateOffer extends VerticalLayout {
     }
 
     private List<String> nameAndSurname() {
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
         Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
         List<String> nameAndSurname = new ArrayList<>();
+/*
         allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getName().concat(" ").concat(user.getSurname())));
+*/
         return nameAndSurname;
     }
 
@@ -131,5 +149,12 @@ public class CreateOffer extends VerticalLayout {
             priceList.setItems("Brak zaimportowanych cenników");
             return priceList;
         }
+    }
+
+    @Override
+    public MenuBar menu() {
+        MenuBar menuBar = new MenuBar();
+        menuBar.addItem("Utwórz ofertę");
+        return menuBar;
     }
 }

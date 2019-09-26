@@ -1,22 +1,15 @@
 package pl.koszela.spring.views;
 
-import com.google.common.base.Joiner;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.VaadinRequest;
-import com.vaadin.flow.server.VaadinResponse;
-import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.Attributes;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
@@ -25,17 +18,12 @@ import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.*;
 import pl.koszela.spring.service.MenuBarInterface;
 
-import javax.servlet.http.Cookie;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import static pl.koszela.spring.service.Labels.getLabel;
-import static pl.koszela.spring.views.SelectAccesories.SELECT_ACCESORIES;
+import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 
-@Route(value = EnterTiles.ENTER_TILES, layout = MainView.class)
-public class EnterTiles extends VerticalLayout implements MenuBarInterface {
+@Route(value = TilesView.ENTER_TILES, layout = MainView.class)
+public class TilesView extends VerticalLayout implements MenuBarInterface {
 
     public static final String ENTER_TILES = "tiles";
 
@@ -77,8 +65,8 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     private Grid<EntityTiles> grid = new Grid<>(EntityTiles.class);
 
     @Autowired
-    public EnterTiles(AccesoriesRepository accesoriesRepository, InputDataTilesRepository inputDataTilesRepository,
-                      CalculateTiles calculateTiles, TilesRepository tilesRepository) {
+    public TilesView(AccesoriesRepository accesoriesRepository, InputDataTilesRepository inputDataTilesRepository,
+                     CalculateTiles calculateTiles, TilesRepository tilesRepository) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
@@ -90,10 +78,15 @@ public class EnterTiles extends VerticalLayout implements MenuBarInterface {
     }
 
     private void getAvailablePriceList(ComboBox<String> comboBox) {
-        if (!calculateTiles.getAvailablePriceList().isEmpty()) {
-            VaadinSession.getCurrent().setAttribute("availablePriceList", calculateTiles.getAvailablePriceList());
+        Object object = VaadinSession.getCurrent().getAttribute("availablePriceList");
+        if (!Objects.isNull(object)) {
             List list = (List) VaadinSession.getCurrent().getAttribute("availablePriceList");
             comboBox.setItems(list);
+        }
+        List<String> available = calculateTiles.getAvailablePriceList();
+        if (Objects.isNull(object) && !available.isEmpty()) {
+            comboBox.setItems(available);
+            VaadinSession.getCurrent().setAttribute("availablePriceList", available);
         }
     }
 

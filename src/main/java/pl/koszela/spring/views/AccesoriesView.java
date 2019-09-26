@@ -25,10 +25,10 @@ import java.math.RoundingMode;
 import java.util.*;
 
 import static pl.koszela.spring.service.Labels.*;
-import static pl.koszela.spring.views.InputWindows.WINDOWS;
+import static pl.koszela.spring.views.WindowsView.WINDOWS;
 
-@Route(value = SelectAccesories.SELECT_ACCESORIES, layout = MainView.class)
-public class SelectAccesories extends VerticalLayout implements MenuBarInterface {
+@Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
+public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
 
     public static final String SELECT_ACCESORIES = "accesories/select";
     private AccesoriesRepository accesoriesRepository;
@@ -89,8 +89,8 @@ public class SelectAccesories extends VerticalLayout implements MenuBarInterface
 
 
     @Autowired
-    public SelectAccesories(AccesoriesRepository accesoriesRepository,
-                            InputDataAccesoriesRespository inputDataAccesoriesRespository) {
+    public AccesoriesView(AccesoriesRepository accesoriesRepository,
+                          InputDataAccesoriesRespository inputDataAccesoriesRespository) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.inputDataAccesoriesRespository = Objects.requireNonNull(inputDataAccesoriesRespository);
 

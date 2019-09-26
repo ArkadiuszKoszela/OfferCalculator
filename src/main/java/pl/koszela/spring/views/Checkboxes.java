@@ -25,20 +25,20 @@ public class Checkboxes extends VerticalLayout {
     private VerticalLayout verticalLayout = new VerticalLayout();
 
     Checkboxes() {
-        createListOfLabels();
-        getCheckboxes().setItems(allLabelsToComboBox);
-        getCheckboxes().setLabel(LABEL_CHECKBOXES);
-        Label label = new Label(" ");
-        FormLayout board = new FormLayout();
-        board.add(clearButton(), label);
-        verticalLayout.add(board);
-        verticalLayout.add(getCheckboxes());
-
-        add(verticalLayout);
+        add(addLayout());
     }
 
-    private void createListOfLabels() {
-        allLabelsToComboBox = Arrays.asList(TASMA_KELNICOWA, WSPORNIK_LATY_KALENICOWEJ, TASMA_DO_OBROBKI_KOMINA, LISTWA_WYKONCZENIOWA_ALUMINIOWA, KOSZ_DACHOWY_ALUMINIOWY_2MB,
+    private FormLayout addLayout() {
+        getCheckboxes().setItems(createListOfLabels());
+        getCheckboxes().setLabel(LABEL_CHECKBOXES);
+        FormLayout formLayout = new FormLayout();
+        formLayout.add(clearButton(), getLabel(" "));
+        formLayout.add(getCheckboxes());
+        return formLayout;
+    }
+
+    private List<String> createListOfLabels() {
+        return allLabelsToComboBox = Arrays.asList(TASMA_KELNICOWA, WSPORNIK_LATY_KALENICOWEJ, TASMA_DO_OBROBKI_KOMINA, LISTWA_WYKONCZENIOWA_ALUMINIOWA, KOSZ_DACHOWY_ALUMINIOWY_2MB,
                 KLAMRA_DO_MOCOWANIA_KOSZA, KLIN_USZCZELNIAJACY_KOSZ, GRZEBIEN_OKAPOWY, KRATKA_ZABEZPIECZAJACA_PRZED_PTACTWEM, PAS_OKAPOWY, KLAMRA_DO_GASIORA,
                 SPINKA_DO_DACHOWKI, SPINKA_DO_DACHOWKI_CIETEJ, LAWA_KOMINIARSKA, STOPIEN_KOMINIARSKI, PLOTEK_PRZECIWSNIEGOWY_155MMX2MB, PLOTEK_PRZECIWSNIEGOWY_155MMX3MB,
                 MEMBRANA_DACHOWA, TASMA_DO_LACZENIA_MEMBRAN_I_FOLII, TASMA_REPARACYJNA, BLACHA_ALUMINIOWA, CEGLA_KLINKIEROWA);

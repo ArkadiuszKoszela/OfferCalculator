@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.importFiles.ImportFiles;
 
@@ -16,13 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static pl.koszela.spring.views.EnterTiles.ENTER_TILES;
-import static pl.koszela.spring.views.InputUser.INPUT_USER;
-import static pl.koszela.spring.views.SelectAccesories.SELECT_ACCESORIES;
-
+import static pl.koszela.spring.views.TilesView.ENTER_TILES;
+import static pl.koszela.spring.views.UsersView.INPUT_USER;
+import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
+@Route("")
 public class MainView extends AppLayout {
 
-    private Map<Tab, Component> tab2Workspace = new HashMap<>();
     private ImportFiles importFiles;
 
     @Autowired

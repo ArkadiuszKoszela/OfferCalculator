@@ -2,6 +2,7 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -22,9 +23,11 @@ import java.util.Objects;
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
 import static pl.koszela.spring.service.Labels.getLabel;
+import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
+import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 
-@Route(value = InputWindows.WINDOWS, layout = MainView.class)
-public class InputWindows extends VerticalLayout  implements MenuBarInterface {
+@Route(value = WindowsView.WINDOWS, layout = MainView.class)
+public class WindowsView extends VerticalLayout implements MenuBarInterface {
 
     private WindowsRepository windowsRepository;
     private KolnierzRepository kolnierzRepository;
@@ -36,21 +39,28 @@ public class InputWindows extends VerticalLayout  implements MenuBarInterface {
     private ComboBox<String> comboboxKolnierz = new ComboBox<>("Kołnierz");
     private Button save = new Button("Zapisz dane");
 
-    public InputWindows(WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, UsersRepo usersRepo) {
+    public WindowsView(WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, UsersRepo usersRepo) {
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
 
+        add(menu());
+        add(addLayout());
+    }
+
+    private FormLayout addLayout() {
         save.addClickListener(buttonClickEvent -> loadUser());
-        add(putDataInComboBox(), save);
-        add(putInComboBox(),getLabel(" "));
+        FormLayout formLayout = new FormLayout();
+        formLayout.add(putDataInComboBox(), save);
+        formLayout.add(putInComboBox(), getLabel(" "));
+        return formLayout;
     }
 
     private void loadUser() {
         EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
 
-        if (saveInputWindows() != null) {
-            entityUser.setEntityWindows(saveInputWindows());
+        if (findWindowsByName() != null) {
+            entityUser.setEntityWindows(findWindowsByName());
             entityUser.setHasWindows(true);
             getNotificationSucces("Okna zapisane");
         } else {
@@ -63,19 +73,26 @@ public class InputWindows extends VerticalLayout  implements MenuBarInterface {
         return comboboxWindows;
     }
 
-    private ComboBox<String> putInComboBox(){
+    private ComboBox<String> putInComboBox() {
         comboboxKolnierz.setItems(getAllNameKolnierz());
         return comboboxKolnierz;
     }
 
-    private EntityWindows saveInputWindows() {
-        EntityWindows entityWindows = new EntityWindows();
-        entityWindows.setName(comboboxWindows.getValue());
-
-        windowsRepository.save(entityWindows);
+    private EntityWindows findWindowsByName() {
+        EntityWindows entityWindows = windowsRepository.findByName(comboboxWindows.getValue());
         return entityWindows;
     }
 
+    private EntityKolnierz findKolnierzByName() {
+        EntityKolnierz entityKolnierz = kolnierzRepository.findByName(comboboxKolnierz.getValue());
+        return entityKolnierz;
+    }
+
+    private void saveUser() {
+        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        entityUser.setEntityWindows(findWindowsByName());
+        entityUser.setEntityKolnierz(findKolnierzByName());
+    }
 
     private List<String> getAllNameWindows() {
         Iterable<EntityWindows> allWindowsFromRepository = windowsRepository.findAll();
@@ -94,7 +111,12 @@ public class InputWindows extends VerticalLayout  implements MenuBarInterface {
     @Override
     public MenuBar menu() {
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem(new RouterLink("Dalej", CreateOffer.class));
+        Button button = new Button("Dalej");
+        button.addClickListener(buttonClickEvent -> {
+            saveUser();
+            getUI().ifPresent(ui -> ui.navigate(CREATE_OFFER));
+        });
+        menuBar.addItem(button);
         return menuBar;
     }
 

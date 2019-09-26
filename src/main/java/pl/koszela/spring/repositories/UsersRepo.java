@@ -8,8 +8,4 @@ import pl.koszela.spring.entities.EntityUser;
 @Transactional
 @Repository(value = "repo_users")
 public interface UsersRepo extends CrudRepository<EntityUser, Long> {
-
-    EntityUser findUsersEntityByNameAndSurnameEquals(String name, String surname);
-    EntityUser findEntityUserByNameAndSurnameContains(String name, String surname);
-
 }

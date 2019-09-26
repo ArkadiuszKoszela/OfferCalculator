@@ -29,14 +29,12 @@ public class CalculateTiles {
                         .concat(" ")
                         .concat(e.getType())));
 
-        List<String> listWithoutDuplicates = new ArrayList<>(allTiles);
+        /*List<String> listWithoutDuplicates = new ArrayList<>(allTiles);
         Collection<String> remove = new TreeSet<>();
         for (int i = 0; i < listWithoutDuplicates.size(); i++) {
             remove.add(listWithoutDuplicates.get(i));
             i++;
-        }
-        allTiles.removeAll(remove);
-
+        }*/
         return new ArrayList<>(allTiles);
     }
 
@@ -75,11 +73,9 @@ public class CalculateTiles {
     }
 
     public void getRetail(List<EntityTiles> tilesList, NumberField customerDiscount, List<Double> listOfNumberFields) {
-        /*enterTiles.setValuesNumberFields();*/
         for (int i = 0; i < tilesList.size(); i++) {
             for (Double value : listOfNumberFields) {
                 calculateRetail(tilesList, i, value, customerDiscount);
-
             }
         }
     }
