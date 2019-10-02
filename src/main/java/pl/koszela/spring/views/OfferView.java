@@ -7,22 +7,23 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.w3c.dom.Entity;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.entities.EntityAccesories;
-import pl.koszela.spring.entities.EntityTiles;
 import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.InputDataTilesRepository;
-import pl.koszela.spring.repositories.TilesRepository;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.service.MenuBarInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout implements MenuBarInterface {
@@ -31,13 +32,12 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
 
     private UsersRepo usersRepo;
     private CalculateTiles calculateTiles;
-    private TilesRepository tilesRepository;
     private InputDataTilesRepository inputDataTilesRepository;
 
     private ComboBox<String> selectUser = new ComboBox<>("Wybierz klienta: ");
     private ComboBox<String> priceList = new ComboBox<>("Dostępne cenniki: ");
 
-    private Grid<EntityTiles> resultTiles = new Grid<>(EntityTiles.class);
+    /*private Grid<Tiles> resultTiles = new Grid<>(Tiles.class);*/
     private Grid<EntityAccesories> resultAccesories = new Grid<>(EntityAccesories.class);
     private Grid<EntityUser> resultUser = new Grid<>(EntityUser.class);
     private NumberField customerDiscount = new NumberField("Rabat na dachówki");
@@ -47,11 +47,10 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
     private Button viewUSer = new Button("Pokaż klienta");
 
     @Autowired
-    public OfferView(UsersRepo usersRepo, CalculateTiles calculateTiles, TilesRepository tilesRepository,
+    public OfferView(UsersRepo usersRepo, CalculateTiles calculateTiles,
                      InputDataTilesRepository inputDataTilesRepository) {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
-        this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
 
         loadUserComboBox();
@@ -62,7 +61,6 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
     private VerticalLayout addLayout() {
         FormLayout formLayout = new FormLayout();
         calculateProfit.addClickListener(buttonClickEvent -> {
-            resultTiles.setItems(resultTiles());
             resultAccesories.setItems(resultAccesories());
         });
         EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
@@ -71,8 +69,9 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
         formLayout.add(customerDiscount, calculateProfit);
         formLayout.add(viewUSer);
         layout.add(formLayout);
+        layout.add(createTiles());
         layout.add(createGridUsers());
-        layout.add(createGridTiles());
+        /*layout.add(createGridTiles());*/
         layout.add(createGridAccesories());
         return layout;
     }
@@ -82,8 +81,47 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
         return resultUser;
     }
 
-    private Grid<EntityTiles> createGridTiles() {
-        resultTiles.getColumnByKey("name").setHeader("Kategoria");
+    private TreeGrid<Tiles> createTiles() {
+        TreeGrid<Tiles> treeGrid = new TreeGrid<>();
+        TreeData<Tiles> treeData1 = new TreeData<>();
+
+        List<Tiles> list = (List<Tiles>) VaadinSession.getCurrent().getAttribute("bogen1");
+        List<Tiles> list2 = (List<Tiles>) VaadinSession.getCurrent().getAttribute("bogen2");
+        if(list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                if (i == 0) {
+                    treeData1.addItem(null, list.get(i));
+                    treeData1.addItem(null, list2.get(i));
+                } else {
+                    treeData1.addItems(list.get(0), list.get(i));
+                    treeData1.addItems(list2.get(0), list2.get(i));
+                }
+            }
+        }
+
+
+        treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika");
+        treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
+        treeGrid.addColumn(Tiles::getPrice).setHeader("Cena jednostkowa");
+        treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total");
+        treeGrid.addColumn(Tiles::getPricePurchase).setHeader("Cena zakupu");
+        treeGrid.addColumn(Tiles::getPriceAfterDiscount).setHeader("Cena po rabacie");
+        treeGrid.addColumn(Tiles::getProfit).setHeader("Zysk");
+
+        treeGrid.setDataProvider(new TreeDataProvider<Tiles>(treeData1));
+        treeGrid.getColumns().forEach(column -> column.setAutoWidth(true));
+
+        return treeGrid;
+    }
+
+    public TreeData<String> addItems(String parent, Stream<String> items) {
+        TreeData<String> treeData = new TreeData<>();
+        items.forEach(item -> treeData.addItem(parent, item));
+        return treeData;
+    }
+
+    /*private Grid<Tiles> createGridTiles() {
+      *//*  resultTiles.getColumnByKey("name").setHeader("Kategoria");
         resultTiles.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
         resultTiles.getColumnByKey("priceAfterDiscount").setHeader("Cena sprzedaży");
         resultTiles.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
@@ -96,9 +134,9 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
         resultTiles.removeColumnByKey("supplierDiscount");
         resultTiles.removeColumnByKey("additionalDiscount");
         resultTiles.removeColumnByKey("skontoDiscount");
-        resultTiles.getColumns().forEach(column -> column.setAutoWidth(true));
+        resultTiles.getColumns().forEach(column -> column.setAutoWidth(true));*//*
         return resultTiles;
-    }
+    }*/
 
     private Grid<EntityAccesories> createGridAccesories() {
         resultAccesories.getColumnByKey("name").setHeader("Nazwa");
@@ -115,10 +153,10 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
         return resultAccesories;
     }
 
-    private List<EntityTiles> resultTiles() {
+    /*private List<EntityTiles> resultTiles() {
         EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
         return entityUser.getEntityTiles();
-    }
+    }*/
 
     private List<EntityAccesories> resultAccesories() {
         EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
@@ -135,9 +173,9 @@ public class OfferView extends VerticalLayout implements MenuBarInterface {
         EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
         Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
         List<String> nameAndSurname = new ArrayList<>();
-/*
-        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getName().concat(" ").concat(user.getSurname())));
-*/
+        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getEntityPersonalData().getName().concat(" ").concat(user.getEntityPersonalData().getSurname())));
+        /*nameAndSurname.add(entityUser.getEntityPersonalData().getName().concat(" ").concat(entityUser.getEntityPersonalData().getSurname()));*/
+        nameAndSurname.add("Brak");
         return nameAndSurname;
     }
 

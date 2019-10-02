@@ -22,7 +22,6 @@ public class Checkboxes extends VerticalLayout {
     private CheckboxGroup<String> checkboxes = new CheckboxGroup<>();
 
     private List<String> allLabelsToComboBox = new ArrayList<>();
-    private VerticalLayout verticalLayout = new VerticalLayout();
 
     Checkboxes() {
         add(addLayout());

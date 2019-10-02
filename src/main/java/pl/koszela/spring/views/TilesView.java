@@ -9,7 +9,6 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.Attributes;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
@@ -30,7 +29,6 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
     private AccesoriesRepository accesoriesRepository;
     private InputDataTilesRepository inputDataTilesRepository;
     private CalculateTiles calculateTiles;
-    private TilesRepository tilesRepository;
 
     private NumberField numberField1 = new NumberField("Powierzchnia połaci");
     private NumberField numberField2 = new NumberField("Długość kalenic");
@@ -62,7 +60,8 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
     private VerticalLayout dane = new VerticalLayout();
     private VerticalLayout cennik = new VerticalLayout();
 
-    private Grid<EntityTiles> grid = new Grid<>(EntityTiles.class);
+    private Grid<Tiles> grid = new Grid<>(Tiles.class);
+    private TilesRepository tilesRepository;
 
     @Autowired
     public TilesView(AccesoriesRepository accesoriesRepository, InputDataTilesRepository inputDataTilesRepository,
@@ -99,27 +98,42 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
         listOfNumberFields.forEach(formLayout::add);
         getAvailablePriceList(comboBoxInput);
         dane.add(formLayout);
+        VaadinSession.getCurrent().setAttribute("resultTiles", listResultTiles());
         return dane;
     }
 
-    private List<EntityTiles> listResultTiles() {
-        String[] spliString = comboBoxInput.getValue().split(" ");
-
-        List<EntityTiles> priceListFromRepository = tilesRepository.findByPriceListNameAndType(spliString[0] + " " + spliString[1] + " " + spliString[2], spliString[3] + " " + spliString[4]);
-        priceListFromRepository.forEach(e -> e.setPriceListName(comboBoxInput.getValue()));
+    private List<Tiles> listResultTiles() {
+        List<Tiles> priceListFromRepository = tilesRepository.findByPriceListNameEquals(calculateTiles.getAvailablePriceList().get(0));
 
         calculateTiles.getRetail(priceListFromRepository, customerDiscount, listValueOfNumberFields);
         calculateTiles.getPurchase(priceListFromRepository, listValueOfNumberFields);
         calculateTiles.getProfit(priceListFromRepository);
+        calculateTiles.getAllPriceAfterDiscount(priceListFromRepository);
 
         tilesRepository.saveAll(priceListFromRepository);
         return priceListFromRepository;
     }
 
-    private List<EntityTiles> allTilesFromRespository() {
-        Iterable<EntityTiles> allTilesFromRepository = tilesRepository.findAll();
-        List<EntityTiles> allTiles = new ArrayList<>();
+    private List<Tiles> allTilesFromRespository() {
+        Iterable<Tiles> allTilesFromRepository = tilesRepository.findAll();
+        List<Tiles> allTiles = new ArrayList<>();
         allTilesFromRepository.forEach(allTiles::add);
+
+        List<Tiles> bogen10 = new ArrayList<>();
+        List<Tiles> bogen10other = new ArrayList<>();
+
+        for (Tiles tiles : allTiles) {
+            String first = allTiles.get(0).getPriceListName();
+            String second = tiles.getPriceListName();
+            if (second.equals(first)) {
+                bogen10.add(tiles);
+            } else {
+                bogen10other.add(tiles);
+            }
+        }
+        VaadinSession.getCurrent().setAttribute("bogen1", bogen10);
+        VaadinSession.getCurrent().setAttribute("bogen2", bogen10other);
+        VaadinSession.getCurrent().setAttribute("tiles", allTiles);
         return allTiles;
     }
 
@@ -200,28 +214,15 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
     }
 
     private void loadUser() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
         EntityInputDataTiles result = saveInputData();
-        if (result != null) {
-            entityUser.setEntityInputDataTiles(result);
-            entityUser.setEntityTiles(listResultTiles());
-            entityUser.setHasTiles(true);
-            ServiceNotification.getNotificationSucces("Dachówki zapisane");
-        } else {
-            ServiceNotification.getNotificationError("Dachówki nizapisane");
-        }
+        VaadinSession.getCurrent().setAttribute("tilesInput", result);
+        ServiceNotification.getNotificationSucces("Dachówki zapisane");
     }
 
     private VerticalLayout createGrid() {
+        grid.getColumnByKey("name").setHeader("Nazwa");
+        grid.getColumnByKey("price").setHeader("Cena");
         grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
-        grid.getColumnByKey("type").setHeader("Typ dachówki");
-        grid.getColumnByKey("name").setHeader("Kategoria");
-        grid.getColumnByKey("unitRetailPrice").setHeader("Cena detaliczna");
-        grid.getColumnByKey("profit").setHeader("Marża");
-        grid.getColumnByKey("basicDiscount").setHeader("Rabat podstawowy");
-        grid.getColumnByKey("supplierDiscount").setHeader("Promocja");
-        grid.getColumnByKey("additionalDiscount").setHeader("Rabat dodatkowy");
-        grid.getColumnByKey("skontoDiscount").setHeader("Skonto");
         grid.removeColumnByKey("id");
         grid.setItems(allTilesFromRespository());
         grid.getColumns().forEach(column -> column.setAutoWidth(true));

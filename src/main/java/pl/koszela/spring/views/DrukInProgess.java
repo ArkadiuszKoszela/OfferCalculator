@@ -2,16 +2,10 @@ package pl.koszela.spring.views;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.EntityTiles;
-import pl.koszela.spring.entities.EntityUser;
 
-import javax.swing.text.html.parser.Entity;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 public class DrukInProgess {
 
@@ -30,7 +24,7 @@ public class DrukInProgess {
         Document document = new Document();
 
         /*EntityUser user = (EntityUser) VaadinSession.getCurrent().getAttribute("user");*/
-        EntityTiles entityTiles = new EntityTiles();
+        /*EntityTiles entityTiles = new EntityTiles();
         entityTiles.setPriceListName("Bogen Innovo 10");
         entityTiles.setType("Czerwona Angoba");
         entityTiles.setName("Dachówka podstawowa");
@@ -42,7 +36,7 @@ public class DrukInProgess {
         entityTiles.setSkontoDiscount(4);
         entityTiles.setPriceAfterDiscount("po rabacie");
         entityTiles.setPurchasePrice("zakup");
-        entityTiles.setProfitCalculate("zysk");
+        entityTiles.setProfitCalculate("zysk");*/
 
         try {
 
@@ -88,12 +82,12 @@ public class DrukInProgess {
             float [] pointColumnWidths = {250F, 100F, 100F,100F,100F,100F};
             PdfPTable table = new PdfPTable(pointColumnWidths);
             
-            table.addCell(new Paragraph(entityTiles.getType()));
+            /*table.addCell(new Paragraph(entityTiles.getType()));
             table.addCell(new Paragraph(entityTiles.getName()));
             table.addCell(new Paragraph(entityTiles.getPriceListName()));
             table.addCell(new Paragraph(entityTiles.getPriceAfterDiscount()));
             table.addCell(new Paragraph(entityTiles.getPurchasePrice()));
-            table.addCell(new Paragraph(entityTiles.getProfitCalculate()));
+            table.addCell(new Paragraph(entityTiles.getProfitCalculate()));*/
 
             document.add(table);
 

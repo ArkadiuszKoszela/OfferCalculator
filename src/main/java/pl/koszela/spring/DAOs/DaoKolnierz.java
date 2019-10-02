@@ -22,7 +22,7 @@ public class DaoKolnierz implements Dao {
     }
 
     @Override
-    public final void save(String filePath) {
+    public final void save(String filePath, String priceListName) {
         String line = "";
         BufferedReader br = null;
 

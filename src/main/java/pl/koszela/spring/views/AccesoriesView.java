@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
+import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.service.Labels.*;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 
@@ -173,26 +174,26 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
     }
 
     private void getValuesTiles() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        EntityInputDataTiles dataTiles = entityUser.getEntityInputDataTiles();
         setValue(getListNumberFields());
-        valuesFromRepo = Arrays.asList(dataTiles.getPowierzchniaPolaci(), dataTiles.getDlugoscKalenic(),
-                dataTiles.getDlugoscKalenicProstych(), dataTiles.getDlugoscKalenicSkosnych(),
-                dataTiles.getDlugoscKoszy(), dataTiles.getDlugoscKrawedziLewych(), dataTiles.getDlugoscKrawedziPrawych(),
-                dataTiles.getObwodKomina(), dataTiles.getDlugoscOkapu(), dataTiles.getDachowkaWentylacyjna(),
-                dataTiles.getKompletKominkaWentylacyjnego(), dataTiles.getGasiarPoczatkowyKalenicaProsta(),
-                dataTiles.getGasiarKoncowyKalenicaProsta(), dataTiles.getGasiarZaokraglony(),
-                dataTiles.getTrojnik(), dataTiles.getCzwornik(), dataTiles.getGasiarZPodwojnaMufa(),
-                dataTiles.getDachowkaDwufalowa(), dataTiles.getOknoPolaciowe());
-        for (int i = 0; i < valuesFromRepo.size(); i++) {
-            listOfNumberFields.get(i).setValue(valuesFromRepo.get(i) * valuePriceAccesories.get(i));
+        EntityInputDataTiles dataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getAttribute("tilesInput");
+        if (dataTiles != null) {
+            valuesFromRepo = Arrays.asList(dataTiles.getPowierzchniaPolaci(), dataTiles.getDlugoscKalenic(),
+                    dataTiles.getDlugoscKalenicProstych(), dataTiles.getDlugoscKalenicSkosnych(),
+                    dataTiles.getDlugoscKoszy(), dataTiles.getDlugoscKrawedziLewych(), dataTiles.getDlugoscKrawedziPrawych(),
+                    dataTiles.getObwodKomina(), dataTiles.getDlugoscOkapu(), dataTiles.getDachowkaWentylacyjna(),
+                    dataTiles.getKompletKominkaWentylacyjnego(), dataTiles.getGasiarPoczatkowyKalenicaProsta(),
+                    dataTiles.getGasiarKoncowyKalenicaProsta(), dataTiles.getGasiarZaokraglony(),
+                    dataTiles.getTrojnik(), dataTiles.getCzwornik(), dataTiles.getGasiarZPodwojnaMufa(),
+                    dataTiles.getDachowkaDwufalowa(), dataTiles.getOknoPolaciowe());
+            for (int i = 0; i < valuesFromRepo.size(); i++) {
+                listOfNumberFields.get(i).setValue(valuesFromRepo.get(i) * valuePriceAccesories.get(i));
+            }
+        } else {
+            getNotificationError("Proszę kliknąc dalej aby móc wczytać dane");
         }
-
     }
 
     private void saveInputDataAccesories() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-
         EntityInputDataAccesories entityInputDataAccesories = EntityInputDataAccesories.builder()
                 .tasmaKalenicowa(comboBoxtasmaKalenicowa.getValue())
                 .wspornikLatyKalenicowej(comboBoxwspornikLatyKalenicowej.getValue())
@@ -218,9 +219,7 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
         inputDataAccesoriesRespository.save(entityInputDataAccesories);
-        entityUser.setHasAccesories(true);
-        entityUser.setEntityInputDataAccesories(entityInputDataAccesories);
-        entityUser.setEntityAccesories(resultAccesories());
+        VaadinSession.getCurrent().setAttribute("accesoriesInput", entityInputDataAccesories);
         ServiceNotification.getNotificationSucces("Akcesoria zapisane");
     }
 

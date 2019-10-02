@@ -2,14 +2,17 @@ package pl.koszela.spring.DAOs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityTiles;
+import pl.koszela.spring.entities.Enums;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.TilesRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DaoTiles implements Dao {
@@ -22,27 +25,28 @@ public class DaoTiles implements Dao {
     }
 
     @Override
-    public final void save(String filePath) {
-        String line = "";
+    public final void save(String filePath, String priceListName) {
+        String line;
         BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new FileReader(filePath));
+            br = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                EntityTiles entityTiles = new EntityTiles();
-
-                entityTiles.setPriceListName(data[0]);
-                entityTiles.setType(data[1]);
-                entityTiles.setName(data[2]);
-                entityTiles.setUnitRetailPrice(new BigDecimal(data[3]));
-                entityTiles.setProfit(Integer.valueOf(data[4]));
-                entityTiles.setBasicDiscount(Integer.valueOf(data[5]));
-                entityTiles.setSupplierDiscount(Integer.valueOf(data[6]));
-                entityTiles.setAdditionalDiscount(Integer.valueOf(data[7]));
-                entityTiles.setSkontoDiscount(Integer.valueOf(data[8]));
-
-                tilesRepository.save(entityTiles);
+                List<Enums> list = Arrays.asList(Enums.values());
+                Set<Tiles> set = new HashSet<>();
+                List<String> stringList = Arrays.asList(data);
+                List<String> doUsuniecia = new ArrayList<>();
+                doUsuniecia.add(stringList.get(0));
+                List<String> poprawna = stringList.stream().filter(e -> !doUsuniecia.contains(e)).collect(Collectors.toList());
+                for (int i = 0; i < list.size(); i++) {
+                    Tiles tiles = new Tiles();
+                    tiles.setName(list.get(i).name());
+                    tiles.setPrice(new BigDecimal(poprawna.get(i)));
+                    tiles.setPriceListName(priceListName);
+                    set.add(tiles);
+                    tilesRepository.save(tiles);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

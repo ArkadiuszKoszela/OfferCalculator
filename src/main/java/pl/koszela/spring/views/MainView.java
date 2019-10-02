@@ -17,9 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.TilesView.ENTER_TILES;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
+import static pl.koszela.spring.views.WindowsView.WINDOWS;
+
 @Route("")
 public class MainView extends AppLayout {
 
@@ -33,7 +36,8 @@ public class MainView extends AppLayout {
         img.setHeight("44px");
         addToNavbar(new DrawerToggle(), img);
         MenuBar menuBar = new MenuBar();
-        Tabs tabs = new Tabs(false, new Tab("Klienci"), new Tab("Dachówki"), new Tab("Akcesoria"));
+        Tabs tabs = new Tabs(false, new Tab("Klienci"), new Tab("Dachówki"), new Tab("Akcesoria"),
+                new Tab("Okna"), new Tab("Oferta"));
         tabs.setFlexGrowForEnclosedTabs(1);
         tabs.addSelectedChangeListener(e -> {
             if (e.getSelectedTab().getLabel().equalsIgnoreCase("Klienci")) {
@@ -44,6 +48,12 @@ public class MainView extends AppLayout {
                 tabs.setSelectedTab(e.getSelectedTab());
             } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Akcesoria")) {
                 getUI().ifPresent(ui -> ui.navigate(SELECT_ACCESORIES));
+                tabs.setSelectedTab(e.getSelectedTab());
+            }else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Okna")) {
+                getUI().ifPresent(ui -> ui.navigate(WINDOWS));
+                tabs.setSelectedTab(e.getSelectedTab());
+            }else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Oferta")) {
+                getUI().ifPresent(ui -> ui.navigate(CREATE_OFFER));
                 tabs.setSelectedTab(e.getSelectedTab());
             }
         });

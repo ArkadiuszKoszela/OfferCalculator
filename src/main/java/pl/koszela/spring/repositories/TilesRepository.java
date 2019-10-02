@@ -2,14 +2,13 @@ package pl.koszela.spring.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.koszela.spring.entities.EntityTiles;
+import pl.koszela.spring.entities.Tiles;
 
 import java.util.List;
 
-@Repository(value = "repo_tiles")
-public interface TilesRepository extends CrudRepository<EntityTiles, Long> {
+@Repository(value = "tiles_repo")
+public interface TilesRepository extends CrudRepository<Tiles, Long> {
 
-    List<EntityTiles> findByPriceListNameAndType(String priceList, String type);
-
-    List<EntityTiles> findByPriceListNameContains(String name);
+    List<Tiles> findByNameEquals (String name);
+    List<Tiles> findByPriceListNameEquals (String priceListName);
 }
