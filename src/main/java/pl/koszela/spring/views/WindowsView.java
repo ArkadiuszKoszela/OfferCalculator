@@ -31,41 +31,25 @@ public class WindowsView extends VerticalLayout implements MenuBarInterface {
 
     private WindowsRepository windowsRepository;
     private KolnierzRepository kolnierzRepository;
-    private UsersRepo usersRepo;
 
     public static final String WINDOWS = "windows";
 
     private ComboBox<String> comboboxWindows = new ComboBox<>("Okna");
     private ComboBox<String> comboboxKolnierz = new ComboBox<>("Kołnierz");
-    private Button save = new Button("Zapisz dane");
 
-    public WindowsView(WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, UsersRepo usersRepo) {
+    public WindowsView(WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository) {
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
-        this.usersRepo = Objects.requireNonNull(usersRepo);
 
         add(menu());
         add(addLayout());
     }
 
     private FormLayout addLayout() {
-        save.addClickListener(buttonClickEvent -> loadUser());
         FormLayout formLayout = new FormLayout();
-        formLayout.add(putDataInComboBox(), save);
+        formLayout.add(putDataInComboBox(), getLabel(" "));
         formLayout.add(putInComboBox(), getLabel(" "));
         return formLayout;
-    }
-
-    private void loadUser() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-
-        if (findWindowsByName() != null) {
-            entityUser.setEntityWindows(findWindowsByName());
-            entityUser.setHasWindows(true);
-            getNotificationSucces("Okna zapisane");
-        } else {
-            getNotificationError("Okna niezapisane");
-        }
     }
 
     private ComboBox<String> putDataInComboBox() {
@@ -76,22 +60,6 @@ public class WindowsView extends VerticalLayout implements MenuBarInterface {
     private ComboBox<String> putInComboBox() {
         comboboxKolnierz.setItems(getAllNameKolnierz());
         return comboboxKolnierz;
-    }
-
-    private EntityWindows findWindowsByName() {
-        EntityWindows entityWindows = windowsRepository.findByName(comboboxWindows.getValue());
-        return entityWindows;
-    }
-
-    private EntityKolnierz findKolnierzByName() {
-        EntityKolnierz entityKolnierz = kolnierzRepository.findByName(comboboxKolnierz.getValue());
-        return entityKolnierz;
-    }
-
-    private void saveUser() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        entityUser.setEntityWindows(findWindowsByName());
-        entityUser.setEntityKolnierz(findKolnierzByName());
     }
 
     private List<String> getAllNameWindows() {
@@ -113,7 +81,6 @@ public class WindowsView extends VerticalLayout implements MenuBarInterface {
         MenuBar menuBar = new MenuBar();
         Button button = new Button("Dalej");
         button.addClickListener(buttonClickEvent -> {
-            saveUser();
             getUI().ifPresent(ui -> ui.navigate(CREATE_OFFER));
         });
         menuBar.addItem(button);

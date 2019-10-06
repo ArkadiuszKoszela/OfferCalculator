@@ -4,9 +4,9 @@ import com.vaadin.flow.component.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.DAOs.DaoAccesories;
-import pl.koszela.spring.DAOs.DaoKolnierz;
-import pl.koszela.spring.DAOs.DaoTiles;
 import pl.koszela.spring.DAOs.DaoWindows;
+import pl.koszela.spring.DAOs.DaoTiles;
+import pl.koszela.spring.DAOs.DaoKolnierz;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.repositories.KolnierzRepository;
@@ -30,6 +30,7 @@ public class ImportFiles {
 
     private static final String NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA = "Bogen Innovo 10 Czerwona Angoba";
     private static final String NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "Bogen Innovo 10 Miedziano-brązowa Angoba";
+    private static final String NAME_BOGEN_INNOVO_12_CZERWONA_ANGOBA = "Bogen Innovo 12 Czerwona Angoba";
 
 
     private AccesoriesRepository accesoriesRepository;
@@ -39,8 +40,8 @@ public class ImportFiles {
 
     private DaoTiles daoTiles;
     private DaoAccesories daoAccesories;
-    private DaoWindows daoWindows;
     private DaoKolnierz daoKolnierz;
+    private DaoWindows daoWindows;
     private CalculateTiles calculateTiles;
 
 
@@ -57,13 +58,13 @@ public class ImportFiles {
     }
 
     @Autowired
-    public void setDaoKolnierz(DaoKolnierz daoKolnierz) {
-        this.daoKolnierz = daoKolnierz;
+    public void setDaoWindows(DaoWindows daoWindows) {
+        this.daoWindows = daoWindows;
     }
 
     @Autowired
-    public void setDaoWindows(DaoWindows daoWindows) {
-        this.daoWindows = daoWindows;
+    public void setDaoKolnierz(DaoKolnierz daoKolnierz) {
+        this.daoKolnierz = daoKolnierz;
     }
 
     @Autowired
@@ -89,11 +90,10 @@ public class ImportFiles {
 
         daoTiles.save(BOGEN_INNOVO_10_CZERWONA_ANGOBA, NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA);
         daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA, NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);
-        /*daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA);
-        daoTiles.save(TEST_INNOVO_10_CZERWONA);*/
+        daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA, NAME_BOGEN_INNOVO_12_CZERWONA_ANGOBA);
         daoAccesories.save(AKCESORIA, "do usunięcia");
-        daoWindows.save(OKNA_OKPOL_DAKEA,"do usunięcia");
         daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA,"do usunięcia");
+        daoWindows.save(OKNA_OKPOL_DAKEA,"do usunięcia");
         calculateTiles.getAvailablePriceList();
         getNotificationSucces("Zaimportowano cenniki");
         UI.getCurrent().getPage().reload();

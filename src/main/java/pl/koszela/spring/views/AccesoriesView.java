@@ -218,7 +218,6 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
                 .blachaAluminiowa(comboBoxblachaAluminiowa.getValue())
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
-        inputDataAccesoriesRespository.save(entityInputDataAccesories);
         VaadinSession.getCurrent().setAttribute("accesoriesInput", entityInputDataAccesories);
         ServiceNotification.getNotificationSucces("Akcesoria zapisane");
     }

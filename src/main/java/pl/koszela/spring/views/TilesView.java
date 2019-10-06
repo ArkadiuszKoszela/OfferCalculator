@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,6 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
     private NumberField numberField19 = new NumberField("Okno połaciowe");
     private NumberField customerDiscount = new NumberField("Podaj rabat dla klienta:");
 
-    private ComboBox<String> comboBoxViewTable = new ComboBox<>("Podaj nazwę cennika: ");
     private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
 
     private List<NumberField> listOfNumberFields = new ArrayList<>();
@@ -102,16 +102,22 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
         return dane;
     }
 
-    private List<Tiles> listResultTiles() {
-        List<Tiles> priceListFromRepository = tilesRepository.findByPriceListNameEquals(calculateTiles.getAvailablePriceList().get(0));
+    private List<List<Tiles>> listResultTiles() {
+        List<String> availablePriceList = calculateTiles.getAvailablePriceList();
+        List<List<Tiles>> allPriceListFromRepository = new ArrayList<>();
+        for (String priceListName : availablePriceList) {
+            List<Tiles> priceListFromRepository = tilesRepository.findByPriceListNameEquals(priceListName);
+            for (Tiles tiles : priceListFromRepository) {
+                for (NumberField listOfNumberField : listOfNumberFields) {
+                    if (tiles.getName().equals(listOfNumberField.getPattern())) {
+                        tiles.setQuantity(listOfNumberField.getValue());
+                    }
+                }
+            }
 
-        calculateTiles.getRetail(priceListFromRepository, customerDiscount, listValueOfNumberFields);
-        calculateTiles.getPurchase(priceListFromRepository, listValueOfNumberFields);
-        calculateTiles.getProfit(priceListFromRepository);
-        calculateTiles.getAllPriceAfterDiscount(priceListFromRepository);
-
-        tilesRepository.saveAll(priceListFromRepository);
-        return priceListFromRepository;
+            allPriceListFromRepository.add(priceListFromRepository);
+        }
+        return allPriceListFromRepository;
     }
 
     private List<Tiles> allTilesFromRespository() {
@@ -159,30 +165,29 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
                 .dachowkaDwufalowa(numberField18.getValue())
                 .oknoPolaciowe(numberField19.getValue())
                 .build();
-        inputDataTilesRepository.save(entityInputDataTiles);
         return entityInputDataTiles;
     }
 
     private void setDefaultValues() {
-        setValues(numberField1, "m²", 300d);
-        setValues(numberField2, "mb", 65d);
-        setValues(numberField3, "mb", 65d);
-        setValues(numberField4, "mb", 1d);
-        setValues(numberField5, "mb", 8d);
-        setValues(numberField6, "mb", 5d);
-        setValues(numberField7, "mb", 5d);
-        setValues(numberField8, "mb", 3d);
-        setValues(numberField9, "mb", 38d);
-        setValues(numberField10, "szt", 1d);
-        setValues(numberField11, "szt", 1d);
-        setValues(numberField12, "szt", 1d);
-        setValues(numberField13, "mb", 1d);
-        setValues(numberField14, "mb", 6d);
-        setValues(numberField15, "szt", 1d);
-        setValues(numberField16, "szt", 1d);
-        setValues(numberField17, "mb", 1d);
-        setValues(numberField18, "szt", 1d);
-        setValues(numberField19, "szt", 1d);
+        setValues(numberField1, "m²", 300d, Enums.DACHOWKA_PODSTAWOWA.toString());
+        setValues(numberField2, "mb", 65d, Enums.DACHOWKA_SKRAJNA_LEWA.toString());
+        setValues(numberField3, "mb", 65d, Enums.DACHOWKA_SKRAJNA_PRAWA.toString());
+        setValues(numberField4, "mb", 1d, Enums.DACHOWKA_POLOWKOWA.toString());
+        setValues(numberField5, "mb", 8d, Enums.DACHOWKA_WENTYLACYJNA.toString());
+        setValues(numberField6, "mb", 5d, Enums.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
+        setValues(numberField7, "mb", 5d, Enums.GASIOR_PODSTAWOWY.toString());
+        setValues(numberField8, "mb", 3d, Enums.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
+        setValues(numberField9, "mb", 38d, Enums.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
+        setValues(numberField10, "szt", 1d, Enums.PLYTKA_POCZATKOWA.toString());
+        setValues(numberField11, "szt", 1d, Enums.PLYTKA_KONCOWA.toString());
+        setValues(numberField12, "szt", 1d, Enums.TROJNIK.toString());
+        setValues(numberField13, "mb", 1d, Enums.GASIAR_ZAOKRAGLONY.toString());
+        setValues(numberField14, "mb", 6d, "brak");
+        setValues(numberField15, "szt", 1d, "brak");
+        setValues(numberField16, "szt", 1d, "brak");
+        setValues(numberField17, "mb", 1d, "brak");
+        setValues(numberField18, "szt", 1d, "brak");
+        setValues(numberField19, "szt", 1d, "brak");
         getListNumberFields();
         getListValueOfNumberFields();
     }
@@ -206,17 +211,18 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
         return customerDiscount;
     }
 
-    private void setValues(NumberField numberField, String unit, Double defaultValue) {
+    private void setValues(NumberField numberField, String unit, Double defaultValue, String pattern) {
+        numberField.setPattern(pattern);
         numberField.setValue(defaultValue);
         numberField.setMin(0);
         numberField.setMax(500);
+        numberField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
         numberField.setSuffixComponent(new Span(unit));
     }
 
     private void loadUser() {
         EntityInputDataTiles result = saveInputData();
         VaadinSession.getCurrent().setAttribute("tilesInput", result);
-        ServiceNotification.getNotificationSucces("Dachówki zapisane");
     }
 
     private VerticalLayout createGrid() {
@@ -225,6 +231,7 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
         grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
         grid.removeColumnByKey("id");
         grid.setItems(allTilesFromRespository());
+        loadUser();
         grid.getColumns().forEach(column -> column.setAutoWidth(true));
         cennik.add(grid);
         return cennik;

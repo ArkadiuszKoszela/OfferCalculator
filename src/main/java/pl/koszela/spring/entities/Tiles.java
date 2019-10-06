@@ -12,11 +12,13 @@ public class Tiles {
     private Long id;
     private String priceListName;
     private String name;
+    private Double quantity;
     private BigDecimal price;
     private BigDecimal priceAfterDiscount;
     private BigDecimal pricePurchase;
     private BigDecimal profit;
     private BigDecimal totalPrice;
+    private BigDecimal totalProfit;
 
     public Tiles() {
     }
@@ -43,6 +45,14 @@ public class Tiles {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
     }
 
     public BigDecimal getPrice() {
@@ -85,17 +95,27 @@ public class Tiles {
         this.totalPrice = totalPrice;
     }
 
+    public BigDecimal getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(BigDecimal totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
     @Override
     public String toString() {
         return "Tiles{" +
                 "id=" + id +
                 ", priceListName='" + priceListName + '\'' +
                 ", name='" + name + '\'' +
-                ", price='" + price + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
                 ", priceAfterDiscount=" + priceAfterDiscount +
                 ", pricePurchase=" + pricePurchase +
                 ", profit=" + profit +
                 ", totalPrice=" + totalPrice +
+                ", totalProfit=" + totalProfit +
                 '}';
     }
 }

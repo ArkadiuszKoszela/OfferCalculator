@@ -10,6 +10,8 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.importFiles.ImportFiles;
 
@@ -24,6 +26,7 @@ import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 
 @Route("")
+@Theme(value = Lumo.class, variant = Lumo.DARK)
 public class MainView extends AppLayout {
 
     private ImportFiles importFiles;

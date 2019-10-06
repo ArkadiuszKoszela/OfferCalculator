@@ -2,8 +2,8 @@ package pl.koszela.spring.DAOs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityKolnierz;
-import pl.koszela.spring.repositories.KolnierzRepository;
+import pl.koszela.spring.entities.EntityWindows;
+import pl.koszela.spring.repositories.WindowsRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,11 +14,11 @@ import java.util.Objects;
 @Service
 public class DaoWindows implements Dao {
 
-    private final KolnierzRepository kolnierzRepository;
+    private final WindowsRepository windowsRepository;
 
     @Autowired
-    public DaoWindows(KolnierzRepository kolnierzRepository) {
-        this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
+    public DaoWindows(WindowsRepository windowsRepository) {
+        this.windowsRepository = Objects.requireNonNull(windowsRepository);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class DaoWindows implements Dao {
             br = new BufferedReader(new FileReader(filePath));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                EntityKolnierz entityKolnierz = new EntityKolnierz();
+                EntityWindows entityWindows = new EntityWindows();
 
-                entityKolnierz.setName(data[0]);
-                entityKolnierz.setUnitRetailPrice(new BigDecimal(data[1]));
-                entityKolnierz.setDiscount(Double.valueOf(data[2]));
+                entityWindows.setName(data[0]);
+                entityWindows.setUnitRetailPrice(new BigDecimal(data[1]));
+                entityWindows.setDiscount(Double.valueOf(data[2]));
 
-                kolnierzRepository.save(entityKolnierz);
+                windowsRepository.save(entityWindows);
             }
         } catch (IOException e) {
             e.printStackTrace();

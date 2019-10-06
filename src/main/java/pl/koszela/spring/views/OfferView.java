@@ -1,198 +1,240 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.editor.Editor;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.converter.StringToBigDecimalConverter;
 import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.calculate.CalculateTiles;
-import pl.koszela.spring.entities.EntityAccesories;
-import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.entities.Enums;
 import pl.koszela.spring.entities.Tiles;
-import pl.koszela.spring.repositories.InputDataTilesRepository;
-import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.service.MenuBarInterface;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout implements MenuBarInterface {
 
     public static final String CREATE_OFFER = "createOffer";
 
-    private UsersRepo usersRepo;
-    private CalculateTiles calculateTiles;
-    private InputDataTilesRepository inputDataTilesRepository;
-
-    private ComboBox<String> selectUser = new ComboBox<>("Wybierz klienta: ");
-    private ComboBox<String> priceList = new ComboBox<>("Dostępne cenniki: ");
-
-    /*private Grid<Tiles> resultTiles = new Grid<>(Tiles.class);*/
-    private Grid<EntityAccesories> resultAccesories = new Grid<>(EntityAccesories.class);
-    private Grid<EntityUser> resultUser = new Grid<>(EntityUser.class);
-    private NumberField customerDiscount = new NumberField("Rabat na dachówki");
+    private NumberField tilesDiscount = new NumberField("Rabat dachówki");
+    private NumberField accesoriesDiscount = new NumberField("Rabat akcesoria");
+    private NumberField windowsDiscount = new NumberField("Rabat okna/kołnierz");
     private VerticalLayout layout = new VerticalLayout();
 
-    private Button calculateProfit = new Button("Oblicz zyski");
-    private Button viewUSer = new Button("Pokaż klienta");
-
     @Autowired
-    public OfferView(UsersRepo usersRepo, CalculateTiles calculateTiles,
-                     InputDataTilesRepository inputDataTilesRepository) {
-        this.usersRepo = Objects.requireNonNull(usersRepo);
-        this.calculateTiles = Objects.requireNonNull(calculateTiles);
-        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
+    public OfferView() {
 
-        loadUserComboBox();
         add(menu());
         add(addLayout());
     }
 
     private VerticalLayout addLayout() {
+        FormLayout.ResponsiveStep step = new FormLayout.ResponsiveStep("5px", 3);
         FormLayout formLayout = new FormLayout();
-        calculateProfit.addClickListener(buttonClickEvent -> {
-            resultAccesories.setItems(resultAccesories());
-        });
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        viewUSer.addClickListener(buttonClickEvent -> resultUser.setItems(entityUser));
-        formLayout.add(selectUser, getAvailablePriceList());
-        formLayout.add(customerDiscount, calculateProfit);
-        formLayout.add(viewUSer);
+        formLayout.setResponsiveSteps(step);
+        /*resultAccesories.setItems(resultAccesories());*/
+        formLayout.add(settingsNumberFields(tilesDiscount), settingsNumberFields(accesoriesDiscount), settingsNumberFields(windowsDiscount));
         layout.add(formLayout);
         layout.add(createTiles());
-        layout.add(createGridUsers());
-        /*layout.add(createGridTiles());*/
-        layout.add(createGridAccesories());
+        /*layout.add(createGridAccesories());*/
         return layout;
     }
 
-    private Grid<EntityUser> createGridUsers() {
-        resultUser.getColumns().forEach(column -> column.setAutoWidth(true));
-        return resultUser;
+    private NumberField settingsNumberFields(NumberField numberField) {
+        numberField.setValue(0d);
+        numberField.setMin(0);
+        numberField.setMax(30);
+        numberField.setHasControls(true);
+        numberField.setSuffixComponent(new Span("%"));
+        return numberField;
     }
 
     private TreeGrid<Tiles> createTiles() {
         TreeGrid<Tiles> treeGrid = new TreeGrid<>();
-        TreeData<Tiles> treeData1 = new TreeData<>();
+        BigDecimal customerDiscount = new BigDecimal(tilesDiscount.getValue()).add(new BigDecimal(100));
 
-        List<Tiles> list = (List<Tiles>) VaadinSession.getCurrent().getAttribute("bogen1");
-        List<Tiles> list2 = (List<Tiles>) VaadinSession.getCurrent().getAttribute("bogen2");
-        if(list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                if (i == 0) {
-                    treeData1.addItem(null, list.get(i));
-                    treeData1.addItem(null, list2.get(i));
-                } else {
-                    treeData1.addItems(list.get(0), list.get(i));
-                    treeData1.addItems(list2.get(0), list2.get(i));
-                }
+        /*Grid.Column<Tiles> id = treeGrid.addColumn(Tiles::getId).setHeader("Id");*/
+        Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika");
+        Grid.Column<Tiles> name = treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
+        Grid.Column<Tiles> quantity = treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
+        Grid.Column<Tiles> price = treeGrid.addColumn(Tiles::getPrice).setHeader("Cena jedn.");
+        Grid.Column<Tiles> totalPrice = treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total klient");
+        Grid.Column<Tiles> totalProfit = treeGrid.addColumn(Tiles::getTotalProfit).setHeader("Total zysk");
+        Grid.Column<Tiles> purchasePrice = treeGrid.addColumn(tiles -> tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)).setHeader("Cena zakupu");
+        Grid.Column<Tiles> priceAfterDiscount = treeGrid.addColumn(tiles -> tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tilesDiscount.getValue()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP)).setHeader("Cena po rabacie");
+        Grid.Column<Tiles> profit = treeGrid.addColumn(tiles -> (tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tilesDiscount.getValue()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP).subtract(tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)))).setHeader("Zysk");
+        FooterRow footerRow = treeGrid.appendFooterRow();
+
+        Button calculate = new Button("Refresh");
+        calculate.addClickListener(buttonClickEvent -> {
+            if (tilesDiscount.getValue() > 30) {
+                tilesDiscount.setValue(30d);
+                getNotificationError("Maksymalny rabat to 30 %");
             }
-        }
+            List<Tiles> parents = treeGrid.getDataCommunicator().fetchFromProvider(0, 13).collect(Collectors.toList());
+            BigDecimal discount = new BigDecimal(tilesDiscount.getValue()).add(new BigDecimal(100));
 
+            Map<BigDecimal, String> allPriceAfrterDiscount = new HashMap<>();
+            Map<BigDecimal, String> allPriceProfit = new HashMap<>();
+            for (Tiles parent : parents) {
+                HierarchicalQuery<Tiles, com.vaadin.flow.function.SerializablePredicate<Tiles>> hierarchicalQuery1 = new HierarchicalQuery<>(null, parent);
+                List<Tiles> childrens = treeGrid.getDataProvider().fetchChildren(hierarchicalQuery1).collect(Collectors.toList());
+                parent.setPricePurchase(parent.getPrice().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP));
+                parent.setPriceAfterDiscount(parent.getPrice().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(100)).divide(discount, 2, RoundingMode.HALF_UP));
+                parent.setProfit(parent.getPriceAfterDiscount().subtract(parent.getPricePurchase()));
+                allPriceAfrterDiscount.put(parent.getPriceAfterDiscount(), parent.getPriceListName());
+                allPriceProfit.put(parent.getProfit(), parent.getPriceListName());
+                treeGrid.getDataCommunicator().refresh(parent);
+                for (Tiles children : childrens) {
+                    children.setPricePurchase(children.getPrice().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP));
+                    children.setPriceAfterDiscount(children.getPrice().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(100)).divide(discount, 2, RoundingMode.HALF_UP));
+                    children.setProfit(children.getPriceAfterDiscount().subtract(children.getPricePurchase()));
+                    allPriceAfrterDiscount.put(children.getPriceAfterDiscount(), children.getPriceListName());
+                    allPriceProfit.put(children.getProfit(), children.getPriceListName());
+                    treeGrid.getDataCommunicator().refresh(children);
+                }
+                BigDecimal totalPriceValue = BigDecimal.ZERO;
+                BigDecimal totalProfitValue = BigDecimal.ZERO;
+                for (Map.Entry<BigDecimal, String> values : allPriceAfrterDiscount.entrySet()) {
+                    if (values.getValue().equals(parent.getPriceListName())) {
+                        totalPriceValue = totalPriceValue.add(values.getKey());
+                    }
+                }
+                for (Map.Entry<BigDecimal, String> values : allPriceProfit.entrySet()) {
+                    if (values.getValue().equals(parent.getPriceListName())) {
+                        totalProfitValue = totalProfitValue.add(values.getKey());
+                    }
+                }
+                parent.setTotalPrice(totalPriceValue);
+                parent.setTotalProfit(totalProfitValue);
+            }
+            treeGrid.getColumns().forEach(column -> column.setAutoWidth(true));
+        });
 
-        treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika");
-        treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
-        treeGrid.addColumn(Tiles::getPrice).setHeader("Cena jednostkowa");
-        treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total");
-        treeGrid.addColumn(Tiles::getPricePurchase).setHeader("Cena zakupu");
-        treeGrid.addColumn(Tiles::getPriceAfterDiscount).setHeader("Cena po rabacie");
-        treeGrid.addColumn(Tiles::getProfit).setHeader("Zysk");
-
-        treeGrid.setDataProvider(new TreeDataProvider<Tiles>(treeData1));
+        footerRow.getCell(priceListName).setComponent(calculate);
+        treeGrid.setDataProvider(new TreeDataProvider<>(getTilesTreeData()));
         treeGrid.getColumns().forEach(column -> column.setAutoWidth(true));
 
+        Binder<Tiles> binder = new Binder<>(Tiles.class);
+        Editor<Tiles> editor = treeGrid.getEditor();
+        editor.setBinder(binder);
+        editor.setBuffered(true);
+
+        Div validationStatus = new Div();
+        validationStatus.setId("validation");
+
+        TextField editPrice = new TextField();
+        binder.forField(editPrice)
+                .withConverter(
+                        new StringToBigDecimalConverter("Age must be a number."))
+                .withStatusLabel(validationStatus).bind("price");
+        price.setEditorComponent(editPrice);
+
+        TextField editQuantity = new TextField();
+        binder.forField(editQuantity)
+                .withConverter(
+                        new StringToBigDecimalConverter("Age must be a number."))
+                .withStatusLabel(validationStatus).bind("price");
+        price.setEditorComponent(editQuantity);
+
+        Collection<Button> editButtons = Collections
+                .newSetFromMap(new WeakHashMap<>());
+
+        Grid.Column<Tiles> editorColumn = treeGrid.addComponentColumn(tiles -> {
+            Button edit = new Button("Edit");
+            edit.addClassName("edit");
+            edit.addClickListener(e -> {
+                editor.editItem(tiles);
+                editPrice.focus();
+                editQuantity.focus();
+            });
+            edit.setEnabled(!editor.isOpen());
+            editButtons.add(edit);
+            return edit;
+        });
+
+        editor.addOpenListener(e -> editButtons
+                .forEach(button -> button.setEnabled(!editor.isOpen())));
+        editor.addCloseListener(e -> editButtons
+                .forEach(button -> button.setEnabled(!editor.isOpen())));
+
+        Button save = new Button("Save", e -> editor.save());
+        save.addClassName("save");
+
+        Button cancel = new Button("Cancel", e -> editor.cancel());
+        cancel.addClassName("cancel");
+
+        treeGrid.getElement().addEventListener("keyup", event -> editor.cancel())
+                .setFilter("event.key === 'Escape' || event.key === 'Esc'");
+
+        Div buttons = new Div(save, cancel);
+        editorColumn.setEditorComponent(buttons);
+
+        treeGrid.getColumns().forEach(column -> column.setAutoWidth(true));
         return treeGrid;
     }
 
-    public TreeData<String> addItems(String parent, Stream<String> items) {
-        TreeData<String> treeData = new TreeData<>();
-        items.forEach(item -> treeData.addItem(parent, item));
-        return treeData;
-    }
+    private TreeData<Tiles> getTilesTreeData() {
+        TreeData<Tiles> treeData1 = new TreeData<>();
+        List<List<Tiles>> all = (List<List<Tiles>>) VaadinSession.getCurrent().getAttribute("resultTiles");
+        if (all != null) {
+            all.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
 
-    /*private Grid<Tiles> createGridTiles() {
-      *//*  resultTiles.getColumnByKey("name").setHeader("Kategoria");
-        resultTiles.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
-        resultTiles.getColumnByKey("priceAfterDiscount").setHeader("Cena sprzedaży");
-        resultTiles.getColumnByKey("purchasePrice").setHeader("Cena Zakupu");
-        resultTiles.getColumnByKey("profitCalculate").setHeader("Zysk");
-        resultTiles.removeColumnByKey("id");
-        resultTiles.removeColumnByKey("type");
-        resultTiles.removeColumnByKey("unitRetailPrice");
-        resultTiles.removeColumnByKey("profit");
-        resultTiles.removeColumnByKey("basicDiscount");
-        resultTiles.removeColumnByKey("supplierDiscount");
-        resultTiles.removeColumnByKey("additionalDiscount");
-        resultTiles.removeColumnByKey("skontoDiscount");
-        resultTiles.getColumns().forEach(column -> column.setAutoWidth(true));*//*
-        return resultTiles;
-    }*/
-
-    private Grid<EntityAccesories> createGridAccesories() {
-        resultAccesories.getColumnByKey("name").setHeader("Nazwa");
-        resultAccesories.getColumnByKey("purchasePrice").setHeader("Cena zakupu");
-        resultAccesories.getColumnByKey("margin").setHeader("Ilość");
-        resultAccesories.getColumnByKey("unitRetailPrice").setHeader("Cena Detaliczna (szt.");
-        resultAccesories.getColumnByKey("totalRetail").setHeader("Cena Detaliczna total");
-        resultAccesories.getColumnByKey("unitPurchasePrice").setHeader("Cena zakupu (szt.)");
-        resultAccesories.getColumnByKey("totalPurchase").setHeader("Cena zakupu total");
-        resultAccesories.removeColumnByKey("id");
-        resultAccesories.removeColumnByKey("firstMultiplier");
-        resultAccesories.removeColumnByKey("secondMultiplier");
-        resultAccesories.getColumns().forEach(column -> column.setAutoWidth(true));
-        return resultAccesories;
-    }
-
-    /*private List<EntityTiles> resultTiles() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        return entityUser.getEntityTiles();
-    }*/
-
-    private List<EntityAccesories> resultAccesories() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        return entityUser.getEntityAccesories();
-    }
-
-    private void loadUserComboBox() {
-        if (nameAndSurname().size() > 0) {
-            selectUser.setItems(nameAndSurname());
+            List<BigDecimal> bigDecimalList = new ArrayList<>();
+            for (List<Tiles> tiles : all) {
+                BigDecimal bigDecimal = BigDecimal.ZERO;
+                List<BigDecimal> wyniki = new ArrayList<>();
+                tiles.forEach(e -> {
+                    wyniki.add(e.getPrice().multiply(new BigDecimal(e.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP));
+                });
+                for (BigDecimal bigDecimal1 : wyniki) {
+                    if (bigDecimal1 != null) {
+                        bigDecimal = bigDecimal.add(bigDecimal1);
+                    }
+                }
+                bigDecimalList.add(bigDecimal);
+                tiles.get(0).setTotalPrice(bigDecimalList.iterator().next());
+            }
+            for (List<Tiles> tiles : all) {
+                for (int j = 0; j < tiles.size(); j++) {
+                    if (j == 0) {
+                        treeData1.addItem(null, tiles.get(0));
+                    } else {
+                        treeData1.addItem(tiles.get(0), tiles.get(j));
+                    }
+                }
+            }
         }
-    }
-
-    private List<String> nameAndSurname() {
-        EntityUser entityUser = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        Iterable<EntityUser> allUsersFromRepository = usersRepo.findAll();
-        List<String> nameAndSurname = new ArrayList<>();
-        allUsersFromRepository.forEach(user -> nameAndSurname.add(user.getEntityPersonalData().getName().concat(" ").concat(user.getEntityPersonalData().getSurname())));
-        /*nameAndSurname.add(entityUser.getEntityPersonalData().getName().concat(" ").concat(entityUser.getEntityPersonalData().getSurname()));*/
-        nameAndSurname.add("Brak");
-        return nameAndSurname;
-    }
-
-    private ComboBox<String> getAvailablePriceList() {
-        if (!calculateTiles.getAvailablePriceList().isEmpty()) {
-            priceList.setItems(calculateTiles.getAvailablePriceList());
-            return priceList;
-        } else {
-            priceList.setItems("Brak zaimportowanych cenników");
-            return priceList;
-        }
+        return treeData1;
     }
 
     @Override
     public MenuBar menu() {
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem("Utwórz ofertę");
+        Button button = new Button("Utwórz ofertę");
+        button.addClickListener(buttonClickEvent -> {
+            VaadinSession.getCurrent().getAttribute("resultTiles");
+            VaadinSession.getCurrent().setAttribute("resultTiles", null);
+        });
+        menuBar.addItem(button);
         return menuBar;
     }
 }
