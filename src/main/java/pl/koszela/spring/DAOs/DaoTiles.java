@@ -41,6 +41,7 @@ public class DaoTiles implements Dao {
                 for (int i = 0; i < tileCategory.size(); i++) {
                     Tiles tiles = new Tiles();
                     tiles.setName(tileCategory.get(i).name());
+                    tiles.setDiscount(0);
                     tiles.setPrice(new BigDecimal(collectStringsFromFile.get(i)));
                     tiles.setPriceListName(priceListName);
                     tilesRepository.save(tiles);

@@ -29,6 +29,9 @@ public class EntityUser {
     @OneToMany(fetch = FetchType.LAZY)
     private List<EntityAccesories> entityAccesories;
 
+    @OneToMany
+    private List<Tiles> tiles;
+
     public EntityUser() {
     }
 
@@ -118,5 +121,13 @@ public class EntityUser {
 
     public void setHasWindows(boolean hasWindows) {
         this.hasWindows = hasWindows;
+    }
+
+    public List<Tiles> getTiles() {
+        return tiles;
+    }
+
+    public void setTiles(List<Tiles> tiles) {
+        this.tiles = tiles;
     }
 }

@@ -1,13 +1,17 @@
 package pl.koszela.spring.service;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.EntityPersonalData;
 import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.PersonalDataRepository;
 import pl.koszela.spring.repositories.UsersRepo;
 
@@ -28,26 +32,18 @@ public class SaveUsers {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
     }
 
-    public void saveUser(TextField name, TextField surname,
-                         TextField adress, TextField telephoneNumber, EmailField email) {
-        if (allDataIsCompleted(name, surname)) {
+    public void saveUser(EntityPersonalData entityPersonalData, List<Tiles> tiles) {
+        if (allDataIsCompleted(entityPersonalData.getName(), entityPersonalData.getSurname())) {
 
             EntityUser newUser = new EntityUser();
-            EntityPersonalData personalData = EntityPersonalData.builder()
-                    .name(name.getValue())
-                    .surname(surname.getValue())
-                    .adress(adress.getValue())
-                    .telephoneNumber(telephoneNumber.getValue())
-                    .email(email.getValue())
-                    .build();
-            newUser.setEntityPersonalData(personalData);
+            newUser.setEntityPersonalData(entityPersonalData);
+            newUser.setTiles(tiles);
 
             VaadinSession.getCurrent().setAttribute("user", newUser);
-            getNotificationSucces("Zapisałem użytkownika wraz z danymi");
         }
     }
 
-    private boolean allDataIsCompleted(TextField name, TextField surname) {
+    private boolean allDataIsCompleted(String name, String surname) {
         if (!isUserInDatabase(name, surname)) {
             return true;
         } else if (allUsers().size() > 0 && isUserInDatabase(name, surname)) {
@@ -59,8 +55,8 @@ public class SaveUsers {
         }
     }
 
-    private boolean isUserInDatabase(TextField name, TextField surname) {
-        EntityPersonalData personalData = personalDataRepository.findUsersEntityByNameAndSurnameEquals(name.getValue(), surname.getValue());
+    private boolean isUserInDatabase(String name, String surname) {
+        EntityPersonalData personalData = personalDataRepository.findUsersEntityByNameAndSurnameEquals(name, surname);
         return personalData != null;
     }
 

@@ -1,16 +1,19 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.EntityKolnierz;
 import pl.koszela.spring.entities.EntityUser;
 import pl.koszela.spring.entities.EntityWindows;
+import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.KolnierzRepository;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.repositories.WindowsRepository;
@@ -43,6 +46,15 @@ public class WindowsView extends VerticalLayout implements MenuBarInterface {
 
         add(menu());
         add(addLayout());
+        UI.getCurrent().addBeforeLeaveListener(e -> {
+            Tabs tabs = (Tabs) VaadinSession.getCurrent().getAttribute("tabs");
+            if (tabs != null && !tabs.getSelectedTab().getLabel().equals("Akcesoria")) {
+                save();
+                ServiceNotification.getNotificationSucces("Windows/ Kolnierz save");
+            }else{
+                ServiceNotification.getNotificationError("Windows/ Kolnierz don't save");
+            }
+        });
     }
 
     private FormLayout addLayout() {
@@ -74,6 +86,18 @@ public class WindowsView extends VerticalLayout implements MenuBarInterface {
         List<String> allKolnierz = new ArrayList<>();
         allKolnierzFromRepository.forEach(e -> allKolnierz.add(e.getName()));
         return allKolnierz;
+    }
+
+    private void save (){
+        EntityKolnierz entityKolnierz = new EntityKolnierz();
+        entityKolnierz.setName(comboboxKolnierz.getValue());
+        EntityWindows entityWindows = new EntityWindows();
+        entityWindows.setName(comboboxWindows.getValue());
+        EntityUser user = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        if(user != null){
+            user.setEntityKolnierz(entityKolnierz);
+            user.setEntityWindows(entityWindows);
+        }
     }
 
     @Override

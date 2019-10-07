@@ -2,21 +2,25 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.importFiles.ImportFiles;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
@@ -52,22 +56,49 @@ public class MainView extends AppLayout {
             } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Akcesoria")) {
                 getUI().ifPresent(ui -> ui.navigate(SELECT_ACCESORIES));
                 tabs.setSelectedTab(e.getSelectedTab());
-            }else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Okna")) {
+            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Okna")) {
                 getUI().ifPresent(ui -> ui.navigate(WINDOWS));
                 tabs.setSelectedTab(e.getSelectedTab());
-            }else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Oferta")) {
+            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Oferta")) {
                 getUI().ifPresent(ui -> ui.navigate(CREATE_OFFER));
                 tabs.setSelectedTab(e.getSelectedTab());
             }
         });
 
+        VaadinSession.getCurrent().setAttribute("tabs", tabs);
         menuBar.addItem(tabs);
         Button button = new Button("Zaimportuj pliki");
         button.addClickListener(e -> importFiles.csv());
         if (isDrawerOpened()) {
             setDrawerOpened(false);
         }
+
+        File file = new File("src\\main\\resources\\templates\\itext.pdf");
+
+        Anchor anchor = new Anchor(getStreamResource(file.getName(), file), file.getName());
+        anchor.getElement().setAttribute("download", true);
+
+        anchor.setHref(getStreamResource(file.getName(), file));
+        anchor.setVisible(false);
+        Button btn = new Button("Download");
+        btn.addClickListener(buttonClickEvent -> {
+            GenerateOffer.writeUsingIText();
+            addToDrawer(anchor);
+            anchor.setVisible(true);
+        });
+
         addToNavbar(menuBar);
-        addToDrawer(button);
+        addToDrawer(button, btn);
+    }
+
+    private StreamResource getStreamResource(String filename, File content) {
+        return new StreamResource(filename, () -> {
+            try {
+                return new ByteArrayInputStream(FileUtils.readFileToByteArray(content));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
     }
 }

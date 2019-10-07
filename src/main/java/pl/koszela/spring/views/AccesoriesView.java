@@ -1,11 +1,13 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.Route;
@@ -97,6 +99,15 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
 
         add(menu());
         add(formLayoutAccesories());
+        UI.getCurrent().addBeforeLeaveListener(e -> {
+            Tabs tabs = (Tabs) VaadinSession.getCurrent().getAttribute("tabs");
+            if (tabs != null && !tabs.getSelectedTab().getLabel().equals("Akcesoria")) {
+                saveInputDataAccesories();
+                ServiceNotification.getNotificationSucces("Accesories save");
+            }else{
+                ServiceNotification.getNotificationError("Accesories don't save");
+            }
+        });
     }
 
     private FormLayout formLayoutAccesories() {
@@ -189,7 +200,7 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
                 listOfNumberFields.get(i).setValue(valuesFromRepo.get(i) * valuePriceAccesories.get(i));
             }
         } else {
-            getNotificationError("Proszę kliknąc dalej aby móc wczytać dane");
+            getNotificationError("Proszę przejść do dachówek aby móc wczytać dane");
         }
     }
 
@@ -218,8 +229,11 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
                 .blachaAluminiowa(comboBoxblachaAluminiowa.getValue())
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
+        EntityUser user = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
+        if(user != null){
+            user.setEntityInputDataAccesories(entityInputDataAccesories);
+        }
         VaadinSession.getCurrent().setAttribute("accesoriesInput", entityInputDataAccesories);
-        ServiceNotification.getNotificationSucces("Akcesoria zapisane");
     }
 
     private List<EntityAccesories> resultAccesories() {
