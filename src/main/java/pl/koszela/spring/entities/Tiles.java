@@ -22,8 +22,6 @@ public class Tiles {
     private BigDecimal profit;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
-    @Enumerated(EnumType.STRING)
-    private Offer offer;
     @ManyToMany(mappedBy = "entityUserTiles")
     private Set<EntityUser> userTiles = new HashSet<>();
 
@@ -124,13 +122,5 @@ public class Tiles {
 
     public void setUserTiles(Set<EntityUser> userTiles) {
         this.userTiles = userTiles;
-    }
-
-    public Offer getOffer() {
-        return offer;
-    }
-
-    public void setOffer(Offer offer) {
-        this.offer = offer;
     }
 }

@@ -51,7 +51,6 @@ public class TilesView extends VerticalLayout {
     private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
 
     private List<NumberField> listOfNumberFields = new ArrayList<>();
-    /*private List<Double> listValueOfNumberFields = new ArrayList<>();*/
 
     private VerticalLayout dane = new VerticalLayout();
     private VerticalLayout cennik = new VerticalLayout();
@@ -102,9 +101,10 @@ public class TilesView extends VerticalLayout {
         List<List<Tiles>> listToTreeGrid = new ArrayList<>();
         if (set != null) {
             List<Tiles> parents = getParents();
+            List<Tiles> childrens = getChildrens();
             for (Tiles tileParent : parents) {
-                List<Tiles> childrens = new ArrayList<>(getChildrens());
-                for (Tiles tileChildren : childrens) {
+                List<Tiles> oneOf = findChildrens(tileParent, childrens);
+                for (Tiles tileChildren : oneOf) {
                     for (NumberField numberField : listOfNumberFields) {
                         if (tileParent.getName().equals(numberField.getPattern())) {
                             tileParent.setQuantity(numberField.getValue());
@@ -113,8 +113,8 @@ public class TilesView extends VerticalLayout {
                         }
                     }
                 }
-                childrens.add(tileParent);
-                listToTreeGrid.add(childrens);
+                oneOf.add(tileParent);
+                listToTreeGrid.add(oneOf);
             }
             return listToTreeGrid;
         } else {
@@ -132,6 +132,16 @@ public class TilesView extends VerticalLayout {
             }
             return listToTreeGrid;
         }
+    }
+
+    private List<Tiles> findChildrens(Tiles parent, List<Tiles> childrens) {
+        List<Tiles> oneOfchildrens = new ArrayList<>();
+        for (Tiles children : childrens) {
+            if (children.getPriceListName().equals(parent.getPriceListName())) {
+                oneOfchildrens.add(children);
+            }
+        }
+        return oneOfchildrens;
     }
 
     private List<Tiles> getChildrens() {

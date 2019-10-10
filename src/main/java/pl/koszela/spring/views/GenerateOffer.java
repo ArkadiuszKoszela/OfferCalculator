@@ -11,6 +11,7 @@ import pl.koszela.spring.entities.Tiles;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.vaadin.flow.server.VaadinServletRequest.getCurrent;
 
@@ -73,6 +74,8 @@ class GenerateOffer {
 
             PdfPTable table = new PdfPTable(6);
 
+            Set<Tiles> resultTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+
             List<List<Tiles>> resultTiles = (List<List<Tiles>>) VaadinSession.getCurrent().getAttribute("resultTiles");
 
             BaseColor baseColor = new BaseColor(224, 224, 224);
@@ -80,13 +83,7 @@ class GenerateOffer {
 
             List<String> priceListName = new ArrayList<>();
 
-            resultTiles.get(0).forEach(e -> {
-                if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                    priceListName.add(e.getPriceListName());
-                }
-            });
-
-            PdfPCell header1 = new PdfPCell(new Phrase(priceListName.get(0), font12));
+            PdfPCell header1 = new PdfPCell(new Phrase("Sprawdzam", font12));
             header1.setBackgroundColor(baseColor);
             table.addCell(header1);
 
@@ -112,26 +109,11 @@ class GenerateOffer {
             table.setWidths(width);
             table.setHeaderRows(1);
 
-            String totalPrice = "";
-            for (List<Tiles> list : resultTiles) {
-                for (Tiles tile : list) {
-                    table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
-                    table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
-                    table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
-                    table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
-                    table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
-                    table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
-                    if (tile.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                        totalPrice = String.valueOf(tile.getTotalPrice());
-                    }
-                }
+            if (resultTilesFromRepo != null) {
+                getTable(document, font12, font10, table, resultTiles, priceListName);
+            }else {
+                getTable(document, font12, font10, table, resultTiles, priceListName);
             }
-            document.add(table);
-
-
-            Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe: " + totalPrice, font12);
-            document.add(suma);
-
             Paragraph paragraph = new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   DODATKI DACHOWE:  jakaś cena\n" +
                     "                   CEGŁA KLINKIEROWA + zaprawa:  jakaś cena\n" +
                     "                   Łata i kontrłata:  jakaś cena\n" +
@@ -176,5 +158,33 @@ class GenerateOffer {
             e.printStackTrace();
         }
 
+    }
+
+    private static void getTable(Document document, Font font12, Font font10, PdfPTable table, List<List<Tiles>> resultTiles, List<String> priceListName) throws DocumentException {
+        resultTiles.get(0).forEach(e -> {
+            if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                priceListName.add(e.getPriceListName());
+            }
+        });
+
+
+        String totalPrice = "";
+        for (List<Tiles> list : resultTiles) {
+            for (Tiles tile : list) {
+                table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
+                if (tile.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                    totalPrice = String.valueOf(tile.getTotalPrice());
+                }
+            }
+        }
+        document.add(table);
+
+        Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe: " + totalPrice, font12);
+        document.add(suma);
     }
 }

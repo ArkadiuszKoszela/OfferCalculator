@@ -41,19 +41,39 @@ public class SaveUsers {
         EntityInputDataAccesories entityInputDataAccesories = (EntityInputDataAccesories) VaadinSession.getCurrent().getAttribute("accesoriesInput");
         EntityWindows entityWindows = (EntityWindows) VaadinSession.getCurrent().getAttribute("entityWindows");
         EntityKolnierz entityKolnierz = (EntityKolnierz) VaadinSession.getCurrent().getAttribute("entityKolnierz");
-        List<Tiles> allTiles = (List<Tiles>) VaadinSession.getCurrent().getAttribute("allTiles");
         EntityUser newUser = new EntityUser();
         newUser.setEntityPersonalData(entityPersonalData);
         newUser.setEntityInputDataTiles(entityInputDataTiles);
         newUser.setEntityInputDataAccesories(entityInputDataAccesories);
         newUser.setEntityWindows(entityWindows);
         newUser.setEntityKolnierz(entityKolnierz);
-        newUser.setTiles(new HashSet<>(allTiles));
 
+        Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameAndAdressEquals(entityPersonalData.getName(), entityPersonalData.getSurname(), entityPersonalData.getAdress());
 
-//        Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(entityPersonalData);
+        if (personalData.isPresent()) {
+            Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
+            if (userFromRepo.isPresent()) {
+                Set<Tiles> allTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+                EntityUser userToUpdate = userFromRepo.get();
+                userToUpdate.setEntityInputDataTiles(entityInputDataTiles);
+                userToUpdate.setEntityInputDataAccesories(entityInputDataAccesories);
+                userToUpdate.setEntityWindows(entityWindows);
+                userToUpdate.setEntityKolnierz(entityKolnierz);
+                userToUpdate.getTiles().clear();
+                userToUpdate.setTiles(allTilesFromRepo);
 
-//        if (userFromRepo.isEmpty()) {
+                inputDataTilesRepository.save(entityInputDataTiles);
+                inputDataAccesoriesRespository.save(entityInputDataAccesories);
+                windowsRepository.save(entityWindows);
+                kolnierzRepository.save(entityKolnierz);
+                tilesRepository.saveAll(allTilesFromRepo);
+
+                usersRepo.save(userToUpdate);
+                getNotificationSucces("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getEntityPersonalData().getName() + " " + userToUpdate.getEntityPersonalData().getSurname() + "    :)");
+            }
+        } else {
+            List<Tiles> allTiles = (List<Tiles>) VaadinSession.getCurrent().getAttribute("allTiles");
+            newUser.setTiles(new HashSet<>(allTiles));
             personalDataRepository.save(entityPersonalData);
             inputDataTilesRepository.save(entityInputDataTiles);
             inputDataAccesoriesRespository.save(entityInputDataAccesories);
@@ -63,6 +83,7 @@ public class SaveUsers {
 
             usersRepo.save(newUser);
             getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
+        }
 //        }/* else {
 //            EntityUser userToUpdate = userFromRepo.get();
 //            inputDataTilesRepository.save(entityInputDataTiles);
