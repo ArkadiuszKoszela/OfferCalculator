@@ -1,11 +1,10 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
@@ -14,21 +13,18 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.entities.*;
-import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.*;
-import pl.koszela.spring.service.MenuBarInterface;
 
 import java.util.*;
 
-import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
+import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
 
 @Route(value = TilesView.ENTER_TILES, layout = MainView.class)
-public class TilesView extends VerticalLayout implements MenuBarInterface {
+public class TilesView extends VerticalLayout {
 
-    public static final String ENTER_TILES = "tiles";
+    static final String ENTER_TILES = "tiles";
 
-    private AccesoriesRepository accesoriesRepository;
-    private InputDataTilesRepository inputDataTilesRepository;
+    private TilesRepository tilesRepository;
     private CalculateTiles calculateTiles;
 
     private NumberField numberField1 = new NumberField("Powierzchnia połaci");
@@ -55,31 +51,31 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
     private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
 
     private List<NumberField> listOfNumberFields = new ArrayList<>();
-    private List<Double> listValueOfNumberFields = new ArrayList<>();
+    /*private List<Double> listValueOfNumberFields = new ArrayList<>();*/
 
     private VerticalLayout dane = new VerticalLayout();
     private VerticalLayout cennik = new VerticalLayout();
 
     private Grid<Tiles> grid = new Grid<>(Tiles.class);
-    private TilesRepository tilesRepository;
 
     @Autowired
-    public TilesView(AccesoriesRepository accesoriesRepository, InputDataTilesRepository inputDataTilesRepository,
-                     CalculateTiles calculateTiles, TilesRepository tilesRepository) {
-        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
-        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
+    public TilesView(CalculateTiles calculateTiles, TilesRepository tilesRepository) {
         this.calculateTiles = Objects.requireNonNull(calculateTiles);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
 
-        add(menu());
         add(createInputFields());
         add(createGrid());
+        UI.getCurrent().addBeforeLeaveListener(e -> {
+            VaadinSession.getCurrent().setAttribute("tilesInput", saveInputData());
+            VaadinSession.getCurrent().setAttribute("resultTiles", listResultTiles());
+            getNotificationSucces("Tiles save");
+        });
     }
 
     private void getAvailablePriceList(ComboBox<String> comboBox) {
         Object object = VaadinSession.getCurrent().getAttribute("availablePriceList");
         if (!Objects.isNull(object)) {
-            List list = (List) VaadinSession.getCurrent().getAttribute("availablePriceList");
+            List<String> list = (List<String>) VaadinSession.getCurrent().getAttribute("availablePriceList");
             comboBox.setItems(list);
         }
         List<String> available = calculateTiles.getAvailablePriceList();
@@ -98,53 +94,86 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
         listOfNumberFields.forEach(formLayout::add);
         getAvailablePriceList(comboBoxInput);
         dane.add(formLayout);
-        VaadinSession.getCurrent().setAttribute("resultTiles", listResultTiles());
         return dane;
     }
 
     private List<List<Tiles>> listResultTiles() {
-        List<String> availablePriceList = calculateTiles.getAvailablePriceList();
-        List<List<Tiles>> allPriceListFromRepository = new ArrayList<>();
-        for (String priceListName : availablePriceList) {
-            List<Tiles> priceListFromRepository = tilesRepository.findByPriceListNameEquals(priceListName);
-            for (Tiles tiles : priceListFromRepository) {
-                for (NumberField listOfNumberField : listOfNumberFields) {
-                    if (tiles.getName().equals(listOfNumberField.getPattern())) {
-                        tiles.setQuantity(listOfNumberField.getValue());
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        List<List<Tiles>> listToTreeGrid = new ArrayList<>();
+        if (set != null) {
+            List<Tiles> parents = getParents();
+            for (Tiles tileParent : parents) {
+                List<Tiles> childrens = new ArrayList<>(getChildrens());
+                for (Tiles tileChildren : childrens) {
+                    for (NumberField numberField : listOfNumberFields) {
+                        if (tileParent.getName().equals(numberField.getPattern())) {
+                            tileParent.setQuantity(numberField.getValue());
+                        } else if (tileChildren.getName().equals(numberField.getPattern())) {
+                            tileChildren.setQuantity(numberField.getValue());
+                        }
                     }
                 }
+                childrens.add(tileParent);
+                listToTreeGrid.add(childrens);
             }
-
-            allPriceListFromRepository.add(priceListFromRepository);
+            return listToTreeGrid;
+        } else {
+            List<String> availablePriceList = calculateTiles.getAvailablePriceList();
+            for (String priceListName : availablePriceList) {
+                List<Tiles> priceListFromRepository = tilesRepository.findByPriceListNameEquals(priceListName);
+                for (Tiles tile : priceListFromRepository) {
+                    for (NumberField listOfNumberField : listOfNumberFields) {
+                        if (tile.getName().equals(listOfNumberField.getPattern())) {
+                            tile.setQuantity(listOfNumberField.getValue());
+                        }
+                    }
+                }
+                listToTreeGrid.add(priceListFromRepository);
+            }
+            return listToTreeGrid;
         }
-        return allPriceListFromRepository;
+    }
+
+    private List<Tiles> getChildrens() {
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        List<Tiles> list = new ArrayList<>(set);
+        List<Tiles> childrens = new ArrayList<>();
+        if (list.size() > 0) {
+            List<Tiles> parents = getParents();
+            list.forEach(e -> {
+                for (Tiles tiles : parents) {
+                    if (e.getPriceListName().equals(tiles.getPriceListName())) {
+                        childrens.add(e);
+                    }
+                }
+            });
+        }
+        return childrens;
+    }
+
+    private List<Tiles> getParents() {
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        List<Tiles> list = new ArrayList<>(set);
+        List<Tiles> parents = new ArrayList<>();
+        if (list.size() > 0) {
+            list.forEach(e -> {
+                if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                    parents.add(e);
+                }
+            });
+        }
+        return parents;
     }
 
     private List<Tiles> allTilesFromRespository() {
         Iterable<Tiles> allTilesFromRepository = tilesRepository.findAll();
         List<Tiles> allTiles = new ArrayList<>();
         allTilesFromRepository.forEach(allTiles::add);
-
-        List<Tiles> bogen10 = new ArrayList<>();
-        List<Tiles> bogen10other = new ArrayList<>();
-
-        for (Tiles tiles : allTiles) {
-            String first = allTiles.get(0).getPriceListName();
-            String second = tiles.getPriceListName();
-            if (second.equals(first)) {
-                bogen10.add(tiles);
-            } else {
-                bogen10other.add(tiles);
-            }
-        }
-        VaadinSession.getCurrent().setAttribute("bogen1", bogen10);
-        VaadinSession.getCurrent().setAttribute("bogen2", bogen10other);
-        VaadinSession.getCurrent().setAttribute("tiles", allTiles);
         return allTiles;
     }
 
     private EntityInputDataTiles saveInputData() {
-        EntityInputDataTiles entityInputDataTiles = EntityInputDataTiles.builder()
+        return EntityInputDataTiles.builder()
                 .powierzchniaPolaci(numberField1.getValue())
                 .dlugoscKalenic(numberField2.getValue())
                 .dlugoscKalenicProstych(numberField3.getValue())
@@ -165,41 +194,58 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
                 .dachowkaDwufalowa(numberField18.getValue())
                 .oknoPolaciowe(numberField19.getValue())
                 .build();
-        return entityInputDataTiles;
     }
 
     private void setDefaultValues() {
-        setValues(numberField1, "m²", 300d, Enums.DACHOWKA_PODSTAWOWA.toString());
-        setValues(numberField2, "mb", 65d, Enums.DACHOWKA_SKRAJNA_LEWA.toString());
-        setValues(numberField3, "mb", 65d, Enums.DACHOWKA_SKRAJNA_PRAWA.toString());
-        setValues(numberField4, "mb", 1d, Enums.DACHOWKA_POLOWKOWA.toString());
-        setValues(numberField5, "mb", 8d, Enums.DACHOWKA_WENTYLACYJNA.toString());
-        setValues(numberField6, "mb", 5d, Enums.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
-        setValues(numberField7, "mb", 5d, Enums.GASIOR_PODSTAWOWY.toString());
-        setValues(numberField8, "mb", 3d, Enums.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
-        setValues(numberField9, "mb", 38d, Enums.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
-        setValues(numberField10, "szt", 1d, Enums.PLYTKA_POCZATKOWA.toString());
-        setValues(numberField11, "szt", 1d, Enums.PLYTKA_KONCOWA.toString());
-        setValues(numberField12, "szt", 1d, Enums.TROJNIK.toString());
-        setValues(numberField13, "mb", 1d, Enums.GASIAR_ZAOKRAGLONY.toString());
-        setValues(numberField14, "mb", 6d, "brak");
-        setValues(numberField15, "szt", 1d, "brak");
-        setValues(numberField16, "szt", 1d, "brak");
-        setValues(numberField17, "mb", 1d, "brak");
-        setValues(numberField18, "szt", 1d, "brak");
-        setValues(numberField19, "szt", 1d, "brak");
+        EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getAttribute("tilesInputFromRepo");
+        if (entityInputDataTiles != null) {
+            setValues(numberField1, "m²", entityInputDataTiles.getPowierzchniaPolaci(), Category.DACHOWKA_PODSTAWOWA.toString());
+            setValues(numberField2, "mb", entityInputDataTiles.getDlugoscKalenic(), Category.DACHOWKA_SKRAJNA_LEWA.toString());
+            setValues(numberField3, "mb", entityInputDataTiles.getDlugoscKalenicProstych(), Category.DACHOWKA_SKRAJNA_PRAWA.toString());
+            setValues(numberField4, "mb", entityInputDataTiles.getDlugoscKalenicSkosnych(), Category.DACHOWKA_POLOWKOWA.toString());
+            setValues(numberField5, "mb", entityInputDataTiles.getDlugoscKoszy(), Category.DACHOWKA_WENTYLACYJNA.toString());
+            setValues(numberField6, "mb", entityInputDataTiles.getDlugoscKrawedziLewych(), Category.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
+            setValues(numberField7, "mb", entityInputDataTiles.getDlugoscKrawedziPrawych(), Category.GASIOR_PODSTAWOWY.toString());
+            setValues(numberField8, "mb", entityInputDataTiles.getObwodKomina(), Category.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
+            setValues(numberField9, "mb", entityInputDataTiles.getDlugoscOkapu(), Category.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
+            setValues(numberField10, "szt", entityInputDataTiles.getDachowkaWentylacyjna(), Category.PLYTKA_POCZATKOWA.toString());
+            setValues(numberField11, "szt", entityInputDataTiles.getKompletKominkaWentylacyjnego(), Category.PLYTKA_KONCOWA.toString());
+            setValues(numberField12, "szt", entityInputDataTiles.getGasiarPoczatkowyKalenicaProsta(), Category.TROJNIK.toString());
+            setValues(numberField13, "mb", entityInputDataTiles.getGasiarKoncowyKalenicaProsta(), Category.GASIAR_ZAOKRAGLONY.toString());
+            setValues(numberField14, "mb", entityInputDataTiles.getGasiarZaokraglony(), "brak");
+            setValues(numberField15, "mb", entityInputDataTiles.getTrojnik(), "brak");
+            setValues(numberField16, "szt", entityInputDataTiles.getCzwornik(), "brak");
+            setValues(numberField17, "szt", entityInputDataTiles.getGasiarZPodwojnaMufa(), "brak");
+            setValues(numberField18, "mb", entityInputDataTiles.getDachowkaDwufalowa(), "brak");
+            setValues(numberField19, "szt", entityInputDataTiles.getOknoPolaciowe(), "brak");
+        } else {
+            setValues(numberField1, "m²", 13d, Category.DACHOWKA_PODSTAWOWA.toString());
+            setValues(numberField2, "mb", 65d, Category.DACHOWKA_SKRAJNA_LEWA.toString());
+            setValues(numberField3, "mb", 65d, Category.DACHOWKA_SKRAJNA_PRAWA.toString());
+            setValues(numberField4, "mb", 1d, Category.DACHOWKA_POLOWKOWA.toString());
+            setValues(numberField5, "mb", 8d, Category.DACHOWKA_WENTYLACYJNA.toString());
+            setValues(numberField6, "mb", 5d, Category.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
+            setValues(numberField7, "mb", 5d, Category.GASIOR_PODSTAWOWY.toString());
+            setValues(numberField8, "mb", 3d, Category.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
+            setValues(numberField9, "mb", 38d, Category.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
+            setValues(numberField10, "szt", 1d, Category.PLYTKA_POCZATKOWA.toString());
+            setValues(numberField11, "szt", 1d, Category.PLYTKA_KONCOWA.toString());
+            setValues(numberField12, "szt", 1d, Category.TROJNIK.toString());
+            setValues(numberField13, "mb", 1d, Category.GASIAR_ZAOKRAGLONY.toString());
+            setValues(numberField14, "mb", 6d, "brak");
+            setValues(numberField15, "szt", 1d, "brak");
+            setValues(numberField16, "szt", 1d, "brak");
+            setValues(numberField17, "mb", 1d, "brak");
+            setValues(numberField18, "szt", 1d, "brak");
+            setValues(numberField19, "szt", 1d, "brak");
+        }
         getListNumberFields();
-        getListValueOfNumberFields();
     }
 
     private void getListNumberFields() {
         listOfNumberFields = Arrays.asList(numberField1, numberField2, numberField3, numberField4, numberField5, numberField6, numberField7,
                 numberField8, numberField9, numberField10, numberField11, numberField12, numberField13, numberField14, numberField15, numberField16,
                 numberField17, numberField18, numberField19);
-    }
-
-    private void getListValueOfNumberFields() {
-        listOfNumberFields.forEach(e -> listValueOfNumberFields.add(e.getValue()));
     }
 
     private NumberField getCustomerDiscount() {
@@ -220,45 +266,22 @@ public class TilesView extends VerticalLayout implements MenuBarInterface {
         numberField.setSuffixComponent(new Span(unit));
     }
 
-    private void loadUser() {
-        EntityInputDataTiles result = saveInputData();
-        VaadinSession.getCurrent().setAttribute("tilesInput", result);
-    }
-
     private VerticalLayout createGrid() {
+        grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
         grid.getColumnByKey("name").setHeader("Nazwa");
         grid.getColumnByKey("price").setHeader("Cena");
-        grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
         grid.removeColumnByKey("id");
+        grid.removeColumnByKey("userTiles");
+        grid.removeColumnByKey("quantity");
+        grid.removeColumnByKey("discount");
+        grid.removeColumnByKey("priceAfterDiscount");
+        grid.removeColumnByKey("pricePurchase");
+        grid.removeColumnByKey("profit");
+        grid.removeColumnByKey("totalPrice");
+        grid.removeColumnByKey("totalProfit");
         grid.setItems(allTilesFromRespository());
-        loadUser();
         grid.getColumns().forEach(column -> column.setAutoWidth(true));
         cennik.add(grid);
         return cennik;
-    }
-
-    @Override
-    public MenuBar menu() {
-        MenuBar menuBar = new MenuBar();
-        menuBar.addItem("Wprowadź dane", e -> {
-            dane.setVisible(true);
-            cennik.setVisible(false);
-        });
-        menuBar.addItem("Cennik", e -> {
-            dane.setVisible(false);
-            cennik.setVisible(true);
-        });
-        Button button = new Button("Dalej");
-        button.addClickListener(buttonClickEvent -> {
-            loadUser();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            getUI().ifPresent(ui -> ui.navigate(SELECT_ACCESORIES));
-        });
-        menuBar.addItem(button);
-        return menuBar;
     }
 }

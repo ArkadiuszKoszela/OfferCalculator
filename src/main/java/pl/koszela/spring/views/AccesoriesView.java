@@ -16,11 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.EntityAccesories;
 import pl.koszela.spring.entities.EntityInputDataAccesories;
 import pl.koszela.spring.entities.EntityInputDataTiles;
-import pl.koszela.spring.entities.EntityUser;
 import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.repositories.InputDataAccesoriesRespository;
-import pl.koszela.spring.service.MenuBarInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,9 +29,9 @@ import static pl.koszela.spring.service.Labels.*;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 
 @Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
-public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
+public class AccesoriesView extends VerticalLayout {
 
-    public static final String SELECT_ACCESORIES = "accesories/select";
+    static final String SELECT_ACCESORIES = "accesories/select";
     private AccesoriesRepository accesoriesRepository;
     private InputDataAccesoriesRespository inputDataAccesoriesRespository;
 
@@ -97,7 +95,6 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.inputDataAccesoriesRespository = Objects.requireNonNull(inputDataAccesoriesRespository);
 
-        add(menu());
         add(formLayoutAccesories());
         UI.getCurrent().addBeforeLeaveListener(e -> {
             Tabs tabs = (Tabs) VaadinSession.getCurrent().getAttribute("tabs");
@@ -229,10 +226,6 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
                 .blachaAluminiowa(comboBoxblachaAluminiowa.getValue())
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
-        EntityUser user = (EntityUser) VaadinSession.getCurrent().getAttribute("user");
-        if(user != null){
-            user.setEntityInputDataAccesories(entityInputDataAccesories);
-        }
         VaadinSession.getCurrent().setAttribute("accesoriesInput", entityInputDataAccesories);
     }
 
@@ -265,18 +258,6 @@ public class AccesoriesView extends VerticalLayout implements MenuBarInterface {
 
     private List<String> getSubList(List<String> listaNazw, int poczatek, int koniec) {
         return listaNazw.subList(poczatek, koniec);
-    }
-
-    @Override
-    public MenuBar menu() {
-        MenuBar menuBar = new MenuBar();
-        Button button = new Button("Dalej");
-        button.addClickListener(buttonClickEvent -> {
-            saveInputDataAccesories();
-            getUI().ifPresent(ui -> ui.navigate(WINDOWS));
-        });
-        menuBar.addItem(button);
-        return menuBar;
     }
 }
 

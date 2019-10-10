@@ -1,23 +1,12 @@
 package pl.koszela.spring.service;
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityPersonalData;
-import pl.koszela.spring.entities.EntityUser;
-import pl.koszela.spring.entities.Tiles;
-import pl.koszela.spring.repositories.PersonalDataRepository;
-import pl.koszela.spring.repositories.UsersRepo;
+import pl.koszela.spring.entities.*;
+import pl.koszela.spring.repositories.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
@@ -26,44 +15,104 @@ import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationS
 public class SaveUsers {
 
     private PersonalDataRepository personalDataRepository;
+    private UsersRepo usersRepo;
+    private InputDataTilesRepository inputDataTilesRepository;
+    private InputDataAccesoriesRespository inputDataAccesoriesRespository;
+    private WindowsRepository windowsRepository;
+    private KolnierzRepository kolnierzRepository;
+    private TilesRepository tilesRepository;
 
     @Autowired
-    public SaveUsers(PersonalDataRepository personalDataRepository) {
+    public SaveUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
+        this.usersRepo = Objects.requireNonNull(usersRepo);
+        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
+        this.inputDataAccesoriesRespository = Objects.requireNonNull(inputDataAccesoriesRespository);
+        this.windowsRepository = Objects.requireNonNull(windowsRepository);
+        this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
     }
 
-    public void saveUser(EntityPersonalData entityPersonalData, List<Tiles> tiles) {
-        if (allDataIsCompleted(entityPersonalData.getName(), entityPersonalData.getSurname())) {
+    public void saveUser() {
+        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getAttribute("personalData");
+        /* if (allDataIsCompleted(entityPersonalData.getName(), entityPersonalData.getSurname())) {*/
 
-            EntityUser newUser = new EntityUser();
-            newUser.setEntityPersonalData(entityPersonalData);
-            newUser.setTiles(tiles);
+        EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getAttribute("tilesInput");
+        EntityInputDataAccesories entityInputDataAccesories = (EntityInputDataAccesories) VaadinSession.getCurrent().getAttribute("accesoriesInput");
+        EntityWindows entityWindows = (EntityWindows) VaadinSession.getCurrent().getAttribute("entityWindows");
+        EntityKolnierz entityKolnierz = (EntityKolnierz) VaadinSession.getCurrent().getAttribute("entityKolnierz");
+        List<Tiles> allTiles = (List<Tiles>) VaadinSession.getCurrent().getAttribute("allTiles");
+        EntityUser newUser = new EntityUser();
+        newUser.setEntityPersonalData(entityPersonalData);
+        newUser.setEntityInputDataTiles(entityInputDataTiles);
+        newUser.setEntityInputDataAccesories(entityInputDataAccesories);
+        newUser.setEntityWindows(entityWindows);
+        newUser.setEntityKolnierz(entityKolnierz);
+        newUser.setTiles(new HashSet<>(allTiles));
 
-            VaadinSession.getCurrent().setAttribute("user", newUser);
-        }
+
+//        Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(entityPersonalData);
+
+//        if (userFromRepo.isEmpty()) {
+            personalDataRepository.save(entityPersonalData);
+            inputDataTilesRepository.save(entityInputDataTiles);
+            inputDataAccesoriesRespository.save(entityInputDataAccesories);
+            windowsRepository.save(entityWindows);
+            kolnierzRepository.save(entityKolnierz);
+            tilesRepository.saveAll(allTiles);
+
+            usersRepo.save(newUser);
+            getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
+//        }/* else {
+//            EntityUser userToUpdate = userFromRepo.get();
+//            inputDataTilesRepository.save(entityInputDataTiles);
+//            inputDataAccesoriesRespository.save(entityInputDataAccesories);
+//            windowsRepository.save(entityWindows);
+//            kolnierzRepository.save(entityKolnierz);
+//            tilesRepository.saveAll(allTiles);
+//
+//            usersRepo.save(userToUpdate);
+//            getNotificationSucces("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getEntityPersonalData().getName() + " " + userToUpdate.getEntityPersonalData().getSurname() + "    :)");
+//        }
+
+        VaadinSession.getCurrent().setAttribute("user", newUser);
+        VaadinSession.getCurrent().setAttribute("personalDataFromRepo", null);
+        VaadinSession.getCurrent().setAttribute("tilesInputFromRepo", null);
+        VaadinSession.getCurrent().setAttribute("accesoriesInputFromRepo", null);
+        VaadinSession.getCurrent().setAttribute("entityWindowsFromRepo", null);
+        VaadinSession.getCurrent().setAttribute("entityKolnierzFromRepo", null);
+        VaadinSession.getCurrent().setAttribute("allTilesFromRepo", null);
+
+        VaadinSession.getCurrent().setAttribute("tilesInput", null);
+        VaadinSession.getCurrent().setAttribute("accesoriesInput", null);
+        VaadinSession.getCurrent().setAttribute("entityWindows", null);
+        VaadinSession.getCurrent().setAttribute("entityKolnierz", null);
+        VaadinSession.getCurrent().setAttribute("allTiles", null);
+//    }
+
     }
 
-    private boolean allDataIsCompleted(String name, String surname) {
-        if (!isUserInDatabase(name, surname)) {
-            return true;
-        } else if (allUsers().size() > 0 && isUserInDatabase(name, surname)) {
-            getNotificationError("Podany użytkownik znajduję się już w bazie danych");
-            return false;
-        } else {
-            getNotificationError("Nieznany błąd");
-            return false;
-        }
-    }
-
-    private boolean isUserInDatabase(String name, String surname) {
-        EntityPersonalData personalData = personalDataRepository.findUsersEntityByNameAndSurnameEquals(name, surname);
-        return personalData != null;
-    }
-
-    private List<EntityPersonalData> allUsers() {
-        Iterable<EntityPersonalData> iterable = personalDataRepository.findAll();
-        List<EntityPersonalData> userList = new ArrayList<>();
-        iterable.forEach(userList::add);
-        return userList;
-    }
+//    private boolean allDataIsCompleted(String name, String surname) {
+//        if (!isUserInDatabase(name, surname)) {
+//            return true;
+//        } else if (allUsers().size() > 0 && isUserInDatabase(name, surname)) {
+//            getNotificationError("Podany użytkownik znajduję się już w bazie danych");
+//            return false;
+//        } else {
+//            getNotificationError("Nieznany błąd");
+//            return false;
+//        }
+//    }
+//
+//    private boolean isUserInDatabase(String name, String surname) {
+//        EntityPersonalData personalData = personalDataRepository.findUsersEntityByNameAndSurnameEquals(name, surname);
+//        return personalData != null;
+//    }
+//
+//    private List<EntityPersonalData> allUsers() {
+//        Iterable<EntityPersonalData> iterable = personalDataRepository.findAll();
+//        List<EntityPersonalData> userList = new ArrayList<>();
+//        iterable.forEach(userList::add);
+//        return userList;
+//    }
 }

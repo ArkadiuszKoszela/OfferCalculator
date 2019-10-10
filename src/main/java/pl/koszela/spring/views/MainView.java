@@ -17,6 +17,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.importFiles.ImportFiles;
+import pl.koszela.spring.service.SaveUsers;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -34,10 +35,12 @@ import static pl.koszela.spring.views.WindowsView.WINDOWS;
 public class MainView extends AppLayout {
 
     private ImportFiles importFiles;
+    private SaveUsers saveUsers;
 
     @Autowired
-    public MainView(ImportFiles importFiles) {
+    public MainView(ImportFiles importFiles, SaveUsers saveUsers) {
         this.importFiles = Objects.requireNonNull(importFiles);
+        this.saveUsers = Objects.requireNonNull(saveUsers);
 
         Image img = new Image("http://www.nowoczesnebudowanie.pl/wp-content/uploads/2016/10/logo-nowoczesne-budowanie-1200x857.png", "Vaadin Logo");
         img.setHeight("44px");
@@ -85,6 +88,7 @@ public class MainView extends AppLayout {
             GenerateOffer.writeUsingIText();
             addToDrawer(anchor);
             anchor.setVisible(true);
+            saveUsers.saveUser();
         });
 
         addToNavbar(menuBar);

@@ -1,14 +1,18 @@
 package pl.koszela.spring.entities;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class EntityUser {
 
     @Id
+    @Column(name="USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String priceListName;
@@ -26,11 +30,16 @@ public class EntityUser {
     private EntityWindows entityWindows;
     @OneToOne
     private EntityKolnierz entityKolnierz;
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<EntityAccesories> entityAccesories;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "entityUserAccesories")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<EntityAccesories> entityAccesories;
 
-    @OneToMany
-    private List<Tiles> tiles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_tiles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tiles_id")
+    )
+    private Set<Tiles> entityUserTiles = new HashSet<>();
 
     public EntityUser() {
     }
@@ -91,11 +100,11 @@ public class EntityUser {
         this.entityKolnierz = entityKolnierz;
     }
 
-    public List<EntityAccesories> getEntityAccesories() {
+    public Set<EntityAccesories> getEntityAccesories() {
         return entityAccesories;
     }
 
-    public void setEntityAccesories(List<EntityAccesories> entityAccesories) {
+    public void setEntityAccesories(Set<EntityAccesories> entityAccesories) {
         this.entityAccesories = entityAccesories;
     }
 
@@ -123,11 +132,11 @@ public class EntityUser {
         this.hasWindows = hasWindows;
     }
 
-    public List<Tiles> getTiles() {
-        return tiles;
+    public Set<Tiles> getTiles() {
+        return entityUserTiles;
     }
 
-    public void setTiles(List<Tiles> tiles) {
-        this.tiles = tiles;
+    public void setTiles(Set<Tiles> tiles) {
+        this.entityUserTiles = tiles;
     }
 }

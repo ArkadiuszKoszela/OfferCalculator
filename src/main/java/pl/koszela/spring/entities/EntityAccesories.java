@@ -19,6 +19,8 @@ public class EntityAccesories {
     private BigDecimal totalRetail;
     private BigDecimal unitPurchasePrice;
     private BigDecimal totalPurchase;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private EntityUser entityUserAccesories;
 
     public EntityAccesories() {
     }
@@ -101,5 +103,13 @@ public class EntityAccesories {
 
     public void setTotalPurchase(BigDecimal totalPurchase) {
         this.totalPurchase = totalPurchase;
+    }
+
+    public EntityUser getEntityUserAccesories() {
+        return entityUserAccesories;
+    }
+
+    public void setEntityUserAccesories(EntityUser entityUserAccesories) {
+        this.entityUserAccesories = entityUserAccesories;
     }
 }

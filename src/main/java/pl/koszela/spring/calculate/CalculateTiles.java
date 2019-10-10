@@ -3,7 +3,7 @@ package pl.koszela.spring.calculate;
 import com.vaadin.flow.component.textfield.NumberField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.Enums;
+import pl.koszela.spring.entities.Category;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.TilesRepository;
 
@@ -22,7 +22,7 @@ public class CalculateTiles {
     }
 
     public List<String> getAvailablePriceList() {
-        List<Tiles> allTilesFromRepository = tilesRepository.findByNameEquals(Enums.DACHOWKA_PODSTAWOWA.toString());
+        List<Tiles> allTilesFromRepository = tilesRepository.findByNameEquals(Category.DACHOWKA_PODSTAWOWA.toString());
         List<String> allTiles = new ArrayList<>();
         allTilesFromRepository.forEach(e -> allTiles
                 .add(e.getPriceListName()));
@@ -39,7 +39,7 @@ public class CalculateTiles {
     }
 
     public void getAllPriceAfterDiscount(List<Tiles> resultTiles) {
-        List<BigDecimal> lista = new ArrayList<BigDecimal>();
+        List<BigDecimal> lista = new ArrayList<>();
         resultTiles.forEach(e -> {
             BigDecimal cos = e.getPriceAfterDiscount();
             lista.add(cos);
@@ -50,7 +50,7 @@ public class CalculateTiles {
         }
         BigDecimal finalWynik = wynik;
         resultTiles.forEach(e -> {
-            if (e.getName().equals(Enums.DACHOWKA_PODSTAWOWA.toString())) {
+            if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
                 e.setTotalPrice(finalWynik);
             }
         });

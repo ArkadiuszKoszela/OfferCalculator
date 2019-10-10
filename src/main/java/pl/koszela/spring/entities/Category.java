@@ -1,6 +1,6 @@
 package pl.koszela.spring.entities;
 
-public enum Enums {
+public enum Category {
 
     DACHOWKA_PODSTAWOWA,
     DACHOWKA_SKRAJNA_LEWA,
@@ -14,5 +14,5 @@ public enum Enums {
     PLYTKA_POCZATKOWA,
     PLYTKA_KONCOWA,
     TROJNIK,
-    GASIAR_ZAOKRAGLONY;
+    GASIAR_ZAOKRAGLONY
 }
