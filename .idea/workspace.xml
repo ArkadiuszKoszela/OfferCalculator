@@ -185,7 +185,7 @@
       <workItem from="1570607459799" duration="18428000" />
       <workItem from="1570648921096" duration="4355000" />
       <workItem from="1570705795742" duration="934000" />
-      <workItem from="1570724409127" duration="2684000" />
+      <workItem from="1570724409127" duration="3970000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -243,7 +243,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570726442007</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="change git ignore">
+      <created>1570727189864</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1570727189864</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,7 +278,8 @@
     <MESSAGE value="chenge table in offerView" />
     <MESSAGE value="adding button to download offer in pdf" />
     <MESSAGE value="add generate offer, refactor code" />
-    <option name="LAST_COMMIT_MESSAGE" value="add generate offer, refactor code" />
+    <MESSAGE value="change git ignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="change git ignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
