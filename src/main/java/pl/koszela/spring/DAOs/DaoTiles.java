@@ -3,7 +3,10 @@ package pl.koszela.spring.DAOs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.Category;
+import pl.koszela.spring.entities.OptionEnum;
+import pl.koszela.spring.entities.OptionsOffer;
 import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.repositories.OptionsOfferRepository;
 import pl.koszela.spring.repositories.TilesRepository;
 
 import java.io.BufferedReader;
@@ -18,10 +21,12 @@ import java.util.stream.Collectors;
 public class DaoTiles implements Dao {
 
     private final TilesRepository tilesRepository;
+    private OptionsOfferRepository optionsOffer;
 
     @Autowired
-    public DaoTiles(TilesRepository tilesRepository) {
+    public DaoTiles(TilesRepository tilesRepository, OptionsOfferRepository optionsOffer) {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.optionsOffer = Objects.requireNonNull(optionsOffer);
     }
 
     @Override

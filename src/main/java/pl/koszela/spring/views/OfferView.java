@@ -16,7 +16,6 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.converter.StringToBigDecimalConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -26,6 +25,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.Category;
+import pl.koszela.spring.entities.OptionsOffer;
 import pl.koszela.spring.entities.Tiles;
 
 import java.math.BigDecimal;
@@ -33,7 +33,8 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
+import static pl.koszela.spring.entities.OptionEnum.GLOWNA;
+import static pl.koszela.spring.entities.OptionEnum.OPCJONALNA;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout {
@@ -82,6 +83,7 @@ public class OfferView extends VerticalLayout {
         treeGrid.addColumn(tiles -> tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)).setHeader("Cena zakupu");
         treeGrid.addColumn(tiles -> tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP)).setHeader("Cena po rabacie");
         treeGrid.addColumn(tiles -> (tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP).subtract(tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)))).setHeader("Zysk");
+        TreeGrid.Column opcje = treeGrid.addColumn(Tiles::getOption).setHeader("Opcje");
 
         HeaderRow filterRow = treeGrid.appendHeaderRow();
         FooterRow footerRow = treeGrid.appendFooterRow();
@@ -102,7 +104,7 @@ public class OfferView extends VerticalLayout {
         footerRow.getCell(priceListName).setComponent(calculate);
         treeGrid.setDataProvider(treeDataProvider);
 
-        Editor(treeGrid, discount, price);
+        Editor(treeGrid, discount, opcje);
         return treeGrid;
     }
 
@@ -144,7 +146,7 @@ public class OfferView extends VerticalLayout {
         return refresh;
     }
 
-    private void Editor(TreeGrid<Tiles> treeGrid, Grid.Column<Tiles> discount, Grid.Column<Tiles> price) {
+    private void Editor(TreeGrid<Tiles> treeGrid, Grid.Column<Tiles> discount, Grid.Column<Tiles> opcje) {
         Binder<Tiles> binder = new Binder<>(Tiles.class);
         Editor<Tiles> editor = treeGrid.getEditor();
         editor.setBinder(binder);
@@ -156,9 +158,14 @@ public class OfferView extends VerticalLayout {
         TextField editDiscount = new TextField();
         binder.forField(editDiscount)
                 .withConverter(
-                        new StringToIntegerConverter("Age must be a number."))
+                        new StringToIntegerConverter("Discount must be a number."))
                 .withStatusLabel(validationStatus).bind("discount");
         discount.setEditorComponent(editDiscount);
+
+        Select<String> select = new Select<String>();
+        binder.forField(select)
+                .withStatusLabel(validationStatus).bind("option");
+        opcje.setEditorComponent(select);
 
         Collection<Button> editButtons = Collections
                 .newSetFromMap(new WeakHashMap<>());
@@ -169,15 +176,13 @@ public class OfferView extends VerticalLayout {
             edit.addClickListener(e -> {
                 editor.editItem(tiles);
                 editDiscount.focus();
+                select.setItems(GLOWNA.toString(), OPCJONALNA.toString());
+                select.focus();
             });
             edit.setEnabled(!editor.isOpen());
             editButtons.add(edit);
             return edit;
         }).setHeader("Edit");
-
-        treeGrid.addComponentColumn(tiles -> {
-            return new Select<>("Główna", "Opcjonalna");
-        }).setHeader("Wydruk");
 
         editor.addOpenListener(e -> editButtons
                 .forEach(button -> button.setEnabled(!editor.isOpen())));
@@ -185,10 +190,10 @@ public class OfferView extends VerticalLayout {
                 .forEach(button -> button.setEnabled(!editor.isOpen())));
 
         Button save = new Button(new Icon(VaadinIcon.CHECK), e -> {
-            if (Integer.parseInt(editDiscount.getValue()) > 30) {
+            /*if (Integer.parseInt(editDiscount.getValue()) > 30) {
                 editDiscount.setValue("30");
                 getNotificationError("Maksymalny rabat to 30 %");
-            }
+            }*/
             editor.save();
         });
 

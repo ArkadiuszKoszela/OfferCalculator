@@ -15,6 +15,7 @@ import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.repositories.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
@@ -125,6 +126,13 @@ public class TilesView extends VerticalLayout {
                     for (NumberField listOfNumberField : listOfNumberFields) {
                         if (tile.getName().equals(listOfNumberField.getPattern())) {
                             tile.setQuantity(listOfNumberField.getValue());
+                            tile.setTotalProfit(new BigDecimal(0));
+                            tile.setDiscount(0);
+                            tile.setTotalPrice(new BigDecimal(0));
+                            tile.setPriceAfterDiscount(new BigDecimal(0));
+                            tile.setPricePurchase(new BigDecimal(0));
+                            tile.setProfit(new BigDecimal(0));
+                            tile.setOption("");
                         }
                     }
                 }
@@ -272,6 +280,7 @@ public class TilesView extends VerticalLayout {
         numberField.setValue(defaultValue);
         numberField.setMin(0);
         numberField.setMax(500);
+        numberField.setAutoselect(true);
         numberField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
         numberField.setSuffixComponent(new Span(unit));
     }

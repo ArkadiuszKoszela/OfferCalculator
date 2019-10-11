@@ -8,7 +8,6 @@ import pl.koszela.spring.repositories.*;
 
 import java.util.*;
 
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
 
 @Service
@@ -21,9 +20,10 @@ public class SaveUsers {
     private WindowsRepository windowsRepository;
     private KolnierzRepository kolnierzRepository;
     private TilesRepository tilesRepository;
+    private OptionsOfferRepository optionsOfferRepository;
 
     @Autowired
-    public SaveUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository) {
+    public SaveUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, OptionsOfferRepository optionsOfferRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
@@ -31,6 +31,7 @@ public class SaveUsers {
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.optionsOfferRepository = Objects.requireNonNull(optionsOfferRepository);
     }
 
     public void saveUser() {

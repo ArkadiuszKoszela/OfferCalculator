@@ -2,7 +2,9 @@ package pl.koszela.spring.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +26,10 @@ public class Tiles {
     private BigDecimal totalProfit;
     @ManyToMany(mappedBy = "entityUserTiles")
     private Set<EntityUser> userTiles = new HashSet<>();
+    private String option;
+    /*@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tiles_id")
+    private OptionsOffer optionsOffer;*/
 
     public Tiles() {
     }
@@ -123,4 +129,20 @@ public class Tiles {
     public void setUserTiles(Set<EntityUser> userTiles) {
         this.userTiles = userTiles;
     }
+
+    public String getOption() {
+        return option;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
+    }
+
+  /*  public OptionsOffer getOptionsOffer() {
+        return optionsOffer;
+    }
+
+    public void setOptionsOffer(OptionsOffer optionsOffer) {
+        this.optionsOffer = optionsOffer;
+    }*/
 }
