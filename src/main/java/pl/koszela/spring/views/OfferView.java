@@ -1,5 +1,7 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.FooterRow;
@@ -25,7 +27,6 @@ import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.Category;
-import pl.koszela.spring.entities.OptionsOffer;
 import pl.koszela.spring.entities.Tiles;
 
 import java.math.BigDecimal;
@@ -35,6 +36,8 @@ import java.util.stream.Collectors;
 
 import static pl.koszela.spring.entities.OptionEnum.GLOWNA;
 import static pl.koszela.spring.entities.OptionEnum.OPCJONALNA;
+import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
+import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout {
@@ -46,6 +49,8 @@ public class OfferView extends VerticalLayout {
     private NumberField windowsDiscount = new NumberField("Rabat okna/kołnierz");
     private VerticalLayout layout = new VerticalLayout();
     private TreeGrid<Tiles> treeGrid = new TreeGrid<>();
+    private List<List<Tiles>> allTilesNew = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
+    private List<List<Tiles>> allTilesFromRepo = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTilesFromRepo");
 
     @Autowired
     public OfferView() {
@@ -60,6 +65,19 @@ public class OfferView extends VerticalLayout {
         layout.add(formLayout);
         layout.add(createTiles());
         return layout;
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        allTilesFromRepo = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTilesFromRepo");
+        allTilesNew = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
+        if (allTilesFromRepo != null) {
+            getNotificationSucces("Dachówki (Offer View) - wszystko ok (repo)");
+        } else if (allTilesFromRepo == null) {
+            getNotificationSucces("Dachówki (Offer View) - wszystko ok (bez repo)");
+        } else {
+            getNotificationError("Dachówki (Offer View) - coś poszło nie tak");
+        }
     }
 
     private NumberField settingsNumberFields(NumberField numberField) {
@@ -85,13 +103,22 @@ public class OfferView extends VerticalLayout {
         treeGrid.addColumn(tiles -> (tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP).subtract(tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)))).setHeader("Zysk");
         TreeGrid.Column opcje = treeGrid.addColumn(Tiles::getOption).setHeader("Opcje");
 
-        HeaderRow filterRow = treeGrid.appendHeaderRow();
         FooterRow footerRow = treeGrid.appendFooterRow();
-
+        HeaderRow filterRow = treeGrid.appendHeaderRow();
         TextField filter = new TextField();
-        TreeDataProvider<Tiles> treeDataProvider = new TreeDataProvider<>(getTilesTreeData());
-        filter.addValueChangeListener(event -> treeDataProvider.setFilter(
-                tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
+
+        TreeDataProvider<Tiles> treeDataProvider;
+        if (allTilesFromRepo != null) {
+            treeDataProvider = new TreeDataProvider<>(getTilesTreeDataFromRepo());
+            filter.addValueChangeListener(event -> treeDataProvider.setFilter(
+                    tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
+            getNotificationSucces("Repo - Wczytano dane");
+        } else {
+            treeDataProvider = new TreeDataProvider<>(getTilesTreeDataNew());
+            filter.addValueChangeListener(event -> treeDataProvider.setFilter(
+                    tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
+            getNotificationSucces("Bez Repo - Wczytano dane");
+        }
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
 
@@ -138,7 +165,7 @@ public class OfferView extends VerticalLayout {
                 }
                 parent.setTotalPrice(totalPriceValue);
                 parent.setTotalProfit(totalProfitValue);
-                VaadinSession.getCurrent().setAttribute("allTiles", list);
+                VaadinSession.getCurrent().getSession().setAttribute("allTiles", list);
                 VaadinSession.getCurrent().setAttribute("childrens", childrens);
                 VaadinSession.getCurrent().setAttribute("parents", parents);
             }
@@ -204,7 +231,44 @@ public class OfferView extends VerticalLayout {
         editorColumn.setEditorComponent(buttons);
     }
 
-    private TreeData<Tiles> getTilesTreeData() {
+    private TreeData<Tiles> getTilesTreeDataFromRepo() {
+        TreeData<Tiles> treeData = new TreeData<>();
+        if (allTilesFromRepo != null) {
+            List<List<Tiles>> allFromRepo = loadDataUser();
+            allFromRepo.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
+            for (List<Tiles> tiles : allFromRepo) {
+                for (int j = 0; j < tiles.size(); j++) {
+                    if (j == 0) {
+                        treeData.addItem(null, tiles.get(0));
+                    } else {
+                        treeData.addItem(tiles.get(0), tiles.get(j));
+                    }
+                }
+            }
+        }
+        return treeData;
+    }
+
+    private TreeData<Tiles> getTilesTreeDataNew() {
+        TreeData<Tiles> treeData1 = new TreeData<>();
+
+        if (allTilesNew != null) {
+            allTilesNew.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
+            for (List<Tiles> tiles : allTilesNew) {
+                for (int j = 0; j < tiles.size(); j++) {
+                    if (j == 0) {
+                        treeData1.addItem(null, tiles.get(0));
+                    } else {
+                        treeData1.addItem(tiles.get(0), tiles.get(j));
+                    }
+                }
+            }
+        }
+        return treeData1;
+    }
+
+
+    /*private TreeData<Tiles> getTilesTreeData() {
         TreeData<Tiles> treeData1 = new TreeData<>();
         List<List<Tiles>> all = (List<List<Tiles>>) VaadinSession.getCurrent().getAttribute("resultTiles");
         Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
@@ -234,7 +298,7 @@ public class OfferView extends VerticalLayout {
             }
         }
         return treeData1;
-    }
+    }*/
 
     private List<List<Tiles>> loadDataUser() {
         List<List<Tiles>> all = new ArrayList<>();
@@ -248,7 +312,7 @@ public class OfferView extends VerticalLayout {
     }
 
     private List<Tiles> getChildrens(String parent) {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         List<Tiles> list = new ArrayList<>(set);
         List<Tiles> childrens = new ArrayList<>();
         if (list.size() > 0) {
@@ -262,7 +326,7 @@ public class OfferView extends VerticalLayout {
     }
 
     private List<Tiles> getParents() {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         List<Tiles> list = new ArrayList<>(set);
         List<Tiles> parents = new ArrayList<>();
         if (list.size() > 0) {

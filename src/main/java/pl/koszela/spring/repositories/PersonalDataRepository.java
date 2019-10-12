@@ -9,5 +9,8 @@ import java.util.Optional;
 @Repository
 public interface PersonalDataRepository extends CrudRepository<EntityPersonalData, Long> {
     EntityPersonalData findUsersEntityByNameAndSurnameEquals(String name, String surname);
-    Optional<EntityPersonalData> findEntityPersonalDataByNameAndSurnameAndAdressEquals (String name, String surname, String adress);
+
+    Optional<EntityPersonalData> findEntityPersonalDataByNameAndSurnameAndAdressEquals(String name, String surname, String adress);
+
+    Optional<EntityPersonalData> findEntityPersonalDataByNameAndSurnameEquals(String name, String surname);
 }

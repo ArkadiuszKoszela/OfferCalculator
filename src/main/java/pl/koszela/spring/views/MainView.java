@@ -4,6 +4,7 @@ import com.vaadin.flow.component.applayout.AppLayout;
 
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -17,7 +18,8 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.importFiles.ImportFiles;
-import pl.koszela.spring.service.SaveUsers;
+import pl.koszela.spring.service.SaveUser;
+import pl.koszela.spring.service.UpdateUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -35,12 +37,14 @@ import static pl.koszela.spring.views.WindowsView.WINDOWS;
 public class MainView extends AppLayout {
 
     private ImportFiles importFiles;
-    private SaveUsers saveUsers;
+    private SaveUser saveUser;
+    private UpdateUser updateUser;
 
     @Autowired
-    public MainView(ImportFiles importFiles, SaveUsers saveUsers) {
+    public MainView(ImportFiles importFiles, SaveUser saveUser, UpdateUser updateUser) {
         this.importFiles = Objects.requireNonNull(importFiles);
-        this.saveUsers = Objects.requireNonNull(saveUsers);
+        this.saveUser = Objects.requireNonNull(saveUser);
+        this.updateUser = Objects.requireNonNull(updateUser);
 
         Image img = new Image("http://www.nowoczesnebudowanie.pl/wp-content/uploads/2016/10/logo-nowoczesne-budowanie-1200x857.png", "Vaadin Logo");
         img.setHeight("44px");
@@ -83,16 +87,24 @@ public class MainView extends AppLayout {
 
         anchor.setHref(getStreamResource(file.getName(), file));
         anchor.setVisible(false);
-        Button btn = new Button("Download");
-        btn.addClickListener(buttonClickEvent -> {
+        Button saveNewUser = new Button("Zapisz użytkownika");
+        saveNewUser.addClickListener(event -> saveUser.saveUser());
+        Button update = new Button("Zaktualizuj użytkownika");
+        update.addClickListener(event -> updateUser.updateUser());
+        FormLayout formLayout = new FormLayout();
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
+        formLayout.setResponsiveSteps(responsiveStep);
+
+        Button gereneteOffer = new Button("Generuj ofertę");
+        gereneteOffer.addClickListener(buttonClickEvent -> {
             GenerateOffer.writeUsingIText();
-            addToDrawer(anchor);
+            formLayout.add(anchor);
             anchor.setVisible(true);
-            saveUsers.saveUser();
         });
 
+        formLayout.add(button, saveNewUser, update, gereneteOffer);
         addToNavbar(menuBar);
-        addToDrawer(button, btn);
+        addToDrawer(formLayout);
     }
 
     private StreamResource getStreamResource(String filename, File content) {

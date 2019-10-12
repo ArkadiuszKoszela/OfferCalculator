@@ -2,6 +2,7 @@ package pl.koszela.spring.views;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import pl.koszela.spring.entities.EntityPersonalData;
@@ -30,6 +31,7 @@ class GenerateOffer {
 
         try {
             EntityPersonalData user = (EntityPersonalData) VaadinSession.getCurrent().getAttribute("personalData");
+            EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getAttribute("personalDataFromRepo");
             PdfWriter.getInstance(document, new FileOutputStream(new File(FILE_NAME)));
 
             //open
@@ -38,22 +40,26 @@ class GenerateOffer {
             BaseFont baseFont = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.EMBEDDED);
 
             Font font = new Font(baseFont, 8);
-            if (user != null) {
-                Paragraph p = new Paragraph("www.nowoczesnebudowanie.pl\n" +
-                        "ul. Chemiczna 2\n" +
-                        "65-713 Zielona Góra                                                              OFERTA HANDLOWA\n" +
-                        "robert@nowoczesnebudowanie.pl\n" +
-                        "tel. 502680330", font);
-                p.setAlignment(Element.ALIGN_LEFT);
-                document.add(p);
-            }
+
+            Paragraph p = new Paragraph("www.nowoczesnebudowanie.pl\n" +
+                    "ul. Chemiczna 2\n" +
+                    "65-713 Zielona Góra                                                              OFERTA HANDLOWA\n" +
+                    "robert@nowoczesnebudowanie.pl\n" +
+                    "tel. 502680330", font);
+            p.setAlignment(Element.ALIGN_LEFT);
+            document.add(p);
+
 
             Font font12 = new Font(baseFont, 12);
-            assert user != null;
-            Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: " + user.getName() + " " + user.getSurname(), font12);
+            if (userfromRepo != null) {
+                Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: " + userfromRepo.getName() + " " + userfromRepo.getSurname(), font12);
 
-            document.add(informacje);
+                document.add(informacje);
+            } else {
+                Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: " + user.getName() + " " + user.getSurname(), font12);
 
+                document.add(informacje);
+            }
             Font font10 = new Font(baseFont, 10);
             Paragraph producent = new Paragraph("\n\nDachówki ceramiczne Nelskamrubp produkowane są z najwyższej jakości surowców w nowoczesnej technologii." +
                     "Sprawdzone na przestrzeni wieków – dachówki ceramiczne zalicza się do najstarszych pokryć dachowych " +
@@ -74,8 +80,9 @@ class GenerateOffer {
 
             PdfPTable table = new PdfPTable(6);
 
-            Set<Tiles> resultTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+            Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
 
+            List<List<Tiles>> resultListTilesFromRepo = changeSetToList(resultSetTilesFromRepo);
             List<List<Tiles>> resultTiles = (List<List<Tiles>>) VaadinSession.getCurrent().getAttribute("resultTiles");
 
             BaseColor baseColor = new BaseColor(224, 224, 224);
@@ -109,9 +116,9 @@ class GenerateOffer {
             table.setWidths(width);
             table.setHeaderRows(1);
 
-            if (resultTilesFromRepo != null) {
-                getTable(document, font12, font10, table, resultTiles, priceListName);
-            }else {
+            if (resultSetTilesFromRepo != null) {
+                getTable(document, font12, font10, table, resultListTilesFromRepo, priceListName);
+            } else {
                 getTable(document, font12, font10, table, resultTiles, priceListName);
             }
             Paragraph paragraph = new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   DODATKI DACHOWE:  jakaś cena\n" +
@@ -158,6 +165,60 @@ class GenerateOffer {
             e.printStackTrace();
         }
 
+    }
+
+    private static List<List<Tiles>> changeSetToList(Set<Tiles> set) {
+        List<List<Tiles>> list = new ArrayList<>();
+        List<Tiles> parents = getParents();
+        List<Tiles> childrens = getChildrens();
+        for (Tiles tileParent : parents) {
+            List<Tiles> oneOf = findChildrens(tileParent, childrens);
+
+            oneOf.add(tileParent);
+            list.add(oneOf);
+        }
+        return list;
+    }
+
+    private static List<Tiles> findChildrens(Tiles parent, List<Tiles> childrens) {
+        List<Tiles> oneOfchildrens = new ArrayList<>();
+        for (Tiles children : childrens) {
+            if (children.getPriceListName().equals(parent.getPriceListName())) {
+                oneOfchildrens.add(children);
+            }
+        }
+        return oneOfchildrens;
+    }
+
+    private static List<Tiles> getChildrens() {
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        List<Tiles> list = new ArrayList<>(set);
+        List<Tiles> childrens = new ArrayList<>();
+        if (list.size() > 0) {
+            List<Tiles> parents = getParents();
+            list.forEach(e -> {
+                for (Tiles tiles : parents) {
+                    if (e.getPriceListName().equals(tiles.getPriceListName())) {
+                        childrens.add(e);
+                    }
+                }
+            });
+        }
+        return childrens;
+    }
+
+    private static List<Tiles> getParents() {
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        List<Tiles> list = new ArrayList<>(set);
+        List<Tiles> parents = new ArrayList<>();
+        if (list.size() > 0) {
+            list.forEach(e -> {
+                if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                    parents.add(e);
+                }
+            });
+        }
+        return parents;
     }
 
     private static void getTable(Document document, Font font12, Font font10, PdfPTable table, List<List<Tiles>> resultTiles, List<String> priceListName) throws DocumentException {

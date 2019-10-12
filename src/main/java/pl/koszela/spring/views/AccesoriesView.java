@@ -1,5 +1,7 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -10,12 +12,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveObserver;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.EntityAccesories;
 import pl.koszela.spring.entities.EntityInputDataAccesories;
 import pl.koszela.spring.entities.EntityInputDataTiles;
+import pl.koszela.spring.entities.EntityPersonalData;
 import pl.koszela.spring.inputFields.ServiceNotification;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.repositories.InputDataAccesoriesRespository;
@@ -23,13 +29,16 @@ import pl.koszela.spring.repositories.InputDataAccesoriesRespository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
+import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
 import static pl.koszela.spring.service.Labels.*;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 
+
 @Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
-public class AccesoriesView extends VerticalLayout {
+public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserver {
 
     static final String SELECT_ACCESORIES = "accesories/select";
     private AccesoriesRepository accesoriesRepository;
@@ -85,9 +94,23 @@ public class AccesoriesView extends VerticalLayout {
     private List<NumberField> listOfNumberFields = new ArrayList<>();
     private List<Double> valuesFromRepo;
     private List<Double> valuePriceAccesories = new ArrayList<>();
+    private EntityInputDataTiles dataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInput");
+    private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
 
     private FormLayout board = new FormLayout();
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        if (dataTilesRepo != null || dataTiles == null) {
+            dataTilesRepo = (EntityInputDataTiles) attachEvent.getSession().getAttribute("tilesInputFromRepo");
+            getNotificationSucces("WEJSCIE Akcesoria - wszystko ok (repo)");
+        } else if (dataTilesRepo == null || dataTiles != null) {
+            dataTiles = (EntityInputDataTiles) attachEvent.getSession().getAttribute("tilesInput");
+            getNotificationSucces("WEJSCIE Akcesoria - wszystko ok (bez repo)");
+        } else {
+            getNotificationError("WEJSCIE Dachówki - coś poszło nie tak");
+        }
+    }
 
     @Autowired
     public AccesoriesView(AccesoriesRepository accesoriesRepository,
@@ -96,15 +119,24 @@ public class AccesoriesView extends VerticalLayout {
         this.inputDataAccesoriesRespository = Objects.requireNonNull(inputDataAccesoriesRespository);
 
         add(formLayoutAccesories());
-        UI.getCurrent().addBeforeLeaveListener(e -> {
-            Tabs tabs = (Tabs) VaadinSession.getCurrent().getAttribute("tabs");
-            if (tabs != null && !tabs.getSelectedTab().getLabel().equals("Akcesoria")) {
-                saveInputDataAccesories();
-                ServiceNotification.getNotificationSucces("Accesories save");
-            }else{
-                ServiceNotification.getNotificationError("Accesories don't save");
-            }
-        });
+    }
+
+    @Override
+    public void beforeLeave(BeforeLeaveEvent event) {
+        BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
+        if (dataTilesRepo != null || dataTiles == null) {
+            VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", saveInputData());
+            getNotificationSucces("WYJSCIE Akcesoria - wszystko ok (repo)");
+            action.proceed();
+        } else if (dataTilesRepo == null || dataTiles != null) {
+            VaadinSession.getCurrent().getSession().setAttribute("accesoriesInput", saveInputDataAccesories());
+            VaadinSession.getCurrent().getSession().setAttribute("tilesInput", saveInputData());
+            getNotificationSucces("WYJSCIE Akcesoria - wszystko ok (bez repo)");
+            action.proceed();
+        } else {
+            getNotificationError("WEJSCIE Dachówki - coś poszło nie tak");
+            action.proceed();
+        }
     }
 
     private FormLayout formLayoutAccesories() {
@@ -181,10 +213,46 @@ public class AccesoriesView extends VerticalLayout {
         return allAccesories;
     }
 
+    private EntityInputDataTiles saveInputData() {
+        return EntityInputDataTiles.builder()
+                .powierzchniaPolaci(numberField1.getValue())
+                .dlugoscKalenic(numberField2.getValue())
+                .dlugoscKalenicProstych(numberField3.getValue())
+                .dlugoscKalenicSkosnych(numberField4.getValue())
+                .dlugoscKoszy(numberField5.getValue())
+                .dlugoscKrawedziLewych(numberField6.getValue())
+                .dlugoscKrawedziPrawych(numberField7.getValue())
+                .obwodKomina(numberField8.getValue())
+                .dlugoscOkapu(numberField9.getValue())
+                .dachowkaWentylacyjna(numberField10.getValue())
+                .kompletKominkaWentylacyjnego(numberField11.getValue())
+                .gasiarPoczatkowyKalenicaProsta(numberField12.getValue())
+                .gasiarKoncowyKalenicaProsta(numberField13.getValue())
+                .gasiarZaokraglony(numberField14.getValue())
+                .trojnik(numberField15.getValue())
+                .czwornik(numberField16.getValue())
+                .gasiarZPodwojnaMufa(numberField17.getValue())
+                .dachowkaDwufalowa(numberField18.getValue())
+                .oknoPolaciowe(numberField19.getValue())
+                .build();
+    }
+
     private void getValuesTiles() {
         setValue(getListNumberFields());
-        EntityInputDataTiles dataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getAttribute("tilesInput");
-        if (dataTiles != null) {
+        if (dataTilesRepo != null && dataTiles == null) {
+            valuesFromRepo = Arrays.asList(dataTilesRepo.getPowierzchniaPolaci(), dataTilesRepo.getDlugoscKalenic(),
+                    dataTilesRepo.getDlugoscKalenicProstych(), dataTilesRepo.getDlugoscKalenicSkosnych(),
+                    dataTilesRepo.getDlugoscKoszy(), dataTilesRepo.getDlugoscKrawedziLewych(), dataTilesRepo.getDlugoscKrawedziPrawych(),
+                    dataTilesRepo.getObwodKomina(), dataTilesRepo.getDlugoscOkapu(), dataTilesRepo.getDachowkaWentylacyjna(),
+                    dataTilesRepo.getKompletKominkaWentylacyjnego(), dataTilesRepo.getGasiarPoczatkowyKalenicaProsta(),
+                    dataTilesRepo.getGasiarKoncowyKalenicaProsta(), dataTilesRepo.getGasiarZaokraglony(),
+                    dataTilesRepo.getTrojnik(), dataTilesRepo.getCzwornik(), dataTilesRepo.getGasiarZPodwojnaMufa(),
+                    dataTilesRepo.getDachowkaDwufalowa(), dataTilesRepo.getOknoPolaciowe());
+            for (int i = 0; i < valuesFromRepo.size(); i++) {
+                listOfNumberFields.get(i).setValue(valuesFromRepo.get(i) * valuePriceAccesories.get(i));
+            }
+            getNotificationSucces("Repo - wczytano dane");
+        } else {
             valuesFromRepo = Arrays.asList(dataTiles.getPowierzchniaPolaci(), dataTiles.getDlugoscKalenic(),
                     dataTiles.getDlugoscKalenicProstych(), dataTiles.getDlugoscKalenicSkosnych(),
                     dataTiles.getDlugoscKoszy(), dataTiles.getDlugoscKrawedziLewych(), dataTiles.getDlugoscKrawedziPrawych(),
@@ -196,13 +264,12 @@ public class AccesoriesView extends VerticalLayout {
             for (int i = 0; i < valuesFromRepo.size(); i++) {
                 listOfNumberFields.get(i).setValue(valuesFromRepo.get(i) * valuePriceAccesories.get(i));
             }
-        } else {
-            getNotificationError("Proszę przejść do dachówek aby móc wczytać dane");
+            getNotificationSucces("Bez repo - wczytano dane");
         }
     }
 
-    private void saveInputDataAccesories() {
-        EntityInputDataAccesories entityInputDataAccesories = EntityInputDataAccesories.builder()
+    private EntityInputDataAccesories saveInputDataAccesories() {
+        return EntityInputDataAccesories.builder()
                 .tasmaKalenicowa(comboBoxtasmaKalenicowa.getValue())
                 .wspornikLatyKalenicowej(comboBoxwspornikLatyKalenicowej.getValue())
                 .tasmaDoObrobkiKomina(comboBoxtasmaDoObrobkiKomina.getValue())
@@ -226,7 +293,7 @@ public class AccesoriesView extends VerticalLayout {
                 .blachaAluminiowa(comboBoxblachaAluminiowa.getValue())
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
-        VaadinSession.getCurrent().setAttribute("accesoriesInput", entityInputDataAccesories);
+        /*VaadinSession.getCurrent().getSession().setAttribute("accesoriesInput", entityInputDataAccesories);*/
     }
 
     private List<EntityAccesories> resultAccesories() {
