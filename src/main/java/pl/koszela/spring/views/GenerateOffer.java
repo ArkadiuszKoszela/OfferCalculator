@@ -30,8 +30,8 @@ class GenerateOffer {
         Document document = new Document();
 
         try {
-            EntityPersonalData user = (EntityPersonalData) VaadinSession.getCurrent().getAttribute("personalData");
-            EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getAttribute("personalDataFromRepo");
+            EntityPersonalData user = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+            EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
             PdfWriter.getInstance(document, new FileOutputStream(new File(FILE_NAME)));
 
             //open
@@ -80,10 +80,10 @@ class GenerateOffer {
 
             PdfPTable table = new PdfPTable(6);
 
-            Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+            Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
 
             List<List<Tiles>> resultListTilesFromRepo = changeSetToList(resultSetTilesFromRepo);
-            List<List<Tiles>> resultTiles = (List<List<Tiles>>) VaadinSession.getCurrent().getAttribute("resultTiles");
+            List<List<Tiles>> resultTiles = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
 
             BaseColor baseColor = new BaseColor(224, 224, 224);
             float[] width = new float[]{320f, 85f, 85f, 85f, 85f, 85f};
@@ -191,7 +191,7 @@ class GenerateOffer {
     }
 
     private static List<Tiles> getChildrens() {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         List<Tiles> list = new ArrayList<>(set);
         List<Tiles> childrens = new ArrayList<>();
         if (list.size() > 0) {
@@ -208,7 +208,7 @@ class GenerateOffer {
     }
 
     private static List<Tiles> getParents() {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
+        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         List<Tiles> list = new ArrayList<>(set);
         List<Tiles> parents = new ArrayList<>();
         if (list.size() > 0) {

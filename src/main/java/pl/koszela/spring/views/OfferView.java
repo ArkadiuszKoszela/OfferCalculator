@@ -203,6 +203,7 @@ public class OfferView extends VerticalLayout {
             edit.addClickListener(e -> {
                 editor.editItem(tiles);
                 editDiscount.focus();
+                tiles.setDiscount(Integer.parseInt(editDiscount.getValue()));
                 select.setItems(GLOWNA.toString(), OPCJONALNA.toString());
                 select.focus();
             });
@@ -217,10 +218,10 @@ public class OfferView extends VerticalLayout {
                 .forEach(button -> button.setEnabled(!editor.isOpen())));
 
         Button save = new Button(new Icon(VaadinIcon.CHECK), e -> {
-            /*if (Integer.parseInt(editDiscount.getValue()) > 30) {
+            if (Integer.parseInt(editDiscount.getValue()) > 30) {
                 editDiscount.setValue("30");
                 getNotificationError("Maksymalny rabat to 30 %");
-            }*/
+            }
             editor.save();
         });
 

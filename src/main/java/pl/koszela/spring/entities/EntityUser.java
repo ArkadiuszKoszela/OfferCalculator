@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,6 +41,13 @@ public class EntityUser {
             inverseJoinColumns = @JoinColumn(name = "tiles_id")
     )
     private Set<Tiles> entityUserTiles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_optionoffer",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "optionoffer_id")
+    )
+    private Set<OptionsOffer> entityUserOffer = new HashSet<>();
 
     public EntityUser() {
     }
@@ -138,5 +146,13 @@ public class EntityUser {
 
     public void setTiles(Set<Tiles> tiles) {
         this.entityUserTiles = tiles;
+    }
+
+    public Set<OptionsOffer> getEntityUserOffer() {
+        return entityUserOffer;
+    }
+
+    public void setEntityUserOffer(Set<OptionsOffer> entityUserOffer) {
+        this.entityUserOffer = entityUserOffer;
     }
 }

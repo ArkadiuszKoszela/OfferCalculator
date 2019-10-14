@@ -4,6 +4,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
@@ -144,10 +146,10 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         getValuesTiles();
         Iterator<ComboBox<String>> iter1 = boxList.iterator();
         Iterator<NumberField> iter2 = listOfNumberFields.iterator();
-        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 7);
         board.setResponsiveSteps(responsiveStep);
         while (iter1.hasNext() && iter2.hasNext()) {
-            board.add(iter1.next(), iter2.next());
+            board.add(iter1.next(), iter2.next(), new TextField("Cena"), new TextField("Cena zakupu"), new TextField("Cena suma po rabacie"), new TextField("Zysk"), new Checkbox());
         }
         return board;
     }
@@ -293,7 +295,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                 .blachaAluminiowa(comboBoxblachaAluminiowa.getValue())
                 .ceglaKlinkierowa(comboBoxceglaKlinkierowa.getValue())
                 .build();
-        /*VaadinSession.getCurrent().getSession().setAttribute("accesoriesInput", entityInputDataAccesories);*/
     }
 
     private List<EntityAccesories> resultAccesories() {
