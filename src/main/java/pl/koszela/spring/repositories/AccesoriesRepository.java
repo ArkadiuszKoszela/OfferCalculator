@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.koszela.spring.entities.EntityAccesories;
 
+import java.util.List;
+
 @Repository(value = "repo_accesories")
 public interface AccesoriesRepository extends CrudRepository<EntityAccesories, Long> {
 
+    List<EntityAccesories> findAllByCategoryEquals (String category);
 }

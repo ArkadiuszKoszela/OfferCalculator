@@ -78,6 +78,15 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         add(createGrid());
     }
 
+    private void map() {
+        Map<Double, String> map = new HashMap<>();
+
+        for (NumberField numberField : listOfNumberFields) {
+            map.put(numberField.getValue(), numberField.getPattern());
+        }
+        VaadinSession.getCurrent().getSession().setAttribute("map", map);
+    }
+
     private void getAvailablePriceList(ComboBox<String> comboBox) {
         Object object = VaadinSession.getCurrent().getAttribute("availablePriceList");
         if (!Objects.isNull(object)) {
@@ -332,6 +341,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
+        map();
         if (set != null && entityInputDataTilesFromRepo != null) {
             List<List<Tiles>> allTilesFromRepo = listResultTilesFromRepo();
             VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", saveInputData());

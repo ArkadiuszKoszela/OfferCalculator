@@ -8,10 +8,7 @@ import pl.koszela.spring.DAOs.DaoWindows;
 import pl.koszela.spring.DAOs.DaoTiles;
 import pl.koszela.spring.DAOs.DaoKolnierz;
 import pl.koszela.spring.calculate.CalculateTiles;
-import pl.koszela.spring.repositories.AccesoriesRepository;
-import pl.koszela.spring.repositories.KolnierzRepository;
-import pl.koszela.spring.repositories.TilesRepository;
-import pl.koszela.spring.repositories.WindowsRepository;
+import pl.koszela.spring.repositories.*;
 
 import java.util.Objects;
 
@@ -43,6 +40,7 @@ public class ImportFiles {
     private DaoKolnierz daoKolnierz;
     private DaoWindows daoWindows;
     private CalculateTiles calculateTiles;
+    private UsersRepo usersRepo;
 
 
     public ImportFiles() {
@@ -50,11 +48,12 @@ public class ImportFiles {
 
     @Autowired
     public ImportFiles(AccesoriesRepository accesoriesRepository, WindowsRepository windowsRepository,
-                       KolnierzRepository kolnierzRepository, TilesRepository tilesRepository) {
+                       KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, UsersRepo usersRepo) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
+        this.usersRepo = Objects.requireNonNull(usersRepo);
     }
 
     @Autowired
@@ -83,6 +82,7 @@ public class ImportFiles {
     }
 
     public void csv() {
+        usersRepo.deleteAll();
         tilesRepository.deleteAll();
         accesoriesRepository.deleteAll();
         windowsRepository.deleteAll();

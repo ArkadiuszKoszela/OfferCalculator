@@ -10,8 +10,9 @@ public class EntityAccesories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    private String category;
     private String name;
-    private BigDecimal purchasePrice;
+    private Double purchasePrice;
     private Integer margin;
     private Double firstMultiplier;
     private Double secondMultiplier;
@@ -41,11 +42,11 @@ public class EntityAccesories {
         this.name = name;
     }
 
-    public BigDecimal getPurchasePrice() {
+    public Double getPurchasePrice() {
         return purchasePrice;
     }
 
-    public void setPurchasePrice(BigDecimal purchasePrice) {
+    public void setPurchasePrice(Double purchasePrice) {
         this.purchasePrice = purchasePrice;
     }
 
@@ -111,5 +112,13 @@ public class EntityAccesories {
 
     public void setEntityUserAccesories(EntityUser entityUserAccesories) {
         this.entityUserAccesories = entityUserAccesories;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
