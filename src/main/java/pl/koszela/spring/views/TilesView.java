@@ -1,9 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -13,10 +9,8 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.shared.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.entities.*;
@@ -24,9 +18,7 @@ import pl.koszela.spring.repositories.*;
 
 import java.math.BigDecimal;
 import java.util.*;
-
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
+import java.util.stream.Collectors;
 
 @Route(value = TilesView.ENTER_TILES, layout = MainView.class)
 public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
@@ -78,15 +70,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         add(createGrid());
     }
 
-    private void map() {
-        Map<Double, String> map = new HashMap<>();
-
-        for (NumberField numberField : listOfNumberFields) {
-            map.put(numberField.getValue(), numberField.getPattern());
-        }
-        VaadinSession.getCurrent().getSession().setAttribute("map", map);
-    }
-
     private void getAvailablePriceList(ComboBox<String> comboBox) {
         Object object = VaadinSession.getCurrent().getAttribute("availablePriceList");
         if (!Objects.isNull(object)) {
@@ -105,101 +88,59 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
         formLayout.setResponsiveSteps(responsiveStep);
         formLayout.add(getCustomerDiscount(), comboBoxInput);
-        if (set != null || entityInputDataTilesFromRepo != null) {
-            setDefaultValuesFromRepo();
-        } else {
-            setDefaultValuesNew();
-        }
+
+        setDefaultValuesFromRepo();
+
         listOfNumberFields.forEach(formLayout::add);
         getAvailablePriceList(comboBoxInput);
         dane.add(formLayout);
         return dane;
     }
 
-    private List<List<Tiles>> listResultTilesFromRepo() {
-        List<List<Tiles>> listToTreeGrid = new ArrayList<>();
+    private Set<Tiles> listResultTilesFromRepo() {
         if (set != null) {
-            List<Tiles> parents = getParents();
-            List<Tiles> childrens = getChildrens();
-            for (Tiles tileParent : parents) {
-                List<Tiles> oneOf = findChildrens(tileParent, childrens);
-                for (Tiles tileChildren : oneOf) {
-                    for (NumberField numberField : listOfNumberFields) {
-                        if (tileParent.getName().equals(numberField.getPattern())) {
-                            tileParent.setQuantity(numberField.getValue());
-                        } else if (tileChildren.getName().equals(numberField.getPattern())) {
-                            tileChildren.setQuantity(numberField.getValue());
-                        }
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            for (Tiles parent : parents) {
+                List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
+                List<NumberField> collect = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
+                parent.setQuantity(collect.get(0).getValue());
+                listOfNumberFields.forEach(e -> childrens.forEach(f -> {
+                    if (e.getPattern().equals(f.getName())) {
+                        f.setQuantity(e.getValue());
                     }
-                }
-                oneOf.add(tileParent);
-                listToTreeGrid.add(oneOf);
+                }));
+            }
+        } else {
+            List<Tiles> allFromRepo = tilesRepository.findAll();
+            set = new HashSet<>(allFromRepo);
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            for (Tiles parent : parents) {
+                List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
+                List<NumberField> collect = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
+                parent.setQuantity(collect.get(0).getValue());
+                parent.setTotalProfit(new BigDecimal(0));
+                parent.setDiscount(0);
+                parent.setTotalPrice(new BigDecimal(0));
+                parent.setPriceAfterDiscount(new BigDecimal(0));
+                parent.setPricePurchase(new BigDecimal(0));
+                parent.setProfit(new BigDecimal(0));
+                parent.setOption("");
+
+                listOfNumberFields.forEach(e -> childrens.forEach(f -> {
+                    if (e.getPattern().equals(f.getName())) {
+                        f.setQuantity(e.getValue());
+                        f.setTotalProfit(new BigDecimal(0));
+                        f.setDiscount(0);
+                        f.setTotalPrice(new BigDecimal(0));
+                        f.setPriceAfterDiscount(new BigDecimal(0));
+                        f.setPricePurchase(new BigDecimal(0));
+                        f.setProfit(new BigDecimal(0));
+                        f.setOption("");
+                    }
+                }));
             }
         }
-        return listToTreeGrid;
-    }
-
-    private List<List<Tiles>> listResultTilesNew() {
-        List<List<Tiles>> listToTreeGrid = new ArrayList<>();
-        List<String> availablePriceList = calculateTiles.getAvailablePriceList();
-        for (String priceListName : availablePriceList) {
-            List<Tiles> priceListFromRepository = tilesRepository.findByPriceListNameEquals(priceListName);
-            for (Tiles tile : priceListFromRepository) {
-                for (NumberField listOfNumberField : listOfNumberFields) {
-                    if (tile.getName().equals(listOfNumberField.getPattern())) {
-                        tile.setQuantity(listOfNumberField.getValue());
-                        tile.setTotalProfit(new BigDecimal(0));
-                        tile.setDiscount(0);
-                        tile.setTotalPrice(new BigDecimal(0));
-                        tile.setPriceAfterDiscount(new BigDecimal(0));
-                        tile.setPricePurchase(new BigDecimal(0));
-                        tile.setProfit(new BigDecimal(0));
-                        tile.setOption("");
-                    }
-                }
-            }
-            listToTreeGrid.add(priceListFromRepository);
-        }
-        return listToTreeGrid;
-    }
-
-    private List<Tiles> findChildrens(Tiles parent, List<Tiles> childrens) {
-        List<Tiles> oneOfchildrens = new ArrayList<>();
-        for (Tiles children : childrens) {
-            if (children.getPriceListName().equals(parent.getPriceListName())) {
-                oneOfchildrens.add(children);
-            }
-        }
-        return oneOfchildrens;
-    }
-
-    private List<Tiles> getChildrens() {
-        List<Tiles> list = new ArrayList<>(set);
-        List<Tiles> childrens = new ArrayList<>();
-        if (list.size() > 0) {
-            List<Tiles> parents = getParents();
-            list.forEach(e -> {
-                for (Tiles tiles : parents) {
-                    if (e.getPriceListName().equals(tiles.getPriceListName())) {
-                        childrens.add(e);
-                    }
-                }
-            });
-        }
-        return childrens;
-    }
-
-    private List<Tiles> getParents() {
-        List<Tiles> list = new ArrayList<>(set);
-        List<Tiles> parents = new ArrayList<>();
-        if (list.size() > 0) {
-            list.forEach(e -> {
-                if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                    parents.add(e);
-                }
-            });
-        }
-        return parents;
+        return set;
     }
 
     private List<Tiles> allTilesFromRespository() {
@@ -256,29 +197,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         getListNumberFields();
     }
 
-    private void setDefaultValuesNew() {
-        setValues(numberField1, "m²", 13d, Category.DACHOWKA_PODSTAWOWA.toString());
-        setValues(numberField2, "mb", 65d, Category.DACHOWKA_SKRAJNA_LEWA.toString());
-        setValues(numberField3, "mb", 65d, Category.DACHOWKA_SKRAJNA_PRAWA.toString());
-        setValues(numberField4, "mb", 1d, Category.DACHOWKA_POLOWKOWA.toString());
-        setValues(numberField5, "mb", 8d, Category.DACHOWKA_WENTYLACYJNA.toString());
-        setValues(numberField6, "mb", 5d, Category.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
-        setValues(numberField7, "mb", 5d, Category.GASIOR_PODSTAWOWY.toString());
-        setValues(numberField8, "mb", 3d, Category.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
-        setValues(numberField9, "mb", 38d, Category.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
-        setValues(numberField10, "szt", 1d, Category.PLYTKA_POCZATKOWA.toString());
-        setValues(numberField11, "szt", 1d, Category.PLYTKA_KONCOWA.toString());
-        setValues(numberField12, "szt", 1d, Category.TROJNIK.toString());
-        setValues(numberField13, "mb", 1d, Category.GASIAR_ZAOKRAGLONY.toString());
-        setValues(numberField14, "mb", 6d, "brak");
-        setValues(numberField15, "szt", 1d, "brak");
-        setValues(numberField16, "szt", 1d, "brak");
-        setValues(numberField17, "mb", 1d, "brak");
-        setValues(numberField18, "szt", 1d, "brak");
-        setValues(numberField19, "szt", 1d, "brak");
-        getListNumberFields();
-    }
-
     private void getListNumberFields() {
         listOfNumberFields = Arrays.asList(numberField1, numberField2, numberField3, numberField4, numberField5, numberField6, numberField7,
                 numberField8, numberField9, numberField10, numberField11, numberField12, numberField13, numberField14, numberField15, numberField16,
@@ -294,9 +212,9 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         return customerDiscount;
     }
 
-    private void setValues(NumberField numberField, String unit, Double defaultValue, String pattern) {
+    private void setValues(NumberField numberField, String unit, Double valueFromRepo, String pattern) {
+        numberField.setValue(valueFromRepo);
         numberField.setPattern(pattern);
-        numberField.setValue(defaultValue);
         numberField.setMin(0);
         numberField.setMax(500);
         numberField.setAutoselect(true);
@@ -324,39 +242,8 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     }
 
     @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        if (set != null && entityInputDataTilesFromRepo != null) {
-            setDefaultValuesFromRepo();
-            getNotificationSucces("WEJSCIE Dachówki - wszystko ok (repo)");
-        } else if (set == null && entityInputDataTilesFromRepo == null) {
-            setDefaultValuesNew();
-            entityInputDataTilesFromRepo = saveInputData();
-            VaadinSession.getCurrent().getSession().setAttribute("tilesInput", saveInputData());
-            getNotificationSucces("WEJSCIE Dachówki - wszystko ok (bez repo)");
-        } else {
-            getNotificationError("WEJSCIE Dachówki - coś poszło nie tak");
-        }
-    }
-
-    @Override
     public void beforeLeave(BeforeLeaveEvent event) {
-        BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        map();
-        if (set != null && entityInputDataTilesFromRepo != null) {
-            List<List<Tiles>> allTilesFromRepo = listResultTilesFromRepo();
-            VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", saveInputData());
-            VaadinSession.getCurrent().getSession().setAttribute("resultTilesFromRepo", listResultTilesFromRepo());
-            action.proceed();
-            getNotificationSucces("WYJSCIE Dachówki - wszystko ok (repo)");
-        } else if (set == null || entityInputDataTilesFromRepo == null) {
-            VaadinSession.getCurrent().getSession().setAttribute("tilesInput", saveInputData());
-            List<List<Tiles>> allTilesNew = listResultTilesNew();
-            VaadinSession.getCurrent().getSession().setAttribute("resultTiles", listResultTilesNew());
-            getNotificationSucces("WYJSCIE Zapisane Dachówki - wszystko ok (bez repo)");
-            action.proceed();
-        } else {
-            getNotificationError("WYJSCIE Dachówki - coś poszło nie tak");
-            action.proceed();
-        }
+        VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", listResultTilesFromRepo());
+        VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", saveInputData());
     }
 }

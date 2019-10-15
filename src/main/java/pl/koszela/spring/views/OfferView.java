@@ -1,7 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.FooterRow;
@@ -49,8 +47,7 @@ public class OfferView extends VerticalLayout {
     private NumberField windowsDiscount = new NumberField("Rabat okna/kołnierz");
     private VerticalLayout layout = new VerticalLayout();
     private TreeGrid<Tiles> treeGrid = new TreeGrid<>();
-    private List<List<Tiles>> allTilesNew = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
-    private List<List<Tiles>> allTilesFromRepo = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTilesFromRepo");
+    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
 
     @Autowired
     public OfferView() {
@@ -65,19 +62,6 @@ public class OfferView extends VerticalLayout {
         layout.add(formLayout);
         layout.add(createTiles());
         return layout;
-    }
-
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        allTilesFromRepo = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTilesFromRepo");
-        allTilesNew = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
-        if (allTilesFromRepo != null) {
-            getNotificationSucces("Dachówki (Offer View) - wszystko ok (repo)");
-        } else if (allTilesFromRepo == null) {
-            getNotificationSucces("Dachówki (Offer View) - wszystko ok (bez repo)");
-        } else {
-            getNotificationError("Dachówki (Offer View) - coś poszło nie tak");
-        }
     }
 
     private NumberField settingsNumberFields(NumberField numberField) {
@@ -108,17 +92,10 @@ public class OfferView extends VerticalLayout {
         TextField filter = new TextField();
 
         TreeDataProvider<Tiles> treeDataProvider;
-        if (allTilesFromRepo != null) {
-            treeDataProvider = new TreeDataProvider<>(getTilesTreeDataFromRepo());
-            filter.addValueChangeListener(event -> treeDataProvider.setFilter(
-                    tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
-            getNotificationSucces("Repo - Wczytano dane");
-        } else {
-            treeDataProvider = new TreeDataProvider<>(getTilesTreeDataNew());
-            filter.addValueChangeListener(event -> treeDataProvider.setFilter(
-                    tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
-            getNotificationSucces("Bez Repo - Wczytano dane");
-        }
+        treeDataProvider = new TreeDataProvider<>(getTilesTreeDataFromRepo());
+        filter.addValueChangeListener(event -> treeDataProvider.setFilter(
+                tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
+        getNotificationSucces("Repo - Wczytano dane");
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
 
@@ -234,109 +211,19 @@ public class OfferView extends VerticalLayout {
 
     private TreeData<Tiles> getTilesTreeDataFromRepo() {
         TreeData<Tiles> treeData = new TreeData<>();
-        if (allTilesFromRepo != null) {
-            List<List<Tiles>> allFromRepo = loadDataUser();
-            allFromRepo.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
-            for (List<Tiles> tiles : allFromRepo) {
-                for (int j = 0; j < tiles.size(); j++) {
-                    if (j == 0) {
-                        treeData.addItem(null, tiles.get(0));
-                    } else {
-                        treeData.addItem(tiles.get(0), tiles.get(j));
+        if (set != null) {
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            for (Tiles parent : parents) {
+                List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
+                for (int i = 0; i < childrens.size(); i++) {
+                    if (i == 0) {
+                        treeData.addItem(null, parent);
+                    } else if (!childrens.get(i).getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                        treeData.addItem(parent, childrens.get(i));
                     }
                 }
             }
         }
         return treeData;
-    }
-
-    private TreeData<Tiles> getTilesTreeDataNew() {
-        TreeData<Tiles> treeData1 = new TreeData<>();
-
-        if (allTilesNew != null) {
-            allTilesNew.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
-            for (List<Tiles> tiles : allTilesNew) {
-                for (int j = 0; j < tiles.size(); j++) {
-                    if (j == 0) {
-                        treeData1.addItem(null, tiles.get(0));
-                    } else {
-                        treeData1.addItem(tiles.get(0), tiles.get(j));
-                    }
-                }
-            }
-        }
-        return treeData1;
-    }
-
-
-    /*private TreeData<Tiles> getTilesTreeData() {
-        TreeData<Tiles> treeData1 = new TreeData<>();
-        List<List<Tiles>> all = (List<List<Tiles>>) VaadinSession.getCurrent().getAttribute("resultTiles");
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getAttribute("allTilesFromRepo");
-        if (set != null) {
-            List<List<Tiles>> allFromRepo = loadDataUser();
-            allFromRepo.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
-            for (List<Tiles> tiles : allFromRepo) {
-                for (int j = 0; j < tiles.size(); j++) {
-                    if (j == 0) {
-                        treeData1.addItem(null, tiles.get(0));
-                    } else {
-                        treeData1.addItem(tiles.get(0), tiles.get(j));
-                    }
-                }
-            }
-        }
-        if (all != null && set == null) {
-            all.forEach(e -> e.sort(Comparator.comparing(Tiles::getId)));
-            for (List<Tiles> tiles : all) {
-                for (int j = 0; j < tiles.size(); j++) {
-                    if (j == 0) {
-                        treeData1.addItem(null, tiles.get(0));
-                    } else {
-                        treeData1.addItem(tiles.get(0), tiles.get(j));
-                    }
-                }
-            }
-        }
-        return treeData1;
-    }*/
-
-    private List<List<Tiles>> loadDataUser() {
-        List<List<Tiles>> all = new ArrayList<>();
-        List<Tiles> parents = getParents();
-        for (Tiles tiles : parents) {
-            List<Tiles> childrens = getChildrens(tiles.getPriceListName());
-            childrens.add(tiles);
-            all.add(getChildrens(tiles.getPriceListName()));
-        }
-        return all;
-    }
-
-    private List<Tiles> getChildrens(String parent) {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-        List<Tiles> list = new ArrayList<>(set);
-        List<Tiles> childrens = new ArrayList<>();
-        if (list.size() > 0) {
-            list.forEach(e -> {
-                if (e.getPriceListName().equals(parent)) {
-                    childrens.add(e);
-                }
-            });
-        }
-        return childrens;
-    }
-
-    private List<Tiles> getParents() {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-        List<Tiles> list = new ArrayList<>(set);
-        List<Tiles> parents = new ArrayList<>();
-        if (list.size() > 0) {
-            list.forEach(e -> {
-                if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                    parents.add(e);
-                }
-            });
-        }
-        return parents;
     }
 }

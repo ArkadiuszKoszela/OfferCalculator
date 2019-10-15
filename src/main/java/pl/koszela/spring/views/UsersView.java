@@ -28,7 +28,7 @@ import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationS
 @Route(value = UsersView.INPUT_USER, layout = MainView.class)
 public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
 
-    static final String INPUT_USER = "users/input";
+    static final String INPUT_USER = "users";
 
     private UsersRepo usersRepo;
 
@@ -97,7 +97,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
             VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.getEntityWindows());
             VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.getEntityKolnierz());
             VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", find.getTiles());
-            VaadinSession.getCurrent().getSession().setAttribute("accesoriesFromRepo", find.getResultAccesories());
+            VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getResultAccesories());
 
             EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
             name.setValue(data.getName());
@@ -159,6 +159,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
             getNotificationSucces("Wszystko ok (repo)");
             action.proceed();
         } else if (entityPersonalData == null){
+            VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", defaultValues());
             VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
             VaadinSession.getCurrent().getSession().removeAttribute("resultTiles");
             save();
@@ -168,5 +169,29 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
             getNotificationError("Klienci - coś poszło nie tak");
             action.proceed();
         }
+    }
+
+    private EntityInputDataTiles defaultValues(){
+        return EntityInputDataTiles.builder()
+                .powierzchniaPolaci(300d)
+                .dlugoscKalenic(65d)
+                .dlugoscKalenicProstych(65d)
+                .dlugoscKalenicSkosnych(1d)
+                .dlugoscKoszy(8d)
+                .dlugoscKrawedziLewych(5d)
+                .dlugoscKrawedziPrawych(5d)
+                .obwodKomina(3d)
+                .dlugoscOkapu(38d)
+                .dachowkaWentylacyjna(1d)
+                .kompletKominkaWentylacyjnego(1d)
+                .gasiarPoczatkowyKalenicaProsta(1d)
+                .gasiarKoncowyKalenicaProsta(1d)
+                .gasiarZaokraglony(1d)
+                .trojnik(6d)
+                .czwornik(1d)
+                .gasiarZPodwojnaMufa(1d)
+                .dachowkaDwufalowa(1d)
+                .oknoPolaciowe(1d)
+                .build();
     }
 }
