@@ -3,16 +3,16 @@ package pl.koszela.spring.importFiles;
 import com.vaadin.flow.component.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.koszela.spring.service.AvailablePriceList;
 import pl.koszela.spring.DAOs.DaoAccesories;
 import pl.koszela.spring.DAOs.DaoWindows;
 import pl.koszela.spring.DAOs.DaoTiles;
 import pl.koszela.spring.DAOs.DaoKolnierz;
-import pl.koszela.spring.calculate.CalculateTiles;
 import pl.koszela.spring.repositories.*;
 
 import java.util.Objects;
 
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
+import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class ImportFiles {
@@ -20,7 +20,6 @@ public class ImportFiles {
     private static final String BOGEN_INNOVO_10_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 czerwona angoba.csv";
     private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 miedziano-brązowa angoba.csv";
     private static final String BOGEN_INNOVO_12_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 12 czerwona angoba.csv";
-    private static final String TEST_INNOVO_10_CZERWONA = "src/main/resources/assets/TestInnovo10Czerwona.csv";
     private static final String AKCESORIA = "src/main/resources/assets/akcesoria.csv";
     private static final String OKNA_OKPOL_DAKEA = "src/main/resources/assets/OknaOkpolDakea.csv";
     private static final String KOLNIERZ_OKPOL_DAKEA = "src/main/resources/assets/KołnierzOkpolDakea.csv";
@@ -39,9 +38,8 @@ public class ImportFiles {
     private DaoAccesories daoAccesories;
     private DaoKolnierz daoKolnierz;
     private DaoWindows daoWindows;
-    private CalculateTiles calculateTiles;
     private UsersRepo usersRepo;
-
+    private AvailablePriceList availablePriceList;
 
     public ImportFiles() {
     }
@@ -72,8 +70,8 @@ public class ImportFiles {
     }
 
     @Autowired
-    public void setCalculateTiles(CalculateTiles calculateTiles) {
-        this.calculateTiles = Objects.requireNonNull(calculateTiles);
+    public void setAvailablePriceList(AvailablePriceList availablePriceList) {
+        this.availablePriceList = Objects.requireNonNull(availablePriceList);
     }
 
     @Autowired
@@ -94,9 +92,7 @@ public class ImportFiles {
         daoAccesories.save(AKCESORIA, "do usunięcia");
         daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA,"do usunięcia");
         daoWindows.save(OKNA_OKPOL_DAKEA,"do usunięcia");
-        calculateTiles.getAvailablePriceList();
         getNotificationSucces("Zaimportowano cenniki");
         UI.getCurrent().getPage().reload();
-        /*history.getUI().navigate(UsersView.class);*/
     }
 }

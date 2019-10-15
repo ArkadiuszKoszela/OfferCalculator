@@ -13,20 +13,14 @@ import java.util.Set;
 public class EntityUser {
 
     @Id
-    @Column(name="USER_ID")
+    @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String priceListName;
-    private boolean hasTiles;
-    private boolean hasAccesories;
-    private boolean hasWindows;
-
     @OneToOne
     private EntityPersonalData entityPersonalData;
     @OneToOne
     private EntityInputDataTiles entityInputDataTiles;
-    @OneToOne
-    private EntityInputDataAccesories entityInputDataAccesories;
     @OneToOne
     private EntityWindows entityWindows;
     @OneToOne
@@ -87,14 +81,6 @@ public class EntityUser {
         this.entityInputDataTiles = entityInputDataTiles;
     }
 
-    public EntityInputDataAccesories getEntityInputDataAccesories() {
-        return entityInputDataAccesories;
-    }
-
-    public void setEntityInputDataAccesories(EntityInputDataAccesories entityInputDataAccesories) {
-        this.entityInputDataAccesories = entityInputDataAccesories;
-    }
-
     public EntityWindows getEntityWindows() {
         return entityWindows;
     }
@@ -109,30 +95,6 @@ public class EntityUser {
 
     public void setEntityKolnierz(EntityKolnierz entityKolnierz) {
         this.entityKolnierz = entityKolnierz;
-    }
-
-    public boolean isHasTiles() {
-        return hasTiles;
-    }
-
-    public void setHasTiles(boolean hasTiles) {
-        this.hasTiles = hasTiles;
-    }
-
-    public boolean isHasAccesories() {
-        return hasAccesories;
-    }
-
-    public void setHasAccesories(boolean hasAccesories) {
-        this.hasAccesories = hasAccesories;
-    }
-
-    public boolean isHasWindows() {
-        return hasWindows;
-    }
-
-    public void setHasWindows(boolean hasWindows) {
-        this.hasWindows = hasWindows;
     }
 
     public Set<Tiles> getTiles() {

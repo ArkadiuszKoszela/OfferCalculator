@@ -12,7 +12,7 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.calculate.CalculateTiles;
+import pl.koszela.spring.service.AvailablePriceList;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.repositories.*;
 
@@ -26,7 +26,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     static final String ENTER_TILES = "tiles";
 
     private TilesRepository tilesRepository;
-    private CalculateTiles calculateTiles;
+    private AvailablePriceList availablePriceList;
 
     private NumberField numberField1 = new NumberField("Powierzchnia połaci");
     private NumberField numberField2 = new NumberField("Długość kalenic");
@@ -62,37 +62,27 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private Grid<Tiles> grid = new Grid<>(Tiles.class);
 
     @Autowired
-    public TilesView(CalculateTiles calculateTiles, TilesRepository tilesRepository) {
-        this.calculateTiles = Objects.requireNonNull(calculateTiles);
+    public TilesView(AvailablePriceList availablePriceList, TilesRepository tilesRepository) {
+        this.availablePriceList = Objects.requireNonNull(availablePriceList);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
 
         add(createInputFields());
         add(createGrid());
     }
 
-    private void getAvailablePriceList(ComboBox<String> comboBox) {
-        Object object = VaadinSession.getCurrent().getAttribute("availablePriceList");
-        if (!Objects.isNull(object)) {
-            List<String> list = (List<String>) VaadinSession.getCurrent().getAttribute("availablePriceList");
-            comboBox.setItems(list);
-        }
-        List<String> available = calculateTiles.getAvailablePriceList();
-        if (Objects.isNull(object) && !available.isEmpty()) {
-            comboBox.setItems(available);
-            VaadinSession.getCurrent().setAttribute("availablePriceList", available);
-        }
+    private ComboBox<String> getAvailablePriceList() {
+        List<String> available = availablePriceList.getAvailablePriceList();
+        comboBoxInput.setItems(available);
+        return comboBoxInput;
     }
 
     private VerticalLayout createInputFields() {
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
         formLayout.setResponsiveSteps(responsiveStep);
-        formLayout.add(getCustomerDiscount(), comboBoxInput);
-
+        formLayout.add(getCustomerDiscount(), getAvailablePriceList());
         setDefaultValuesFromRepo();
-
         listOfNumberFields.forEach(formLayout::add);
-        getAvailablePriceList(comboBoxInput);
         dane.add(formLayout);
         return dane;
     }
@@ -116,8 +106,8 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
             Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
                 List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
-                List<NumberField> collect = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
-                parent.setQuantity(collect.get(0).getValue());
+                List<NumberField> fields = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
+                parent.setQuantity(fields.get(0).getValue());
                 parent.setTotalProfit(new BigDecimal(0));
                 parent.setDiscount(0);
                 parent.setTotalPrice(new BigDecimal(0));
@@ -126,16 +116,16 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 parent.setProfit(new BigDecimal(0));
                 parent.setOption("");
 
-                listOfNumberFields.forEach(e -> childrens.forEach(f -> {
-                    if (e.getPattern().equals(f.getName())) {
-                        f.setQuantity(e.getValue());
-                        f.setTotalProfit(new BigDecimal(0));
-                        f.setDiscount(0);
-                        f.setTotalPrice(new BigDecimal(0));
-                        f.setPriceAfterDiscount(new BigDecimal(0));
-                        f.setPricePurchase(new BigDecimal(0));
-                        f.setProfit(new BigDecimal(0));
-                        f.setOption("");
+                listOfNumberFields.forEach(field -> childrens.forEach(children -> {
+                    if (field.getPattern().equals(children.getName())) {
+                        children.setQuantity(field.getValue());
+                        children.setTotalProfit(new BigDecimal(0));
+                        children.setDiscount(0);
+                        children.setTotalPrice(new BigDecimal(0));
+                        children.setPriceAfterDiscount(new BigDecimal(0));
+                        children.setPricePurchase(new BigDecimal(0));
+                        children.setProfit(new BigDecimal(0));
+                        children.setOption("");
                     }
                 }));
             }
@@ -235,6 +225,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         grid.removeColumnByKey("profit");
         grid.removeColumnByKey("totalPrice");
         grid.removeColumnByKey("totalProfit");
+        grid.removeColumnByKey("option");
         grid.setItems(allTilesFromRespository());
         grid.getColumns().forEach(column -> column.setAutoWidth(true));
         cennik.add(grid);

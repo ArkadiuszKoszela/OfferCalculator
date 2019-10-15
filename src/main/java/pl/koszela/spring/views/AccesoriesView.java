@@ -92,35 +92,32 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep form = new FormLayout.ResponsiveStep("5px", 9);
         formLayout.setResponsiveSteps(form);
-        TextArea name = new TextArea("Nazwa");
-        name.setReadOnly(true);
-        name.setPlaceholder(category);
 
-        NumberField numberField23 = new NumberField("Ilość");
-        numberField23.setValue(value(category));
-        numberField23.setReadOnly(true);
+        TextArea name = getTextArea(category, "Nazwa");
+        TextArea pricePurchase = getTextArea(category, "Cena zakupu");
+        TextArea priceRetail = new TextArea("Cena detal", category);
+        TextArea allPriceRetail = getTextArea(category, "Cena razem netto");
+        TextArea allPricePurchase = getTextArea(category, "Cena razem zakup");
+        TextArea profit = getTextArea(category, "Zysk");
+        NumberField numberField = new NumberField("Ilość");
+        numberField.setValue(value(category));
+        numberField.setReadOnly(true);
+        Checkbox checkbox = new Checkbox("Dodać do oferty?");
 
-        TextArea pricePurchase = new TextArea("Cena zakupu");
-        pricePurchase.setReadOnly(true);
-        pricePurchase.setPlaceholder(category);
+        List<EntityAccesories> allWithTheSameCategory = accesoriesRepository.findAllByCategoryEquals(category);
+        ComboBox<EntityAccesories> comboBox = new ComboBox<>("Wybierz", allWithTheSameCategory);
 
-        TextArea priceRetail = new TextArea("Cena detal");
-        priceRetail.setPlaceholder(category);
+        priceRetail.addValueChangeListener(e -> {
+            allPriceRetail.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(pricePurchase.getValue())));
+            allPricePurchase.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(priceRetail.getValue())));
+            profit.setValue(String.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())));
+        });
 
-        TextArea allPriceRetail = new TextArea("Cena razem netto");
-        allPriceRetail.setReadOnly(true);
-        allPriceRetail.setPlaceholder(category);
+        formLayout.add(comboBox, name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
 
-        TextArea allPricePurchase = new TextArea("Cena razem zakup");
-        allPricePurchase.setReadOnly(true);
-        allPricePurchase.setPlaceholder(category);
-
-        TextArea profit = new TextArea("Zysk");
-        profit.setReadOnly(true);
-        profit.setPlaceholder(category);
         if (setFromRepo != null) {
-            Set<EntityResultAccesories> collect = setFromRepo.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
-            for (EntityResultAccesories resultAccesories : collect) {
+            Set<EntityResultAccesories> accesoriesWithTheSameCategory = setFromRepo.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
+            for (EntityResultAccesories resultAccesories : accesoriesWithTheSameCategory) {
                 name.setValue(resultAccesories.getName());
                 pricePurchase.setValue(String.valueOf(resultAccesories.getPricePurchase()));
                 priceRetail.setValue(String.valueOf(resultAccesories.getPriceRetail()));
@@ -129,74 +126,59 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                 profit.setValue(String.valueOf(resultAccesories.getProfit()));
             }
         }
-
-        priceRetail.addValueChangeListener(e -> {
-            allPriceRetail.setValue(String.valueOf(numberField23.getValue() * Double.parseDouble(pricePurchase.getValue())));
-            allPricePurchase.setValue(String.valueOf(numberField23.getValue() * Double.parseDouble(priceRetail.getValue())));
-            profit.setValue(String.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())));
-        });
-        Checkbox checkbox = new Checkbox("Dodać do oferty?");
-        ComboBox<EntityAccesories> comboBox = new ComboBox<>("Wybierz");
-        formLayout.add(comboBox, name, numberField23, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
-        List<EntityAccesories> all = accesoriesRepository.findAllByCategoryEquals(category);
-
-        comboBox.setItems(all);
-
         comboBox.setItemLabelGenerator(EntityAccesories::getName);
 
+        comboBoxValueChangeListener(name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, comboBox);
+        return formLayout;
+    }
+
+    private TextArea getTextArea(String category, String label) {
+        TextArea allPriceRetail = new TextArea(label, category);
+        allPriceRetail.setReadOnly(true);
+        return allPriceRetail;
+    }
+
+    private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, TextArea pricePurchase, TextArea priceRetail, TextArea allPriceRetail, TextArea allPricePurchase, TextArea profit, ComboBox<EntityAccesories> comboBox) {
         comboBox.addValueChangeListener(event -> {
-            if (event.getSource().isEmpty()) {
-                comboBox.setValue(event.getValue());
-            } else {
-                EntityAccesories value = event.getValue();
-                name.setValue(value.getName());
-                pricePurchase.setValue(String.valueOf(value.getPurchasePrice()));
-                double cenaDetal = (value.getPurchasePrice() * value.getMargin() / 100) + value.getPurchasePrice();
-                BigDecimal bigDecimalPriceRetail = new BigDecimal(cenaDetal);
-                priceRetail.setValue(String.valueOf(bigDecimalPriceRetail.setScale(2, RoundingMode.HALF_UP)));
+            EntityAccesories value = event.getValue();
 
-                double val = numberField23.getValue() * Double.parseDouble(pricePurchase.getValue());
-                BigDecimal bigDecimalallPriceRetail = new BigDecimal(val);
-                allPriceRetail.setValue(String.valueOf(bigDecimalallPriceRetail.setScale(2, RoundingMode.HALF_UP)));
+            name.setValue(value.getName());
+            pricePurchase.setValue(String.valueOf(value.getPurchasePrice()));
+            priceRetail.setValue(BigDecimal.valueOf((value.getPurchasePrice() * value.getMargin() / 100) + value.getPurchasePrice()).setScale(2, RoundingMode.HALF_UP).toString());
+            allPriceRetail.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(pricePurchase.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
+            allPricePurchase.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(priceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
+            profit.setValue(BigDecimal.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
 
-                double va = numberField23.getValue() * Double.parseDouble(priceRetail.getValue());
-                BigDecimal bigDecimalAllPricePurchase = new BigDecimal(va);
-                allPricePurchase.setValue(String.valueOf(bigDecimalAllPricePurchase.setScale(2, RoundingMode.HALF_UP)));
+            EntityResultAccesories resultAccesories = EntityResultAccesories.builder()
+                    .name(name.getValue())
+                    .quantity(numberField23.getValue())
+                    .pricePurchase(Double.valueOf(pricePurchase.getValue()))
+                    .priceRetail(Double.valueOf(priceRetail.getValue()))
+                    .allPriceRetail(Double.valueOf(allPriceRetail.getValue()))
+                    .allPricePurchase(Double.valueOf(allPricePurchase.getValue()))
+                    .profit(Double.valueOf(profit.getValue()))
+                    .category(value.getCategory())
+                    .build();
 
-                double cena = Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue());
-                BigDecimal bigDecimalProfit = new BigDecimal(cena);
-                profit.setValue(String.valueOf(bigDecimalProfit.setScale(2, RoundingMode.HALF_UP)));
-
-                EntityResultAccesories resultAccesories = new EntityResultAccesories();
-                resultAccesories.setName(name.getValue());
-                resultAccesories.setQuantity(numberField23.getValue());
-                resultAccesories.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
-                resultAccesories.setPriceRetail(Double.valueOf(priceRetail.getValue()));
-                resultAccesories.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
-                resultAccesories.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
-                resultAccesories.setProfit(Double.valueOf(profit.getValue()));
-                resultAccesories.setCategory(value.getCategory());
-                if (setFromRepo.isEmpty()) {
-                    setFromRepo.add(resultAccesories);
-                }
-                for (EntityResultAccesories resultAccesories1 : setFromRepo) {
-                    if (resultAccesories1.getCategory().equals(resultAccesories.getCategory())) {
-                        resultAccesories1.setName(name.getValue());
-                        resultAccesories1.setQuantity(numberField23.getValue());
-                        resultAccesories1.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
-                        resultAccesories1.setPriceRetail(Double.valueOf(priceRetail.getValue()));
-                        resultAccesories1.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
-                        resultAccesories1.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
-                        resultAccesories1.setProfit(Double.valueOf(profit.getValue()));
-                    } else if (!resultAccesories1.getCategory().equals(resultAccesories.getCategory()) && !setFromRepo.contains(resultAccesories)) {
-                        boolean exist = setFromRepo.stream().anyMatch(c -> c.getCategory().equals(resultAccesories.getCategory()));
-                        if (!exist) {
-                            setFromRepo.add(resultAccesories);
-                        }
+            if (setFromRepo.isEmpty()) {
+                setFromRepo.add(resultAccesories);
+            }
+            for (EntityResultAccesories accesoriestoChange : setFromRepo) {
+                if (accesoriestoChange.getCategory().equals(resultAccesories.getCategory())) {
+                    accesoriestoChange.setName(name.getValue());
+                    accesoriestoChange.setQuantity(numberField23.getValue());
+                    accesoriestoChange.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
+                    accesoriestoChange.setPriceRetail(Double.valueOf(priceRetail.getValue()));
+                    accesoriestoChange.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
+                    accesoriestoChange.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
+                    accesoriestoChange.setProfit(Double.valueOf(profit.getValue()));
+                } else if (!accesoriestoChange.getCategory().equals(resultAccesories.getCategory()) && !setFromRepo.contains(resultAccesories)) {
+                    boolean exist = setFromRepo.stream().anyMatch(c -> c.getCategory().equals(resultAccesories.getCategory()));
+                    if (!exist) {
+                        setFromRepo.add(resultAccesories);
                     }
                 }
             }
         });
-        return formLayout;
     }
 }

@@ -1,5 +1,7 @@
 package pl.koszela.spring.entities;
 
+import javafx.util.Builder;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +25,7 @@ public class EntityResultAccesories {
     @ManyToMany(mappedBy = "resultAccesories")
     private Set<EntityUser> userResultAccesories = new HashSet<>();
 
-    public EntityResultAccesories() {
+    private EntityResultAccesories() {
     }
 
     public Long getId() {
@@ -112,5 +114,89 @@ public class EntityResultAccesories {
 
     public void setUserResultAccesories(Set<EntityUser> userResultAccesories) {
         this.userResultAccesories = userResultAccesories;
+    }
+
+    public static EntityResultAccesories.Builder builder() {
+        return new EntityResultAccesories.Builder();
+    }
+
+    public static final class Builder {
+        private Long id;
+        private String name;
+        private String category;
+        private Double quantity;
+        private Double pricePurchase;
+        private Double priceRetail;
+        private Double allPricePurchase;
+        private Double allPriceRetail;
+        private Double profit;
+        private boolean offer;
+
+        public EntityResultAccesories build() {
+            EntityResultAccesories resultAccesories = new EntityResultAccesories();
+
+            resultAccesories.id = this.id;
+            resultAccesories.name = this.name;
+            resultAccesories.category = this.category;
+            resultAccesories.quantity = this.quantity;
+            resultAccesories.pricePurchase = this.pricePurchase;
+            resultAccesories.priceRetail = this.priceRetail;
+            resultAccesories.allPricePurchase = this.allPricePurchase;
+            resultAccesories.allPriceRetail = this.allPriceRetail;
+            resultAccesories.profit = this.profit;
+            resultAccesories.offer = this.offer;
+
+            return resultAccesories;
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder category(String category) {
+            this.category = category;
+            return this;
+        }
+
+        public Builder quantity(Double quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder pricePurchase(Double pricePurchase) {
+            this.pricePurchase = pricePurchase;
+            return this;
+        }
+
+        public Builder priceRetail(Double priceRetail) {
+            this.priceRetail = priceRetail;
+            return this;
+        }
+
+        public Builder allPricePurchase(Double allPricePurchase) {
+            this.allPricePurchase = allPricePurchase;
+            return this;
+        }
+
+        public Builder allPriceRetail(Double allPriceRetail) {
+            this.allPriceRetail = allPriceRetail;
+            return this;
+        }
+
+        public Builder profit(Double profit) {
+            this.profit = profit;
+            return this;
+        }
+
+        public Builder offer(boolean offer) {
+            this.offer = offer;
+            return this;
+        }
     }
 }

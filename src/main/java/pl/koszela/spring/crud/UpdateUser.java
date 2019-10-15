@@ -1,4 +1,4 @@
-package pl.koszela.spring.service;
+package pl.koszela.spring.crud;
 
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,8 @@ import pl.koszela.spring.repositories.*;
 
 import java.util.*;
 
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
+import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
+import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class UpdateUser {
@@ -17,23 +17,15 @@ public class UpdateUser {
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
     private InputDataTilesRepository inputDataTilesRepository;
-    private InputDataAccesoriesRespository inputDataAccesoriesRespository;
-    private WindowsRepository windowsRepository;
-    private KolnierzRepository kolnierzRepository;
     private TilesRepository tilesRepository;
-    private OptionsOfferRepository optionsOfferRepository;
     private ResultAccesoriesRepository resultAccesoriesRepository;
 
     @Autowired
-    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, OptionsOfferRepository optionsOfferRepository, ResultAccesoriesRepository resultAccesoriesRepository) {
+    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, ResultAccesoriesRepository resultAccesoriesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
-        this.inputDataAccesoriesRespository = Objects.requireNonNull(inputDataAccesoriesRespository);
-        this.windowsRepository = Objects.requireNonNull(windowsRepository);
-        this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
-        this.optionsOfferRepository = Objects.requireNonNull(optionsOfferRepository);
         this.resultAccesoriesRepository = Objects.requireNonNull(resultAccesoriesRepository);
     }
 
@@ -42,9 +34,6 @@ public class UpdateUser {
         Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
 
         EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
-        EntityInputDataAccesories entityInputDataAccesories = (EntityInputDataAccesories) VaadinSession.getCurrent().getSession().getAttribute("accesoriesInputFromRepo");
-        EntityWindows entityWindows = (EntityWindows) VaadinSession.getCurrent().getSession().getAttribute("entityWindowsFromRepo");
-        EntityKolnierz entityKolnierz = (EntityKolnierz) VaadinSession.getCurrent().getSession().getAttribute("entityKolnierzFromRepo");
         Set<EntityResultAccesories> resultAccesories = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         if (personalData.isPresent()) {
@@ -54,18 +43,11 @@ public class UpdateUser {
                 EntityUser userToUpdate = userFromRepo.get();
                 userToUpdate.setEntityInputDataTiles(entityInputDataTiles);
                 userToUpdate.setResultAccesories(resultAccesories);
-                /*userToUpdate.setEntityInputDataAccesories(entityInputDataAccesories);
-                userToUpdate.setEntityWindows(entityWindows);
-                userToUpdate.setEntityKolnierz(entityKolnierz);*/
                 userToUpdate.getTiles().clear();
                 userToUpdate.setTiles(allTilesFromRepo);
 
                 resultAccesoriesRepository.saveAll(resultAccesories);
                 inputDataTilesRepository.save(entityInputDataTiles);
-
-                /*inputDataAccesoriesRespository.save(entityInputDataAccesories);
-                windowsRepository.save(entityWindows);
-                kolnierzRepository.save(entityKolnierz);*/
                 tilesRepository.saveAll(allTilesFromRepo);
 
                 usersRepo.save(userToUpdate);

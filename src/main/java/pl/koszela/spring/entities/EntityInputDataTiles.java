@@ -105,7 +105,7 @@ public class EntityInputDataTiles {
         return oknoPolaciowe;
     }
 
-    public EntityInputDataTiles() {
+    private EntityInputDataTiles() {
     }
 
     public static EntityInputDataTiles.Builder builder() {
@@ -258,6 +258,5 @@ public class EntityInputDataTiles {
             this.oknoPolaciowe = oknoPolaciowe;
             return this;
         }
-
     }
 }

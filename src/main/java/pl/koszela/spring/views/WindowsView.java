@@ -1,26 +1,21 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.EntityKolnierz;
 import pl.koszela.spring.entities.EntityWindows;
-import pl.koszela.spring.inputFields.ServiceNotification;
+import pl.koszela.spring.service.ServiceNotification;
 import pl.koszela.spring.repositories.KolnierzRepository;
 import pl.koszela.spring.repositories.WindowsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static pl.koszela.spring.service.Labels.getLabel;
-import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 
 @Route(value = WindowsView.WINDOWS, layout = MainView.class)
 public class WindowsView extends VerticalLayout {
@@ -51,8 +46,9 @@ public class WindowsView extends VerticalLayout {
 
     private FormLayout addLayout() {
         FormLayout formLayout = new FormLayout();
-        formLayout.add(putDataInComboBox(), getLabel(" "));
-        formLayout.add(putInComboBox(), getLabel(" "));
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
+        formLayout.setResponsiveSteps(responsiveStep);
+        formLayout.add(putDataInComboBox(), putInComboBox());
         return formLayout;
     }
 

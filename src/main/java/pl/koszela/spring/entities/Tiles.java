@@ -27,9 +27,6 @@ public class Tiles {
     @ManyToMany(mappedBy = "entityUserTiles")
     private Set<EntityUser> userTiles = new HashSet<>();
     private String option;
-    /*@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tiles_id")
-    private OptionsOffer optionsOffer;*/
 
     public Tiles() {
     }

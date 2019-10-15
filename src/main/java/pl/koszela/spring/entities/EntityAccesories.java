@@ -121,4 +121,86 @@ public class EntityAccesories {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public static EntityAccesories.Builder builder(){
+        return new EntityAccesories.Builder();
+    }
+
+    public static final class Builder {
+        private String category;
+        private String name;
+        private Double purchasePrice;
+        private Integer margin;
+        private Double firstMultiplier;
+        private Double secondMultiplier;
+        private BigDecimal unitRetailPrice;
+        private BigDecimal totalRetail;
+        private BigDecimal unitPurchasePrice;
+        private BigDecimal totalPurchase;
+
+        public EntityAccesories build() {
+            EntityAccesories accesories = new EntityAccesories();
+            accesories.category = this.category;
+            accesories.name = this.name;
+            accesories.purchasePrice = this.purchasePrice;
+            accesories.margin = this.margin;
+            accesories.firstMultiplier = this.firstMultiplier;
+            accesories.secondMultiplier = this.secondMultiplier;
+            accesories.unitRetailPrice = this.unitRetailPrice;
+            accesories.totalRetail = this.totalRetail;
+            accesories.unitPurchasePrice = this.unitPurchasePrice;
+            accesories.totalPurchase = this.totalPurchase;
+            return accesories;
+        }
+
+        public Builder category(String category) {
+            this.category = category;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder purchasePrice(Double purchasePrice) {
+            this.purchasePrice = purchasePrice;
+            return this;
+        }
+
+        public Builder margin(Integer margin) {
+            this.margin = margin;
+            return this;
+        }
+
+        public Builder firstMultiplier(Double firstMultiplier) {
+            this.firstMultiplier = firstMultiplier;
+            return this;
+        }
+
+        public Builder secondMultiplier(Double secondMultiplier) {
+            this.secondMultiplier = secondMultiplier;
+            return this;
+        }
+
+        public Builder unitRetailPrice(BigDecimal unitRetailPrice) {
+            this.unitRetailPrice = unitRetailPrice;
+            return this;
+        }
+
+        public Builder totalRetail(BigDecimal totalRetail) {
+            this.totalRetail = totalRetail;
+            return this;
+        }
+
+        public Builder unitPurchasePrice(BigDecimal unitPurchasePrice) {
+            this.unitPurchasePrice = unitPurchasePrice;
+            return this;
+        }
+
+        public Builder totalPurchase(BigDecimal totalPurchase) {
+            this.totalPurchase = totalPurchase;
+            return this;
+        }
+    }
 }

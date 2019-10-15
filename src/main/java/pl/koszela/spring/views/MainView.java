@@ -17,9 +17,10 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.koszela.spring.GernateFile.GenerateOffer;
 import pl.koszela.spring.importFiles.ImportFiles;
-import pl.koszela.spring.service.SaveUser;
-import pl.koszela.spring.service.UpdateUser;
+import pl.koszela.spring.crud.CreateUser;
+import pl.koszela.spring.crud.UpdateUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -37,13 +38,13 @@ import static pl.koszela.spring.views.WindowsView.WINDOWS;
 public class MainView extends AppLayout {
 
     private ImportFiles importFiles;
-    private SaveUser saveUser;
+    private CreateUser createUser;
     private UpdateUser updateUser;
 
     @Autowired
-    public MainView(ImportFiles importFiles, SaveUser saveUser, UpdateUser updateUser) {
+    public MainView(ImportFiles importFiles, CreateUser createUser, UpdateUser updateUser) {
         this.importFiles = Objects.requireNonNull(importFiles);
-        this.saveUser = Objects.requireNonNull(saveUser);
+        this.createUser = Objects.requireNonNull(createUser);
         this.updateUser = Objects.requireNonNull(updateUser);
 
         Image img = new Image("http://www.nowoczesnebudowanie.pl/wp-content/uploads/2016/10/logo-nowoczesne-budowanie-1200x857.png", "Vaadin Logo");
@@ -88,7 +89,7 @@ public class MainView extends AppLayout {
         anchor.setHref(getStreamResource(file.getName(), file));
         anchor.setVisible(false);
         Button saveNewUser = new Button("Zapisz użytkownika");
-        saveNewUser.addClickListener(event -> saveUser.saveUser());
+        saveNewUser.addClickListener(event -> createUser.saveUser());
         Button update = new Button("Zaktualizuj użytkownika");
         update.addClickListener(event -> updateUser.updateUser());
         FormLayout formLayout = new FormLayout();

@@ -1,8 +1,7 @@
-package pl.koszela.spring.views;
+package pl.koszela.spring.GernateFile;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import pl.koszela.spring.entities.EntityPersonalData;
@@ -17,7 +16,7 @@ import java.util.Set;
 
 import static com.vaadin.flow.server.VaadinServletRequest.getCurrent;
 
-class GenerateOffer {
+public class GenerateOffer {
 
     private static final String FILE_NAME = "src/main/resources/templates/itext.pdf";
     private static final String TABLE = "src/main/resources/templates/Tabela.png";
@@ -26,7 +25,7 @@ class GenerateOffer {
     private static final String STANDARD = "src/main/resources/templates/standard.png";
 
 
-    static void writeUsingIText() {
+    public static void writeUsingIText() {
 
         Document document = new Document();
 
@@ -82,11 +81,7 @@ class GenerateOffer {
             PdfPTable table = new PdfPTable(6);
 
             Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-            List<List<Tiles>> resultListTilesFromRepo = new ArrayList<>();
-            if (resultSetTilesFromRepo != null) {
-                resultListTilesFromRepo = changeSetToList(resultSetTilesFromRepo);
-            }
-            List<List<Tiles>> resultTiles = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
+            List<Tiles> resultListTilesFromRepo = new ArrayList<>(resultSetTilesFromRepo);
 
             BaseColor baseColor = new BaseColor(224, 224, 224);
             float[] width = new float[]{320f, 85f, 85f, 85f, 85f, 85f};
@@ -94,23 +89,22 @@ class GenerateOffer {
             List<String> priceListName = new ArrayList<>();
 
 
-            if (resultSetTilesFromRepo != null) {
-                cell(font12, table, baseColor, resultListTilesFromRepo.get(0).get(0).getPriceListName());
-                cell(font12, table, baseColor, "Ilość");
-                cell(font12, table, baseColor, "Cena detal");
-                cell(font12, table, baseColor, "Cena zakupu");
-                cell(font12, table, baseColor, "Cena po rabacie");
-                cell(font12, table, baseColor, "Zysk");
-                table.setWidths(width);
-                table.setHeaderRows(1);
-                getTable(document, font12, font10, table, resultListTilesFromRepo, priceListName);
-            } else {
-                getTable(document, font12, font10, table, resultTiles, priceListName);
-            }
+            cell(font12, table, baseColor, resultListTilesFromRepo.get(0).getPriceListName());
+            cell(font12, table, baseColor, "Ilość");
+            cell(font12, table, baseColor, "Cena detal");
+            cell(font12, table, baseColor, "Cena zakupu");
+            cell(font12, table, baseColor, "Cena po rabacie");
+            cell(font12, table, baseColor, "Zysk");
+            table.setWidths(width);
+            table.setHeaderRows(1);
+
+            getTable(document, font12, font10, table, resultListTilesFromRepo, priceListName);
 
             Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
             PdfPTable accesories = new PdfPTable(7);
+            float[] width2 = new float[]{320f, 85f, 85f, 85f, 85f, 85f, 85f};
+            accesories.setWidths(width2);
             cell(font12, accesories, baseColor, "Nazwa");
             cell(font12, accesories, baseColor, "Ilość");
             cell(font12, accesories, baseColor, "Cena zakupu");
@@ -176,88 +170,30 @@ class GenerateOffer {
 
     }
 
-    private static PdfPCell cell(Font font12, PdfPTable table, BaseColor baseColor, String sprawdzam) {
-        PdfPCell header1 = new PdfPCell(new Phrase(sprawdzam, font12));
+    private static void cell(Font font12, PdfPTable table, BaseColor baseColor, String priceListName) {
+        PdfPCell header1 = new PdfPCell(new Phrase(priceListName, font12));
         header1.setBackgroundColor(baseColor);
         table.addCell(header1);
-        return header1;
-    }
-
-    private static List<List<Tiles>> changeSetToList(Set<Tiles> set) {
-        List<List<Tiles>> list = new ArrayList<>();
-        List<Tiles> parents = getParents();
-        List<Tiles> childrens = getChildrens();
-        for (Tiles tileParent : parents) {
-            List<Tiles> oneOf = findChildrens(tileParent, childrens);
-
-            oneOf.add(tileParent);
-            list.add(oneOf);
-        }
-        return list;
-    }
-
-    private static List<Tiles> findChildrens(Tiles parent, List<Tiles> childrens) {
-        List<Tiles> oneOfchildrens = new ArrayList<>();
-        for (Tiles children : childrens) {
-            if (children.getPriceListName().equals(parent.getPriceListName())) {
-                oneOfchildrens.add(children);
-            }
-        }
-        return oneOfchildrens;
-    }
-
-    private static List<Tiles> getChildrens() {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-        List<Tiles> list = new ArrayList<>(set);
-        List<Tiles> childrens = new ArrayList<>();
-        if (list.size() > 0) {
-            List<Tiles> parents = getParents();
-            list.forEach(e -> {
-                for (Tiles tiles : parents) {
-                    if (e.getPriceListName().equals(tiles.getPriceListName())) {
-                        childrens.add(e);
-                    }
-                }
-            });
-        }
-        return childrens;
-    }
-
-    private static List<Tiles> getParents() {
-        Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-        List<Tiles> list = new ArrayList<>(set);
-        List<Tiles> parents = new ArrayList<>();
-        if (list.size() > 0) {
-            list.forEach(e -> {
-                if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                    parents.add(e);
-                }
-            });
-        }
-        return parents;
     }
 
     private static void getTable(Document document, Font font12, Font font10, PdfPTable
-            table, List<List<Tiles>> resultTiles, List<String> priceListName) throws DocumentException {
-        resultTiles.get(0).forEach(e -> {
+            table, List<Tiles> resultTiles, List<String> priceListName) throws DocumentException {
+        resultTiles.forEach(e -> {
             if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
                 priceListName.add(e.getPriceListName());
             }
         });
 
-
         String totalPrice = "";
-        for (List<Tiles> list : resultTiles) {
-            for (Tiles tile : list) {
-                table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
-                if (tile.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                    totalPrice = String.valueOf(tile.getTotalPrice());
-                }
+        for (Tiles tile : resultTiles) {
+            table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
+            table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
+            table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
+            table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
+            table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
+            table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
+            if (tile.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                totalPrice = String.valueOf(tile.getTotalPrice());
             }
         }
         document.add(table);

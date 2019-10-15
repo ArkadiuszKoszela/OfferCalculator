@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 
 import static pl.koszela.spring.entities.OptionEnum.GLOWNA;
 import static pl.koszela.spring.entities.OptionEnum.OPCJONALNA;
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
+import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
+import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout {
@@ -115,7 +115,7 @@ public class OfferView extends VerticalLayout {
     private Button getButtonRefresh(TreeGrid<Tiles> treeGrid) {
         Button refresh = new Button("Refresh");
         refresh.addClickListener(buttonClickEvent -> {
-            List<Tiles> parents = treeGrid.getDataCommunicator().fetchFromProvider(0, 13).collect(Collectors.toList());
+            List<Tiles> parents = treeGrid.getDataCommunicator().fetchFromProvider(0, 15).collect(Collectors.toList());
             List<Tiles> list = new ArrayList<>();
             for (Tiles parent : parents) {
                 HierarchicalQuery<Tiles, SerializablePredicate<Tiles>> hierarchicalQuery1 = new HierarchicalQuery<>(null, parent);
@@ -142,13 +142,12 @@ public class OfferView extends VerticalLayout {
                 }
                 parent.setTotalPrice(totalPriceValue);
                 parent.setTotalProfit(totalProfitValue);
-                VaadinSession.getCurrent().getSession().setAttribute("allTiles", list);
-                VaadinSession.getCurrent().setAttribute("childrens", childrens);
-                VaadinSession.getCurrent().setAttribute("parents", parents);
             }
         });
         return refresh;
     }
+
+    // przy jednym cenniku nie zaimportowala sie jedna pozycja przez seta - sprawdzic o co chodzi i poprawic :)
 
     private void Editor(TreeGrid<Tiles> treeGrid, Grid.Column<Tiles> discount, Grid.Column<Tiles> opcje) {
         Binder<Tiles> binder = new Binder<>(Tiles.class);
@@ -166,7 +165,7 @@ public class OfferView extends VerticalLayout {
                 .withStatusLabel(validationStatus).bind("discount");
         discount.setEditorComponent(editDiscount);
 
-        Select<String> select = new Select<String>();
+        Select<String> select = new Select<>();
         binder.forField(select)
                 .withStatusLabel(validationStatus).bind("option");
         opcje.setEditorComponent(select);
