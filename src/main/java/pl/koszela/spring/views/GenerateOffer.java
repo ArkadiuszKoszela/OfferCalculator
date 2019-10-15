@@ -7,6 +7,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import pl.koszela.spring.entities.EntityPersonalData;
 import pl.koszela.spring.entities.Category;
+import pl.koszela.spring.entities.EntityResultAccesories;
 import pl.koszela.spring.entities.Tiles;
 
 import java.io.*;
@@ -81,8 +82,10 @@ class GenerateOffer {
             PdfPTable table = new PdfPTable(6);
 
             Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-
-            List<List<Tiles>> resultListTilesFromRepo = changeSetToList(resultSetTilesFromRepo);
+            List<List<Tiles>> resultListTilesFromRepo = new ArrayList<>();
+            if (resultSetTilesFromRepo != null) {
+                resultListTilesFromRepo = changeSetToList(resultSetTilesFromRepo);
+            }
             List<List<Tiles>> resultTiles = (List<List<Tiles>>) VaadinSession.getCurrent().getSession().getAttribute("resultTiles");
 
             BaseColor baseColor = new BaseColor(224, 224, 224);
@@ -90,37 +93,43 @@ class GenerateOffer {
 
             List<String> priceListName = new ArrayList<>();
 
-            PdfPCell header1 = new PdfPCell(new Phrase("Sprawdzam", font12));
-            header1.setBackgroundColor(baseColor);
-            table.addCell(header1);
-
-            PdfPCell header2 = new PdfPCell(new Phrase("Ilość", font12));
-            header2.setBackgroundColor(baseColor);
-            table.addCell(header2);
-
-            PdfPCell header3 = new PdfPCell(new Phrase("Cena detal", font12));
-            header3.setBackgroundColor(baseColor);
-            table.addCell(header3);
-
-            PdfPCell header4 = new PdfPCell(new Phrase("Cena zakupu", font12));
-            header4.setBackgroundColor(baseColor);
-            table.addCell(header4);
-
-            PdfPCell header5 = new PdfPCell(new Phrase("Cena po rabacie", font12));
-            header5.setBackgroundColor(baseColor);
-            table.addCell(header5);
-
-            PdfPCell header6 = new PdfPCell(new Phrase("Zysk", font12));
-            header6.setBackgroundColor(baseColor);
-            table.addCell(header6);
-            table.setWidths(width);
-            table.setHeaderRows(1);
 
             if (resultSetTilesFromRepo != null) {
+                cell(font12, table, baseColor, resultListTilesFromRepo.get(0).get(0).getPriceListName());
+                cell(font12, table, baseColor, "Ilość");
+                cell(font12, table, baseColor, "Cena detal");
+                cell(font12, table, baseColor, "Cena zakupu");
+                cell(font12, table, baseColor, "Cena po rabacie");
+                cell(font12, table, baseColor, "Zysk");
+                table.setWidths(width);
+                table.setHeaderRows(1);
                 getTable(document, font12, font10, table, resultListTilesFromRepo, priceListName);
             } else {
                 getTable(document, font12, font10, table, resultTiles, priceListName);
             }
+
+            Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+
+            PdfPTable accesories = new PdfPTable(7);
+            cell(font12, accesories, baseColor, "Nazwa");
+            cell(font12, accesories, baseColor, "Ilość");
+            cell(font12, accesories, baseColor, "Cena zakupu");
+            cell(font12, accesories, baseColor, "Cena detal");
+            cell(font12, accesories, baseColor, "Cena razem netto");
+            cell(font12, accesories, baseColor, "Cena razem zakup");
+            cell(font12, accesories, baseColor, "Zysk");
+
+            for (EntityResultAccesories resultAccesories : set) {
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getName()), font10));
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getQuantity()), font10));
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPricePurchase()), font10));
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPriceRetail()), font10));
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPriceRetail()), font10));
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPricePurchase()), font10));
+                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getProfit()), font10));
+            }
+            document.add(accesories);
+
             Paragraph paragraph = new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   DODATKI DACHOWE:  jakaś cena\n" +
                     "                   CEGŁA KLINKIEROWA + zaprawa:  jakaś cena\n" +
                     "                   Łata i kontrłata:  jakaś cena\n" +
@@ -165,6 +174,13 @@ class GenerateOffer {
             e.printStackTrace();
         }
 
+    }
+
+    private static PdfPCell cell(Font font12, PdfPTable table, BaseColor baseColor, String sprawdzam) {
+        PdfPCell header1 = new PdfPCell(new Phrase(sprawdzam, font12));
+        header1.setBackgroundColor(baseColor);
+        table.addCell(header1);
+        return header1;
     }
 
     private static List<List<Tiles>> changeSetToList(Set<Tiles> set) {
@@ -221,7 +237,8 @@ class GenerateOffer {
         return parents;
     }
 
-    private static void getTable(Document document, Font font12, Font font10, PdfPTable table, List<List<Tiles>> resultTiles, List<String> priceListName) throws DocumentException {
+    private static void getTable(Document document, Font font12, Font font10, PdfPTable
+            table, List<List<Tiles>> resultTiles, List<String> priceListName) throws DocumentException {
         resultTiles.get(0).forEach(e -> {
             if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
                 priceListName.add(e.getPriceListName());
@@ -245,7 +262,7 @@ class GenerateOffer {
         }
         document.add(table);
 
-        Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe: " + totalPrice, font12);
+        Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe: " + totalPrice + "\n\n\n", font12);
         document.add(suma);
     }
 }

@@ -4,20 +4,17 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.EntityAccesories;
-import pl.koszela.spring.entities.EntityInputDataAccesories;
 import pl.koszela.spring.entities.EntityInputDataTiles;
 import pl.koszela.spring.entities.EntityResultAccesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
@@ -26,10 +23,10 @@ import pl.koszela.spring.repositories.InputDataAccesoriesRespository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.inputFields.ServiceNotification.getNotificationSucces;
-import static pl.koszela.spring.service.Labels.*;
 
 
 @Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
@@ -91,11 +88,15 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     //    private List<Double> valuePriceAccesories = new ArrayList<>();
     private EntityInputDataTiles dataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInput");
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
+    private Set<EntityResultAccesories> set = new HashSet<>();
+    private Set<EntityResultAccesories> setFromRepo = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesFromRepo");
 
 //    private FormLayout board = new FormLayout();
 
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
+        /*setFromRepo = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesFromRepo");*/
         if (dataTilesRepo != null || dataTiles == null) {
             dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
             getNotificationSucces("WEJSCIE Akcesoria - wszystko ok (repo)");
@@ -115,28 +116,36 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
 
         getValuesTiles();
         /*add(formLayoutAccesories());*/
-        add(addSubLayout("grzebien", numberField1));
-        add(addSubLayout("kratka", numberField2));
-        add(addSubLayout("pas", numberField3));
-        add(addSubLayout("klamra do gasiora", numberField4));
-        add(addSubLayout("spinka", numberField5));
-        add(addSubLayout("spinka cieta", numberField6));
-        add(addSubLayout("lawa mniejsza", numberField7));
-        add(addSubLayout("lawa wieksza", numberField8));
-        add(addSubLayout("stopien", numberField9));
-        add(addSubLayout("plotek mniejszy", numberField10));
-        add(addSubLayout("plotek wiekszy", numberField11));
-        add(addSubLayout("membrana", numberField12));
-        add(addSubLayout("laczenie membran", numberField13));
-        add(addSubLayout("reparacyjna", numberField14));
-        add(addSubLayout("blacha", numberField15));
-        add(addSubLayout("cegla", numberField16));
-        add(addSubLayout("podbitka", numberField17));
+        add(addSubLayout("tasma kalenicowa", numberField2.getValue()));
+        add(addSubLayout("wspornik", numberField2.getValue()));
+        add(addSubLayout("tasma do obrobki", numberField2.getValue()));
+        add(addSubLayout("listwa", numberField1.getValue()));
+        add(addSubLayout("kosz", numberField1.getValue()));
+        add(addSubLayout("klamra do mocowania kosza", numberField1.getValue()));
+        add(addSubLayout("tasma samorozprezna", numberField1.getValue()));
+        add(addSubLayout("grzebien", numberField1.getValue()));
+        add(addSubLayout("kratka", numberField2.getValue()));
+        add(addSubLayout("pas", numberField3.getValue()));
+        add(addSubLayout("klamra do gasiora", numberField4.getValue()));
+        add(addSubLayout("spinka", numberField5.getValue()));
+        add(addSubLayout("spinka cieta", numberField6.getValue()));
+        add(addSubLayout("lawa mniejsza", numberField7.getValue()));
+        add(addSubLayout("lawa wieksza", numberField8.getValue()));
+        add(addSubLayout("stopien", numberField9.getValue()));
+        add(addSubLayout("plotek mniejszy", numberField10.getValue()));
+        add(addSubLayout("plotek wiekszy", numberField11.getValue()));
+        add(addSubLayout("membrana", numberField12.getValue()));
+        add(addSubLayout("laczenie membran", numberField13.getValue()));
+        add(addSubLayout("reparacyjna", numberField14.getValue()));
+        add(addSubLayout("blacha", numberField15.getValue()));
+        add(addSubLayout("cegla", numberField16.getValue()));
+        add(addSubLayout("podbitka", numberField17.getValue()));
     }
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
+        VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
         if (dataTilesRepo != null || dataTiles == null) {
             VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", saveInputData());
             getNotificationSucces("WYJSCIE Akcesoria - wszystko ok (repo)");
@@ -152,47 +161,107 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         }
     }
 
-    private Set<EntityResultAccesories> set = new HashSet<>();
+    private Double value(String category) {
+        if (dataTilesRepo != null) {
+            dataTiles = dataTilesRepo;
+        }
+        switch (category) {
+            case "wspornik":
+                return BigDecimal.valueOf(dataTiles.getDlugoscKalenic() / 0.8).setScale(0, RoundingMode.UP).doubleValue();
+            case "tasma kalenicowa":
+                return BigDecimal.valueOf(dataTiles.getDlugoscKalenic()).setScale(0, RoundingMode.UP).doubleValue();
+            case "tasma do obrobki":
+                return BigDecimal.valueOf((dataTiles.getObwodKomina() + 1) * 2).setScale(0, RoundingMode.UP).doubleValue();
+            case "listwa":
+                return BigDecimal.valueOf((dataTiles.getObwodKomina() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
+            case "kosz":
+                return BigDecimal.valueOf((dataTiles.getDlugoscKoszy() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
+            case "klamra do mocowania kosza":
+                return BigDecimal.valueOf((dataTiles.getDlugoscKoszy() / 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
+            case "tasma samorozprezna":
+                return BigDecimal.valueOf(dataTiles.getDlugoscKoszy() * 2).setScale(0, RoundingMode.UP).doubleValue();
+            case "grzebien":
+                return BigDecimal.valueOf(dataTiles.getDlugoscOkapu()).setScale(0, RoundingMode.UP).doubleValue();
+            case "pas":
+                return BigDecimal.valueOf(dataTiles.getDlugoscKalenic() / 1.95).setScale(0, RoundingMode.UP).doubleValue();
+            case "klamra do gasiora":
+                return BigDecimal.valueOf(dataTiles.getDlugoscKalenic() * 2.5).setScale(0, RoundingMode.UP).doubleValue();
+            case "spinka":
+                return BigDecimal.valueOf(dataTiles.getPowierzchniaPolaci() / 50).setScale(0, RoundingMode.UP).doubleValue();
+            case "spinka cieta":
+                return BigDecimal.valueOf(dataTiles.getDlugoscKoszy() * 0.6).setScale(0, RoundingMode.UP).doubleValue();
+            case "membrana":
+                return BigDecimal.valueOf(dataTiles.getPowierzchniaPolaci() * 1.1).setScale(0, RoundingMode.UP).doubleValue();
+            default:
+                return 1d;
+        }
+    }
 
-    private FormLayout addSubLayout(String category, NumberField numberField) {
+    private FormLayout addSubLayout(String category, Double numberField) {
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep form = new FormLayout.ResponsiveStep("5px", 9);
         formLayout.setResponsiveSteps(form);
         TextArea name = new TextArea("Nazwa");
         name.setReadOnly(true);
-        numberField.setReadOnly(true);
+        name.setPlaceholder(category);
+
+        NumberField numberField23 = new NumberField("Ilość");
+        numberField23.setValue(value(category));
+        numberField23.setReadOnly(true);
+
         TextArea pricePurchase = new TextArea("Cena zakupu");
         pricePurchase.setReadOnly(true);
+        pricePurchase.setPlaceholder(category);
+
         TextArea priceRetail = new TextArea("Cena detal");
+        priceRetail.setPlaceholder(category);
+
         TextArea allPriceRetail = new TextArea("Cena razem netto");
         allPriceRetail.setReadOnly(true);
+        allPriceRetail.setPlaceholder(category);
+
         TextArea allPricePurchase = new TextArea("Cena razem zakup");
         allPricePurchase.setReadOnly(true);
+        allPricePurchase.setPlaceholder(category);
+
         TextArea profit = new TextArea("Zysk");
         profit.setReadOnly(true);
+        profit.setPlaceholder(category);
+        if (setFromRepo != null) {
+            set.addAll(setFromRepo);
+            Set<EntityResultAccesories> collect = set.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
+            for (EntityResultAccesories resultAccesories : collect) {
+                name.setValue(resultAccesories.getName());
+                pricePurchase.setValue(String.valueOf(resultAccesories.getPricePurchase()));
+                priceRetail.setValue(String.valueOf(resultAccesories.getPriceRetail()));
+                allPriceRetail.setValue(String.valueOf(resultAccesories.getAllPriceRetail()));
+                allPricePurchase.setValue(String.valueOf(resultAccesories.getAllPricePurchase()));
+                profit.setValue(String.valueOf(resultAccesories.getProfit()));
+            }
+        }
         priceRetail.addValueChangeListener(e -> {
-            allPriceRetail.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(pricePurchase.getValue())));
-            allPricePurchase.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(priceRetail.getValue())));
+            allPriceRetail.setValue(String.valueOf(numberField23.getValue() * Double.parseDouble(pricePurchase.getValue())));
+            allPricePurchase.setValue(String.valueOf(numberField23.getValue() * Double.parseDouble(priceRetail.getValue())));
             profit.setValue(String.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())));
         });
         Checkbox checkbox = new Checkbox("Dodać do oferty?");
         ComboBox<EntityAccesories> comboBox = new ComboBox<>("Wybierz");
-        formLayout.add(comboBox, name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
+        formLayout.add(comboBox, name, numberField23, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
         Iterable<EntityAccesories> accesoriesRepositoryAll = accesoriesRepository.findAllByCategoryEquals(category);
         List<EntityAccesories> all = new ArrayList<>();
         accesoriesRepositoryAll.forEach(all::add);
 
-        ComboBox.ItemFilter<EntityAccesories> filter = (song, filterString) ->
-                song.getName().toLowerCase()
-                        .contains(filterString.toLowerCase())
-                        || song.getCategory().toLowerCase()
-                        .contains(filterString.toLowerCase());
+//        ComboBox.ItemFilter<EntityAccesories> filter = (song, filterString) ->
+//                song.getName().toLowerCase()
+//                        .contains(filterString.toLowerCase())
+//                        || song.getCategory().toLowerCase()
+//                        .contains(filterString.toLowerCase());
 
-        comboBox.setItems(filter, all);
+        comboBox.setItems(/*filter,*/ all);
 
         comboBox.setItemLabelGenerator(EntityAccesories::getName);
 
-        comboBox.setRenderer(new ComponentRenderer<>(item -> {
+        /*comboBox.setRenderer(new ComponentRenderer<>(item -> {
             VerticalLayout container = new VerticalLayout();
 
             Label song = new Label(item.getName());
@@ -203,7 +272,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
             container.add(artist);
 
             return container;
-        }));
+        }));*/
 
         comboBox.addValueChangeListener(event -> {
             if (event.getSource().isEmpty()) {
@@ -215,15 +284,22 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                 double cenaDetal = (value.getPurchasePrice() * value.getMargin() / 100) + value.getPurchasePrice();
                 BigDecimal bigDecimalPriceRetail = new BigDecimal(cenaDetal);
                 priceRetail.setValue(String.valueOf(bigDecimalPriceRetail.setScale(2, RoundingMode.HALF_UP)));
-                allPriceRetail.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(pricePurchase.getValue())));
-                allPricePurchase.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(priceRetail.getValue())));
+
+                double val = numberField23.getValue() * Double.parseDouble(pricePurchase.getValue());
+                BigDecimal bigDecimalallPriceRetail = new BigDecimal(val);
+                allPriceRetail.setValue(String.valueOf(bigDecimalallPriceRetail.setScale(2, RoundingMode.HALF_UP)));
+
+                double va = numberField23.getValue() * Double.parseDouble(priceRetail.getValue());
+                BigDecimal bigDecimalAllPricePurchase = new BigDecimal(va);
+                allPricePurchase.setValue(String.valueOf(bigDecimalAllPricePurchase.setScale(2, RoundingMode.HALF_UP)));
+
                 double cena = Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue());
                 BigDecimal bigDecimalProfit = new BigDecimal(cena);
                 profit.setValue(String.valueOf(bigDecimalProfit.setScale(2, RoundingMode.HALF_UP)));
 
                 EntityResultAccesories resultAccesories = new EntityResultAccesories();
                 resultAccesories.setName(name.getValue());
-                resultAccesories.setQuantity(numberField.getValue());
+                resultAccesories.setQuantity(numberField23.getValue());
                 resultAccesories.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
                 resultAccesories.setPriceRetail(Double.valueOf(priceRetail.getValue()));
                 resultAccesories.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
@@ -236,7 +312,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                 for (EntityResultAccesories resultAccesories1 : set) {
                     if (resultAccesories1.getCategory().equals(resultAccesories.getCategory())) {
                         resultAccesories1.setName(name.getValue());
-                        resultAccesories1.setQuantity(numberField.getValue());
+                        resultAccesories1.setQuantity(numberField23.getValue());
                         resultAccesories1.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
                         resultAccesories1.setPriceRetail(Double.valueOf(priceRetail.getValue()));
                         resultAccesories1.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));

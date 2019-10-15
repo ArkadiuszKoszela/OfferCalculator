@@ -1,7 +1,6 @@
 package pl.koszela.spring.service;
 
 import com.vaadin.flow.server.VaadinSession;
-import javafx.scene.control.ComboBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
@@ -23,9 +22,10 @@ public class UpdateUser {
     private KolnierzRepository kolnierzRepository;
     private TilesRepository tilesRepository;
     private OptionsOfferRepository optionsOfferRepository;
+    private ResultAccesoriesRepository resultAccesoriesRepository;
 
     @Autowired
-    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, OptionsOfferRepository optionsOfferRepository) {
+    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, OptionsOfferRepository optionsOfferRepository, ResultAccesoriesRepository resultAccesoriesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
@@ -34,6 +34,7 @@ public class UpdateUser {
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.optionsOfferRepository = Objects.requireNonNull(optionsOfferRepository);
+        this.resultAccesoriesRepository = Objects.requireNonNull(resultAccesoriesRepository);
     }
 
     public void updateUser() {
@@ -44,6 +45,7 @@ public class UpdateUser {
         EntityInputDataAccesories entityInputDataAccesories = (EntityInputDataAccesories) VaadinSession.getCurrent().getSession().getAttribute("accesoriesInputFromRepo");
         EntityWindows entityWindows = (EntityWindows) VaadinSession.getCurrent().getSession().getAttribute("entityWindowsFromRepo");
         EntityKolnierz entityKolnierz = (EntityKolnierz) VaadinSession.getCurrent().getSession().getAttribute("entityKolnierzFromRepo");
+        Set<EntityResultAccesories> resultAccesories = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         if (personalData.isPresent()) {
             Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
@@ -51,13 +53,16 @@ public class UpdateUser {
                 Set<Tiles> allTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
                 EntityUser userToUpdate = userFromRepo.get();
                 userToUpdate.setEntityInputDataTiles(entityInputDataTiles);
+                userToUpdate.setResultAccesories(resultAccesories);
                 /*userToUpdate.setEntityInputDataAccesories(entityInputDataAccesories);
                 userToUpdate.setEntityWindows(entityWindows);
                 userToUpdate.setEntityKolnierz(entityKolnierz);*/
                 userToUpdate.getTiles().clear();
                 userToUpdate.setTiles(allTilesFromRepo);
 
+                resultAccesoriesRepository.saveAll(resultAccesories);
                 inputDataTilesRepository.save(entityInputDataTiles);
+
                 /*inputDataAccesoriesRespository.save(entityInputDataAccesories);
                 windowsRepository.save(entityWindows);
                 kolnierzRepository.save(entityKolnierz);*/

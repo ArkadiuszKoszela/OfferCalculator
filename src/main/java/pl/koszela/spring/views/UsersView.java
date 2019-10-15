@@ -97,6 +97,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
             VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.getEntityWindows());
             VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.getEntityKolnierz());
             VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", find.getTiles());
+            VaadinSession.getCurrent().getSession().setAttribute("accesoriesFromRepo", find.getResultAccesories());
 
             EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
             name.setValue(data.getName());
@@ -136,6 +137,8 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
         VaadinSession.getCurrent().getSession().removeAttribute("tilesInputFromRepo");
         VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("accesories");
         if (entityPersonalData != null) {
             VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
             getNotificationSucces("WEJSCIE Klienci - wszystko ok (repo)");

@@ -21,9 +21,10 @@ public class SaveUser {
     private KolnierzRepository kolnierzRepository;
     private TilesRepository tilesRepository;
     private OptionsOfferRepository optionsOfferRepository;
+    private ResultAccesoriesRepository resultAccesoriesRepository;
 
     @Autowired
-    public SaveUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, OptionsOfferRepository optionsOfferRepository) {
+    public SaveUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, InputDataAccesoriesRespository inputDataAccesoriesRespository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, OptionsOfferRepository optionsOfferRepository, ResultAccesoriesRepository resultAccesoriesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
@@ -32,6 +33,7 @@ public class SaveUser {
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.optionsOfferRepository = Objects.requireNonNull(optionsOfferRepository);
+        this.resultAccesoriesRepository = Objects.requireNonNull(resultAccesoriesRepository);
     }
 
     public void saveUser() {
@@ -41,9 +43,12 @@ public class SaveUser {
         EntityWindows entityWindows = (EntityWindows) VaadinSession.getCurrent().getSession().getAttribute("entityWindows");
         EntityKolnierz entityKolnierz = (EntityKolnierz) VaadinSession.getCurrent().getSession().getAttribute("entityKolnierz");
         List<Tiles> allTiles = (List<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTiles");
+        Set<EntityResultAccesories> resultAccesories = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+
         EntityUser newUser = new EntityUser();
         newUser.setEntityPersonalData(entityPersonalData);
         newUser.setEntityInputDataTiles(entityInputDataTiles);
+        newUser.setResultAccesories(resultAccesories);
         /*newUser.setEntityInputDataAccesories(entityInputDataAccesories);*/
         /*newUser.setEntityWindows(entityWindows);
         newUser.setEntityKolnierz(entityKolnierz);*/
@@ -51,6 +56,7 @@ public class SaveUser {
 
         personalDataRepository.save(entityPersonalData);
         inputDataTilesRepository.save(entityInputDataTiles);
+        resultAccesoriesRepository.saveAll(resultAccesories);
         /*inputDataAccesoriesRespository.save(entityInputDataAccesories);*/
         /*windowsRepository.save(entityWindows);
         kolnierzRepository.save(entityKolnierz);*/

@@ -31,9 +31,12 @@ public class EntityUser {
     private EntityWindows entityWindows;
     @OneToOne
     private EntityKolnierz entityKolnierz;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "entityUserAccesories")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private Set<EntityAccesories> entityAccesories;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_resultAccesories",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "entityResultAccesories_id")
+    )
+    private Set<EntityResultAccesories> resultAccesories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",
@@ -108,14 +111,6 @@ public class EntityUser {
         this.entityKolnierz = entityKolnierz;
     }
 
-    public Set<EntityAccesories> getEntityAccesories() {
-        return entityAccesories;
-    }
-
-    public void setEntityAccesories(Set<EntityAccesories> entityAccesories) {
-        this.entityAccesories = entityAccesories;
-    }
-
     public boolean isHasTiles() {
         return hasTiles;
     }
@@ -154,5 +149,13 @@ public class EntityUser {
 
     public void setEntityUserOffer(Set<OptionsOffer> entityUserOffer) {
         this.entityUserOffer = entityUserOffer;
+    }
+
+    public Set<EntityResultAccesories> getResultAccesories() {
+        return resultAccesories;
+    }
+
+    public void setResultAccesories(Set<EntityResultAccesories> resultAccesories) {
+        this.resultAccesories = resultAccesories;
     }
 }

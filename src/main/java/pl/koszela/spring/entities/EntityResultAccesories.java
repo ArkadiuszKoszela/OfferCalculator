@@ -1,6 +1,8 @@
 package pl.koszela.spring.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "result_accesories")
@@ -18,6 +20,8 @@ public class EntityResultAccesories {
     private Double allPriceRetail;
     private Double profit;
     private boolean offer;
+    @ManyToMany(mappedBy = "resultAccesories")
+    private Set<EntityUser> userResultAccesories = new HashSet<>();
 
     public EntityResultAccesories() {
     }
@@ -100,5 +104,13 @@ public class EntityResultAccesories {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Set<EntityUser> getUserResultAccesories() {
+        return userResultAccesories;
+    }
+
+    public void setUserResultAccesories(Set<EntityUser> userResultAccesories) {
+        this.userResultAccesories = userResultAccesories;
     }
 }
