@@ -114,13 +114,15 @@ public class GenerateOffer {
             cell(font12, accesories, baseColor, "Zysk");
 
             for (EntityResultAccesories resultAccesories : set) {
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getName()), font10));
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getQuantity()), font10));
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPricePurchase()), font10));
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPriceRetail()), font10));
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPriceRetail()), font10));
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPricePurchase()), font10));
-                accesories.addCell(new Phrase(String.valueOf(resultAccesories.getProfit()), font10));
+                if (resultAccesories.isOffer()) {
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getName()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getQuantity()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPricePurchase()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPriceRetail()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPriceRetail()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPricePurchase()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getProfit()), font10));
+                }
             }
             document.add(accesories);
 

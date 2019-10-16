@@ -154,7 +154,10 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
         EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
-        VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", defaultValues());
+        if(entityPersonalData == null){
+            VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", defaultValues());
+            action.proceed();
+        }
         VaadinSession.getCurrent().getSession().removeAttribute("personalData");
         VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
         VaadinSession.getCurrent().getSession().removeAttribute("resultTiles");

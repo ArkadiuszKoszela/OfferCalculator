@@ -3,11 +3,9 @@ package pl.koszela.spring.views;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
@@ -30,14 +28,14 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     private AccesoriesRepository accesoriesRepository;
 
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
-    private Set<EntityResultAccesories> setFromRepo = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+    private Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
     @Autowired
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
 
-        if (setFromRepo == null) {
-            setFromRepo = new HashSet<>();
+        if (set == null) {
+            set = new HashSet<>();
         }
         add(addSubLayout("tasma kalenicowa"), addSubLayout("wspornik"), addSubLayout("tasma do obrobki"), addSubLayout("listwa"),
                 addSubLayout("kosz"), addSubLayout("klamra do mocowania kosza"), addSubLayout("tasma samorozprezna"),
@@ -51,7 +49,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        VaadinSession.getCurrent().getSession().setAttribute("accesories", setFromRepo);
+        VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
         action.proceed();
     }
 
@@ -115,8 +113,8 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
 
         formLayout.add(comboBox, name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
 
-        if (setFromRepo != null) {
-            Set<EntityResultAccesories> accesoriesWithTheSameCategory = setFromRepo.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
+        if (set != null) {
+            Set<EntityResultAccesories> accesoriesWithTheSameCategory = set.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
             for (EntityResultAccesories resultAccesories : accesoriesWithTheSameCategory) {
                 name.setValue(resultAccesories.getName());
                 pricePurchase.setValue(String.valueOf(resultAccesories.getPricePurchase()));
@@ -124,11 +122,12 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                 allPriceRetail.setValue(String.valueOf(resultAccesories.getAllPriceRetail()));
                 allPricePurchase.setValue(String.valueOf(resultAccesories.getAllPricePurchase()));
                 profit.setValue(String.valueOf(resultAccesories.getProfit()));
+                checkbox.setValue(resultAccesories.isOffer());
             }
         }
         comboBox.setItemLabelGenerator(EntityAccesories::getName);
 
-        comboBoxValueChangeListener(name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, comboBox);
+        comboBoxValueChangeListener(name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, comboBox, checkbox);
         return formLayout;
     }
 
@@ -138,7 +137,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         return allPriceRetail;
     }
 
-    private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, TextArea pricePurchase, TextArea priceRetail, TextArea allPriceRetail, TextArea allPricePurchase, TextArea profit, ComboBox<EntityAccesories> comboBox) {
+    private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, TextArea pricePurchase, TextArea priceRetail, TextArea allPriceRetail, TextArea allPricePurchase, TextArea profit, ComboBox<EntityAccesories> comboBox, Checkbox checkbox) {
         comboBox.addValueChangeListener(event -> {
             EntityAccesories value = event.getValue();
 
@@ -148,6 +147,10 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
             allPriceRetail.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(pricePurchase.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
             allPricePurchase.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(priceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
             profit.setValue(BigDecimal.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
+            checkbox.setValue(true);
+
+            // ogarnac dlaczego przy wczytaniu uzytkownika nie wczytuja sie jego dane wprowadzone
+
 
             EntityResultAccesories resultAccesories = EntityResultAccesories.builder()
                     .name(name.getValue())
@@ -158,12 +161,13 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                     .allPricePurchase(Double.valueOf(allPricePurchase.getValue()))
                     .profit(Double.valueOf(profit.getValue()))
                     .category(value.getCategory())
+                    .offer(checkbox.getValue())
                     .build();
 
-            if (setFromRepo.isEmpty()) {
-                setFromRepo.add(resultAccesories);
+            if (set.isEmpty()) {
+                set.add(resultAccesories);
             }
-            for (EntityResultAccesories accesoriestoChange : setFromRepo) {
+            for (EntityResultAccesories accesoriestoChange : set) {
                 if (accesoriestoChange.getCategory().equals(resultAccesories.getCategory())) {
                     accesoriestoChange.setName(name.getValue());
                     accesoriestoChange.setQuantity(numberField23.getValue());
@@ -172,13 +176,21 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                     accesoriestoChange.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
                     accesoriestoChange.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
                     accesoriestoChange.setProfit(Double.valueOf(profit.getValue()));
-                } else if (!accesoriestoChange.getCategory().equals(resultAccesories.getCategory()) && !setFromRepo.contains(resultAccesories)) {
-                    boolean exist = setFromRepo.stream().anyMatch(c -> c.getCategory().equals(resultAccesories.getCategory()));
+                    accesoriestoChange.setOffer(checkbox.getValue());
+                } else if (!accesoriestoChange.getCategory().equals(resultAccesories.getCategory()) && !set.contains(resultAccesories)) {
+                    boolean exist = set.stream().anyMatch(c -> c.getCategory().equals(resultAccesories.getCategory()));
                     if (!exist) {
-                        setFromRepo.add(resultAccesories);
+                        set.add(resultAccesories);
                     }
                 }
             }
         });
     }
+
+//    private Set<EntityResultAccesories> save (){
+//        for (EntityResultAccesories resultAccesories: set){
+//            resultAccesories.
+//        }
+//
+//    }
 }

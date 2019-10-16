@@ -1,51 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="continue refactor code">
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/ReadUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/AvailablePriceList.java" afterDir="false" />
+    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/PriceListView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/calculate/CalculateTiles.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityAccesories.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityInputDataAccesories.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityInputDataTiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityInputDataTiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityResultAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityResultAccesories.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/Tiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/Tiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/importFiles/ImportFiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/importFiles/ImportFiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/inputFields/ServiceNotification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/ServiceNotification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/InputDataAccesoriesRespository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/Labels.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/RemoveUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/DeleteUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/SaveUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/UpdateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GenerateOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/WindowsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/WindowsView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/TestInnovo10Czerwona.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/oferta.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/tasma kalenicowa.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/wspornik laty.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Edytowalny.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/excel.xlsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/assets/oferta.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/calculate/CalculateTiles.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityAccesories.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataAccesories$Builder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataAccesories.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/inputFields/ServiceNotification.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/InputDataAccesoriesRespository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/service/Labels.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/Edytowalny.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/excel.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataTiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataTiles.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -128,19 +92,20 @@
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Arkadiusz Koszela\Desktop\demo\projekt_zaliczeniowy\springapp\src\main\resources\templates" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="pl.koszela.spring.entities" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Arkadiusz Koszela\Desktop\spring-app\src\main\resources\assets" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="pl.koszela.spring.views" />
       <recent name="pl.koszela.spring.crud" />
       <recent name="pl.koszela.spring.service" />
       <recent name="pl.koszela.spring.DAOs" />
     </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="pl.koszela.spring.entities" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Arkadiusz Koszela\Desktop\demo\projekt_zaliczeniowy\springapp\src\main\resources\templates" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -243,7 +208,8 @@
       <workItem from="1570957312593" duration="3289000" />
       <workItem from="1571048848902" duration="23258000" />
       <workItem from="1571125888238" duration="15127000" />
-      <workItem from="1571156202983" duration="19691000" />
+      <workItem from="1571156202983" duration="19725000" />
+      <workItem from="1571221160317" duration="7685000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -364,7 +330,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571173653649</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="continue refactor code">
+      <created>1571182155264</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1571182155264</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -413,30 +386,12 @@
     <option name="LAST_COMMIT_MESSAGE" value="continue refactor code" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java</url>
-          <line>96</line>
-          <option name="timeStamp" value="184" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java</url>
-          <line>142</line>
-          <option name="timeStamp" value="207" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java</url>
-          <line>143</line>
-          <option name="timeStamp" value="208" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
         <watch expression="parent" language="JAVA" />
         <watch expression="childrens.get(i).getName();" language="JAVA" />
         <watch expression="parent.getPriceListName()" language="JAVA" />
+        <watch expression="set.toArray()[3]" />
       </configuration>
     </watches-manager>
   </component>
