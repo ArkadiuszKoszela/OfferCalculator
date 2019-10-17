@@ -2,9 +2,8 @@ package pl.koszela.spring.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,15 +17,22 @@ public class Tiles {
     private String name;
     private Double quantity;
     private Integer discount;
+    private Integer basicDiscount;
+    private Integer promotionDiscount;
+    private Integer additionalDiscount;
+    private Integer skontoDiscount;
+    private Double priceFromRepo;
     private BigDecimal price;
     private BigDecimal priceAfterDiscount;
     private BigDecimal pricePurchase;
     private BigDecimal profit;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
+    private String date;
     @ManyToMany(mappedBy = "entityUserTiles")
     private Set<EntityUser> userTiles = new HashSet<>();
-    private String option;
+    private boolean main;
+    private boolean option;
 
     public Tiles() {
     }
@@ -127,19 +133,67 @@ public class Tiles {
         this.userTiles = userTiles;
     }
 
-    public String getOption() {
+    public boolean isOption() {
         return option;
     }
 
-    public void setOption(String option) {
+    public void setOption(boolean option) {
         this.option = option;
     }
 
-  /*  public OptionsOffer getOptionsOffer() {
-        return optionsOffer;
+    public boolean isMain() {
+        return main;
     }
 
-    public void setOptionsOffer(OptionsOffer optionsOffer) {
-        this.optionsOffer = optionsOffer;
-    }*/
+    public void setMain(boolean main) {
+        this.main = main;
+    }
+
+    public Integer getBasicDiscount() {
+        return basicDiscount;
+    }
+
+    public void setBasicDiscount(Integer basicDiscount) {
+        this.basicDiscount = basicDiscount;
+    }
+
+    public Integer getPromotionDiscount() {
+        return promotionDiscount;
+    }
+
+    public void setPromotionDiscount(Integer promotionDiscount) {
+        this.promotionDiscount = promotionDiscount;
+    }
+
+    public Integer getAdditionalDiscount() {
+        return additionalDiscount;
+    }
+
+    public void setAdditionalDiscount(Integer additionalDiscount) {
+        this.additionalDiscount = additionalDiscount;
+    }
+
+    public Integer getSkontoDiscount() {
+        return skontoDiscount;
+    }
+
+    public void setSkontoDiscount(Integer skontoDiscount) {
+        this.skontoDiscount = skontoDiscount;
+    }
+
+    public Double getPriceFromRepo() {
+        return priceFromRepo;
+    }
+
+    public void setPriceFromRepo(Double priceFromRepo) {
+        this.priceFromRepo = priceFromRepo;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

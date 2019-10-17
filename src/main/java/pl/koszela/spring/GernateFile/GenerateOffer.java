@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.vaadin.flow.server.VaadinServletRequest.getCurrent;
 
@@ -30,7 +31,6 @@ public class GenerateOffer {
         Document document = new Document();
 
         try {
-            EntityPersonalData user = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
             EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
             PdfWriter.getInstance(document, new FileOutputStream(new File(FILE_NAME)));
 
@@ -51,15 +51,10 @@ public class GenerateOffer {
 
 
             Font font12 = new Font(baseFont, 12);
-            if (userfromRepo != null) {
-                Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: " + userfromRepo.getName() + " " + userfromRepo.getSurname(), font12);
+            Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: " + userfromRepo.getName() + " " + userfromRepo.getSurname(), font12);
 
-                document.add(informacje);
-            } else {
-                Paragraph informacje = new Paragraph("\n\n\nInformacje handlowe przygotowane dla: " + user.getName() + " " + user.getSurname(), font12);
+            document.add(informacje);
 
-                document.add(informacje);
-            }
             Font font10 = new Font(baseFont, 10);
             Paragraph producent = new Paragraph("\n\nDachówki ceramiczne Nelskamrubp produkowane są z najwyższej jakości surowców w nowoczesnej technologii." +
                     "Sprawdzone na przestrzeni wieków – dachówki ceramiczne zalicza się do najstarszych pokryć dachowych " +
@@ -86,10 +81,12 @@ public class GenerateOffer {
             BaseColor baseColor = new BaseColor(224, 224, 224);
             float[] width = new float[]{320f, 85f, 85f, 85f, 85f, 85f};
 
-            List<String> priceListName = new ArrayList<>();
+            String priceListName = "";
 
+            List<Tiles> parents = resultListTilesFromRepo.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toList());
+            priceListName = parents.get(0).getPriceListName();
 
-            cell(font12, table, baseColor, resultListTilesFromRepo.get(0).getPriceListName());
+            cell(font12, table, baseColor, priceListName);
             cell(font12, table, baseColor, "Ilość");
             cell(font12, table, baseColor, "Cena detal");
             cell(font12, table, baseColor, "Cena zakupu");
@@ -179,28 +176,35 @@ public class GenerateOffer {
     }
 
     private static void getTable(Document document, Font font12, Font font10, PdfPTable
-            table, List<Tiles> resultTiles, List<String> priceListName) throws DocumentException {
-        resultTiles.forEach(e -> {
-            if (e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                priceListName.add(e.getPriceListName());
-            }
-        });
+            table, List<Tiles> resultTiles, String priceListName) throws DocumentException {
+
+        List<Tiles> parents = resultTiles.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toList());
+        priceListName = parents.get(0).getPriceListName();
 
         String totalPrice = "";
+        List<Tiles> parentsOptional = resultTiles.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString()) && e.isOption()).collect(Collectors.toList());
         for (Tiles tile : resultTiles) {
-            table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
-            table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
-            table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
-            table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
-            table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
-            table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
-            if (tile.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
-                totalPrice = String.valueOf(tile.getTotalPrice());
+            if (tile.getPriceListName().equals(parents.get(0).getPriceListName())) {
+                table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
+
+                totalPrice = String.valueOf(parents.get(0).getTotalPrice());
             }
         }
+
         document.add(table);
 
-        Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe: " + totalPrice + "\n\n\n", font12);
+        Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe dla dachu " + parents.get(0).getPriceListName() + " : " + totalPrice + "\n\n\n", font12);
+
+        Paragraph opcjonalne = new Paragraph("\n\n\t\t\t\tOferty Opcjonalne:" +
+                " \n" + parentsOptional.get(0).getPriceListName() + " z ceną: " + parentsOptional.get(0).getTotalPrice() +
+                "\n" + parentsOptional.get(1).getPriceListName() + " z ceną: " + parentsOptional.get(0).getTotalPrice() + "\n\n\n", font12);
         document.add(suma);
+
+        document.add(opcjonalne);
     }
 }

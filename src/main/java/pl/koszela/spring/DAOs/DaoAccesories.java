@@ -37,8 +37,6 @@ public class DaoAccesories implements Dao {
                 entityAccesories.setName(data[1]);
                 entityAccesories.setPurchasePrice(Double.valueOf(data[2]));
                 entityAccesories.setMargin(Integer.valueOf(data[3]));
-                entityAccesories.setFirstMultiplier(Double.valueOf(data[4]));
-                entityAccesories.setSecondMultiplier(Double.valueOf(data[5]));
 
                 accesoriesRepository.save(entityAccesories);
             }

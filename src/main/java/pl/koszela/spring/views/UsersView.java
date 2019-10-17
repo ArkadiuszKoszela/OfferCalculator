@@ -127,7 +127,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
                 .telephoneNumber(telephoneNumber.getValue())
                 .email(email.getValue())
                 .build();
-        VaadinSession.getCurrent().getSession().setAttribute("personalData", personalData);
+        VaadinSession.getCurrent().getSession().setAttribute("personalDataFromRepo", personalData);
     }
 
     @Override
@@ -141,6 +141,16 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("accesories");
         VaadinSession.getCurrent().getSession().removeAttribute("personalData");
         VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
+
+        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
+        VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");
+        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierz");
+        VaadinSession.getCurrent().getSession().removeAttribute("allTiles");
+
+        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInputFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
 //        if (entityPersonalData != null) {
 //            getNotificationSucces("WEJSCIE Klienci - wszystko ok (repo)");
 //        } else if (entityPersonalData == null) {
@@ -155,6 +165,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
         EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
         if(entityPersonalData == null){
+            save();
             VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", defaultValues());
             action.proceed();
         }

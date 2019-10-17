@@ -29,16 +29,16 @@ public class CreateUser {
     }
 
     public void saveUser() {
-        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
         EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
-        List<Tiles> allTiles = (List<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTiles");
+        Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         Set<EntityResultAccesories> resultAccesories = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         EntityUser newUser = new EntityUser();
         newUser.setEntityPersonalData(entityPersonalData);
         newUser.setEntityInputDataTiles(entityInputDataTiles);
         newUser.setResultAccesories(resultAccesories);
-        newUser.setTiles(new HashSet<>(allTiles));
+        newUser.setTiles(allTiles);
 
         personalDataRepository.save(entityPersonalData);
         inputDataTilesRepository.save(entityInputDataTiles);
@@ -48,11 +48,11 @@ public class CreateUser {
         usersRepo.save(newUser);
         getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
 
-        VaadinSession.getCurrent().getSession().removeAttribute("personalData");
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierz");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTiles");
+//        VaadinSession.getCurrent().getSession().removeAttribute("personalData");
+//        VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
+//        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
+//        VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");
+//        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierz");
+//        VaadinSession.getCurrent().getSession().removeAttribute("allTiles");
     }
 }

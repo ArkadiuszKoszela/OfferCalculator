@@ -114,7 +114,8 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 parent.setPriceAfterDiscount(new BigDecimal(0));
                 parent.setPricePurchase(new BigDecimal(0));
                 parent.setProfit(new BigDecimal(0));
-                parent.setOption("");
+                parent.setOption(false);
+                parent.setMain(false);
 
                 listOfNumberFields.forEach(field -> childrens.forEach(children -> {
                     if (field.getPattern().equals(children.getName())) {
@@ -125,7 +126,8 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                         children.setPriceAfterDiscount(new BigDecimal(0));
                         children.setPricePurchase(new BigDecimal(0));
                         children.setProfit(new BigDecimal(0));
-                        children.setOption("");
+                        children.setOption(false);
+                        children.setMain(false);
                     }
                 }));
             }

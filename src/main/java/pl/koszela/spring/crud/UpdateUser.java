@@ -59,11 +59,11 @@ public class UpdateUser {
             getNotificationError("Coś poszło nie tak - nie ma takich danych");
         }
 
-        VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInputFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInputFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
+//        VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
+//        VaadinSession.getCurrent().getSession().removeAttribute("tilesInputFromRepo");
+//        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInputFromRepo");
+//        VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
+//        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
+//        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
     }
 }

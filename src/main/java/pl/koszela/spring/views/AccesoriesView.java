@@ -6,6 +6,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.dom.ClassList;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
@@ -27,6 +28,21 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     static final String SELECT_ACCESORIES = "accesories";
     private AccesoriesRepository accesoriesRepository;
 
+    private static final String NAZWA = "Nazwa";
+    private static final String WYBIERZ = "Wybierz";
+    private static final String ILOSC = "Ilość";
+    private static final String CENA_ZAKUPU = "Cena zakupu";
+    private static final String CENA_DETAL = "Cena detal";
+    private static final String CENA_RAZEM_NETTO = "Cena razem netto";
+    private static final String CENA_RAZEM_ZAKUP = "Cena razem zakup";
+    private static final String ZYSK = "Zysk";
+    private static final String DODAC_DO_OFERTY = "Dodać do oferty ?";
+
+    List<String> categories = Arrays.asList("tasma kalenicowa", "wspornik", "tasma do obrobki", "listwa", "kosz", "klamra do mocowania kosza", "tasma samorozprezna",
+            "grzebien", "kratka", "pas", "klamra do gasiora", "spinka", "spinka cieta", "lawa mniejsza", "lawa wieksza", "stopien", "plotek mniejszy", "plotek wiekszy",
+            "membrana", "laczenie membran", "reparacyjna", "blacha", "cegla", "podbitka");
+
+
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
     private Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
@@ -37,19 +53,21 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         if (set == null) {
             set = new HashSet<>();
         }
-        add(addSubLayout("tasma kalenicowa"), addSubLayout("wspornik"), addSubLayout("tasma do obrobki"), addSubLayout("listwa"),
-                addSubLayout("kosz"), addSubLayout("klamra do mocowania kosza"), addSubLayout("tasma samorozprezna"),
-                addSubLayout("grzebien"), addSubLayout("kratka"), addSubLayout("pas"), addSubLayout("klamra do gasiora"),
-                addSubLayout("spinka"), addSubLayout("spinka cieta"), addSubLayout("lawa mniejsza"), addSubLayout("lawa wieksza"),
-                addSubLayout("stopien"), addSubLayout("plotek mniejszy"), addSubLayout("plotek wiekszy"), addSubLayout("membrana"),
-                addSubLayout("laczenie membran"), addSubLayout("reparacyjna"), addSubLayout("blacha"), addSubLayout("cegla"),
-                addSubLayout("podbitka"));
+        categories.forEach(category -> add(addSubLayout(category)));
+//        add(addSubLayout("tasma kalenicowa"), addSubLayout("wspornik"), addSubLayout("tasma do obrobki"), addSubLayout("listwa"),
+//                addSubLayout("kosz"), addSubLayout("klamra do mocowania kosza"), addSubLayout("tasma samorozprezna"),
+//                addSubLayout("grzebien"), addSubLayout("kratka"), addSubLayout("pas"), addSubLayout("klamra do gasiora"),
+//                addSubLayout("spinka"), addSubLayout("spinka cieta"), addSubLayout("lawa mniejsza"), addSubLayout("lawa wieksza"),
+//                addSubLayout("stopien"), addSubLayout("plotek mniejszy"), addSubLayout("plotek wiekszy"), addSubLayout("membrana"),
+//                addSubLayout("laczenie membran"), addSubLayout("reparacyjna"), addSubLayout("blacha"), addSubLayout("cegla"),
+//                addSubLayout("podbitka"));
     }
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
         VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
+        save();
         action.proceed();
     }
 
@@ -91,19 +109,23 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         FormLayout.ResponsiveStep form = new FormLayout.ResponsiveStep("5px", 9);
         formLayout.setResponsiveSteps(form);
 
-        TextArea name = getTextArea(category, "Nazwa");
-        TextArea pricePurchase = getTextArea(category, "Cena zakupu");
-        TextArea priceRetail = new TextArea("Cena detal", category);
-        TextArea allPriceRetail = getTextArea(category, "Cena razem netto");
-        TextArea allPricePurchase = getTextArea(category, "Cena razem zakup");
-        TextArea profit = getTextArea(category, "Zysk");
-        NumberField numberField = new NumberField("Ilość");
+        TextArea name = getTextArea(category, NAZWA);
+        TextArea pricePurchase = getTextArea(category, CENA_ZAKUPU);
+        TextArea priceRetail = new TextArea(CENA_DETAL, category);
+        VaadinSession.getCurrent().getSession().setAttribute(category + CENA_DETAL, priceRetail);
+        TextArea allPriceRetail = getTextArea(category, CENA_RAZEM_NETTO);
+        TextArea allPricePurchase = getTextArea(category, CENA_RAZEM_ZAKUP);
+        TextArea profit = getTextArea(category, ZYSK);
+        NumberField numberField = new NumberField(ILOSC);
         numberField.setValue(value(category));
         numberField.setReadOnly(true);
-        Checkbox checkbox = new Checkbox("Dodać do oferty?");
+        VaadinSession.getCurrent().getSession().setAttribute(category + ILOSC, numberField);
+        Checkbox checkbox = new Checkbox(DODAC_DO_OFERTY);
+        VaadinSession.getCurrent().getSession().setAttribute(category + DODAC_DO_OFERTY, checkbox);
 
         List<EntityAccesories> allWithTheSameCategory = accesoriesRepository.findAllByCategoryEquals(category);
-        ComboBox<EntityAccesories> comboBox = new ComboBox<>("Wybierz", allWithTheSameCategory);
+        ComboBox<EntityAccesories> comboBox = new ComboBox<>(WYBIERZ, allWithTheSameCategory);
+        VaadinSession.getCurrent().getSession().setAttribute(category + WYBIERZ, comboBox);
 
         priceRetail.addValueChangeListener(e -> {
             allPriceRetail.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(pricePurchase.getValue())));
@@ -132,9 +154,10 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     }
 
     private TextArea getTextArea(String category, String label) {
-        TextArea allPriceRetail = new TextArea(label, category);
-        allPriceRetail.setReadOnly(true);
-        return allPriceRetail;
+        TextArea textArea = new TextArea(label, category);
+        textArea.setReadOnly(true);
+        VaadinSession.getCurrent().getSession().setAttribute(category + label, textArea);
+        return textArea;
     }
 
     private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, TextArea pricePurchase, TextArea priceRetail, TextArea allPriceRetail, TextArea allPricePurchase, TextArea profit, ComboBox<EntityAccesories> comboBox, Checkbox checkbox) {
@@ -147,10 +170,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
             allPriceRetail.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(pricePurchase.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
             allPricePurchase.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(priceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
             profit.setValue(BigDecimal.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
-            checkbox.setValue(true);
-
-            // ogarnac dlaczego przy wczytaniu uzytkownika nie wczytuja sie jego dane wprowadzone
-
 
             EntityResultAccesories resultAccesories = EntityResultAccesories.builder()
                     .name(name.getValue())
@@ -187,10 +206,30 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         });
     }
 
-//    private Set<EntityResultAccesories> save (){
-//        for (EntityResultAccesories resultAccesories: set){
-//            resultAccesories.
-//        }
-//
-//    }
+    private void save() {
+//        String category = "tasma kalenicowa";
+        for (String category : categories) {
+            TextArea name = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + NAZWA);
+            TextArea pricePurchase = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_ZAKUPU);
+            TextArea priceRetail = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_DETAL);
+            TextArea allPriceRetail = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_RAZEM_NETTO);
+            TextArea allPricePurchase = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_RAZEM_ZAKUP);
+            TextArea profit = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + ZYSK);
+            NumberField numberField = (NumberField) VaadinSession.getCurrent().getSession().getAttribute(category + ILOSC);
+            Checkbox checkbox = (Checkbox) VaadinSession.getCurrent().getSession().getAttribute(category + DODAC_DO_OFERTY);
+            ComboBox comboBox = (ComboBox) VaadinSession.getCurrent().getSession().getAttribute(category + WYBIERZ);
+            set.forEach(e -> {
+                if (e.getCategory().equals(category)) {
+                    e.setName(name.getValue());
+                    e.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
+                    e.setPriceRetail(Double.valueOf(priceRetail.getValue()));
+                    e.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
+                    e.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
+                    e.setProfit(Double.valueOf(profit.getValue()));
+                    e.setQuantity(numberField.getValue());
+                    e.setOffer(checkbox.getValue());
+                }
+            });
+        }
+    }
 }
