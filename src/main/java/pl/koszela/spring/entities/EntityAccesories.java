@@ -1,7 +1,6 @@
 package pl.koszela.spring.entities;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "accesories")
@@ -14,7 +13,8 @@ public class EntityAccesories {
     private String name;
     private Double purchasePrice;
     private Integer margin;
-    private Double retailPrice;
+    private Double detalPrice;
+    private String option;
 
     public EntityAccesories() {
     }
@@ -63,12 +63,20 @@ public class EntityAccesories {
         return new EntityAccesories.Builder();
     }
 
-    public Double getRetailPrice() {
-        return retailPrice;
+    public Double getDetalPrice() {
+        return detalPrice;
     }
 
-    public void setRetailPrice(Double retailPrice) {
-        this.retailPrice = retailPrice;
+    public void setDetalPrice(Double detalPrice) {
+        this.detalPrice = detalPrice;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
     }
 
     public static final class Builder {
@@ -84,7 +92,7 @@ public class EntityAccesories {
             accesories.name = this.name;
             accesories.purchasePrice = this.purchasePrice;
             accesories.margin = this.margin;
-            accesories.retailPrice = this.retailPrice;
+            accesories.detalPrice = this.retailPrice;
             return accesories;
         }
 

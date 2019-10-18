@@ -27,8 +27,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+import static pl.koszela.spring.views.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
-import static pl.koszela.spring.views.PriceListView.PRICE_LIST;
+import static pl.koszela.spring.views.TilesPriceListView.TILES_PRICE_LIST;
 import static pl.koszela.spring.views.TilesView.ENTER_TILES;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
@@ -53,7 +54,7 @@ public class MainView extends AppLayout {
         addToNavbar(new DrawerToggle(), img);
         MenuBar menuBar = new MenuBar();
         Tabs tabs = new Tabs(false, new Tab("Klienci"), new Tab("Dachówki"), new Tab("Akcesoria"),
-                new Tab("Okna"), new Tab("Oferta"), new Tab("Cenniki"));
+                new Tab("Okna"), new Tab("Oferta"), new Tab("Cenniki dachówki"), new Tab("Cenniki akcesoria"));
         tabs.setFlexGrowForEnclosedTabs(1);
         tabs.addSelectedChangeListener(e -> {
             if (e.getSelectedTab().getLabel().equalsIgnoreCase("Klienci")) {
@@ -71,8 +72,11 @@ public class MainView extends AppLayout {
             } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Oferta")) {
                 getUI().ifPresent(ui -> ui.navigate(CREATE_OFFER));
                 tabs.setSelectedTab(e.getSelectedTab());
-            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Cenniki")) {
-                getUI().ifPresent(ui -> ui.navigate(PRICE_LIST));
+            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Cenniki dachówki")) {
+                getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST));
+                tabs.setSelectedTab(e.getSelectedTab());
+            }else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Cenniki akcesoria")) {
+                getUI().ifPresent(ui -> ui.navigate(ACCESORIES_PRICE_LIST));
                 tabs.setSelectedTab(e.getSelectedTab());
             }
         });

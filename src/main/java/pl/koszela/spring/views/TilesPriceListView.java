@@ -3,10 +3,6 @@ package pl.koszela.spring.views;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
-import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -21,19 +17,16 @@ import pl.koszela.spring.repositories.TilesRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
-@Route(value = PriceListView.PRICE_LIST, layout = MainView.class)
-public class PriceListView extends VerticalLayout {
+@Route(value = TilesPriceListView.TILES_PRICE_LIST, layout = MainView.class)
+public class TilesPriceListView extends VerticalLayout {
 
-    static final String PRICE_LIST = "priceList";
+    static final String TILES_PRICE_LIST = "tilesPriceList";
 
     private TilesRepository tilesRepository;
 
@@ -42,16 +35,13 @@ public class PriceListView extends VerticalLayout {
     private Grid<Tiles> grid = new Grid<>();
     private List<Tiles> allTilesRepo = new ArrayList<>();
 
-    private TextField textField = new TextField();
-
     @Autowired
-    public PriceListView(TilesRepository tilesRepository) {
+    public TilesPriceListView(TilesRepository tilesRepository) {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
 
         add(createGrid());
         add(refresh());
         add(saveToRepo());
-        add(textField);
     }
 
     private List<Tiles> allTilesFromRespository() {
@@ -66,7 +56,7 @@ public class PriceListView extends VerticalLayout {
 
         Grid.Column<Tiles> priceListNameColumn = grid.addColumn(Tiles::getPriceListName).setHeader("Nazwa Cennika");
         Grid.Column<Tiles> nameColumn = grid.addColumn(Tiles::getName).setHeader("Nazwa");
-        Grid.Column<Tiles> priceColumn = grid.addColumn(Tiles::getPrice).setHeader("Cena detal");
+        Grid.Column<Tiles> priceColumn = grid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
         Grid.Column<Tiles> basicDiscountColumn = grid.addColumn(Tiles::getBasicDiscount).setHeader("Podstawowy rabat");
         Grid.Column<Tiles> promotionDiscountColumn = grid.addColumn(Tiles::getPromotionDiscount).setHeader("Promocja");
         Grid.Column<Tiles> additionalDiscountColumn = grid.addColumn(Tiles::getAdditionalDiscount).setHeader("Dodatkowy rabat");
@@ -86,8 +76,7 @@ public class PriceListView extends VerticalLayout {
 
         grid.getColumns().forEach(column -> column.setAutoWidth(true));
 
-//        Editor(grid, basicDiscountColumn);
-        editor2(basicDiscountColumn, promotionDiscountColumn, additionalDiscountColumn, skontoDiscountColumn);
+        getBinder(basicDiscountColumn, promotionDiscountColumn, additionalDiscountColumn, skontoDiscountColumn);
 
         grid.setMinHeight("500px");
         grid.setMinWidth("1200px");
@@ -95,8 +84,8 @@ public class PriceListView extends VerticalLayout {
         return cennik;
     }
 
-    private void editor2(Grid.Column<Tiles> basicDiscountColumn, Grid.Column<Tiles> promotionDiscountColumn, Grid.Column<Tiles> additionalDiscountColumn,
-                         Grid.Column<Tiles> skontoDiscountColumn) {
+    private void getBinder(Grid.Column<Tiles> basicDiscountColumn, Grid.Column<Tiles> promotionDiscountColumn, Grid.Column<Tiles> additionalDiscountColumn,
+                           Grid.Column<Tiles> skontoDiscountColumn) {
         Binder<Tiles> binder = new Binder<>(Tiles.class);
         grid.getEditor().setBinder(binder);
 
@@ -135,7 +124,7 @@ public class PriceListView extends VerticalLayout {
         refresh.addClickListener(event -> {
             for (Tiles tiles : allTilesRepo) {
                 BigDecimal constance = new BigDecimal(100);
-                BigDecimal pricePurchase = tiles.getPrice();
+                BigDecimal pricePurchase = tiles.getPriceDetalUnit();
                 BigDecimal firstDiscount = (constance.subtract(new BigDecimal(tiles.getBasicDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
                 BigDecimal secondDiscount = (constance.subtract(new BigDecimal(tiles.getPromotionDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
                 BigDecimal thirdDiscount = (constance.subtract(new BigDecimal(tiles.getAdditionalDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
@@ -169,7 +158,6 @@ public class PriceListView extends VerticalLayout {
             tilesRepository.saveAll(new HashSet<>(allTilesRepo));
             getNotificationSucces("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "         :)");
             grid.getDataProvider().refreshAll();
-//            grid.getColumns().forEach(e -> e.setAutoWidth(true));
         });
         return save;
     }

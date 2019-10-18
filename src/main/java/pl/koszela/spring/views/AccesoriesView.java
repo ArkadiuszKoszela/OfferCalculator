@@ -1,12 +1,14 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.dom.ClassList;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
@@ -38,10 +40,9 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     private static final String ZYSK = "Zysk";
     private static final String DODAC_DO_OFERTY = "Dodać do oferty ?";
 
-    List<String> categories = Arrays.asList("tasma kalenicowa", "wspornik", "tasma do obrobki", "listwa", "kosz", "klamra do mocowania kosza", "tasma samorozprezna",
+    private List<String> categories = Arrays.asList("tasma kalenicowa", "wspornik", "tasma do obrobki", "listwa", "kosz", "klamra do mocowania kosza", "tasma samorozprezna",
             "grzebien", "kratka", "pas", "klamra do gasiora", "spinka", "spinka cieta", "lawa mniejsza", "lawa wieksza", "stopien", "plotek mniejszy", "plotek wiekszy",
             "membrana", "laczenie membran", "reparacyjna", "blacha", "cegla", "podbitka");
-
 
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
     private Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
@@ -53,14 +54,8 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         if (set == null) {
             set = new HashSet<>();
         }
+        add(createCheckboxes());
         categories.forEach(category -> add(addSubLayout(category)));
-//        add(addSubLayout("tasma kalenicowa"), addSubLayout("wspornik"), addSubLayout("tasma do obrobki"), addSubLayout("listwa"),
-//                addSubLayout("kosz"), addSubLayout("klamra do mocowania kosza"), addSubLayout("tasma samorozprezna"),
-//                addSubLayout("grzebien"), addSubLayout("kratka"), addSubLayout("pas"), addSubLayout("klamra do gasiora"),
-//                addSubLayout("spinka"), addSubLayout("spinka cieta"), addSubLayout("lawa mniejsza"), addSubLayout("lawa wieksza"),
-//                addSubLayout("stopien"), addSubLayout("plotek mniejszy"), addSubLayout("plotek wiekszy"), addSubLayout("membrana"),
-//                addSubLayout("laczenie membran"), addSubLayout("reparacyjna"), addSubLayout("blacha"), addSubLayout("cegla"),
-//                addSubLayout("podbitka"));
     }
 
     @Override
@@ -103,6 +98,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
                 return 1d;
         }
     }
+
 
     private FormLayout addSubLayout(String category) {
         FormLayout formLayout = new FormLayout();
@@ -153,6 +149,24 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         return formLayout;
     }
 
+    private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
+
+    private FormLayout createCheckboxes() {
+        FormLayout formLayout = new FormLayout();
+        checkboxGroup.setItems("PODSTAWOWY", "PREMIUM", "LUX");
+        checkboxGroup.addValueChangeListener(e -> {
+            List<EntityAccesories> all = accesoriesRepository.findAll();
+//            Optional<EntityAccesories> collect = all.stream().filter(f -> f.getOption().equals(e.getValue())).findFirst();
+            List<EntityAccesories> collect = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toList());
+            for(EntityAccesories accesories: collect) {
+                TextField textField = (TextField) VaadinSession.getCurrent().getSession().getAttribute(accesories.getCategory() + NAZWA);
+                textField.setValue(accesories.getName());
+            }
+        });
+        formLayout.add(checkboxGroup);
+        return formLayout;
+    }
+
     private TextArea getTextArea(String category, String label) {
         TextArea textArea = new TextArea(label, category);
         textArea.setReadOnly(true);
@@ -163,6 +177,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, TextArea pricePurchase, TextArea priceRetail, TextArea allPriceRetail, TextArea allPricePurchase, TextArea profit, ComboBox<EntityAccesories> comboBox, Checkbox checkbox) {
         comboBox.addValueChangeListener(event -> {
             EntityAccesories value = event.getValue();
+
 
             name.setValue(value.getName());
             pricePurchase.setValue(String.valueOf(value.getPurchasePrice()));
@@ -207,7 +222,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     }
 
     private void save() {
-//        String category = "tasma kalenicowa";
         for (String category : categories) {
             TextArea name = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + NAZWA);
             TextArea pricePurchase = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_ZAKUPU);

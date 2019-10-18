@@ -2,7 +2,6 @@ package pl.koszela.spring.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,10 +21,10 @@ public class Tiles {
     private Integer additionalDiscount;
     private Integer skontoDiscount;
     private Double priceFromRepo;
-    private BigDecimal price;
-    private BigDecimal priceAfterDiscount;
-    private BigDecimal pricePurchase;
-    private BigDecimal profit;
+    private BigDecimal priceDetalUnit;
+    private BigDecimal allpriceAfterDiscount;
+    private BigDecimal allpricePurchase;
+    private BigDecimal allprofit;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
     private String date;
@@ -77,36 +76,36 @@ public class Tiles {
         this.discount = discount;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getPriceDetalUnit() {
+        return priceDetalUnit;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setPriceDetalUnit(BigDecimal priceDetalUnit) {
+        this.priceDetalUnit = priceDetalUnit;
     }
 
-    public BigDecimal getPriceAfterDiscount() {
-        return priceAfterDiscount;
+    public BigDecimal getAllpriceAfterDiscount() {
+        return allpriceAfterDiscount;
     }
 
-    public void setPriceAfterDiscount(BigDecimal priceAfterDiscount) {
-        this.priceAfterDiscount = priceAfterDiscount;
+    public void setAllpriceAfterDiscount(BigDecimal allpriceAfterDiscount) {
+        this.allpriceAfterDiscount = allpriceAfterDiscount;
     }
 
-    public BigDecimal getPricePurchase() {
-        return pricePurchase;
+    public BigDecimal getAllpricePurchase() {
+        return allpricePurchase;
     }
 
-    public void setPricePurchase(BigDecimal pricePurchase) {
-        this.pricePurchase = pricePurchase;
+    public void setAllpricePurchase(BigDecimal allpricePurchase) {
+        this.allpricePurchase = allpricePurchase;
     }
 
-    public BigDecimal getProfit() {
-        return profit;
+    public BigDecimal getAllprofit() {
+        return allprofit;
     }
 
-    public void setProfit(BigDecimal profit) {
-        this.profit = profit;
+    public void setAllprofit(BigDecimal allprofit) {
+        this.allprofit = allprofit;
     }
 
     public BigDecimal getTotalPrice() {

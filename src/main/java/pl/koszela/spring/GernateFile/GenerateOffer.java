@@ -5,7 +5,7 @@ import com.itextpdf.text.pdf.*;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import pl.koszela.spring.entities.EntityPersonalData;
-import pl.koszela.spring.entities.Category;
+import pl.koszela.spring.entities.CategoryTiles;
 import pl.koszela.spring.entities.EntityResultAccesories;
 import pl.koszela.spring.entities.Tiles;
 
@@ -83,7 +83,7 @@ public class GenerateOffer {
 
             String priceListName = "";
 
-            List<Tiles> parents = resultListTilesFromRepo.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toList());
+            List<Tiles> parents = resultListTilesFromRepo.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toList());
             priceListName = parents.get(0).getPriceListName();
 
             cell(font12, table, baseColor, priceListName);
@@ -178,19 +178,19 @@ public class GenerateOffer {
     private static void getTable(Document document, Font font12, Font font10, PdfPTable
             table, List<Tiles> resultTiles, String priceListName) throws DocumentException {
 
-        List<Tiles> parents = resultTiles.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toList());
+        List<Tiles> parents = resultTiles.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toList());
         priceListName = parents.get(0).getPriceListName();
 
         String totalPrice = "";
-        List<Tiles> parentsOptional = resultTiles.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString()) && e.isOption()).collect(Collectors.toList());
+        List<Tiles> parentsOptional = resultTiles.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString()) && e.isOption()).collect(Collectors.toList());
         for (Tiles tile : resultTiles) {
             if (tile.getPriceListName().equals(parents.get(0).getPriceListName())) {
                 table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
                 table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPrice()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPricePurchase()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPriceAfterDiscount()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getProfit()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getPriceDetalUnit()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getAllpricePurchase()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getAllpriceAfterDiscount()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getAllprofit()), font10));
 
                 totalPrice = String.valueOf(parents.get(0).getTotalPrice());
             }

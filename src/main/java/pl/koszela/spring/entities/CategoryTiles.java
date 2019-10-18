@@ -1,6 +1,6 @@
 package pl.koszela.spring.entities;
 
-public enum Category {
+public enum CategoryTiles {
 
     DACHOWKA_PODSTAWOWA,
     DACHOWKA_SKRAJNA_LEWA,

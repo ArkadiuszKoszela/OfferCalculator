@@ -12,7 +12,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -21,12 +20,11 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.*;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.function.SerializablePredicate;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Category;
+import pl.koszela.spring.entities.CategoryTiles;
 import pl.koszela.spring.entities.Tiles;
 
 import java.math.BigDecimal;
@@ -34,8 +32,6 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static pl.koszela.spring.entities.OptionEnum.GLOWNA;
-import static pl.koszela.spring.entities.OptionEnum.OPCJONALNA;
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
@@ -80,13 +76,13 @@ public class OfferView extends VerticalLayout {
         Grid.Column<Tiles> name = treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
         Grid.Column<Tiles> quantity = treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
         Grid.Column<Tiles> discount = treeGrid.addColumn(Tiles::getDiscount).setHeader("Rabat");
-        Grid.Column<Tiles> price = treeGrid.addColumn(Tiles::getPrice).setHeader("Cena detal");
+        Grid.Column<Tiles> price = treeGrid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
         Grid.Column<Tiles> priceRetail = treeGrid.addColumn(Tiles::getPriceFromRepo).setHeader("Cena zakupu");
         treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total klient");
         treeGrid.addColumn(Tiles::getTotalProfit).setHeader("Total zysk");
-        treeGrid.addColumn(tiles -> tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)).setHeader("Cena zakupu");
-        treeGrid.addColumn(tiles -> tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP)).setHeader("Cena po rabacie");
-        treeGrid.addColumn(tiles -> (tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP).subtract(tiles.getPrice().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)))).setHeader("Zysk");
+        treeGrid.addColumn(tiles -> tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)).setHeader("Cena zakupu");
+        treeGrid.addColumn(tiles -> tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP)).setHeader("Cena po rabacie");
+        treeGrid.addColumn(tiles -> (tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP).subtract(tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)))).setHeader("Zysk");
         TreeGrid.Column opcje = treeGrid.addColumn(new ComponentRenderer<>(tiles -> {
             Checkbox main = new Checkbox("Główna");
             Checkbox option = new Checkbox("Opcjonalna");
@@ -134,24 +130,24 @@ public class OfferView extends VerticalLayout {
     private Button getButtonRefreshNew(TreeGrid<Tiles> treeGrid) {
         Button refresh = new Button("Refresh");
         refresh.addClickListener(buttonClickEvent -> {
-            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
-                parent.setPricePurchase((parent.getPrice().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-                parent.setPriceAfterDiscount((parent.getPrice().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(parent.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
-                parent.setProfit(parent.getPriceAfterDiscount().subtract(parent.getPricePurchase()));
+                parent.setAllpricePurchase((parent.getPriceDetalUnit().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+                parent.setAllpriceAfterDiscount((parent.getPriceDetalUnit().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(parent.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
+                parent.setAllprofit(parent.getAllpriceAfterDiscount().subtract(parent.getAllpricePurchase()));
                 List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
                 int priceAfterDiscount = 0;
                 int profit = 0;
                 for (Tiles tiles : childrens) {
-                    priceAfterDiscount = priceAfterDiscount + tiles.getPriceAfterDiscount().intValue();
-                    profit = profit + tiles.getProfit().intValue();
+                    priceAfterDiscount = priceAfterDiscount + tiles.getAllpriceAfterDiscount().intValue();
+                    profit = profit + tiles.getAllprofit().intValue();
                 }
-                priceAfterDiscount = priceAfterDiscount + parent.getPriceAfterDiscount().intValue();
-                profit = profit + parent.getPriceAfterDiscount().intValue();
+                priceAfterDiscount = priceAfterDiscount + parent.getAllpriceAfterDiscount().intValue();
+                profit = profit + parent.getAllpriceAfterDiscount().intValue();
                 for (Tiles children : childrens) {
-                    children.setPricePurchase(children.getPrice().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(70)).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-                    children.setPriceAfterDiscount((children.getPrice().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(children.getDiscount())))).divide((new BigDecimal(100)), RoundingMode.HALF_UP));
-                    children.setProfit(children.getPriceAfterDiscount().subtract(children.getPricePurchase()));
+                    children.setAllpricePurchase(children.getPriceDetalUnit().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(70)).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+                    children.setAllpriceAfterDiscount((children.getPriceDetalUnit().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(children.getDiscount())))).divide((new BigDecimal(100)), RoundingMode.HALF_UP));
+                    children.setAllprofit(children.getAllpriceAfterDiscount().subtract(children.getAllpricePurchase()));
                 }
                 parent.setTotalPrice(BigDecimal.valueOf(priceAfterDiscount));
                 parent.setTotalProfit(BigDecimal.valueOf(profit));
@@ -218,13 +214,13 @@ public class OfferView extends VerticalLayout {
     private TreeData<Tiles> getTilesTreeDataFromRepo() {
         TreeData<Tiles> treeData = new TreeData<>();
         if (set != null) {
-            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
                 List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, parent);
-                    } else if (!childrens.get(i).getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())) {
+                    } else if (!childrens.get(i).getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())) {
                         treeData.addItem(parent, childrens.get(i));
                     }
                 }

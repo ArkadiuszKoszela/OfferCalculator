@@ -2,7 +2,6 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -57,9 +56,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private List<NumberField> listOfNumberFields = new ArrayList<>();
 
     private VerticalLayout dane = new VerticalLayout();
-    private VerticalLayout cennik = new VerticalLayout();
-
-    private Grid<Tiles> grid = new Grid<>(Tiles.class);
 
     @Autowired
     public TilesView(AvailablePriceList availablePriceList, TilesRepository tilesRepository) {
@@ -67,7 +63,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
 
         add(createInputFields());
-        add(createGrid());
     }
 
     private ComboBox<String> getAvailablePriceList() {
@@ -89,7 +84,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
 
     private Set<Tiles> listResultTilesFromRepo() {
         if (set != null) {
-            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
                 List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
                 List<NumberField> collect = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
@@ -103,7 +98,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         } else {
             List<Tiles> allFromRepo = tilesRepository.findAll();
             set = new HashSet<>(allFromRepo);
-            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(Category.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
                 List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
                 List<NumberField> fields = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
@@ -111,9 +106,9 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 parent.setTotalProfit(new BigDecimal(0));
                 parent.setDiscount(0);
                 parent.setTotalPrice(new BigDecimal(0));
-                parent.setPriceAfterDiscount(new BigDecimal(0));
-                parent.setPricePurchase(new BigDecimal(0));
-                parent.setProfit(new BigDecimal(0));
+                parent.setAllpriceAfterDiscount(new BigDecimal(0));
+                parent.setAllpricePurchase(new BigDecimal(0));
+                parent.setAllprofit(new BigDecimal(0));
                 parent.setOption(false);
                 parent.setMain(false);
 
@@ -123,9 +118,9 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                         children.setTotalProfit(new BigDecimal(0));
                         children.setDiscount(0);
                         children.setTotalPrice(new BigDecimal(0));
-                        children.setPriceAfterDiscount(new BigDecimal(0));
-                        children.setPricePurchase(new BigDecimal(0));
-                        children.setProfit(new BigDecimal(0));
+                        children.setAllpriceAfterDiscount(new BigDecimal(0));
+                        children.setAllpricePurchase(new BigDecimal(0));
+                        children.setAllprofit(new BigDecimal(0));
                         children.setOption(false);
                         children.setMain(false);
                     }
@@ -133,13 +128,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
             }
         }
         return set;
-    }
-
-    private List<Tiles> allTilesFromRespository() {
-        Iterable<Tiles> allTilesFromRepository = tilesRepository.findAll();
-        List<Tiles> allTiles = new ArrayList<>();
-        allTilesFromRepository.forEach(allTiles::add);
-        return allTiles;
     }
 
     private EntityInputDataTiles saveInputData() {
@@ -167,26 +155,30 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     }
 
     private void setDefaultValuesFromRepo() {
-        setValues(numberField1, "m²", entityInputDataTilesFromRepo.getPowierzchniaPolaci(), Category.DACHOWKA_PODSTAWOWA.toString());
-        setValues(numberField2, "mb", entityInputDataTilesFromRepo.getDlugoscKalenic(), Category.DACHOWKA_SKRAJNA_LEWA.toString());
-        setValues(numberField3, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicProstych(), Category.DACHOWKA_SKRAJNA_PRAWA.toString());
-        setValues(numberField4, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicSkosnych(), Category.DACHOWKA_POLOWKOWA.toString());
-        setValues(numberField5, "mb", entityInputDataTilesFromRepo.getDlugoscKoszy(), Category.DACHOWKA_WENTYLACYJNA.toString());
-        setValues(numberField6, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziLewych(), Category.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
-        setValues(numberField7, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziPrawych(), Category.GASIOR_PODSTAWOWY.toString());
-        setValues(numberField8, "mb", entityInputDataTilesFromRepo.getObwodKomina(), Category.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
-        setValues(numberField9, "mb", entityInputDataTilesFromRepo.getDlugoscOkapu(), Category.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
-        setValues(numberField10, "szt", entityInputDataTilesFromRepo.getDachowkaWentylacyjna(), Category.PLYTKA_POCZATKOWA.toString());
-        setValues(numberField11, "szt", entityInputDataTilesFromRepo.getKompletKominkaWentylacyjnego(), Category.PLYTKA_KONCOWA.toString());
-        setValues(numberField12, "szt", entityInputDataTilesFromRepo.getGasiarPoczatkowyKalenicaProsta(), Category.TROJNIK.toString());
-        setValues(numberField13, "mb", entityInputDataTilesFromRepo.getGasiarKoncowyKalenicaProsta(), Category.GASIAR_ZAOKRAGLONY.toString());
-        setValues(numberField14, "mb", entityInputDataTilesFromRepo.getGasiarZaokraglony(), "brak");
-        setValues(numberField15, "mb", entityInputDataTilesFromRepo.getTrojnik(), "brak");
-        setValues(numberField16, "szt", entityInputDataTilesFromRepo.getCzwornik(), "brak");
-        setValues(numberField17, "szt", entityInputDataTilesFromRepo.getGasiarZPodwojnaMufa(), "brak");
-        setValues(numberField18, "mb", entityInputDataTilesFromRepo.getDachowkaDwufalowa(), "brak");
-        setValues(numberField19, "szt", entityInputDataTilesFromRepo.getOknoPolaciowe(), "brak");
-        getListNumberFields();
+//        if(set != null) {
+            setValues(numberField1, "m²", entityInputDataTilesFromRepo.getPowierzchniaPolaci(), CategoryTiles.DACHOWKA_PODSTAWOWA.toString());
+            setValues(numberField2, "mb", entityInputDataTilesFromRepo.getDlugoscKalenic(), CategoryTiles.DACHOWKA_SKRAJNA_LEWA.toString());
+            setValues(numberField3, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicProstych(), CategoryTiles.DACHOWKA_SKRAJNA_PRAWA.toString());
+            setValues(numberField4, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicSkosnych(), CategoryTiles.DACHOWKA_POLOWKOWA.toString());
+            setValues(numberField5, "mb", entityInputDataTilesFromRepo.getDlugoscKoszy(), CategoryTiles.DACHOWKA_WENTYLACYJNA.toString());
+            setValues(numberField6, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziLewych(), CategoryTiles.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
+            setValues(numberField7, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziPrawych(), CategoryTiles.GASIOR_PODSTAWOWY.toString());
+            setValues(numberField8, "mb", entityInputDataTilesFromRepo.getObwodKomina(), CategoryTiles.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
+            setValues(numberField9, "mb", entityInputDataTilesFromRepo.getDlugoscOkapu(), CategoryTiles.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
+            setValues(numberField10, "szt", entityInputDataTilesFromRepo.getDachowkaWentylacyjna(), CategoryTiles.PLYTKA_POCZATKOWA.toString());
+            setValues(numberField11, "szt", entityInputDataTilesFromRepo.getKompletKominkaWentylacyjnego(), CategoryTiles.PLYTKA_KONCOWA.toString());
+            setValues(numberField12, "szt", entityInputDataTilesFromRepo.getGasiarPoczatkowyKalenicaProsta(), CategoryTiles.TROJNIK.toString());
+            setValues(numberField13, "mb", entityInputDataTilesFromRepo.getGasiarKoncowyKalenicaProsta(), CategoryTiles.GASIAR_ZAOKRAGLONY.toString());
+            setValues(numberField14, "mb", entityInputDataTilesFromRepo.getGasiarZaokraglony(), "brak");
+            setValues(numberField15, "mb", entityInputDataTilesFromRepo.getTrojnik(), "brak");
+            setValues(numberField16, "szt", entityInputDataTilesFromRepo.getCzwornik(), "brak");
+            setValues(numberField17, "szt", entityInputDataTilesFromRepo.getGasiarZPodwojnaMufa(), "brak");
+            setValues(numberField18, "mb", entityInputDataTilesFromRepo.getDachowkaDwufalowa(), "brak");
+            setValues(numberField19, "szt", entityInputDataTilesFromRepo.getOknoPolaciowe(), "brak");
+            getListNumberFields();
+//        }else{
+//            getNotificationError("Przejdź do zakładki 'Klienci' aby załadować dane");
+//        }
     }
 
     private void getListNumberFields() {
@@ -212,26 +204,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         numberField.setAutoselect(true);
         numberField.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
         numberField.setSuffixComponent(new Span(unit));
-    }
-
-    private VerticalLayout createGrid() {
-        grid.getColumnByKey("priceListName").setHeader("Nazwa Cennika");
-        grid.getColumnByKey("name").setHeader("Nazwa");
-        grid.getColumnByKey("price").setHeader("Cena");
-        grid.removeColumnByKey("id");
-        grid.removeColumnByKey("userTiles");
-        grid.removeColumnByKey("quantity");
-        grid.removeColumnByKey("discount");
-        grid.removeColumnByKey("priceAfterDiscount");
-        grid.removeColumnByKey("pricePurchase");
-        grid.removeColumnByKey("profit");
-        grid.removeColumnByKey("totalPrice");
-        grid.removeColumnByKey("totalProfit");
-        grid.removeColumnByKey("option");
-        grid.setItems(allTilesFromRespository());
-        grid.getColumns().forEach(column -> column.setAutoWidth(true));
-        cennik.add(grid);
-        return cennik;
     }
 
     @Override
