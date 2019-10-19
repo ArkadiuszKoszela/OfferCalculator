@@ -30,7 +30,7 @@ public class EntityUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "entityResultAccesories_id")
     )
-    private Set<EntityResultAccesories> resultAccesories;
+    private Set<EntityAccesories> resultAccesories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",
@@ -113,11 +113,11 @@ public class EntityUser {
         this.entityUserOffer = entityUserOffer;
     }
 
-    public Set<EntityResultAccesories> getResultAccesories() {
+    public Set<EntityAccesories> getResultAccesories() {
         return resultAccesories;
     }
 
-    public void setResultAccesories(Set<EntityResultAccesories> resultAccesories) {
+    public void setResultAccesories(Set<EntityAccesories> resultAccesories) {
         this.resultAccesories = resultAccesories;
     }
 }

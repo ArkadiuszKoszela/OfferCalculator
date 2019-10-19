@@ -17,22 +17,22 @@ public class CreateUser {
     private UsersRepo usersRepo;
     private InputDataTilesRepository inputDataTilesRepository;
     private TilesRepository tilesRepository;
-    private ResultAccesoriesRepository resultAccesoriesRepository;
+    private AccesoriesRepository accesoriesRepository;
 
     @Autowired
-    public CreateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, ResultAccesoriesRepository resultAccesoriesRepository) {
+    public CreateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
-        this.resultAccesoriesRepository = Objects.requireNonNull(resultAccesoriesRepository);
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
     }
 
     public void saveUser() {
         EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
         EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
         Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-        Set<EntityResultAccesories> resultAccesories = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         EntityUser newUser = new EntityUser();
         newUser.setEntityPersonalData(entityPersonalData);
@@ -42,7 +42,7 @@ public class CreateUser {
 
         personalDataRepository.save(entityPersonalData);
         inputDataTilesRepository.save(entityInputDataTiles);
-        resultAccesoriesRepository.saveAll(resultAccesories);
+        accesoriesRepository.saveAll(resultAccesories);
         tilesRepository.saveAll(allTiles);
 
         usersRepo.save(newUser);

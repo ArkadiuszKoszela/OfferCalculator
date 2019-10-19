@@ -1,5 +1,6 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -45,7 +46,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
             "membrana", "laczenie membran", "reparacyjna", "blacha", "cegla", "podbitka");
 
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
-    private Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+    private Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
     @Autowired
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
@@ -61,8 +62,8 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
         save();
+        VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
         action.proceed();
     }
 
@@ -99,25 +100,27 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         }
     }
 
-    List<TextArea> textAreaList = new ArrayList<>();
+    private Set<NumberField> textAreaList = new HashSet<>();
+    private Set<TextArea> textAreaSet = new HashSet<>();
 
     private FormLayout addSubLayout(String category) {
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep form = new FormLayout.ResponsiveStep("5px", 9);
         formLayout.setResponsiveSteps(form);
 
-        TextArea name = getTextArea(category, NAZWA);
-        textAreaList.add(name);
-        TextArea pricePurchase = getTextArea(category, CENA_ZAKUPU);
+        TextArea name = new TextArea(NAZWA, category);
+        textAreaSet.add(name);
+//        textAreaList.add(name);
+        NumberField pricePurchase = getTextArea(category, CENA_ZAKUPU);
         textAreaList.add(pricePurchase);
-        TextArea priceRetail = new TextArea(CENA_DETAL, category);
+        NumberField priceRetail = new NumberField(CENA_DETAL, category);
         textAreaList.add(priceRetail);
         VaadinSession.getCurrent().getSession().setAttribute(category + CENA_DETAL, priceRetail);
-        TextArea allPriceRetail = getTextArea(category, CENA_RAZEM_NETTO);
+        NumberField allPriceRetail = getTextArea(category, CENA_RAZEM_NETTO);
         textAreaList.add(allPriceRetail);
-        TextArea allPricePurchase = getTextArea(category, CENA_RAZEM_ZAKUP);
+        NumberField allPricePurchase = getTextArea(category, CENA_RAZEM_ZAKUP);
         textAreaList.add(allPricePurchase);
-        TextArea profit = getTextArea(category, ZYSK);
+        NumberField profit = getTextArea(category, ZYSK);
         textAreaList.add(profit);
         NumberField numberField = new NumberField(ILOSC);
         numberField.setValue(value(category));
@@ -130,23 +133,23 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         ComboBox<EntityAccesories> comboBox = new ComboBox<>(WYBIERZ, allWithTheSameCategory);
         VaadinSession.getCurrent().getSession().setAttribute(category + WYBIERZ, comboBox);
 
-        priceRetail.addValueChangeListener(e -> {
-            allPriceRetail.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(pricePurchase.getValue())));
-            allPricePurchase.setValue(String.valueOf(numberField.getValue() * Double.parseDouble(priceRetail.getValue())));
-            profit.setValue(String.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())));
-        });
+//        priceRetail.addValueChangeListener(e -> {
+//            allPriceRetail.setValue(numberField.getValue() * pricePurchase.getValue());
+//            allPricePurchase.setValue(numberField.getValue() * priceRetail.getValue());
+//            profit.setValue(allPricePurchase.getValue() - allPriceRetail.getValue());
+//        });
 
         formLayout.add(comboBox, name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
 
         if (set != null) {
-            Set<EntityResultAccesories> accesoriesWithTheSameCategory = set.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
-            for (EntityResultAccesories resultAccesories : accesoriesWithTheSameCategory) {
+            Set<EntityAccesories> accesoriesWithTheSameCategory = set.stream().filter(e -> e.getCategory().equals(category)).collect(Collectors.toSet());
+            for (EntityAccesories resultAccesories : accesoriesWithTheSameCategory) {
                 name.setValue(resultAccesories.getName());
-                pricePurchase.setValue(String.valueOf(resultAccesories.getPricePurchase()));
-                priceRetail.setValue(String.valueOf(resultAccesories.getPriceRetail()));
-                allPriceRetail.setValue(String.valueOf(resultAccesories.getAllPriceRetail()));
-                allPricePurchase.setValue(String.valueOf(resultAccesories.getAllPricePurchase()));
-                profit.setValue(String.valueOf(resultAccesories.getProfit()));
+                pricePurchase.setValue(resultAccesories.getPurchasePrice());
+                priceRetail.setValue(resultAccesories.getDetalPrice());
+                allPriceRetail.setValue(resultAccesories.getAllPriceRetail());
+                allPricePurchase.setValue(resultAccesories.getAllPricePurchase());
+                profit.setValue(resultAccesories.getProfit());
                 checkbox.setValue(resultAccesories.isOffer());
             }
         }
@@ -163,20 +166,30 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         checkboxGroup.setItems("PODSTAWOWY", "PREMIUM", "LUX");
         checkboxGroup.addValueChangeListener(e -> {
             List<EntityAccesories> all = accesoriesRepository.findAll();
+
             List<EntityAccesories> collect = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toList());
-            for(EntityAccesories accesories: collect) {
-                for(TextArea textArea: textAreaList){
-                    if(accesories.getCategory().equals(textArea.getPlaceholder())){
-                        switch (textArea.getLabel()){
-                            case NAZWA:
-                                textArea.setValue(accesories.getName());
-                                break;
-                            case CENA_ZAKUPU:
-                                textArea.setValue(String.valueOf(accesories.getPurchasePrice()));
-                                break;
-                            case CENA_DETAL:
-                                textArea.setValue(String.valueOf(accesories.getDetalPrice()));
-                                break;
+            set = new HashSet<>(collect);
+            set = set.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toSet());
+            for (NumberField textArea1 : textAreaList) {
+                textArea1.clear();
+            }
+            textAreaSet.forEach(HasValue::clear);
+            for (EntityAccesories accesories : set) {
+                for (NumberField numberField : textAreaList) {
+                    for (TextArea textArea : textAreaSet) {
+                        if (accesories.getCategory().equals(numberField.getPlaceholder()) && accesories.getCategory().equals(textArea.getPlaceholder())) {
+                            textArea.setValue(accesories.getName());
+                            switch (numberField.getLabel()) {
+//                            case NAZWA:
+//                                textArea.setValue(accesories.getName());
+//                                break;
+                                case CENA_ZAKUPU:
+                                    numberField.setValue(accesories.getPurchasePrice());
+                                    break;
+                                case CENA_DETAL:
+                                    numberField.setValue(accesories.getDetalPrice());
+                                    break;
+                            }
                         }
                     }
                 }
@@ -186,54 +199,53 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         return formLayout;
     }
 
-    private TextArea getTextArea(String category, String label) {
-        TextArea textArea = new TextArea(label, category);
+    private NumberField getTextArea(String category, String label) {
+        NumberField textArea = new NumberField(label, category);
         textArea.setReadOnly(true);
         VaadinSession.getCurrent().getSession().setAttribute(category + label, textArea);
         return textArea;
     }
 
-    private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, TextArea pricePurchase, TextArea priceRetail, TextArea allPriceRetail, TextArea allPricePurchase, TextArea profit, ComboBox<EntityAccesories> comboBox, Checkbox checkbox) {
+    private void comboBoxValueChangeListener(TextArea name, NumberField numberField23, NumberField pricePurchase, NumberField priceRetail, NumberField allPriceRetail, NumberField allPricePurchase, NumberField profit, ComboBox<EntityAccesories> comboBox, Checkbox checkbox) {
         comboBox.addValueChangeListener(event -> {
             EntityAccesories value = event.getValue();
 
-
             name.setValue(value.getName());
-            pricePurchase.setValue(String.valueOf(value.getPurchasePrice()));
-            priceRetail.setValue(BigDecimal.valueOf((value.getPurchasePrice() * value.getMargin() / 100) + value.getPurchasePrice()).setScale(2, RoundingMode.HALF_UP).toString());
-            allPriceRetail.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(pricePurchase.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
-            allPricePurchase.setValue(BigDecimal.valueOf(numberField23.getValue() * Double.parseDouble(priceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
-            profit.setValue(BigDecimal.valueOf(Double.parseDouble(allPricePurchase.getValue()) - Double.parseDouble(allPriceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).toString());
+            pricePurchase.setValue(value.getPurchasePrice());
+            priceRetail.setValue(BigDecimal.valueOf((value.getPurchasePrice() * value.getMargin() / 100) + value.getPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            allPriceRetail.setValue(BigDecimal.valueOf(numberField23.getValue() * pricePurchase.getValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            allPricePurchase.setValue(BigDecimal.valueOf(numberField23.getValue() * priceRetail.getValue()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            profit.setValue((BigDecimal.valueOf(allPricePurchase.getValue()).subtract(BigDecimal.valueOf(allPriceRetail.getValue())).setScale(2, RoundingMode.HALF_UP).doubleValue()));
 
-            EntityResultAccesories resultAccesories = EntityResultAccesories.builder()
-                    .name(name.getValue())
-                    .quantity(numberField23.getValue())
-                    .pricePurchase(Double.valueOf(pricePurchase.getValue()))
-                    .priceRetail(Double.valueOf(priceRetail.getValue()))
-                    .allPriceRetail(Double.valueOf(allPriceRetail.getValue()))
-                    .allPricePurchase(Double.valueOf(allPricePurchase.getValue()))
-                    .profit(Double.valueOf(profit.getValue()))
-                    .category(value.getCategory())
-                    .offer(checkbox.getValue())
-                    .build();
+//            EntityResultAccesories resultAccesories = EntityResultAccesories.builder()
+//                    .name(name.getValue())
+//                    .quantity(numberField23.getValue())
+//                    .pricePurchase(Double.valueOf(pricePurchase.getValue()))
+//                    .priceRetail(Double.valueOf(priceRetail.getValue()))
+//                    .allPriceRetail(Double.valueOf(allPriceRetail.getValue()))
+//                    .allPricePurchase(Double.valueOf(allPricePurchase.getValue()))
+//                    .profit(Double.valueOf(profit.getValue()))
+//                    .category(value.getCategory())
+//                    .offer(checkbox.getValue())
+//                    .build();
 
             if (set.isEmpty()) {
-                set.add(resultAccesories);
+                set.add(value);
             }
-            for (EntityResultAccesories accesoriestoChange : set) {
-                if (accesoriestoChange.getCategory().equals(resultAccesories.getCategory())) {
+            for (EntityAccesories accesoriestoChange : set) {
+                if (accesoriestoChange.getCategory().equals(value.getCategory())) {
                     accesoriestoChange.setName(name.getValue());
                     accesoriestoChange.setQuantity(numberField23.getValue());
-                    accesoriestoChange.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
-                    accesoriestoChange.setPriceRetail(Double.valueOf(priceRetail.getValue()));
-                    accesoriestoChange.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
-                    accesoriestoChange.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
-                    accesoriestoChange.setProfit(Double.valueOf(profit.getValue()));
+                    accesoriestoChange.setPurchasePrice(pricePurchase.getValue());
+                    accesoriestoChange.setDetalPrice(priceRetail.getValue());
+                    accesoriestoChange.setAllPriceRetail(allPriceRetail.getValue());
+                    accesoriestoChange.setAllPricePurchase(allPricePurchase.getValue());
+                    accesoriestoChange.setProfit(profit.getValue());
                     accesoriestoChange.setOffer(checkbox.getValue());
-                } else if (!accesoriestoChange.getCategory().equals(resultAccesories.getCategory()) && !set.contains(resultAccesories)) {
-                    boolean exist = set.stream().anyMatch(c -> c.getCategory().equals(resultAccesories.getCategory()));
+                } else if (!accesoriestoChange.getCategory().equals(value.getCategory()) && !set.contains(value)) {
+                    boolean exist = set.stream().anyMatch(c -> c.getCategory().equals(value.getCategory()));
                     if (!exist) {
-                        set.add(resultAccesories);
+                        set.add(value);
                     }
                 }
             }
@@ -241,28 +253,34 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     }
 
     private void save() {
-        for (String category : categories) {
-            TextArea name = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + NAZWA);
-            TextArea pricePurchase = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_ZAKUPU);
-            TextArea priceRetail = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_DETAL);
-            TextArea allPriceRetail = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_RAZEM_NETTO);
-            TextArea allPricePurchase = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + CENA_RAZEM_ZAKUP);
-            TextArea profit = (TextArea) VaadinSession.getCurrent().getSession().getAttribute(category + ZYSK);
-            NumberField numberField = (NumberField) VaadinSession.getCurrent().getSession().getAttribute(category + ILOSC);
-            Checkbox checkbox = (Checkbox) VaadinSession.getCurrent().getSession().getAttribute(category + DODAC_DO_OFERTY);
-            ComboBox comboBox = (ComboBox) VaadinSession.getCurrent().getSession().getAttribute(category + WYBIERZ);
-            set.forEach(e -> {
-                if (e.getCategory().equals(category)) {
-                    e.setName(name.getValue());
-                    e.setPricePurchase(Double.valueOf(pricePurchase.getValue()));
-                    e.setPriceRetail(Double.valueOf(priceRetail.getValue()));
-                    e.setAllPriceRetail(Double.valueOf(allPriceRetail.getValue()));
-                    e.setAllPricePurchase(Double.valueOf(allPricePurchase.getValue()));
-                    e.setProfit(Double.valueOf(profit.getValue()));
-                    e.setQuantity(numberField.getValue());
-                    e.setOffer(checkbox.getValue());
+        for (NumberField numberField : textAreaList) {
+            for (EntityAccesories accesories : set) {
+                for (TextArea textArea : textAreaSet) {
+                    if (accesories.getCategory().equals(numberField.getPlaceholder()) && accesories.getCategory().equals(textArea.getPlaceholder())) {
+                        accesories.setName(textArea.getValue());
+                        switch (numberField.getLabel()) {
+//                        case NAZWA:
+//                            accesories.setName(textArea.getValue());
+//                            break;
+                            case CENA_ZAKUPU:
+                                accesories.setPurchasePrice(numberField.getValue());
+                                break;
+                            case CENA_DETAL:
+                                accesories.setDetalPrice(numberField.getValue());
+                                break;
+                            case CENA_RAZEM_NETTO:
+                                accesories.setAllPriceRetail(numberField.getValue());
+                                break;
+                            case CENA_RAZEM_ZAKUP:
+                                accesories.setAllPricePurchase(numberField.getValue());
+                                break;
+                            case ZYSK:
+                                accesories.setProfit(numberField.getValue());
+                                break;
+                        }
+                    }
                 }
-            });
+            }
         }
     }
 }

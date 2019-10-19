@@ -18,15 +18,15 @@ public class UpdateUser {
     private UsersRepo usersRepo;
     private InputDataTilesRepository inputDataTilesRepository;
     private TilesRepository tilesRepository;
-    private ResultAccesoriesRepository resultAccesoriesRepository;
+    private AccesoriesRepository accesoriesRepository;
 
     @Autowired
-    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, ResultAccesoriesRepository resultAccesoriesRepository) {
+    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
-        this.resultAccesoriesRepository = Objects.requireNonNull(resultAccesoriesRepository);
+        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
     }
 
     public void updateUser() {
@@ -34,7 +34,7 @@ public class UpdateUser {
         Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
 
         EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
-        Set<EntityResultAccesories> resultAccesories = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         if (personalData.isPresent()) {
             Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
@@ -46,7 +46,7 @@ public class UpdateUser {
                 userToUpdate.getTiles().clear();
                 userToUpdate.setTiles(allTilesFromRepo);
 
-                resultAccesoriesRepository.saveAll(resultAccesories);
+                accesoriesRepository.saveAll(resultAccesories);
                 inputDataTilesRepository.save(entityInputDataTiles);
                 tilesRepository.saveAll(allTilesFromRepo);
 

@@ -4,10 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
-import pl.koszela.spring.entities.EntityPersonalData;
-import pl.koszela.spring.entities.CategoryTiles;
-import pl.koszela.spring.entities.EntityResultAccesories;
-import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.entities.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -97,7 +94,7 @@ public class GenerateOffer {
 
             getTable(document, font12, font10, table, resultListTilesFromRepo, priceListName);
 
-            Set<EntityResultAccesories> set = (Set<EntityResultAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+            Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
             PdfPTable accesories = new PdfPTable(7);
             float[] width2 = new float[]{320f, 85f, 85f, 85f, 85f, 85f, 85f};
@@ -110,12 +107,12 @@ public class GenerateOffer {
             cell(font12, accesories, baseColor, "Cena razem zakup");
             cell(font12, accesories, baseColor, "Zysk");
 
-            for (EntityResultAccesories resultAccesories : set) {
+            for (EntityAccesories resultAccesories : set) {
                 if (resultAccesories.isOffer()) {
                     accesories.addCell(new Phrase(String.valueOf(resultAccesories.getName()), font10));
                     accesories.addCell(new Phrase(String.valueOf(resultAccesories.getQuantity()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPricePurchase()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPriceRetail()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPurchasePrice()), font10));
+                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getDetalPrice()), font10));
                     accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPriceRetail()), font10));
                     accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPricePurchase()), font10));
                     accesories.addCell(new Phrase(String.valueOf(resultAccesories.getProfit()), font10));
