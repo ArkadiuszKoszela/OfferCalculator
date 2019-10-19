@@ -33,10 +33,11 @@ public class DaoAccesories implements Dao {
                 String[] data = line.split(";");
                 EntityAccesories entityAccesories = new EntityAccesories();
 
-                entityAccesories.setCategory(data[0]);
-                entityAccesories.setName(data[1]);
-                entityAccesories.setPurchasePrice(Double.valueOf(data[2]));
-                entityAccesories.setMargin(Integer.valueOf(data[3]));
+                entityAccesories.setCategory(data[1]);
+                entityAccesories.setOption(data[2]);
+                entityAccesories.setName(data[3]);
+                entityAccesories.setPurchasePrice(Double.valueOf(data[4]));
+                entityAccesories.setMargin(Integer.valueOf(data[5]));
 
                 accesoriesRepository.save(entityAccesories);
             }

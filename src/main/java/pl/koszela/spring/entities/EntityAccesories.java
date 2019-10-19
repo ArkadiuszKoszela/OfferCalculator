@@ -12,9 +12,13 @@ public class EntityAccesories {
     private String category;
     private String name;
     private Double purchasePrice;
-    private Integer margin;
     private Double detalPrice;
+    private Integer margin;
     private String option;
+    private Double allPricePurchase;
+    private Double allPriceRetail;
+    private Double profit;
+    private boolean offer;
 
     public EntityAccesories() {
     }
@@ -77,6 +81,38 @@ public class EntityAccesories {
 
     public void setOption(String option) {
         this.option = option;
+    }
+
+    public Double getAllPricePurchase() {
+        return allPricePurchase;
+    }
+
+    public void setAllPricePurchase(Double allPricePurchase) {
+        this.allPricePurchase = allPricePurchase;
+    }
+
+    public Double getAllPriceRetail() {
+        return allPriceRetail;
+    }
+
+    public void setAllPriceRetail(Double allPriceRetail) {
+        this.allPriceRetail = allPriceRetail;
+    }
+
+    public Double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(Double profit) {
+        this.profit = profit;
+    }
+
+    public boolean isOffer() {
+        return offer;
+    }
+
+    public void setOffer(boolean offer) {
+        this.offer = offer;
     }
 
     public static final class Builder {

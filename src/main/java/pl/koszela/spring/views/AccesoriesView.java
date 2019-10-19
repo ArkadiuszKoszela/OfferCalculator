@@ -99,6 +99,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         }
     }
 
+    List<TextArea> textAreaList = new ArrayList<>();
 
     private FormLayout addSubLayout(String category) {
         FormLayout formLayout = new FormLayout();
@@ -106,12 +107,18 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         formLayout.setResponsiveSteps(form);
 
         TextArea name = getTextArea(category, NAZWA);
+        textAreaList.add(name);
         TextArea pricePurchase = getTextArea(category, CENA_ZAKUPU);
+        textAreaList.add(pricePurchase);
         TextArea priceRetail = new TextArea(CENA_DETAL, category);
+        textAreaList.add(priceRetail);
         VaadinSession.getCurrent().getSession().setAttribute(category + CENA_DETAL, priceRetail);
         TextArea allPriceRetail = getTextArea(category, CENA_RAZEM_NETTO);
+        textAreaList.add(allPriceRetail);
         TextArea allPricePurchase = getTextArea(category, CENA_RAZEM_ZAKUP);
+        textAreaList.add(allPricePurchase);
         TextArea profit = getTextArea(category, ZYSK);
+        textAreaList.add(profit);
         NumberField numberField = new NumberField(ILOSC);
         numberField.setValue(value(category));
         numberField.setReadOnly(true);
@@ -156,11 +163,23 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         checkboxGroup.setItems("PODSTAWOWY", "PREMIUM", "LUX");
         checkboxGroup.addValueChangeListener(e -> {
             List<EntityAccesories> all = accesoriesRepository.findAll();
-//            Optional<EntityAccesories> collect = all.stream().filter(f -> f.getOption().equals(e.getValue())).findFirst();
             List<EntityAccesories> collect = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toList());
             for(EntityAccesories accesories: collect) {
-                TextField textField = (TextField) VaadinSession.getCurrent().getSession().getAttribute(accesories.getCategory() + NAZWA);
-                textField.setValue(accesories.getName());
+                for(TextArea textArea: textAreaList){
+                    if(accesories.getCategory().equals(textArea.getPlaceholder())){
+                        switch (textArea.getLabel()){
+                            case NAZWA:
+                                textArea.setValue(accesories.getName());
+                                break;
+                            case CENA_ZAKUPU:
+                                textArea.setValue(String.valueOf(accesories.getPurchasePrice()));
+                                break;
+                            case CENA_DETAL:
+                                textArea.setValue(String.valueOf(accesories.getDetalPrice()));
+                                break;
+                        }
+                    }
+                }
             }
         });
         formLayout.add(checkboxGroup);
