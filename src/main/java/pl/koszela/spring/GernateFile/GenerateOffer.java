@@ -96,29 +96,29 @@ public class GenerateOffer {
 
             Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
-            PdfPTable accesories = new PdfPTable(7);
+            PdfPTable tableAccesories = new PdfPTable(7);
             float[] width2 = new float[]{320f, 85f, 85f, 85f, 85f, 85f, 85f};
-            accesories.setWidths(width2);
-            cell(font12, accesories, baseColor, "Nazwa");
-            cell(font12, accesories, baseColor, "Ilość");
-            cell(font12, accesories, baseColor, "Cena zakupu");
-            cell(font12, accesories, baseColor, "Cena detal");
-            cell(font12, accesories, baseColor, "Cena razem netto");
-            cell(font12, accesories, baseColor, "Cena razem zakup");
-            cell(font12, accesories, baseColor, "Zysk");
+            tableAccesories.setWidths(width2);
+            cell(font12, tableAccesories, baseColor, "Nazwa");
+            cell(font12, tableAccesories, baseColor, "Ilość");
+            cell(font12, tableAccesories, baseColor, "Cena zakupu");
+            cell(font12, tableAccesories, baseColor, "Cena detal");
+            cell(font12, tableAccesories, baseColor, "Cena razem netto");
+            cell(font12, tableAccesories, baseColor, "Cena razem zakup");
+            cell(font12, tableAccesories, baseColor, "Zysk");
 
-            for (EntityAccesories resultAccesories : set) {
-                if (resultAccesories.isOffer()) {
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getName()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getQuantity()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getPurchasePrice()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getDetalPrice()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPriceRetail()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getAllPricePurchase()), font10));
-                    accesories.addCell(new Phrase(String.valueOf(resultAccesories.getProfit()), font10));
+            for (EntityAccesories accesories : set) {
+                if (accesories.isOffer()) {
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getName()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getQuantity()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getPurchasePrice()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getDetalPrice()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllPriceRetail()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllPricePurchase()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getProfit()), font10));
                 }
             }
-            document.add(accesories);
+            document.add(tableAccesories);
 
             Paragraph paragraph = new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                   DODATKI DACHOWE:  jakaś cena\n" +
                     "                   CEGŁA KLINKIEROWA + zaprawa:  jakaś cena\n" +

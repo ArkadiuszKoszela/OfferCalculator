@@ -4,6 +4,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.BeforeLeaveEvent;
@@ -56,6 +57,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private List<NumberField> listOfNumberFields = new ArrayList<>();
 
     private VerticalLayout dane = new VerticalLayout();
+    private Set<EntityAccesories> setAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
     @Autowired
     public TilesView(AvailablePriceList availablePriceList, TilesRepository tilesRepository) {
@@ -131,6 +133,10 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     }
 
     private EntityInputDataTiles saveInputData() {
+//        setAccesories = new HashSet<>();
+//        for (NumberField numberField : listOfNumberFields) {
+//            setAccesories.add(EntityAccesories.builder().quantity(numberField.getValue()).build());
+//        }
         return EntityInputDataTiles.builder()
                 .powierzchniaPolaci(numberField1.getValue())
                 .dlugoscKalenic(numberField2.getValue())
@@ -156,26 +162,26 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
 
     private void setDefaultValuesFromRepo() {
 //        if(set != null) {
-            setValues(numberField1, "m²", entityInputDataTilesFromRepo.getPowierzchniaPolaci(), CategoryTiles.DACHOWKA_PODSTAWOWA.toString());
-            setValues(numberField2, "mb", entityInputDataTilesFromRepo.getDlugoscKalenic(), CategoryTiles.DACHOWKA_SKRAJNA_LEWA.toString());
-            setValues(numberField3, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicProstych(), CategoryTiles.DACHOWKA_SKRAJNA_PRAWA.toString());
-            setValues(numberField4, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicSkosnych(), CategoryTiles.DACHOWKA_POLOWKOWA.toString());
-            setValues(numberField5, "mb", entityInputDataTilesFromRepo.getDlugoscKoszy(), CategoryTiles.DACHOWKA_WENTYLACYJNA.toString());
-            setValues(numberField6, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziLewych(), CategoryTiles.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
-            setValues(numberField7, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziPrawych(), CategoryTiles.GASIOR_PODSTAWOWY.toString());
-            setValues(numberField8, "mb", entityInputDataTilesFromRepo.getObwodKomina(), CategoryTiles.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
-            setValues(numberField9, "mb", entityInputDataTilesFromRepo.getDlugoscOkapu(), CategoryTiles.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
-            setValues(numberField10, "szt", entityInputDataTilesFromRepo.getDachowkaWentylacyjna(), CategoryTiles.PLYTKA_POCZATKOWA.toString());
-            setValues(numberField11, "szt", entityInputDataTilesFromRepo.getKompletKominkaWentylacyjnego(), CategoryTiles.PLYTKA_KONCOWA.toString());
-            setValues(numberField12, "szt", entityInputDataTilesFromRepo.getGasiarPoczatkowyKalenicaProsta(), CategoryTiles.TROJNIK.toString());
-            setValues(numberField13, "mb", entityInputDataTilesFromRepo.getGasiarKoncowyKalenicaProsta(), CategoryTiles.GASIAR_ZAOKRAGLONY.toString());
-            setValues(numberField14, "mb", entityInputDataTilesFromRepo.getGasiarZaokraglony(), "brak");
-            setValues(numberField15, "mb", entityInputDataTilesFromRepo.getTrojnik(), "brak");
-            setValues(numberField16, "szt", entityInputDataTilesFromRepo.getCzwornik(), "brak");
-            setValues(numberField17, "szt", entityInputDataTilesFromRepo.getGasiarZPodwojnaMufa(), "brak");
-            setValues(numberField18, "mb", entityInputDataTilesFromRepo.getDachowkaDwufalowa(), "brak");
-            setValues(numberField19, "szt", entityInputDataTilesFromRepo.getOknoPolaciowe(), "brak");
-            getListNumberFields();
+        setValues(numberField1, "m²", entityInputDataTilesFromRepo.getPowierzchniaPolaci(), CategoryTiles.DACHOWKA_PODSTAWOWA.toString());
+        setValues(numberField2, "mb", entityInputDataTilesFromRepo.getDlugoscKalenic(), CategoryTiles.DACHOWKA_SKRAJNA_LEWA.toString());
+        setValues(numberField3, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicProstych(), CategoryTiles.DACHOWKA_SKRAJNA_PRAWA.toString());
+        setValues(numberField4, "mb", entityInputDataTilesFromRepo.getDlugoscKalenicSkosnych(), CategoryTiles.DACHOWKA_POLOWKOWA.toString());
+        setValues(numberField5, "mb", entityInputDataTilesFromRepo.getDlugoscKoszy(), CategoryTiles.DACHOWKA_WENTYLACYJNA.toString());
+        setValues(numberField6, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziLewych(), CategoryTiles.KOMPLET_KOMINKA_WENTYLACYJNEGO.toString());
+        setValues(numberField7, "mb", entityInputDataTilesFromRepo.getDlugoscKrawedziPrawych(), CategoryTiles.GASIOR_PODSTAWOWY.toString());
+        setValues(numberField8, "mb", entityInputDataTilesFromRepo.getObwodKomina(), CategoryTiles.GASIOR_POCZATKOWY_KALENICA_PROSTA.toString());
+        setValues(numberField9, "mb", entityInputDataTilesFromRepo.getDlugoscOkapu(), CategoryTiles.GASIOR_KONCOWY_KALENICA_PROSTA.toString());
+        setValues(numberField10, "szt", entityInputDataTilesFromRepo.getDachowkaWentylacyjna(), CategoryTiles.PLYTKA_POCZATKOWA.toString());
+        setValues(numberField11, "szt", entityInputDataTilesFromRepo.getKompletKominkaWentylacyjnego(), CategoryTiles.PLYTKA_KONCOWA.toString());
+        setValues(numberField12, "szt", entityInputDataTilesFromRepo.getGasiarPoczatkowyKalenicaProsta(), CategoryTiles.TROJNIK.toString());
+        setValues(numberField13, "mb", entityInputDataTilesFromRepo.getGasiarKoncowyKalenicaProsta(), CategoryTiles.GASIAR_ZAOKRAGLONY.toString());
+        setValues(numberField14, "mb", entityInputDataTilesFromRepo.getGasiarZaokraglony(), "brak");
+        setValues(numberField15, "mb", entityInputDataTilesFromRepo.getTrojnik(), "brak");
+        setValues(numberField16, "szt", entityInputDataTilesFromRepo.getCzwornik(), "brak");
+        setValues(numberField17, "szt", entityInputDataTilesFromRepo.getGasiarZPodwojnaMufa(), "brak");
+        setValues(numberField18, "mb", entityInputDataTilesFromRepo.getDachowkaDwufalowa(), "brak");
+        setValues(numberField19, "szt", entityInputDataTilesFromRepo.getOknoPolaciowe(), "brak");
+        getListNumberFields();
 //        }else{
 //            getNotificationError("Przejdź do zakładki 'Klienci' aby załadować dane");
 //        }

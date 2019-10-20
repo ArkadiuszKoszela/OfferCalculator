@@ -140,16 +140,28 @@ public class EntityAccesories {
         private String category;
         private String name;
         private Double purchasePrice;
+        private Double detalPrice;
         private Integer margin;
-        private Double retailPrice;
+        private String option;
+        private Double allPricePurchase;
+        private Double allPriceRetail;
+        private Double profit;
+        private boolean offer;
+        private Double quantity;
 
         public EntityAccesories build() {
             EntityAccesories accesories = new EntityAccesories();
             accesories.category = this.category;
             accesories.name = this.name;
             accesories.purchasePrice = this.purchasePrice;
+            accesories.detalPrice = this.detalPrice;
             accesories.margin = this.margin;
-            accesories.detalPrice = this.retailPrice;
+            accesories.option = this.option;
+            accesories.allPricePurchase = this.allPricePurchase;
+            accesories.allPriceRetail = this.allPriceRetail;
+            accesories.profit = this.profit;
+            accesories.offer = this.offer;
+            accesories.quantity = this.quantity;
             return accesories;
         }
 
@@ -168,13 +180,43 @@ public class EntityAccesories {
             return this;
         }
 
+        public Builder detalPrice(Double detalPrice) {
+            this.detalPrice = detalPrice;
+            return this;
+        }
+
         public Builder margin(Integer margin) {
             this.margin = margin;
             return this;
         }
 
-        public Builder retailPrice(Double retailPrice) {
-            this.retailPrice = retailPrice;
+        public Builder pption(String option) {
+            this.option = option;
+            return this;
+        }
+
+        public Builder allPricePurchase(Double allPricePurchase) {
+            this.allPricePurchase = allPricePurchase;
+            return this;
+        }
+
+        public Builder allPriceRetail(Double allPriceRetail) {
+            this.allPriceRetail = allPriceRetail;
+            return this;
+        }
+
+        public Builder profit(Double profit) {
+            this.profit = profit;
+            return this;
+        }
+
+        public Builder offer(boolean offer) {
+            this.offer = offer;
+            return this;
+        }
+
+        public Builder quantity(Double quantity) {
+            this.quantity = quantity;
             return this;
         }
     }

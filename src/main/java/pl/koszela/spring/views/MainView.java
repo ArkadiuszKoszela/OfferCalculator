@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static pl.koszela.spring.views.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
+import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.TilesPriceListView.TILES_PRICE_LIST;
 import static pl.koszela.spring.views.TilesView.ENTER_TILES;
