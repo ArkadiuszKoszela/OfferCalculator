@@ -2,27 +2,18 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.HeaderRow;
-import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.provider.hierarchy.*;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.CategoryTiles;
 import pl.koszela.spring.entities.Tiles;
@@ -33,182 +24,137 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout {
 
     static final String CREATE_OFFER = "createOffer";
 
-    private NumberField tilesDiscount = new NumberField("Rabat dachówki");
-    private NumberField accesoriesDiscount = new NumberField("Rabat akcesoria");
-    private NumberField windowsDiscount = new NumberField("Rabat okna/kołnierz");
-    private VerticalLayout layout = new VerticalLayout();
     private TreeGrid<Tiles> treeGrid = new TreeGrid<>();
     private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
 
     @Autowired
     public OfferView() {
-        add(addLayout());
+        add(createTilesGrid());
     }
 
-    private VerticalLayout addLayout() {
-        FormLayout.ResponsiveStep step = new FormLayout.ResponsiveStep("5px", 3);
-        FormLayout formLayout = new FormLayout();
-        formLayout.setResponsiveSteps(step);
-        formLayout.add(settingsNumberFields(tilesDiscount), settingsNumberFields(accesoriesDiscount), settingsNumberFields(windowsDiscount));
-        layout.add(formLayout);
-        layout.add(createTiles());
-        return layout;
-    }
-
-    private NumberField settingsNumberFields(NumberField numberField) {
-        numberField.setValue(0d);
-        numberField.setMin(0);
-        numberField.setMax(30);
-        numberField.setHasControls(true);
-        numberField.setSuffixComponent(new Span("%"));
-        return numberField;
-    }
-
-    private TreeGrid<Tiles> createTiles() {
+    private TreeGrid<Tiles> createTilesGrid() {
         Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika").setAutoWidth(true);
-        Grid.Column<Tiles> name = treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
-        Grid.Column<Tiles> quantity = treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
+        treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
+        treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
         Grid.Column<Tiles> discount = treeGrid.addColumn(Tiles::getDiscount).setHeader("Rabat");
-        Grid.Column<Tiles> price = treeGrid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
-        Grid.Column<Tiles> priceRetail = treeGrid.addColumn(Tiles::getPriceFromRepo).setHeader("Cena zakupu");
+        treeGrid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
+        treeGrid.addColumn(Tiles::getPriceFromRepo).setHeader("Cena zakupu");
         treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total klient");
         treeGrid.addColumn(Tiles::getTotalProfit).setHeader("Total zysk");
-        treeGrid.addColumn(tiles -> tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)).setHeader("Cena zakupu");
-        treeGrid.addColumn(tiles -> tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP)).setHeader("Cena po rabacie");
-        treeGrid.addColumn(tiles -> (tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(new BigDecimal(tiles.getDiscount()).add(new BigDecimal(100)), 2, RoundingMode.HALF_UP).subtract(tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100)).divide(BigDecimal.valueOf(130), 2, RoundingMode.HALF_UP)))).setHeader("Zysk");
-        TreeGrid.Column opcje = treeGrid.addColumn(new ComponentRenderer<>(tiles -> {
-            Checkbox main = new Checkbox("Główna");
-            Checkbox option = new Checkbox("Opcjonalna");
-            main.setValue(tiles.isMain());
-            option.setValue(tiles.isOption());
-            main.addValueChangeListener(event -> {
-                tiles.setMain(event.getValue());
-                tiles.setOption(!event.getValue());
-                option.setValue(!main.getValue());
-            });
-            option.addValueChangeListener(event -> {
-                tiles.setMain(!event.getValue());
-                tiles.setOption(event.getValue());
-                main.setValue(!option.getValue());
-            });
-            return new VerticalLayout(main, option);
-        })).setHeader("Opcje");
+        treeGrid.addColumn(Tiles::getAllpricePurchase).setHeader("Cena zakupu");
+        treeGrid.addColumn(Tiles::getAllpriceAfterDiscount).setHeader("Cena netto po rabacie");
+        treeGrid.addColumn(Tiles::getAllprofit).setHeader("Zysk");
+        treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
 
+        Binder<Tiles> binder = new Binder<>(Tiles.class);
         FooterRow footerRow = treeGrid.appendFooterRow();
-        HeaderRow filterRow = treeGrid.appendHeaderRow();
-        TextField filter = new TextField();
+        treeGrid.getEditor().setBinder(binder);
 
-        TreeDataProvider<Tiles> treeDataProvider;
-        treeDataProvider = new TreeDataProvider<>(getTilesTreeDataFromRepo());
-        filter.addValueChangeListener(event -> treeDataProvider.setFilter(
-                tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())));
-        getNotificationSucces("Repo - Wczytano dane");
+        TextField discountEditField = editDiscountField(discount, binder);
 
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        itemClickListener(discountEditField);
 
-        filterRow.getCell(priceListName).setComponent(filter);
-        filter.setSizeFull();
-        filter.setPlaceholder("Filter");
+        closeListener(binder);
 
-        Button calculate = getButtonRefreshNew(treeGrid);
+        Button calculate = refreshButton(treeGrid);
 
+        readBeans(binder);
         footerRow.getCell(priceListName).setComponent(calculate);
-        treeGrid.setDataProvider(treeDataProvider);
+        treeGrid.setDataProvider(new TreeDataProvider<>(getTilesTreeDataFromRepo()));
 
-        Editor(treeGrid, discount);
-        treeGrid.setMinHeight("550px");
+        treeGrid.setMinHeight("850px");
         return treeGrid;
     }
 
-    private Button getButtonRefreshNew(TreeGrid<Tiles> treeGrid) {
-        Button refresh = new Button("Refresh");
-        refresh.addClickListener(buttonClickEvent -> {
-            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
-            for (Tiles parent : parents) {
-                parent.setAllpricePurchase((parent.getPriceDetalUnit().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-                parent.setAllpriceAfterDiscount((parent.getPriceDetalUnit().multiply(new BigDecimal(parent.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(parent.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
-                parent.setAllprofit(parent.getAllpriceAfterDiscount().subtract(parent.getAllpricePurchase()));
-                List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
-                int priceAfterDiscount = 0;
-                int profit = 0;
-                for (Tiles tiles : childrens) {
-                    priceAfterDiscount = priceAfterDiscount + tiles.getAllpriceAfterDiscount().intValue();
-                    profit = profit + tiles.getAllprofit().intValue();
+    private ComponentRenderer<VerticalLayout, Tiles> createCheckboxes() {
+        return new ComponentRenderer<>(tiles -> {
+            Checkbox mainCheckBox = new Checkbox("Główna");
+            Checkbox optionCheckbox = new Checkbox("Opcjonalna");
+            mainCheckBox.setValue(tiles.isMain());
+            optionCheckbox.setValue(tiles.isOption());
+            mainCheckBox.addValueChangeListener(event -> {
+                tiles.setMain(event.getValue());
+                tiles.setOption(!event.getValue());
+                optionCheckbox.setValue(!mainCheckBox.getValue());
+            });
+            optionCheckbox.addValueChangeListener(event -> {
+                tiles.setMain(!event.getValue());
+                tiles.setOption(event.getValue());
+                mainCheckBox.setValue(!optionCheckbox.getValue());
+            });
+            return new VerticalLayout(mainCheckBox, optionCheckbox);
+        });
+    }
+
+    private TextField editDiscountField(Grid.Column<Tiles> discount, Binder<Tiles> binder) {
+        TextField discountEditField = new TextField();
+        addEnterEvent(discountEditField);
+        binder.forField(discountEditField)
+                .withConverter(new StringToIntegerConverter("Błąd"))
+                .bind(Tiles::getDiscount, Tiles::setDiscount);
+        discount.setEditorComponent(discountEditField);
+        return discountEditField;
+    }
+
+    private void addEnterEvent(TextField discountEditField) {
+        discountEditField.getElement()
+                .addEventListener("keydown",
+                        event -> treeGrid.getEditor().cancel())
+                .setFilter("event.key === 'Enter'");
+    }
+
+    private void itemClickListener(TextField disc) {
+        treeGrid.addItemDoubleClickListener(event -> {
+            treeGrid.getEditor().editItem(event.getItem());
+            disc.focus();
+        });
+    }
+
+    private void closeListener(Binder<Tiles> binder) {
+        treeGrid.getEditor().addCloseListener(event -> {
+            if (binder.getBean() != null) {
+                Tiles tiles = binder.getBean();
+                tiles.setAllpricePurchase((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+                tiles.setAllpriceAfterDiscount((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(tiles.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
+                tiles.setAllprofit(tiles.getAllpriceAfterDiscount().subtract(tiles.getAllpricePurchase()));
+                if (binder.getBean().getDiscount() <= 30) {
+                    binder.setBean(tiles);
+                } else {
+                    tiles.setDiscount(30);
+                    getNotificationError("Maksymalny rabat to 30 %");
+                    binder.setBean(tiles);
                 }
-                priceAfterDiscount = priceAfterDiscount + parent.getAllpriceAfterDiscount().intValue();
-                profit = profit + parent.getAllpriceAfterDiscount().intValue();
-                for (Tiles children : childrens) {
-                    children.setAllpricePurchase(children.getPriceDetalUnit().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(70)).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-                    children.setAllpriceAfterDiscount((children.getPriceDetalUnit().multiply(new BigDecimal(children.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(children.getDiscount())))).divide((new BigDecimal(100)), RoundingMode.HALF_UP));
-                    children.setAllprofit(children.getAllpriceAfterDiscount().subtract(children.getAllpricePurchase()));
-                }
-                parent.setTotalPrice(BigDecimal.valueOf(priceAfterDiscount));
-                parent.setTotalProfit(BigDecimal.valueOf(profit));
+            }
+        });
+    }
+
+    private void readBeans(Binder<Tiles> binder) {
+        for (Tiles tiles : set) {
+            tiles.setAllpricePurchase((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            tiles.setAllpriceAfterDiscount((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(tiles.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
+            tiles.setAllprofit(tiles.getAllpriceAfterDiscount().subtract(tiles.getAllpricePurchase()));
+            binder.setBean(tiles);
+        }
+    }
+
+    private Button refreshButton(TreeGrid<Tiles> treeGrid) {
+        return new Button("Refresh", buttonClickEvent -> {
+            Set<Tiles> mainsInPriceList = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            for (Tiles tiles : mainsInPriceList) {
+                Set<Tiles> onePriceList = set.stream().filter(e -> e.getPriceListName().equals(tiles.getPriceListName())).collect(Collectors.toSet());
+                BigDecimal totalPrice = onePriceList.stream().map(Tiles::getAllpriceAfterDiscount).reduce(BigDecimal::add).get();
+                BigDecimal totalProfit = onePriceList.stream().map(Tiles::getAllprofit).reduce(BigDecimal::add).get();
+                tiles.setTotalPrice(totalPrice);
+                tiles.setTotalProfit(totalProfit);
             }
             treeGrid.getDataProvider().refreshAll();
         });
-        return refresh;
-    }
-
-    private void Editor(TreeGrid<Tiles> treeGrid, Grid.Column<Tiles> discount) {
-        Binder<Tiles> binder = new Binder<>(Tiles.class);
-        Editor<Tiles> editor = treeGrid.getEditor();
-        editor.setBinder(binder);
-        editor.setBuffered(true);
-
-        Div validationStatus = new Div();
-        validationStatus.setId("validation");
-
-        TextField editDiscount = new TextField();
-        binder.forField(editDiscount)
-                .withConverter(
-                        new StringToIntegerConverter("Discount must be a number."))
-                .withStatusLabel(validationStatus).bind("discount");
-        discount.setEditorComponent(editDiscount);
-
-        Collection<Button> editButtons = Collections
-                .newSetFromMap(new WeakHashMap<>());
-
-        Grid.Column<Tiles> editorColumn = treeGrid.addComponentColumn(tiles -> {
-            Button edit = new Button("Edit");
-            edit.addClassName("edit");
-            edit.addClickListener(e -> {
-                editor.editItem(tiles);
-                editDiscount.focus();
-                tiles.setDiscount(Integer.parseInt(editDiscount.getValue()));
-            });
-            edit.setEnabled(!editor.isOpen());
-            editButtons.add(edit);
-            return edit;
-        }).setHeader("Edit");
-
-
-        editor.addOpenListener(e -> editButtons
-                .forEach(button -> button.setEnabled(!editor.isOpen())));
-        editor.addCloseListener(e -> editButtons
-                .forEach(button -> button.setEnabled(!editor.isOpen())));
-
-        Button save = new Button(new Icon(VaadinIcon.CHECK), e -> {
-            if (Integer.parseInt(editDiscount.getValue()) > 30) {
-                editDiscount.setValue("30");
-                getNotificationError("Maksymalny rabat to 30 %");
-            }
-            editor.save();
-        });
-
-        Button cancel = new Button(new Icon(VaadinIcon.CLOSE), e -> editor.cancel());
-        cancel.addClassName("cancel");
-
-        Div buttons = new Div(save, cancel);
-
-        editorColumn.setEditorComponent(buttons);
     }
 
     private TreeData<Tiles> getTilesTreeDataFromRepo() {

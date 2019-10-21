@@ -33,7 +33,6 @@ import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.TilesPriceListView.TILES_PRICE_LIST;
 import static pl.koszela.spring.views.TilesView.ENTER_TILES;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
-import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 
 @Route("")
