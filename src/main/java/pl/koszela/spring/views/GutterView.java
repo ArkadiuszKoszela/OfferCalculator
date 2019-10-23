@@ -1,6 +1,8 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -9,18 +11,18 @@ import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.CategoryTiles;
 import pl.koszela.spring.entities.EntityGutter;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.GutterRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -42,8 +44,6 @@ public class GutterView extends VerticalLayout {
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
 
         add(checkboxGroupType());
-        add(checkboxGroupDiatemter());
-        add(buttonSearch());
         add(createGrid());
     }
 
@@ -76,15 +76,23 @@ public class GutterView extends VerticalLayout {
         Grid.Column<EntityGutter> categoryColumn = grid.addColumn(EntityGutter::getCategory).setHeader("Kategoria");
         Grid.Column<EntityGutter> quantityColumn = grid.addColumn(EntityGutter::getQuantity).setHeader("Ilość");
         Grid.Column<EntityGutter> discountColumn = grid.addColumn(EntityGutter::getDiscount).setHeader("Rabat");
+        grid.addColumn(EntityGutter::getTotalPrice).setHeader("Total klient");
+        grid.addColumn(EntityGutter::getTotalProfit).setHeader("Total zysk");
         Grid.Column<EntityGutter> unitPurchaseColumn = grid.addColumn(EntityGutter::getUnitPricePurchase).setHeader("Cena jedn. zakup");
         Grid.Column<EntityGutter> unitDetalColumn = grid.addColumn(EntityGutter::getUnitPriceDetal).setHeader("Cena jedn. detal");
         Grid.Column<EntityGutter> allPurchaseColumn = grid.addColumn(EntityGutter::getAllPricePurchase).setHeader("Razem cena netto");
         Grid.Column<EntityGutter> allDetalColumn = grid.addColumn(EntityGutter::getAllPriceDetal).setHeader("Razem cena detal");
         Grid.Column<EntityGutter> protitColumn = grid.addColumn(EntityGutter::getProfit).setHeader("Zysk");
+        grid.addColumn(createCheckboxes()).setHeader("Opcje");
 
         Binder<EntityGutter> binder = new Binder<>(EntityGutter.class);
         grid.getEditor().setBinder(binder);
-        editor(binder, discountColumn);
+        editor(binder, discountColumn, quantityColumn);
+        FooterRow footerRow = grid.appendFooterRow();
+
+        Button calculate = refreshButton(grid);
+
+        footerRow.getCell(nameColumn).setComponent(calculate);
 
         grid.setDataProvider(new TreeDataProvider<>(allGutter(list)));
         grid.getColumns().forEach(e -> e.setAutoWidth(true));
@@ -92,7 +100,27 @@ public class GutterView extends VerticalLayout {
         return grid;
     }
 
-    private void editor(Binder<EntityGutter> binder, Grid.Column<EntityGutter> discountColumn) {
+    private ComponentRenderer<VerticalLayout, EntityGutter> createCheckboxes() {
+        return new ComponentRenderer<>(gutter -> {
+            Checkbox mainCheckBox = new Checkbox("Główna");
+            Checkbox optionCheckbox = new Checkbox("Opcjonalna");
+            mainCheckBox.setValue(gutter.isMain());
+            optionCheckbox.setValue(gutter.isOption());
+            mainCheckBox.addValueChangeListener(event -> {
+                gutter.setMain(event.getValue());
+                gutter.setOption(!event.getValue());
+                optionCheckbox.setValue(!mainCheckBox.getValue());
+            });
+            optionCheckbox.addValueChangeListener(event -> {
+                gutter.setMain(!event.getValue());
+                gutter.setOption(event.getValue());
+                mainCheckBox.setValue(!optionCheckbox.getValue());
+            });
+            return new VerticalLayout(mainCheckBox, optionCheckbox);
+        });
+    }
+
+    private void editor(Binder<EntityGutter> binder, Grid.Column<EntityGutter> discountColumn, Grid.Column<EntityGutter> quantityColumn) {
 
         TextField discountField = new TextField();
         addEnterEvent(discountField);
@@ -101,13 +129,20 @@ public class GutterView extends VerticalLayout {
                 .bind(EntityGutter::getDiscount, EntityGutter::setDiscount);
         discountColumn.setEditorComponent(discountField);
 
+        TextField quantityField = new TextField();
+        addEnterEvent(quantityField);
+        binder.forField(quantityField)
+                .withConverter(new StringToDoubleConverter("Błąd"))
+                .bind(EntityGutter::getQuantity, EntityGutter::setQuantity);
+        quantityColumn.setEditorComponent(quantityField);
+
         addClickListener(discountField);
 
         addCloseListener(binder);
     }
 
-    private void addEnterEvent(TextField discountEditField) {
-        discountEditField.getElement()
+    private void addEnterEvent(TextField textField) {
+        textField.getElement()
                 .addEventListener("keydown",
                         event -> grid.getEditor().cancel())
                 .setFilter("event.key === 'Enter'");
@@ -141,7 +176,7 @@ public class GutterView extends VerticalLayout {
 
     private RadioButtonGroup<String> checkboxGroupType() {
         RadioButtonGroup<String> radioButtonGroup = new RadioButtonGroup<>();
-        radioButtonGroup.setItems("Stalowa", "PCV", "Tytan-cynk", "Ocynk");
+        radioButtonGroup.setItems("Stalowa", "PCV", "Tytan-cynk", "Ocynk", "Wszystko");
         radioButtonGroup.addValueChangeListener(e -> {
             String value = e.getValue();
             if (value.equals("Stalowa")) {
@@ -152,21 +187,25 @@ public class GutterView extends VerticalLayout {
                 List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Bryza")).collect(Collectors.toList());
                 grid.setDataProvider(new TreeDataProvider<>(allGutter(searchCategory)));
                 grid.getDataProvider().refreshAll();
+            }else if(value.equals("Wszystko")){
+                grid.setDataProvider(new TreeDataProvider<>(allGutter(list)));
+                grid.getDataProvider().refreshAll();
             }
         });
         return radioButtonGroup;
-
     }
 
-    private RadioButtonGroup<String> checkboxGroupDiatemter() {
-        RadioButtonGroup<String> radioButtonGroup = new RadioButtonGroup<>();
-        radioButtonGroup.setItems("125/90", "125/100", "150/100");
-        return radioButtonGroup;
-    }
-
-    private Button buttonSearch() {
-        return new Button("Szukaj", e -> {
-
+    private Button refreshButton(TreeGrid<EntityGutter> treeGrid) {
+        return new Button("Refresh", buttonClickEvent -> {
+            List<EntityGutter> mainsInPriceList = list.stream().filter(e -> e.getName().equals("rynna 3mb")).collect(Collectors.toList());
+            for (EntityGutter gutter : mainsInPriceList) {
+                List<EntityGutter> onePriceList = list.stream().filter(e -> e.getCategory().equals(gutter.getCategory())).collect(Collectors.toList());
+                Double totalPrice = onePriceList.stream().map(EntityGutter::getAllPriceDetal).reduce(Double::sum).get();
+                Double totalProfit = onePriceList.stream().map(EntityGutter::getProfit).reduce(Double::sum).get();
+                gutter.setTotalPrice(BigDecimal.valueOf(totalPrice).setScale(2, RoundingMode.HALF_UP));
+                gutter.setTotalProfit(BigDecimal.valueOf(totalProfit).setScale(2, RoundingMode.HALF_UP));
+            }
+            treeGrid.getDataProvider().refreshAll();
         });
     }
 }
