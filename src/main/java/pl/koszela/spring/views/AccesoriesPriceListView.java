@@ -148,10 +148,18 @@ public class AccesoriesPriceListView extends VerticalLayout {
     private Button saveToRepo() {
         Button save = new Button("Zapisz do bazy");
         save.addClickListener(event -> {
-            for (EntityAccesories accesories : allAccesoriesRepo) {
-                LocalDateTime dateTime = LocalDateTime.now();
-                DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                accesories.setDate(dateTime.format(myDateFormat));
+            List<EntityAccesories> all = accesoriesRepository.findAll();
+            for (EntityAccesories old : all) {
+                for (EntityAccesories accesories : allAccesoriesRepo) {
+                    if (old.getName().equals(accesories.getName())) {
+                        if (!old.getPurchasePrice().equals(accesories.getPurchasePrice())
+                                || !old.getMargin().equals(accesories.getMargin()) || !old.getOption().equals(accesories.getOption())) {
+                            LocalDateTime dateTime = LocalDateTime.now();
+                            DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                            accesories.setDate(dateTime.format(myDateFormat));
+                        }
+                    }
+                }
             }
             accesoriesRepository.saveAll(new HashSet<>(allAccesoriesRepo));
             getNotificationSucces("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "         :)");

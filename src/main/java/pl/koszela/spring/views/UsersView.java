@@ -133,6 +133,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("accesories");
         VaadinSession.getCurrent().getSession().removeAttribute("personalData");
         VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("inputGutterData");
 
         VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
         VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");
@@ -170,7 +171,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
                 .dlugoscKrawedziLewych(5d)
                 .dlugoscKrawedziPrawych(5d)
                 .obwodKomina(3d)
-                .dlugoscOkapu(38d)
+                .dlugoscOkapu(0d)
                 .dachowkaWentylacyjna(1d)
                 .kompletKominkaWentylacyjnego(1d)
                 .gasiarPoczatkowyKalenicaProsta(1d)

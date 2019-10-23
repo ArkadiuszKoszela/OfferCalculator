@@ -20,12 +20,18 @@ public class ImportFiles {
     private static final String AKCESORIA = "src/main/resources/assets/akcesoria.csv";
     private static final String OKNA_OKPOL_DAKEA = "src/main/resources/assets/OknaOkpolDakea.csv";
     private static final String KOLNIERZ_OKPOL_DAKEA = "src/main/resources/assets/KołnierzOkpolDakea.csv";
-    private static final String FLAMINGO_GUTTER = "src/main/resources/assets/FlamingoGutter.csv";
+    private static final String FLAMINGO_125x100 = "src/main/resources/assets/Flamingo 125x100.csv";
+    private static final String FLAMINGO_125x90 = "src/main/resources/assets/Flamingo 125x90.csv";
+    private static final String BRYZA_125x90 = "src/main/resources/assets/Bryza 125x90.csv";
+    private static final String BRYZA_150x100 = "src/main/resources/assets/Bryza 150x100.csv";
 
     private static final String NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA = "Bogen Innovo 10 Czerwona Angoba";
     private static final String NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "Bogen Innovo 10 Miedziano-brązowa Angoba";
     private static final String NAME_BOGEN_INNOVO_12_CZERWONA_ANGOBA = "Bogen Innovo 12 Czerwona Angoba";
-
+    private static final String NAME_FLAMINGO_125x100 = "Flamingo 125x100";
+    private static final String NAME_FLAMINGO_125x90 = "Flamingo 125x90";
+    private static final String NAME_BRYZA_125x90 = "Bryza 125x90";
+    private static final String NAME_BRYZA_150x100 = "Bryza 150x100";
 
     private AccesoriesRepository accesoriesRepository;
     private WindowsRepository windowsRepository;
@@ -99,7 +105,10 @@ public class ImportFiles {
         daoAccesories.save(AKCESORIA, "do usunięcia");
         daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA, "do usunięcia");
         daoWindows.save(OKNA_OKPOL_DAKEA, "do usunięcia");
-        daoGutter.save(FLAMINGO_GUTTER, "do usunięcia");
+        daoGutter.save(FLAMINGO_125x100, NAME_FLAMINGO_125x100);
+        daoGutter.save(FLAMINGO_125x90, NAME_FLAMINGO_125x90);
+        daoGutter.save(BRYZA_125x90, NAME_BRYZA_125x90);
+        daoGutter.save(BRYZA_150x100, NAME_BRYZA_150x100);
         getNotificationSucces("Zaimportowano cenniki");
         UI.getCurrent().getPage().reload();
     }

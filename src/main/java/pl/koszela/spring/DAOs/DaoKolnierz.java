@@ -28,7 +28,7 @@ public class DaoKolnierz implements Dao {
         BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8));
+            br = new BufferedReader(new FileReader(filePath/*, StandardCharsets.UTF_8*/));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 EntityKolnierz entityKolnierz = new EntityKolnierz();

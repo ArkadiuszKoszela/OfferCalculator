@@ -8,6 +8,7 @@ import pl.koszela.spring.entities.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -197,11 +198,16 @@ public class GenerateOffer {
 
         Paragraph suma = new Paragraph("\n\n\t\t\t\tElementy dachówkowe dla dachu " + parents.get(0).getPriceListName() + " : " + totalPrice + "\n\n\n", font12);
 
-        Paragraph opcjonalne = new Paragraph("\n\n\t\t\t\tOferty Opcjonalne:" +
-                " \n" + parentsOptional.get(0).getPriceListName() + " z ceną: " + parentsOptional.get(0).getTotalPrice() +
-                "\n" + parentsOptional.get(1).getPriceListName() + " z ceną: " + parentsOptional.get(0).getTotalPrice() + "\n\n\n", font12);
         document.add(suma);
+        Iterator<Tiles> iterator = parentsOptional.iterator();
+        if (iterator.hasNext()) {
+            Tiles next = iterator.next();
+            String string = " \n" + next.getPriceListName() + " z ceną: " + next.getTotalPrice();
 
-        document.add(opcjonalne);
+            Paragraph opcjonalne = new Paragraph("\n\n\t\t\t\tOferty Opcjonalne:" +
+                    string, font12);
+            document.add(opcjonalne);
+        }
+
     }
 }

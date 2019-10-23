@@ -29,13 +29,14 @@ public class DaoGutter implements Dao {
         BufferedReader br = null;
 
         try {
-            br = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8));
+            br = new BufferedReader(new FileReader(filePath/*, StandardCharsets.UTF_8*/));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
                 EntityGutter gutter = new EntityGutter();
 
                 gutter.setName(data[1]);
                 gutter.setUnitPriceDetal(Double.valueOf(data[2]));
+                gutter.setCategory(priceListName);
                 gutter.setDiscount(0);
                 gutter.setUnitPricePurchase(0d);
 

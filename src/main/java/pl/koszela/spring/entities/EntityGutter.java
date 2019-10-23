@@ -10,13 +10,14 @@ public class EntityGutter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Integer quantity;
+    private Double quantity;
     private Integer discount;
     private Double unitPriceDetal;
     private Double unitPricePurchase;
     private Double allPriceDetal;
     private Double allPricePurchase;
     private Double profit;
+    private String category;
 
     public EntityGutter() {
     }
@@ -37,11 +38,11 @@ public class EntityGutter {
         this.name = name;
     }
 
-    public Integer getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
@@ -91,5 +92,13 @@ public class EntityGutter {
 
     public void setDiscount(Integer discount) {
         this.discount = discount;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }
