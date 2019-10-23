@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="" />
+    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spring-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/Dao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/Dao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/SpringAppApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/SpringAppApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityAccesories.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataTiles$Builder.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataTiles$Builder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataTiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityInputDataTiles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityKolnierz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityKolnierz.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityWindows.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityWindows.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/AccesoriesRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/AccesoriesRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/KolnierzRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/KolnierzRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/TilesRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/TilesRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/UsersRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/UsersRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/WindowsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/WindowsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +236,7 @@
       <workItem from="1571474326277" duration="38457000" />
       <workItem from="1571561825067" duration="11941000" />
       <workItem from="1571655701537" duration="13757000" />
-      <workItem from="1571729895908" duration="19297000" />
+      <workItem from="1571729895908" duration="19855000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -401,7 +427,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571826389015</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="to deploy">
+      <created>1571826698557</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1571826698557</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -451,7 +484,8 @@
     <MESSAGE value="add choose option for accesories view" />
     <MESSAGE value="refactor code in OfferView" />
     <MESSAGE value="refactor code" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor code" />
+    <MESSAGE value="to deploy" />
+    <option name="LAST_COMMIT_MESSAGE" value="to deploy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
