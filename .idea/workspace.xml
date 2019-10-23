@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spring-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spring-app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/SpringappApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/SpringappApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/pl/koszela/spring/SpringappApplicationTests.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/SpringAppApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/SpringAppApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/pl/koszela/spring/SpringAppApplicationTests.class" beforeDir="false" />
-    </list>
+    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,7 +210,7 @@
       <workItem from="1571474326277" duration="38457000" />
       <workItem from="1571561825067" duration="11941000" />
       <workItem from="1571655701537" duration="13757000" />
-      <workItem from="1571729895908" duration="19045000" />
+      <workItem from="1571729895908" duration="19297000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -406,7 +394,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571823378976</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="refactor code">
+      <created>1571826389015</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1571826389015</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
