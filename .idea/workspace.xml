@@ -2,11 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoGutter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityGutter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/GutterRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/FlamingoGutter.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityAccesories.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/importFiles/ImportFiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/importFiles/ImportFiles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesPriceListView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesPriceListView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityAccesories.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -73,6 +85,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$USER_HOME$/Downloads/my-starter-project" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -90,17 +103,18 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Arkadiusz Koszela\Desktop\spring-app\src\main\resources\assets" />
       <recent name="C:\Users\Arkadiusz Koszela\Desktop\demo\projekt_zaliczeniowy\springapp\src\main\resources\templates" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Arkadiusz Koszela\Desktop\spring-app\src\main\resources\assets" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="pl.koszela.spring.repositories" />
+      <recent name="pl.koszela.spring.DAOs" />
       <recent name="pl.koszela.spring.views" />
       <recent name="pl.koszela.spring.entities" />
       <recent name="pl.koszela.spring.crud" />
-      <recent name="pl.koszela.spring.service" />
-      <recent name="pl.koszela.spring.DAOs" />
     </key>
     <key name="CreateClassDialog.RecentsKey">
       <recent name="pl.koszela.spring.entities" />
@@ -213,7 +227,8 @@
       <workItem from="1571386316176" duration="21153000" />
       <workItem from="1571474326277" duration="38457000" />
       <workItem from="1571561825067" duration="11941000" />
-      <workItem from="1571655701537" duration="10686000" />
+      <workItem from="1571655701537" duration="13757000" />
+      <workItem from="1571729895908" duration="16768000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -383,7 +398,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571498652781</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="refactor code in OfferView">
+      <created>1571686881669</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1571686881670</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,7 +454,8 @@
     <MESSAGE value="add new priceList editor" />
     <MESSAGE value="add accesories price list view" />
     <MESSAGE value="add choose option for accesories view" />
-    <option name="LAST_COMMIT_MESSAGE" value="add choose option for accesories view" />
+    <MESSAGE value="refactor code in OfferView" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor code in OfferView" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -451,6 +474,16 @@
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesPriceListView.java</url>
           <line>147</line>
           <option name="timeStamp" value="235" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="236" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
+          <line>66</line>
+          <option name="timeStamp" value="239" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

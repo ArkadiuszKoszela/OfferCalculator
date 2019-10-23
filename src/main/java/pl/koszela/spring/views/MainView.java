@@ -1,16 +1,22 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.Router;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
@@ -24,11 +30,15 @@ import pl.koszela.spring.crud.UpdateUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
+import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
+import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 import static pl.koszela.spring.views.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
+import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.TilesPriceListView.TILES_PRICE_LIST;
 import static pl.koszela.spring.views.TilesView.ENTER_TILES;
@@ -52,39 +62,24 @@ public class MainView extends AppLayout {
         Image img = new Image("http://www.nowoczesnebudowanie.pl/wp-content/uploads/2016/10/logo-nowoczesne-budowanie-1200x857.png", "Vaadin Logo");
         img.setHeight("44px");
         addToNavbar(new DrawerToggle(), img);
-        MenuBar menuBar = new MenuBar();
-        Tabs tabs = new Tabs(false, new Tab("Klienci"), new Tab("Dachówki"), new Tab("Akcesoria"),
-                new Tab("Okna"), new Tab("Oferta"), new Tab("Cenniki dachówki"), new Tab("Cenniki akcesoria"));
-        tabs.setFlexGrowForEnclosedTabs(1);
-        tabs.addSelectedChangeListener(e -> {
-            if (e.getSelectedTab().getLabel().equalsIgnoreCase("Klienci")) {
-                getUI().ifPresent(ui -> ui.navigate(INPUT_USER));
-                tabs.setSelectedTab(e.getSelectedTab());
-            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Dachówki")) {
-                getUI().ifPresent(ui -> ui.navigate(ENTER_TILES));
-                tabs.setSelectedTab(e.getSelectedTab());
-            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Akcesoria")) {
-                getUI().ifPresent(ui -> ui.navigate(SELECT_ACCESORIES));
-                tabs.setSelectedTab(e.getSelectedTab());
-            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Okna")) {
-                getUI().ifPresent(ui -> ui.navigate(WINDOWS));
-                tabs.setSelectedTab(e.getSelectedTab());
-            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Oferta")) {
-                getUI().ifPresent(ui -> ui.navigate(CREATE_OFFER));
-                tabs.setSelectedTab(e.getSelectedTab());
-            } else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Cenniki dachówki")) {
-                getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST));
-                tabs.setSelectedTab(e.getSelectedTab());
-            }else if (e.getSelectedTab().getLabel().equalsIgnoreCase("Cenniki akcesoria")) {
-                getUI().ifPresent(ui -> ui.navigate(ACCESORIES_PRICE_LIST));
-                tabs.setSelectedTab(e.getSelectedTab());
-            }
-        });
 
-        VaadinSession.getCurrent().setAttribute("tabs", tabs);
-        menuBar.addItem(tabs);
-        Button button = new Button("Zaimportuj pliki");
-        button.addClickListener(e -> importFiles.csv());
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_PRIMARY);
+        addItemMenuBar(menuBar, "Strona Główna", "");
+        addItemMenuBar(menuBar, "Klienci", INPUT_USER);
+        addItemMenuBar(menuBar, "Dachówki", ENTER_TILES);
+        addItemMenuBar(menuBar, "Akcesoria", SELECT_ACCESORIES);
+        addItemMenuBar(menuBar, "Rynny", GUTTER_VIEW);
+        addItemMenuBar(menuBar, "Okna", WINDOWS);
+        addItemMenuBar(menuBar, "Oferta", CREATE_OFFER);
+        MenuItem priceLists = menuBar.addItem("Cenniki");
+        priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
+        priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESORIES_PRICE_LIST)));
+
+        Button importFilesButton = new Button("Zaimportuj pliki");
+        importFilesButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        importFilesButton.addClickListener(e -> importFiles.csv());
         if (isDrawerOpened()) {
             setDrawerOpened(false);
         }
@@ -97,23 +92,35 @@ public class MainView extends AppLayout {
         anchor.setHref(getStreamResource(file.getName(), file));
         anchor.setVisible(false);
         Button saveNewUser = new Button("Zapisz użytkownika");
+        saveNewUser.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         saveNewUser.addClickListener(event -> createUser.saveUser());
         Button update = new Button("Zaktualizuj użytkownika");
+        update.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         update.addClickListener(event -> updateUser.updateUser());
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
         formLayout.setResponsiveSteps(responsiveStep);
 
         Button gereneteOffer = new Button("Generuj ofertę");
+        gereneteOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         gereneteOffer.addClickListener(buttonClickEvent -> {
-            GenerateOffer.writeUsingIText();
-            formLayout.add(anchor);
-            anchor.setVisible(true);
+            try {
+                GenerateOffer.writeUsingIText();
+                formLayout.add(anchor);
+                anchor.setVisible(true);
+                getNotificationSucces("Oferta została wygenerowana");
+            } catch (NotFoundException ignored) {
+                getNotificationError("Coś poszło nie tak. Proszę uzupełnić wszystkie pola");
+            }
         });
 
-        formLayout.add(button, saveNewUser, update, gereneteOffer);
+        formLayout.add(importFilesButton, saveNewUser, update, gereneteOffer);
         addToNavbar(menuBar);
         addToDrawer(formLayout);
+    }
+
+    private void addItemMenuBar(MenuBar menuBar, String nameItem, String nameRoute) {
+        menuBar.addItem(nameItem, event -> getUI().ifPresent(ui -> ui.navigate(nameRoute)));
     }
 
     private StreamResource getStreamResource(String filename, File content) {

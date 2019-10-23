@@ -2,6 +2,7 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -41,8 +42,6 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
     private Button loadUser = new Button("Wczytaj klienta");
     private Button removeUser = new Button(" Usuń użytkownika");
     private FormLayout board = new FormLayout();
-    private EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
-
 
     @Autowired
     public UsersView(UsersRepo usersRepo, DeleteUsers deleteUsers, ReadUser readUser) {
@@ -83,6 +82,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
             loadUsers(usersRepo);
             combobox.getDataProvider().refreshAll();
         });
+        removeUser.addThemeVariants(ButtonVariant.LUMO_ERROR);
         return removeUser;
     }
 
@@ -90,22 +90,14 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         loadUser.addClickListener(buttonClickEvent -> {
             String[] split = combobox.getValue().split(" ");
             EntityUser find = readUser.getUser(split[0], split[1]);
-//            EntityUser find = usersRepo.findEntityUserByEntityPersonalDataNameAndEntityPersonalDataSurname(split[0], split[1]);
-//
-//            VaadinSession.getCurrent().getSession().setAttribute("personalDataFromRepo", find.getEntityPersonalData());
-//            VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", find.getEntityInputDataTiles());
-//            VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.getEntityWindows());
-//            VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.getEntityKolnierz());
-//            VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", find.getTiles());
-//            VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getResultAccesories());
 
-            EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
             name.setValue(find.getEntityPersonalData().getName());
             surname.setValue(find.getEntityPersonalData().getSurname());
             adress.setValue(find.getEntityPersonalData().getAdress());
             telephoneNumber.setValue(find.getEntityPersonalData().getTelephoneNumber());
             email.setValue(find.getEntityPersonalData().getEmail());
         });
+        loadUser.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         return loadUser;
     }
 
@@ -151,13 +143,6 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
         VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
         VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
-//        if (entityPersonalData != null) {
-//            getNotificationSucces("WEJSCIE Klienci - wszystko ok (repo)");
-//        } else if (entityPersonalData == null) {
-//            getNotificationSucces("WEJSCIE Klienci - wszystko ok (bez repo)");
-//        } else {
-//            getNotificationError("WEJSCIE Klienci - coś poszło nie tak");
-//        }
     }
 
     @Override
@@ -173,17 +158,6 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
         VaadinSession.getCurrent().getSession().removeAttribute("resultTiles");
         action.proceed();
-//        if(entityPersonalData != null){
-//            getNotificationSucces("Wszystko ok (repo)");
-//            action.proceed();
-//        } else if (entityPersonalData == null){
-//            save();
-//            action.proceed();
-//            getNotificationSucces("Wszystko ok (bez repo)");
-//        }else {
-//            getNotificationError("Klienci - coś poszło nie tak");
-//            action.proceed();
-//        }
     }
 
     private EntityInputDataTiles defaultValues(){

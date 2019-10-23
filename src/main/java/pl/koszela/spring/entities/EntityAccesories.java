@@ -22,6 +22,7 @@ public class EntityAccesories {
     private Double profit;
     private boolean offer;
     private Double quantity;
+    private String date;
     @ManyToMany(mappedBy = "resultAccesories")
     private Set<EntityUser> userResultAccesories = new HashSet<>();
 
@@ -134,6 +135,14 @@ public class EntityAccesories {
 
     public void setUserResultAccesories(Set<EntityUser> userResultAccesories) {
         this.userResultAccesories = userResultAccesories;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public static final class Builder {

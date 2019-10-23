@@ -47,8 +47,8 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
 
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
     private Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+    private List<Binder<EntityAccesories>> binders = new ArrayList<>();
     private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
-
 
     @Autowired
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
@@ -58,9 +58,7 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
             set = new HashSet<>();
         }
         add(createCheckboxes());
-        categories.forEach(category -> {
-            add(addSubLayout(category));
-        });
+        categories.forEach(category -> add(addSubLayout(category)));
         if (set != null) {
             read();
         }
@@ -106,8 +104,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         }
     }
 
-    private List<Binder<EntityAccesories>> binders = new ArrayList<>();
-
     private FormLayout addSubLayout(String category) {
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep form = new FormLayout.ResponsiveStep("5px", 9);
@@ -129,7 +125,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         binder.bind(pricePurchase, EntityAccesories::getPurchasePrice, EntityAccesories::setPurchasePrice);
         binder.bind(priceRetail, EntityAccesories::getDetalPrice, EntityAccesories::setDetalPrice);
         binder.bind(numberField, EntityAccesories::getQuantity, EntityAccesories::setQuantity);
-//        binder.bind(numberField, entityAccesories1 -> value(category), (entityAccesories4, quantity) -> entityAccesories4.setQuantity(value(category)));
         binder.bind(allPriceRetail, EntityAccesories::getAllPriceRetail, EntityAccesories::setAllPriceRetail);
         binder.bind(allPricePurchase, EntityAccesories::getAllPricePurchase, EntityAccesories::setAllPricePurchase);
         binder.bind(profit, EntityAccesories::getProfit, EntityAccesories::setProfit);
@@ -144,7 +139,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
 
         List<EntityAccesories> allWithTheSameCategory = accesoriesRepository.findAllByCategoryEquals(category);
         ComboBox<EntityAccesories> comboBox = new ComboBox<>(WYBIERZ, allWithTheSameCategory);
-        VaadinSession.getCurrent().getSession().setAttribute(category + WYBIERZ, comboBox);
 
         formLayout.add(comboBox, name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
         comboBox.setItemLabelGenerator(EntityAccesories::getName);
@@ -203,7 +197,6 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
     private NumberField getTextArea(String category, String label) {
         NumberField textArea = new NumberField(label, category);
         textArea.setReadOnly(true);
-        VaadinSession.getCurrent().getSession().setAttribute(category + label, textArea);
         return textArea;
     }
 

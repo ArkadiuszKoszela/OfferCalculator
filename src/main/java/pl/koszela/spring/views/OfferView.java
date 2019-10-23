@@ -4,7 +4,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
@@ -40,7 +43,7 @@ public class OfferView extends VerticalLayout {
 
     private TreeGrid<Tiles> createTilesGrid() {
         Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika").setAutoWidth(true);
-        treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
+        Grid.Column<Tiles> nameColumn = treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
         treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
         Grid.Column<Tiles> discount = treeGrid.addColumn(Tiles::getDiscount).setHeader("Rabat");
         treeGrid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
@@ -69,6 +72,7 @@ public class OfferView extends VerticalLayout {
         treeGrid.setDataProvider(new TreeDataProvider<>(getTilesTreeDataFromRepo()));
 
         treeGrid.setMinHeight("850px");
+        nameColumn.setAutoWidth(true);
         return treeGrid;
     }
 

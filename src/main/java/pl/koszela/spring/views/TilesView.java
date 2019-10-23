@@ -49,6 +49,15 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private NumberField numberField19 = new NumberField("Okno połaciowe");
     private NumberField customerDiscount = new NumberField("Podaj rabat dla klienta:");
 
+    NumberField gutter1 = new NumberField("Rynna");
+    NumberField gutter2 = new NumberField("Sztucer");
+    NumberField gutter3 = new NumberField("Denko");
+    NumberField gutter4 = new NumberField("Złączka rynny");
+    NumberField gutter5 = new NumberField("Narożnik wew.");
+    NumberField gutter6 = new NumberField("Narożnik zew.");
+
+    List<NumberField> listInputGutter = new ArrayList<>();
+
     private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
 
     private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
@@ -75,12 +84,21 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
 
     private VerticalLayout createInputFields() {
         FormLayout formLayout = new FormLayout();
+        Span title = new Span("Dachówki");
+        Span title2 = new Span("Rynny");
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
         formLayout.setResponsiveSteps(responsiveStep);
+        FormLayout gutterInput = new FormLayout();
+        FormLayout.ResponsiveStep responsiveStep1 = new FormLayout.ResponsiveStep("5px", 6);
+        gutterInput.setResponsiveSteps(responsiveStep1);
         formLayout.add(getCustomerDiscount(), getAvailablePriceList());
         setDefaultValuesFromRepo();
         listOfNumberFields.forEach(formLayout::add);
+        listInputGutter.forEach(gutterInput::add);
+        dane.add(title);
         dane.add(formLayout);
+        dane.add(title2);
+        dane.add(gutterInput);
         return dane;
     }
 
@@ -133,10 +151,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     }
 
     private EntityInputDataTiles saveInputData() {
-//        setAccesories = new HashSet<>();
-//        for (NumberField numberField : listOfNumberFields) {
-//            setAccesories.add(EntityAccesories.builder().quantity(numberField.getValue()).build());
-//        }
         return EntityInputDataTiles.builder()
                 .powierzchniaPolaci(numberField1.getValue())
                 .dlugoscKalenic(numberField2.getValue())
@@ -181,10 +195,23 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         setValues(numberField17, "szt", entityInputDataTilesFromRepo.getGasiarZPodwojnaMufa(), "brak");
         setValues(numberField18, "mb", entityInputDataTilesFromRepo.getDachowkaDwufalowa(), "brak");
         setValues(numberField19, "szt", entityInputDataTilesFromRepo.getOknoPolaciowe(), "brak");
+
+        setValues(gutter1, "mb", 30d, "brak");
+        setValues(gutter2, "szt", 3d, "brak");
+        setValues(gutter3, "szt", 5d, "brak");
+        setValues(gutter4, "szt", 2d, "brak");
+        setValues(gutter5, "szt", 1d, "brak");
+        setValues(gutter6, "szt", 23d, "brak");
+
         getListNumberFields();
+        getListInputGutter();
 //        }else{
 //            getNotificationError("Przejdź do zakładki 'Klienci' aby załadować dane");
 //        }
+    }
+
+    private void getListInputGutter() {
+        listInputGutter = Arrays.asList(gutter1, gutter2, gutter3, gutter4, gutter5, gutter6);
     }
 
     private void getListNumberFields() {

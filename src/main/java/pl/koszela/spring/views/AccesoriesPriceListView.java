@@ -13,10 +13,14 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.EntityAccesories;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 
+import javax.swing.text.html.parser.Entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,6 +69,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
         Grid.Column<EntityAccesories> detalPriceColumn = grid.addColumn(EntityAccesories::getDetalPrice).setHeader("Cena detal");
         Grid.Column<EntityAccesories> marginColumn = grid.addColumn(EntityAccesories::getMargin).setHeader("Narzut");
         Grid.Column<EntityAccesories> optionColumn = grid.addColumn(EntityAccesories::getOption).setHeader("Opcja");
+        Grid.Column<EntityAccesories> dateColumn = grid.addColumn(EntityAccesories::getDate).setHeader("Data modyfikacji");
         setPriceRetail();
         grid.getColumns().forEach(column -> column.setAutoWidth(true));
 
@@ -143,8 +148,13 @@ public class AccesoriesPriceListView extends VerticalLayout {
     private Button saveToRepo() {
         Button save = new Button("Zapisz do bazy");
         save.addClickListener(event -> {
+            for (EntityAccesories accesories : allAccesoriesRepo) {
+                LocalDateTime dateTime = LocalDateTime.now();
+                DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                accesories.setDate(dateTime.format(myDateFormat));
+            }
             accesoriesRepository.saveAll(new HashSet<>(allAccesoriesRepo));
-            getNotificationSucces("Zmodyfikowano          :)");
+            getNotificationSucces("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "         :)");
             grid.getDataProvider().refreshAll();
         });
         return save;
