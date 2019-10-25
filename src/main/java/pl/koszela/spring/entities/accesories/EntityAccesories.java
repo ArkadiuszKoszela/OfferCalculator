@@ -1,4 +1,6 @@
-package pl.koszela.spring.entities;
+package pl.koszela.spring.entities.accesories;
+
+import pl.koszela.spring.entities.EntityUser;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -25,6 +27,7 @@ public class EntityAccesories {
     private String date;
     @ManyToMany(mappedBy = "resultAccesories")
     private Set<EntityUser> userResultAccesories = new HashSet<>();
+    private Integer discount;
 
     public EntityAccesories() {
     }
@@ -69,8 +72,8 @@ public class EntityAccesories {
         this.category = category;
     }
 
-    public static EntityAccesories.Builder builder(){
-        return new EntityAccesories.Builder();
+    public static Builder builder(){
+        return new Builder();
     }
 
     public Double getDetalPrice() {
@@ -143,6 +146,14 @@ public class EntityAccesories {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public Integer getDiscount() {
+        return discount;
     }
 
     public static final class Builder {

@@ -4,6 +4,10 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.*;
 
 import java.util.*;

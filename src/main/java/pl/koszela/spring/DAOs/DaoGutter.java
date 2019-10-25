@@ -2,15 +2,12 @@ package pl.koszela.spring.DAOs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityAccesories;
-import pl.koszela.spring.entities.EntityGutter;
-import pl.koszela.spring.repositories.AccesoriesRepository;
+import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.repositories.GutterRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service

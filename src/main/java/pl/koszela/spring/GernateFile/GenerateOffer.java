@@ -4,7 +4,10 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
-import pl.koszela.spring.entities.*;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.tiles.CategoryTiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 
 import java.io.*;
 import java.util.ArrayList;

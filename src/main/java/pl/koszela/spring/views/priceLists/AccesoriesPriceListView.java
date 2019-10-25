@@ -1,4 +1,4 @@
-package pl.koszela.spring.views;
+package pl.koszela.spring.views.priceLists;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -9,14 +9,12 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.EntityAccesories;
-import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
+import pl.koszela.spring.views.MainView;
 
-import javax.swing.text.html.parser.Entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -31,7 +29,7 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 @Route(value = AccesoriesPriceListView.ACCESORIES_PRICE_LIST, layout = MainView.class)
 public class AccesoriesPriceListView extends VerticalLayout {
 
-    static final String ACCESORIES_PRICE_LIST = "accesoriesPriceList";
+   public static final String ACCESORIES_PRICE_LIST = "accesoriesPriceList";
 
     private AccesoriesRepository accesoriesRepository;
 

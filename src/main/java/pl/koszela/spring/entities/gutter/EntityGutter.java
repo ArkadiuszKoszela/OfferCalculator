@@ -1,11 +1,17 @@
-package pl.koszela.spring.entities;
+package pl.koszela.spring.entities.gutter;
+
+import pl.koszela.spring.entities.EntityUser;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "gutter")
-public class EntityGutter {
+public class EntityGutter{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +29,12 @@ public class EntityGutter {
     private BigDecimal totalProfit;
     private boolean main;
     private boolean option;
+    @ManyToMany(mappedBy = "entityUserGutter")
+    private List<EntityUser> userGutters = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "input_id")
+    private List<InputGutterData> inputGutter = new ArrayList<>();
 
     public EntityGutter() {
     }
@@ -137,5 +149,21 @@ public class EntityGutter {
 
     public void setOption(boolean option) {
         this.option = option;
+    }
+
+    public List<EntityUser> getUserGutters() {
+        return userGutters;
+    }
+
+    public void setUserGutters(List<EntityUser> userGutters) {
+        this.userGutters = userGutters;
+    }
+
+    public List<InputGutterData> getInputGutter() {
+        return inputGutter;
+    }
+
+    public void setInputGutter(List<InputGutterData> inputGutter) {
+        this.inputGutter = inputGutter;
     }
 }

@@ -32,6 +32,7 @@ public class ReadUser {
         VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.getEntityKolnierz());
         VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", find.getTiles());
         VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getResultAccesories());
+        VaadinSession.getCurrent().getSession().setAttribute("allGutter", find.getEntityUserGutter());
 
         return find;
     }

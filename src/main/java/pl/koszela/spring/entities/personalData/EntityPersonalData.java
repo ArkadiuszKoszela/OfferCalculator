@@ -1,4 +1,4 @@
-package pl.koszela.spring.entities;
+package pl.koszela.spring.entities.personalData;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

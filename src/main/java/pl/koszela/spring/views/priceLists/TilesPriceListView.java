@@ -1,4 +1,4 @@
-package pl.koszela.spring.views;
+package pl.koszela.spring.views.priceLists;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,8 +12,9 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.TilesRepository;
+import pl.koszela.spring.views.MainView;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,7 +27,7 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 @Route(value = TilesPriceListView.TILES_PRICE_LIST, layout = MainView.class)
 public class TilesPriceListView extends VerticalLayout {
 
-    static final String TILES_PRICE_LIST = "tilesPriceList";
+    public static final String TILES_PRICE_LIST = "tilesPriceList";
 
     private TilesRepository tilesRepository;
 

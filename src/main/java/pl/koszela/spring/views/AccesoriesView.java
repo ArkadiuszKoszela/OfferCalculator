@@ -1,74 +1,177 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.converter.StringToDoubleConverter;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.EntityAccesories;
-import pl.koszela.spring.entities.EntityInputDataTiles;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
+import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
+
 @Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
-public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserver {
-
+public class AccesoriesView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
     static final String SELECT_ACCESORIES = "accesories";
-    private AccesoriesRepository accesoriesRepository;
 
-    private static final String NAZWA = "Nazwa";
-    private static final String WYBIERZ = "Wybierz";
-    private static final String ILOSC = "Ilość";
-    private static final String CENA_ZAKUPU = "Cena zakupu";
-    private static final String CENA_DETAL = "Cena detal";
-    private static final String CENA_RAZEM_NETTO = "Cena razem netto";
-    private static final String CENA_RAZEM_ZAKUP = "Cena razem zakup";
-    private static final String ZYSK = "Zysk";
-    private static final String DODAC_DO_OFERTY = "Dodać do oferty ?";
-
-    private List<String> categories = Arrays.asList("tasma kalenicowa", "wspornik", "tasma do obrobki", "listwa", "kosz", "klamra do mocowania kosza", "tasma samorozprezna",
-            "grzebien", "kratka", "pas", "klamra do gasiora", "spinka", "spinka cieta", "lawa mniejsza", "lawa wieksza", "stopien", "plotek mniejszy", "plotek wiekszy",
-            "membrana", "laczenie membran", "reparacyjna", "blacha", "cegla", "podbitka");
-
+    private TreeGrid<EntityAccesories> treeGrid = new TreeGrid<>();
     private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
     private Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
-    private List<Binder<EntityAccesories>> binders = new ArrayList<>();
+    private AccesoriesRepository accesoriesRepository;
+    private Binder<EntityAccesories> binder;
     private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
 
-    @Autowired
-    public AccesoriesView(AccesoriesRepository accesoriesRepository) {
-        this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
 
+    public AccesoriesView(AccesoriesRepository accesoriesRepository) {
+        this.accesoriesRepository = accesoriesRepository;
         if (set == null) {
-            set = new HashSet<>();
+            List<EntityAccesories> all = accesoriesRepository.findAll();
+            set = new HashSet<>(addQuantityToList(all));
         }
-        add(createCheckboxes());
-        categories.forEach(category -> add(addSubLayout(category)));
-        if (set != null) {
-            read();
-        }
+        add(createCheckbox());
+        add(createGrid());
     }
 
     @Override
-    public void beforeLeave(BeforeLeaveEvent event) {
-        BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
-        action.proceed();
+    public TreeGrid createGrid() {
+        Grid.Column<EntityAccesories> nameColumn = treeGrid.addHierarchyColumn(EntityAccesories::getName).setHeader("Nazwa");
+        Grid.Column<EntityAccesories> quantityColumn = treeGrid.addColumn(EntityAccesories::getQuantity).setHeader("Ilość");
+        Grid.Column<EntityAccesories> discountColumn = treeGrid.addColumn(EntityAccesories::getDiscount).setHeader("Rabat");
+        Grid.Column<EntityAccesories> detalPriceColumn = treeGrid.addColumn(EntityAccesories::getDetalPrice).setHeader("Cena jedn. detal");
+        Grid.Column<EntityAccesories> purchasePriceColumn = treeGrid.addColumn(EntityAccesories::getPurchasePrice).setHeader("Cena jedn. zakup");
+        Grid.Column<EntityAccesories> allPricePurchaseColumn = treeGrid.addColumn(EntityAccesories::getAllPricePurchase).setHeader("Razem zakup");
+        Grid.Column<EntityAccesories> allPriceDetalColumn = treeGrid.addColumn(EntityAccesories::getAllPriceRetail).setHeader("Razem Detal");
+        Grid.Column<EntityAccesories> profitColumn = treeGrid.addColumn(EntityAccesories::getProfit).setHeader("Zysk");
+        treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
+
+        binder = new Binder<>(EntityAccesories.class);
+
+        treeGrid.getEditor().setBinder(binder);
+
+        checkbox();
+
+        TextField discountEditField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
+        itemClickListener(discountEditField);
+        addEnterEvent(discountEditField);
+        discountColumn.setEditorComponent(discountEditField);
+
+
+        closeListener();
+
+        treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
+        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
+        treeGrid.setMinHeight("750px");
+        return treeGrid;
+    }
+
+    @Override
+    public void addEnterEvent(TextField textField) {
+        textField.getElement()
+                .addEventListener("keydown",
+                        event -> treeGrid.getEditor().cancel())
+                .setFilter("event.key === 'Enter'");
+    }
+
+    @Override
+    public void itemClickListener(TextField textField) {
+        treeGrid.addItemDoubleClickListener(event -> {
+            treeGrid.getEditor().editItem(event.getItem());
+            textField.focus();
+        });
+    }
+
+    @Override
+    public void closeListener() {
+        treeGrid.getEditor().addCloseListener(event -> {
+            if (binder.getBean() != null) {
+                EntityAccesories accesories = binder.getBean();
+                accesories.setAllPricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getPurchasePrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                accesories.setAllPriceRetail(new BigDecimal(accesories.getQuantity() * accesories.getDetalPrice() * (100 - accesories.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                accesories.setProfit(new BigDecimal(accesories.getAllPriceRetail() - accesories.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                if (binder.getBean().getDiscount() <= 30) {
+                    binder.setBean(accesories);
+                } else {
+                    accesories.setDiscount(30);
+                    getNotificationError("Maksymalny rabat to 30 %");
+                    binder.setBean(accesories);
+                }
+            }
+        });
+    }
+
+    @Override
+    public TreeData<EntityAccesories> addItems(List list) {
+        TreeData<EntityAccesories> treeData = new TreeData<>();
+        if (set != null) {
+            Set<String> parents = new HashSet<>();
+            Set<EntityAccesories> duplicates = set.stream().filter(e -> !parents.add(e.getCategory())).collect(Collectors.toSet());
+            for (String parent : parents) {
+                List<EntityAccesories> childrens = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
+                for (int i = 0; i < childrens.size(); i++) {
+                    if (i == 0) {
+                        treeData.addItem(null, childrens.stream().findFirst().get());
+                    } else {
+                        treeData.addItem(childrens.stream().findFirst().get(), childrens.get(i));
+                    }
+                }
+            }
+        }
+        return treeData;
+    }
+
+    @Override
+    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
+        TextField textField = new TextField();
+        addEnterEvent(textField);
+        binder.forField(textField)
+                .withConverter(stringToIntegerConverter)
+                .bind(EntityAccesories::getDiscount, EntityAccesories::setDiscount);
+        return textField;
+    }
+
+    @Override
+    public ComponentRenderer<VerticalLayout, EntityAccesories> createCheckboxes() {
+        return new ComponentRenderer<>(accesories -> {
+            Checkbox mainCheckBox = new Checkbox("Dodać ?");
+            mainCheckBox.setValue(accesories.isOffer());
+            mainCheckBox.addValueChangeListener(event -> {
+                accesories.setOffer(event.getValue());
+            });
+            return new VerticalLayout(mainCheckBox);
+        });
+    }
+
+    private List<EntityAccesories> addQuantityToList(List<EntityAccesories> list) {
+        for (EntityAccesories accesories : list) {
+            accesories.setDiscount(0);
+            accesories.setQuantity(value(accesories.getCategory()));
+            accesories.setAllPricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setAllPriceRetail(new BigDecimal(accesories.getQuantity() * accesories.getDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setProfit(new BigDecimal(accesories.getAllPriceRetail() - accesories.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+        }
+        return list;
     }
 
     private Double value(String category) {
@@ -104,113 +207,27 @@ public class AccesoriesView extends VerticalLayout implements BeforeLeaveObserve
         }
     }
 
-    private FormLayout addSubLayout(String category) {
-        FormLayout formLayout = new FormLayout();
-        FormLayout.ResponsiveStep form = new FormLayout.ResponsiveStep("5px", 9);
-        formLayout.setResponsiveSteps(form);
-
-        Binder<EntityAccesories> binder = new Binder<>(EntityAccesories.class);
-
-        TextArea name = new TextArea(NAZWA, category);
-        NumberField pricePurchase = getTextArea(category, CENA_ZAKUPU);
-        NumberField priceRetail = new NumberField(CENA_DETAL, category);
-        NumberField numberField = new NumberField(ILOSC);
-        numberField.setValue(value(category));
-        NumberField allPriceRetail = getTextArea(category, CENA_RAZEM_NETTO);
-        NumberField allPricePurchase = getTextArea(category, CENA_RAZEM_ZAKUP);
-        NumberField profit = getTextArea(category, ZYSK);
-        Checkbox checkbox = new Checkbox(DODAC_DO_OFERTY);
-
-        binder.bind(name, EntityAccesories::getName, EntityAccesories::setName);
-        binder.bind(pricePurchase, EntityAccesories::getPurchasePrice, EntityAccesories::setPurchasePrice);
-        binder.bind(priceRetail, EntityAccesories::getDetalPrice, EntityAccesories::setDetalPrice);
-        binder.bind(numberField, EntityAccesories::getQuantity, EntityAccesories::setQuantity);
-        binder.bind(allPriceRetail, EntityAccesories::getAllPriceRetail, EntityAccesories::setAllPriceRetail);
-        binder.bind(allPricePurchase, EntityAccesories::getAllPricePurchase, EntityAccesories::setAllPricePurchase);
-        binder.bind(profit, EntityAccesories::getProfit, EntityAccesories::setProfit);
-        binder.bind(checkbox, EntityAccesories::isOffer, (entityAccesories, offer) -> entityAccesories.setOffer(checkbox.getValue()));
-
-        binder.setStatusLabel(new Label(category));
-
-        binders.add(binder);
-        binder.setStatusLabel(new Label(category));
-
-        checkbox(binder);
-
-        List<EntityAccesories> allWithTheSameCategory = accesoriesRepository.findAllByCategoryEquals(category);
-        ComboBox<EntityAccesories> comboBox = new ComboBox<>(WYBIERZ, allWithTheSameCategory);
-
-        formLayout.add(comboBox, name, numberField, pricePurchase, priceRetail, allPriceRetail, allPricePurchase, profit, checkbox);
-        comboBox.setItemLabelGenerator(EntityAccesories::getName);
-        comboBoxValueChangeListener(comboBox, binder);
-        return formLayout;
-    }
-
-    private void read() {
-        for (EntityAccesories accesories : set) {
-            Set<Binder<EntityAccesories>> toChange = binders.stream().filter(f -> f.getStatusLabel().get().getText().equals(accesories.getCategory())).collect(Collectors.toSet());
-            for (Binder<EntityAccesories> binder : toChange) {
-                binder.setBean(accesories);
-                binder.setStatusLabel(new Label(accesories.getCategory()));
-            }
-        }
-    }
-
-    private void checkbox(Binder<EntityAccesories> binder) {
+    private void checkbox() {
         checkboxGroup.addValueChangeListener(e -> {
             List<EntityAccesories> all = accesoriesRepository.findAll();
-
-            Set<EntityAccesories> newValue = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toSet());
-            Set<EntityAccesories> oldValue = all.stream().filter(f -> f.getOption().equals(e.getOldValue())).collect(Collectors.toSet());
-            Set<EntityAccesories> other = oldValue.stream().filter(f -> f.getCategory().equals(binder.getStatusLabel().get().getText())).collect(Collectors.toSet());
-            Set<EntityAccesories> toChange = newValue.stream().filter(f -> f.getCategory().equals(binder.getStatusLabel().get().getText())).collect(Collectors.toSet());
-            for (EntityAccesories accesories : other) {
-                binder.setBean(null);
-                binder.setStatusLabel(new Label(accesories.getCategory()));
-                Set<EntityAccesories> toRemove = new HashSet<>();
-                for (EntityAccesories accesoriesToRemove : set) {
-                    if (accesories.getName().equals(accesoriesToRemove.getName()) && accesories.getOption().equals(accesoriesToRemove.getOption())) {
-                        toRemove.add(accesoriesToRemove);
-                    }
-                }
-                set.removeAll(toRemove);
-            }
-            for (EntityAccesories accesories : toChange) {
-                accesories.setQuantity(value(accesories.getCategory()));
-                accesories.setAllPricePurchase(accesories.getQuantity() * accesories.getPurchasePrice());
-                accesories.setAllPriceRetail(accesories.getQuantity() * accesories.getDetalPrice());
-                accesories.setProfit(accesories.getAllPriceRetail() - accesories.getAllPricePurchase());
-                binder.setBean(accesories);
-                binder.setStatusLabel(new Label(accesories.getCategory()));
-                set.add(binder.getBean());
-            }
+            List<EntityAccesories> newValue = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toList());
+            set = new HashSet<>(addQuantityToList(newValue));
+            treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList<>())));
+            treeGrid.getDataProvider().refreshAll();
         });
     }
 
-    private FormLayout createCheckboxes() {
+    private FormLayout createCheckbox() {
         FormLayout formLayout = new FormLayout();
         checkboxGroup.setItems("PODSTAWOWY", "PREMIUM", "LUX");
         formLayout.add(checkboxGroup);
         return formLayout;
     }
 
-    private NumberField getTextArea(String category, String label) {
-        NumberField textArea = new NumberField(label, category);
-        textArea.setReadOnly(true);
-        return textArea;
-    }
-
-    private void comboBoxValueChangeListener(ComboBox<EntityAccesories> comboBox, Binder<EntityAccesories> binder) {
-        comboBox.addValueChangeListener(event -> {
-            EntityAccesories value = event.getValue();
-            value.setQuantity(value(value.getCategory()));
-            value.setAllPricePurchase(value.getQuantity() * value.getPurchasePrice());
-            value.setAllPriceRetail(value.getQuantity() * value.getDetalPrice());
-            value.setProfit(value.getAllPriceRetail() - value.getAllPricePurchase());
-            Set<EntityAccesories> collect = set.stream().filter(e -> e.getCategory().equals(value.getCategory())).collect(Collectors.toSet());
-            collect.forEach(e -> set.remove(e));
-            binder.setBean(value);
-            set.add(binder.getBean());
-        });
+    @Override
+    public void beforeLeave(BeforeLeaveEvent event) {
+        BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
+        VaadinSession.getCurrent().getSession().setAttribute("accesories", set);
+        action.proceed();
     }
 }

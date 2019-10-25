@@ -2,14 +2,12 @@ package pl.koszela.spring.DAOs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityAccesories;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service

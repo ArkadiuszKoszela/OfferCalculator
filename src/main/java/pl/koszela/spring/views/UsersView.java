@@ -16,13 +16,12 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.crud.ReadUser;
 import pl.koszela.spring.entities.*;
+import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.crud.DeleteUsers;
 
 import java.util.*;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Route(value = UsersView.INPUT_USER, layout = MainView.class)
 public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
@@ -134,6 +133,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("personalData");
         VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
         VaadinSession.getCurrent().getSession().removeAttribute("inputGutterData");
+        VaadinSession.getCurrent().getSession().removeAttribute("allGutter");
 
         VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
         VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");

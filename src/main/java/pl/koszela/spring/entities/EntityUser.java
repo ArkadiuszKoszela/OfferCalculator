@@ -1,9 +1,13 @@
 package pl.koszela.spring.entities;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.gutter.EntityGutter;
+import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +42,13 @@ public class EntityUser {
             inverseJoinColumns = @JoinColumn(name = "tiles_id")
     )
     private Set<Tiles> entityUserTiles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_gutters",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "gutter_id")
+    )
+    private List<EntityGutter> entityUserGutter = new ArrayList<>();
 
     public EntityUser() {
     }
@@ -104,5 +115,13 @@ public class EntityUser {
 
     public void setResultAccesories(Set<EntityAccesories> resultAccesories) {
         this.resultAccesories = resultAccesories;
+    }
+
+    public List<EntityGutter> getEntityUserGutter() {
+        return entityUserGutter;
+    }
+
+    public void setEntityUserGutter(List<EntityGutter> entityUserGutter) {
+        this.entityUserGutter = entityUserGutter;
     }
 }

@@ -14,8 +14,13 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.gutter.EntityGutter;
+import pl.koszela.spring.entities.gutter.InputGutterData;
+import pl.koszela.spring.entities.tiles.CategoryTiles;
+import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.service.AvailablePriceList;
-import pl.koszela.spring.entities.*;
 import pl.koszela.spring.repositories.*;
 
 import java.math.BigDecimal;
@@ -64,13 +69,16 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private Set<EntityAccesories> setAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
     private List<Binder<InputGutterData>> binders = new ArrayList<>();
     private List<InputGutterData> inputGutterDataList = (List<InputGutterData>) VaadinSession.getCurrent().getSession().getAttribute("inputGutterData");
+    private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
 
     @Autowired
     public TilesView(AvailablePriceList availablePriceList, TilesRepository tilesRepository, GutterRepository gutterRepository) throws ValidationException {
         this.availablePriceList = Objects.requireNonNull(availablePriceList);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
-        if (inputGutterDataList == null) {
+        if (list != null) {
+            inputGutterDataList = list.get(0).getInputGutter();
+        } else {
             inputGutterDataList = new ArrayList<>();
         }
         add(createInputFields());
@@ -256,6 +264,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         for (EntityGutter gutter : gutterRepositoryAll) {
             if (gutter.getName().equals("rynna 3mb")) {
                 gutter.setQuantity(rynna3mb);
+                gutter.setInputGutter(inputGutterDataList);
             } else if (gutter.getName().equals("rynna 4mb")) {
                 gutter.setQuantity(rynna4mb);
             } else {
@@ -323,6 +332,8 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         } catch (ValidationException e) {
             e.printStackTrace();
         }
+
         VaadinSession.getCurrent().getSession().setAttribute("allGutter", listWithQuantityGutter());
+
     }
 }

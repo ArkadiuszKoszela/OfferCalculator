@@ -1,4 +1,4 @@
-package pl.koszela.spring.entities;
+package pl.koszela.spring.entities.tiles;
 
 import javax.persistence.*;
 

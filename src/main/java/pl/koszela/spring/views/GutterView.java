@@ -3,7 +3,6 @@ package pl.koszela.spring.views;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
@@ -14,51 +13,118 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.CategoryTiles;
-import pl.koszela.spring.entities.EntityGutter;
-import pl.koszela.spring.entities.Tiles;
-import pl.koszela.spring.repositories.GutterRepository;
+import pl.koszela.spring.entities.gutter.EntityGutter;
+import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 @Route(value = GutterView.GUTTER_VIEW, layout = MainView.class)
-public class GutterView extends VerticalLayout {
+public class GutterView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
 
     public static final String GUTTER_VIEW = "gutter";
-
-    private GutterRepository gutterRepository;
-
-    private TreeGrid<EntityGutter> grid = new TreeGrid<>();
+    private TreeGrid<EntityGutter> treeGrid = new TreeGrid<>();
     private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
+    private Binder<EntityGutter> binder;
 
-    public GutterView(GutterRepository gutterRepository) {
-        this.gutterRepository = Objects.requireNonNull(gutterRepository);
-
+    public GutterView() {
+        addPriceToList(list);
         add(checkboxGroupType());
         add(createGrid());
     }
 
-    private TreeData<EntityGutter> allGutter(List<EntityGutter> list) {
+    @Override
+    public TreeGrid createGrid() {
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> nameColumn = treeGrid.addHierarchyColumn(EntityGutter::getName).setHeader("Nazwa");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> categoryColumn = treeGrid.addColumn(EntityGutter::getCategory).setHeader("Kategoria");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> quantityColumn = treeGrid.addColumn(EntityGutter::getQuantity).setHeader("Ilość");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> discountColumn = treeGrid.addColumn(EntityGutter::getDiscount).setHeader("Rabat");
+        treeGrid.addColumn(EntityGutter::getTotalPrice).setHeader("Total klient");
+        treeGrid.addColumn(EntityGutter::getTotalProfit).setHeader("Total zysk");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> unitPurchaseColumn = treeGrid.addColumn(EntityGutter::getUnitPricePurchase).setHeader("Cena jedn. zakup");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> unitDetalColumn = treeGrid.addColumn(EntityGutter::getUnitPriceDetal).setHeader("Cena jedn. detal");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> allPurchaseColumn = treeGrid.addColumn(EntityGutter::getAllPricePurchase).setHeader("Razem cena netto");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> allDetalColumn = treeGrid.addColumn(EntityGutter::getAllPriceDetal).setHeader("Razem cena detal");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> protitColumn = treeGrid.addColumn(EntityGutter::getProfit).setHeader("Zysk");
+        treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
+
+        binder = new Binder<>(EntityGutter.class);
+        treeGrid.getEditor().setBinder(binder);
+        TextField discountField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
+        addEnterEvent(discountField);
+        itemClickListener(discountField);
+        discountColumn.setEditorComponent(discountField);
+        TextField quantityField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
+        addEnterEvent(quantityField);
+        itemClickListener(quantityField);
+        quantityColumn.setEditorComponent(quantityField);
+
+        FooterRow footerRow = treeGrid.appendFooterRow();
+
+        Button calculate = refreshButton(treeGrid);
+
+        footerRow.getCell(nameColumn).setComponent(calculate);
+
+        closeListener();
+
+        treeGrid.setDataProvider(new TreeDataProvider<>(addItems(list)));
+        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
+        treeGrid.setMinHeight("750px");
+        return treeGrid;
+    }
+
+    @Override
+    public void addEnterEvent(TextField textField) {
+        textField.getElement()
+                .addEventListener("keydown",
+                        event -> treeGrid.getEditor().cancel())
+                .setFilter("event.key === 'Enter'");
+    }
+
+    @Override
+    public void itemClickListener(TextField textField) {
+        treeGrid.addItemDoubleClickListener(e -> {
+            treeGrid.getEditor().editItem(e.getItem());
+            textField.focus();
+        });
+    }
+
+    @Override
+    public void closeListener() {
+        treeGrid.getEditor().addCloseListener(event -> {
+            if (binder.getBean() != null) {
+                EntityGutter gutter = binder.getBean();
+                gutter.setUnitPriceDetal(new BigDecimal(gutter.getUnitPriceDetal() * (100 - gutter.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllPriceDetal(new BigDecimal(gutter.getUnitPriceDetal() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllPricePurchase(new BigDecimal(gutter.getUnitPricePurchase() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setProfit(new BigDecimal(gutter.getAllPriceDetal() - gutter.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                if (binder.getBean().getDiscount() <= 30) {
+                    binder.setBean(gutter);
+                } else {
+                    gutter.setDiscount(30);
+                    getNotificationError("Maksymalny rabat to 30 %");
+                    binder.setBean(gutter);
+                }
+            }
+        });
+    }
+
+    @Override
+    public TreeData<EntityGutter> addItems(List list) {
         TreeData<EntityGutter> treeData = new TreeData<>();
-        for (EntityGutter gutter : list) {
-            gutter.setUnitPricePurchase(new BigDecimal(gutter.getUnitPriceDetal() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllPriceDetal(new BigDecimal(gutter.getQuantity() * gutter.getUnitPriceDetal()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllPricePurchase(new BigDecimal(gutter.getQuantity() * gutter.getUnitPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setProfit(new BigDecimal(gutter.getAllPriceDetal() - gutter.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-        }
-        if (list != null) {
-            List<EntityGutter> parents = list.stream().filter(e -> e.getName().equals("rynna 3mb")).collect(Collectors.toList());
+        if ((List<EntityGutter>) list != null) {
+            List<EntityGutter> parents = ((List<EntityGutter>) list).stream().filter(e -> e.getName().equals("rynna 3mb")).collect(Collectors.toList());
             for (EntityGutter parent : parents) {
-                List<EntityGutter> childrens = list.stream().filter(e -> e.getCategory().equals(parent.getCategory())).collect(Collectors.toList());
+                List<EntityGutter> childrens = ((List<EntityGutter>) list).stream().filter(e -> e.getCategory().equals(parent.getCategory())).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, parent);
@@ -71,36 +137,32 @@ public class GutterView extends VerticalLayout {
         return treeData;
     }
 
-    private TreeGrid<EntityGutter> createGrid() {
-        Grid.Column<EntityGutter> nameColumn = grid.addHierarchyColumn(EntityGutter::getName).setHeader("Nazwa");
-        Grid.Column<EntityGutter> categoryColumn = grid.addColumn(EntityGutter::getCategory).setHeader("Kategoria");
-        Grid.Column<EntityGutter> quantityColumn = grid.addColumn(EntityGutter::getQuantity).setHeader("Ilość");
-        Grid.Column<EntityGutter> discountColumn = grid.addColumn(EntityGutter::getDiscount).setHeader("Rabat");
-        grid.addColumn(EntityGutter::getTotalPrice).setHeader("Total klient");
-        grid.addColumn(EntityGutter::getTotalProfit).setHeader("Total zysk");
-        Grid.Column<EntityGutter> unitPurchaseColumn = grid.addColumn(EntityGutter::getUnitPricePurchase).setHeader("Cena jedn. zakup");
-        Grid.Column<EntityGutter> unitDetalColumn = grid.addColumn(EntityGutter::getUnitPriceDetal).setHeader("Cena jedn. detal");
-        Grid.Column<EntityGutter> allPurchaseColumn = grid.addColumn(EntityGutter::getAllPricePurchase).setHeader("Razem cena netto");
-        Grid.Column<EntityGutter> allDetalColumn = grid.addColumn(EntityGutter::getAllPriceDetal).setHeader("Razem cena detal");
-        Grid.Column<EntityGutter> protitColumn = grid.addColumn(EntityGutter::getProfit).setHeader("Zysk");
-        grid.addColumn(createCheckboxes()).setHeader("Opcje");
-
-        Binder<EntityGutter> binder = new Binder<>(EntityGutter.class);
-        grid.getEditor().setBinder(binder);
-        editor(binder, discountColumn, quantityColumn);
-        FooterRow footerRow = grid.appendFooterRow();
-
-        Button calculate = refreshButton(grid);
-
-        footerRow.getCell(nameColumn).setComponent(calculate);
-
-        grid.setDataProvider(new TreeDataProvider<>(allGutter(list)));
-        grid.getColumns().forEach(e -> e.setAutoWidth(true));
-        grid.setMinHeight("750px");
-        return grid;
+    private List<EntityGutter> addPriceToList(List<EntityGutter> list) {
+        for (EntityGutter gutter : list) {
+            gutter.setUnitPricePurchase(new BigDecimal(gutter.getUnitPriceDetal() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setAllPriceDetal(new BigDecimal(gutter.getQuantity() * gutter.getUnitPriceDetal()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setAllPricePurchase(new BigDecimal(gutter.getQuantity() * gutter.getUnitPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setProfit(new BigDecimal(gutter.getAllPriceDetal() - gutter.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+        }
+        return list;
     }
 
-    private ComponentRenderer<VerticalLayout, EntityGutter> createCheckboxes() {
+    @Override
+    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
+        TextField discountField = new TextField();
+        binder.forField(discountField)
+                .withConverter(stringToIntegerConverter)
+                .bind(EntityGutter::getDiscount, EntityGutter::setDiscount);
+
+        TextField quantityField = new TextField();
+        binder.forField(quantityField)
+                .withConverter(stringToDoubleConverter)
+                .bind(EntityGutter::getQuantity, EntityGutter::setQuantity);
+        return discountField;
+    }
+
+    @Override
+    public ComponentRenderer<VerticalLayout, EntityGutter> createCheckboxes() {
         return new ComponentRenderer<>(gutter -> {
             Checkbox mainCheckBox = new Checkbox("Główna");
             Checkbox optionCheckbox = new Checkbox("Opcjonalna");
@@ -120,76 +182,28 @@ public class GutterView extends VerticalLayout {
         });
     }
 
-    private void editor(Binder<EntityGutter> binder, Grid.Column<EntityGutter> discountColumn, Grid.Column<EntityGutter> quantityColumn) {
-
-        TextField discountField = new TextField();
-        addEnterEvent(discountField);
-        binder.forField(discountField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(EntityGutter::getDiscount, EntityGutter::setDiscount);
-        discountColumn.setEditorComponent(discountField);
-
-        TextField quantityField = new TextField();
-        addEnterEvent(quantityField);
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(EntityGutter::getQuantity, EntityGutter::setQuantity);
-        quantityColumn.setEditorComponent(quantityField);
-
-        addClickListener(discountField);
-
-        addCloseListener(binder);
-    }
-
-    private void addEnterEvent(TextField textField) {
-        textField.getElement()
-                .addEventListener("keydown",
-                        event -> grid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
-    }
-
-    private void addClickListener(TextField discountField) {
-        grid.addItemDoubleClickListener(e -> {
-            grid.getEditor().editItem(e.getItem());
-            discountField.focus();
-        });
-    }
-
-    private void addCloseListener(Binder<EntityGutter> binder) {
-        grid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                EntityGutter gutter = binder.getBean();
-                gutter.setUnitPriceDetal(new BigDecimal(gutter.getUnitPriceDetal() * (100 - gutter.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllPriceDetal(new BigDecimal(gutter.getUnitPriceDetal() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllPricePurchase(new BigDecimal(gutter.getUnitPricePurchase() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setProfit(new BigDecimal(gutter.getAllPriceDetal() - gutter.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(gutter);
-                } else {
-                    gutter.setDiscount(30);
-                    getNotificationError("Maksymalny rabat to 30 %");
-                    binder.setBean(gutter);
-                }
-            }
-        });
-    }
-
     private RadioButtonGroup<String> checkboxGroupType() {
         RadioButtonGroup<String> radioButtonGroup = new RadioButtonGroup<>();
         radioButtonGroup.setItems("Stalowa", "PCV", "Tytan-cynk", "Ocynk", "Wszystko");
         radioButtonGroup.addValueChangeListener(e -> {
             String value = e.getValue();
-            if (value.equals("Stalowa")) {
-                List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Flamingo")).collect(Collectors.toList());
-                grid.setDataProvider(new TreeDataProvider<>(allGutter(searchCategory)));
-                grid.getDataProvider().refreshAll();
-            } else if (value.equals("PCV")) {
-                List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Bryza")).collect(Collectors.toList());
-                grid.setDataProvider(new TreeDataProvider<>(allGutter(searchCategory)));
-                grid.getDataProvider().refreshAll();
-            }else if(value.equals("Wszystko")){
-                grid.setDataProvider(new TreeDataProvider<>(allGutter(list)));
-                grid.getDataProvider().refreshAll();
+            switch (value) {
+                case "Stalowa": {
+                    List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Flamingo")).collect(Collectors.toList());
+                    treeGrid.setDataProvider(new TreeDataProvider<>(addItems(searchCategory)));
+                    treeGrid.getDataProvider().refreshAll();
+                    break;
+                }
+                case "PCV": {
+                    List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Bryza")).collect(Collectors.toList());
+                    treeGrid.setDataProvider(new TreeDataProvider<>(addItems(searchCategory)));
+                    treeGrid.getDataProvider().refreshAll();
+                    break;
+                }
+                case "Wszystko":
+                    treeGrid.setDataProvider(new TreeDataProvider<>(addItems(list)));
+                    treeGrid.getDataProvider().refreshAll();
+                    break;
             }
         });
         return radioButtonGroup;
@@ -207,5 +221,12 @@ public class GutterView extends VerticalLayout {
             }
             treeGrid.getDataProvider().refreshAll();
         });
+    }
+
+    @Override
+    public void beforeLeave(BeforeLeaveEvent event) {
+        BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
+        VaadinSession.getCurrent().getSession().setAttribute("allGutter", list);
+        action.proceed();
     }
 }

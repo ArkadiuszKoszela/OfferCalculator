@@ -1,6 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -12,13 +11,9 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.tabs.Tab;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.Router;
 import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
@@ -30,20 +25,20 @@ import pl.koszela.spring.crud.UpdateUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
-import static pl.koszela.spring.views.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
-import static pl.koszela.spring.views.TilesPriceListView.TILES_PRICE_LIST;
+import static pl.koszela.spring.views.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
 import static pl.koszela.spring.views.TilesView.ENTER_TILES;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
+import static pl.koszela.spring.views.priceLists.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
+import static pl.koszela.spring.views.priceLists.TilesPriceListView.TILES_PRICE_LIST;
 
 @Route("")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
@@ -65,10 +60,10 @@ public class MainView extends AppLayout {
 
 
         MenuBar menuBar = new MenuBar();
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_PRIMARY);
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_CONTRAST);
         addItemMenuBar(menuBar, "Strona Główna", "");
         addItemMenuBar(menuBar, "Klienci", INPUT_USER);
-        addItemMenuBar(menuBar, "Dachówki", ENTER_TILES);
+        addItemMenuBar(menuBar, "Wprowadź Dane", ENTER_TILES);
         addItemMenuBar(menuBar, "Akcesoria", SELECT_ACCESORIES);
         addItemMenuBar(menuBar, "Rynny", GUTTER_VIEW);
         addItemMenuBar(menuBar, "Okna", WINDOWS);
@@ -76,6 +71,7 @@ public class MainView extends AppLayout {
         MenuItem priceLists = menuBar.addItem("Cenniki");
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
         priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESORIES_PRICE_LIST)));
+        priceLists.getSubMenu().addItem("Konkurencja", event -> getUI().ifPresent(ui -> ui.navigate(PRICE_LIST_OF_SALES_COMPETITION)));
 
         Button importFilesButton = new Button("Zaimportuj pliki");
         importFilesButton.addThemeVariants(ButtonVariant.LUMO_ERROR);

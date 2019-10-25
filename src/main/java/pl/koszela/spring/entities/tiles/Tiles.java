@@ -1,4 +1,6 @@
-package pl.koszela.spring.entities;
+package pl.koszela.spring.entities.tiles;
+
+import pl.koszela.spring.entities.EntityUser;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

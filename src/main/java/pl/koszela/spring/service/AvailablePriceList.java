@@ -2,8 +2,8 @@ package pl.koszela.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.CategoryTiles;
-import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.entities.tiles.CategoryTiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.TilesRepository;
 
 import java.util.ArrayList;
