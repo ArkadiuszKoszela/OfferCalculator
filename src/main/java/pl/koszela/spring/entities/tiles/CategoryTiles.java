@@ -14,5 +14,11 @@ public enum CategoryTiles {
     PLYTKA_POCZATKOWA,
     PLYTKA_KONCOWA,
     TROJNIK,
-    GASIAR_ZAOKRAGLONY
+    GASIAR_ZAOKRAGLONY,
+    BRAK,
+    BRAK1,
+    BRAK2,
+    BRAK3,
+    BRAK4,
+    BRAK5;
 }

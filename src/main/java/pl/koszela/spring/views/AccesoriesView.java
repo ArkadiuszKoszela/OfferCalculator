@@ -17,17 +17,16 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import pl.koszela.spring.entities.InputData;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
+import pl.koszela.spring.service.NameNumberFields;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
@@ -37,7 +36,8 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     static final String SELECT_ACCESORIES = "accesories";
 
     private TreeGrid<EntityAccesories> treeGrid = new TreeGrid<>();
-    private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
+    //    private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
+    private Set<InputData> setInput = (Set<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
     private Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
     private AccesoriesRepository accesoriesRepository;
     private Binder<EntityAccesories> binder;
@@ -167,33 +167,38 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     }
 
     private Double value(String category) {
+        Optional<InputData> dlugoscKalenic = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.DLUGOSC_KALENIC.toString())).findFirst();
+        Optional<InputData> obwodOkapu = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.OBWOD_OKAPU.toString())).findFirst();
+        Optional<InputData> dlugoscOkapu = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.DLUGOSC_OKAPU.toString())).findFirst();
+        Optional<InputData> dlugoscKoszy = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.DLUGOSC_KOSZY.toString())).findFirst();
+        Optional<InputData> powierzchniaPolaci = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.POWIERZCHNIA_POLACI.toString())).findFirst();
         switch (category) {
             case "wspornik":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscKalenic() / 0.8).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 0.8).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma kalenicowa":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscKalenic()).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKalenic.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma do obrobki":
-                return BigDecimal.valueOf((dataTilesRepo.getObwodKomina() + 1) * 2).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf((obwodOkapu.get().getValue() + 1) * 2).setScale(0, RoundingMode.UP).doubleValue();
             case "listwa":
-                return BigDecimal.valueOf((dataTilesRepo.getObwodKomina() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf((obwodOkapu.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
             case "kosz":
-                return BigDecimal.valueOf((dataTilesRepo.getDlugoscKoszy() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
             case "klamra do mocowania kosza":
-                return BigDecimal.valueOf((dataTilesRepo.getDlugoscKoszy() / 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf((dlugoscKoszy.get().getValue()/ 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma samorozprezna":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscKoszy() * 2).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 2).setScale(0, RoundingMode.UP).doubleValue();
             case "grzebien":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscOkapu()).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscOkapu.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
             case "pas":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscKalenic() / 1.95).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 1.95).setScale(0, RoundingMode.UP).doubleValue();
             case "klamra do gasiora":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscKalenic() * 2.5).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() * 2.5).setScale(0, RoundingMode.UP).doubleValue();
             case "spinka":
-                return BigDecimal.valueOf(dataTilesRepo.getPowierzchniaPolaci() / 50).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() / 50).setScale(0, RoundingMode.UP).doubleValue();
             case "spinka cieta":
-                return BigDecimal.valueOf(dataTilesRepo.getDlugoscKoszy() * 0.6).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 0.6).setScale(0, RoundingMode.UP).doubleValue();
             case "membrana":
-                return BigDecimal.valueOf(dataTilesRepo.getPowierzchniaPolaci() * 1.1).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() * 1.1).setScale(0, RoundingMode.UP).doubleValue();
             default:
                 return 1d;
         }

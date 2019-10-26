@@ -7,10 +7,7 @@ import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -48,6 +45,9 @@ public class EntityUser {
             inverseJoinColumns = @JoinColumn(name = "gutter_id")
     )
     private List<EntityGutter> entityUserGutter = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<InputData> inputData = new LinkedHashSet<>();
 
     public EntityUser() {
     }
@@ -114,5 +114,13 @@ public class EntityUser {
 
     public void setEntityUserGutter(List<EntityGutter> entityUserGutter) {
         this.entityUserGutter = entityUserGutter;
+    }
+
+    public Set<InputData> getInputData() {
+        return inputData;
+    }
+
+    public void setInputData(Set<InputData> inputData) {
+        this.inputData = inputData;
     }
 }
