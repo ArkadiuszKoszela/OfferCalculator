@@ -52,7 +52,7 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         treeGrid.getEditor().setBinder(binder);
 
         TextField priceField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
-        addEnterEvent(priceField);
+        addEnterEvent(treeGrid, priceField);
         cena.setEditorComponent(priceField);
 
         itemClickListener(priceField);
@@ -61,14 +61,6 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
         treeGrid.setMinHeight("750px");
         return treeGrid;
-    }
-
-    @Override
-    public void addEnterEvent(TextField textField) {
-        textField.getElement()
-                .addEventListener("keydown",
-                        event -> treeGrid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
     }
 
     @Override
@@ -111,7 +103,7 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
     @Override
     public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         TextField textField = new TextField();
-        addEnterEvent(textField);
+        addEnterEvent(treeGrid, textField);
         binder.forField(textField)
                 .withConverter(stringToDoubleConverter)
                 .bind(Competition::getPrice, Competition::setPrice);

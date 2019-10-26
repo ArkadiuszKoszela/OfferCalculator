@@ -41,7 +41,7 @@ import static pl.koszela.spring.views.priceLists.AccesoriesPriceListView.ACCESOR
 import static pl.koszela.spring.views.priceLists.TilesPriceListView.TILES_PRICE_LIST;
 
 @Route("")
-@Theme(value = Lumo.class, variant = Lumo.DARK)
+@Theme(value = Lumo.class, variant = Lumo.LIGHT)
 public class MainView extends AppLayout {
 
     private ImportFiles importFiles;

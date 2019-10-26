@@ -22,7 +22,6 @@ import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,22 +49,22 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         com.vaadin.flow.component.grid.Grid.Column<EntityGutter> discountColumn = treeGrid.addColumn(EntityGutter::getDiscount).setHeader("Rabat");
         treeGrid.addColumn(EntityGutter::getTotalPrice).setHeader("Total klient");
         treeGrid.addColumn(EntityGutter::getTotalProfit).setHeader("Total zysk");
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> unitPurchaseColumn = treeGrid.addColumn(EntityGutter::getUnitPricePurchase).setHeader("Cena jedn. zakup");
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> unitDetalColumn = treeGrid.addColumn(EntityGutter::getUnitPriceDetal).setHeader("Cena jedn. detal");
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> allPurchaseColumn = treeGrid.addColumn(EntityGutter::getAllPricePurchase).setHeader("Razem cena netto");
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> allDetalColumn = treeGrid.addColumn(EntityGutter::getAllPriceDetal).setHeader("Razem cena detal");
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> protitColumn = treeGrid.addColumn(EntityGutter::getProfit).setHeader("Zysk");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> unitPurchaseColumn = treeGrid.addColumn(EntityGutter::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> unitDetalColumn = treeGrid.addColumn(EntityGutter::getUnitDetalPrice).setHeader("Cena jedn. detal");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> allPurchaseColumn = treeGrid.addColumn(EntityGutter::getAllpricePurchase).setHeader("Razem cena netto");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> allDetalColumn = treeGrid.addColumn(EntityGutter::getAllpriceAfterDiscount).setHeader("Razem cena detal");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> protitColumn = treeGrid.addColumn(EntityGutter::getAllprofit).setHeader("Zysk");
         treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
 
         binder = new Binder<>(EntityGutter.class);
         treeGrid.getEditor().setBinder(binder);
         TextField discountField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
-        addEnterEvent(discountField);
-        itemClickListener(discountField);
+        addEnterEvent(treeGrid, discountField);
+        itemClickListener( discountField);
         discountColumn.setEditorComponent(discountField);
         TextField quantityField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
-        addEnterEvent(quantityField);
-        itemClickListener(quantityField);
+        addEnterEvent(treeGrid, quantityField);
+        itemClickListener( quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
         FooterRow footerRow = treeGrid.appendFooterRow();
@@ -83,14 +82,6 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
     }
 
     @Override
-    public void addEnterEvent(TextField textField) {
-        textField.getElement()
-                .addEventListener("keydown",
-                        event -> treeGrid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
-    }
-
-    @Override
     public void itemClickListener(TextField textField) {
         treeGrid.addItemDoubleClickListener(e -> {
             treeGrid.getEditor().editItem(e.getItem());
@@ -103,10 +94,10 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         treeGrid.getEditor().addCloseListener(event -> {
             if (binder.getBean() != null) {
                 EntityGutter gutter = binder.getBean();
-                gutter.setUnitPriceDetal(new BigDecimal(gutter.getUnitPriceDetal() * (100 - gutter.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllPriceDetal(new BigDecimal(gutter.getUnitPriceDetal() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllPricePurchase(new BigDecimal(gutter.getUnitPricePurchase() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setProfit(new BigDecimal(gutter.getAllPriceDetal() - gutter.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setUnitDetalPrice(new BigDecimal(gutter.getUnitDetalPrice() * (100 - gutter.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllpriceAfterDiscount(new BigDecimal(gutter.getUnitDetalPrice() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllpricePurchase(new BigDecimal(gutter.getUnitPurchasePrice() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllprofit(new BigDecimal(gutter.getAllpriceAfterDiscount() - gutter.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 if (binder.getBean().getDiscount() <= 30) {
                     binder.setBean(gutter);
                 } else {
@@ -122,9 +113,9 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
     public TreeData<EntityGutter> addItems(List list) {
         TreeData<EntityGutter> treeData = new TreeData<>();
         if ((List<EntityGutter>) list != null) {
-            List<EntityGutter> parents = ((List<EntityGutter>) list).stream().filter(e -> e.getName().equals("rynna 3mb")).collect(Collectors.toList());
+            List<EntityGutter> parents = ((List<EntityGutter>) list).stream().filter(gutter -> gutter.getName().equals("rynna 3mb")).collect(Collectors.toList());
             for (EntityGutter parent : parents) {
-                List<EntityGutter> childrens = ((List<EntityGutter>) list).stream().filter(e -> e.getCategory().equals(parent.getCategory())).collect(Collectors.toList());
+                List<EntityGutter> childrens = ((List<EntityGutter>) list).stream().filter(gutter -> gutter.getCategory().equals(parent.getCategory()) && !gutter.getUnitDetalPrice().equals(0d)).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, parent);
@@ -137,14 +128,13 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         return treeData;
     }
 
-    private List<EntityGutter> addPriceToList(List<EntityGutter> list) {
+    private void addPriceToList(List<EntityGutter> list) {
         for (EntityGutter gutter : list) {
-            gutter.setUnitPricePurchase(new BigDecimal(gutter.getUnitPriceDetal() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllPriceDetal(new BigDecimal(gutter.getQuantity() * gutter.getUnitPriceDetal()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllPricePurchase(new BigDecimal(gutter.getQuantity() * gutter.getUnitPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setProfit(new BigDecimal(gutter.getAllPriceDetal() - gutter.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setUnitPurchasePrice(new BigDecimal(gutter.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setAllpriceAfterDiscount(new BigDecimal(gutter.getQuantity() * gutter.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setAllpricePurchase(new BigDecimal(gutter.getQuantity() * gutter.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            gutter.setAllprofit(new BigDecimal(gutter.getAllpriceAfterDiscount() - gutter.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
         }
-        return list;
     }
 
     @Override
@@ -189,13 +179,13 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
             String value = e.getValue();
             switch (value) {
                 case "Stalowa": {
-                    List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Flamingo")).collect(Collectors.toList());
+                    List<EntityGutter> searchCategory = list.stream().filter(gutter -> gutter.getCategory().contains("Flamingo")/* && !gutter.getUnitDetalPrice().equals(0d)*/).collect(Collectors.toList());
                     treeGrid.setDataProvider(new TreeDataProvider<>(addItems(searchCategory)));
                     treeGrid.getDataProvider().refreshAll();
                     break;
                 }
                 case "PCV": {
-                    List<EntityGutter> searchCategory = list.stream().filter(f -> f.getCategory().contains("Bryza")).collect(Collectors.toList());
+                    List<EntityGutter> searchCategory = list.stream().filter(gutter -> gutter.getCategory().contains("Bryza")/* && !gutter.getUnitDetalPrice().equals(0d)*/).collect(Collectors.toList());
                     treeGrid.setDataProvider(new TreeDataProvider<>(addItems(searchCategory)));
                     treeGrid.getDataProvider().refreshAll();
                     break;
@@ -214,8 +204,8 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
             List<EntityGutter> mainsInPriceList = list.stream().filter(e -> e.getName().equals("rynna 3mb")).collect(Collectors.toList());
             for (EntityGutter gutter : mainsInPriceList) {
                 List<EntityGutter> onePriceList = list.stream().filter(e -> e.getCategory().equals(gutter.getCategory())).collect(Collectors.toList());
-                Double totalPrice = onePriceList.stream().map(EntityGutter::getAllPriceDetal).reduce(Double::sum).get();
-                Double totalProfit = onePriceList.stream().map(EntityGutter::getProfit).reduce(Double::sum).get();
+                Double totalPrice = onePriceList.stream().map(EntityGutter::getAllpriceAfterDiscount).reduce(Double::sum).get();
+                Double totalProfit = onePriceList.stream().map(EntityGutter::getAllprofit).reduce(Double::sum).get();
                 gutter.setTotalPrice(BigDecimal.valueOf(totalPrice).setScale(2, RoundingMode.HALF_UP));
                 gutter.setTotalProfit(BigDecimal.valueOf(totalProfit).setScale(2, RoundingMode.HALF_UP));
             }

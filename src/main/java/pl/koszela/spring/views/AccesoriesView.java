@@ -59,11 +59,11 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         Grid.Column<EntityAccesories> nameColumn = treeGrid.addHierarchyColumn(EntityAccesories::getName).setHeader("Nazwa");
         Grid.Column<EntityAccesories> quantityColumn = treeGrid.addColumn(EntityAccesories::getQuantity).setHeader("Ilość");
         Grid.Column<EntityAccesories> discountColumn = treeGrid.addColumn(EntityAccesories::getDiscount).setHeader("Rabat");
-        Grid.Column<EntityAccesories> detalPriceColumn = treeGrid.addColumn(EntityAccesories::getDetalPrice).setHeader("Cena jedn. detal");
-        Grid.Column<EntityAccesories> purchasePriceColumn = treeGrid.addColumn(EntityAccesories::getPurchasePrice).setHeader("Cena jedn. zakup");
-        Grid.Column<EntityAccesories> allPricePurchaseColumn = treeGrid.addColumn(EntityAccesories::getAllPricePurchase).setHeader("Razem zakup");
-        Grid.Column<EntityAccesories> allPriceDetalColumn = treeGrid.addColumn(EntityAccesories::getAllPriceRetail).setHeader("Razem Detal");
-        Grid.Column<EntityAccesories> profitColumn = treeGrid.addColumn(EntityAccesories::getProfit).setHeader("Zysk");
+        Grid.Column<EntityAccesories> detalPriceColumn = treeGrid.addColumn(EntityAccesories::getUnitDetalPrice).setHeader("Cena jedn. detal");
+        Grid.Column<EntityAccesories> purchasePriceColumn = treeGrid.addColumn(EntityAccesories::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
+        Grid.Column<EntityAccesories> allPricePurchaseColumn = treeGrid.addColumn(EntityAccesories::getAllpricePurchase).setHeader("Razem zakup");
+        Grid.Column<EntityAccesories> allPriceDetalColumn = treeGrid.addColumn(EntityAccesories::getAllpriceAfterDiscount).setHeader("Razem Detal");
+        Grid.Column<EntityAccesories> profitColumn = treeGrid.addColumn(EntityAccesories::getAllprofit).setHeader("Zysk");
         treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
 
         binder = new Binder<>(EntityAccesories.class);
@@ -74,7 +74,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
 
         TextField discountEditField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
         itemClickListener(discountEditField);
-        addEnterEvent(discountEditField);
+        addEnterEvent(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
 
@@ -84,14 +84,6 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         treeGrid.setMinHeight("750px");
         return treeGrid;
-    }
-
-    @Override
-    public void addEnterEvent(TextField textField) {
-        textField.getElement()
-                .addEventListener("keydown",
-                        event -> treeGrid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
     }
 
     @Override
@@ -107,9 +99,9 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         treeGrid.getEditor().addCloseListener(event -> {
             if (binder.getBean() != null) {
                 EntityAccesories accesories = binder.getBean();
-                accesories.setAllPricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getPurchasePrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                accesories.setAllPriceRetail(new BigDecimal(accesories.getQuantity() * accesories.getDetalPrice() * (100 - accesories.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                accesories.setProfit(new BigDecimal(accesories.getAllPriceRetail() - accesories.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice() * (100 - accesories.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 if (binder.getBean().getDiscount() <= 30) {
                     binder.setBean(accesories);
                 } else {
@@ -144,7 +136,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     @Override
     public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         TextField textField = new TextField();
-        addEnterEvent(textField);
+        addEnterEvent(treeGrid, textField);
         binder.forField(textField)
                 .withConverter(stringToIntegerConverter)
                 .bind(EntityAccesories::getDiscount, EntityAccesories::setDiscount);
@@ -167,9 +159,9 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         for (EntityAccesories accesories : list) {
             accesories.setDiscount(0);
             accesories.setQuantity(value(accesories.getCategory()));
-            accesories.setAllPricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            accesories.setAllPriceRetail(new BigDecimal(accesories.getQuantity() * accesories.getDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            accesories.setProfit(new BigDecimal(accesories.getAllPriceRetail() - accesories.getAllPricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
         }
         return list;
     }

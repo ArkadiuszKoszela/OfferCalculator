@@ -1,10 +1,10 @@
 package pl.koszela.spring.crud;
 
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
+import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
 import pl.koszela.spring.repositories.*;
 
@@ -21,14 +21,18 @@ public class DeleteUsers {
     private InputDataTilesRepository inputDataTilesRepository;
     private WindowsRepository windowsRepository;
     private KolnierzRepository kolnierzRepository;
+    private GutterRepository gutterRepository;
+    private TilesRepository tilesRepository;
 
     @Autowired
-    public DeleteUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository) {
+    public DeleteUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, GutterRepository gutterRepository, TilesRepository tilesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
+        this.gutterRepository = Objects.requireNonNull(gutterRepository);
+        this.tilesRepository = Objects.requireNonNull(tilesRepository);
     }
 
     public void removeUser(ComboBox<String> comboBox) {
@@ -40,28 +44,22 @@ public class DeleteUsers {
             Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
             if (userFromRepo.isPresent()) {
                 EntityUser userToRemove = userFromRepo.get();
-                usersRepo.delete(userToRemove);
-                inputDataTilesRepository.delete(userToRemove.getEntityInputDataTiles());
-                windowsRepository.delete(userToRemove.getEntityWindows());
-                kolnierzRepository.delete(userToRemove.getEntityKolnierz());
+
+                userToRemove.getEntityUserGutter().clear();
+                gutterRepository.flush();
+                userToRemove.getEntityUserGutter().clear();
+                inputDataTilesRepository.flush();
+//                windowsRepository.delete(userToRemove.getEntityWindows());
+//                kolnierzRepository.delete(userToRemove.getEntityKolnierz());
+                userToRemove.getTiles().clear();
+                tilesRepository.flush();
+                usersRepo.deleteById(   userToRemove.getId());
+                usersRepo.flush();
 
                 getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getEntityPersonalData().getName() + " " + userToRemove.getEntityPersonalData().getSurname() + "   papa  :(");
             }
         } else {
             getNotificationError("Nie ma takiego użytkownika " + nameAndSurname[0] + " " + nameAndSurname[1] + " w bazie danych    :(");
         }
-
-        VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInputFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInputFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
-
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierz");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTiles");
     }
 }

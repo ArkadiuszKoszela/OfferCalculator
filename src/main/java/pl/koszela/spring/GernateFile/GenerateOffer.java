@@ -115,11 +115,11 @@ public class GenerateOffer {
                 if (accesories.isOffer()) {
                     tableAccesories.addCell(new Phrase(String.valueOf(accesories.getName()), font10));
                     tableAccesories.addCell(new Phrase(String.valueOf(accesories.getQuantity()), font10));
-                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getPurchasePrice()), font10));
-                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getDetalPrice()), font10));
-                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllPriceRetail()), font10));
-                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllPricePurchase()), font10));
-                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getProfit()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getUnitPurchasePrice()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getUnitDetalPrice()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllpriceAfterDiscount()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllpricePurchase()), font10));
+                    tableAccesories.addCell(new Phrase(String.valueOf(accesories.getAllprofit()), font10));
                 }
             }
             document.add(tableAccesories);
@@ -188,7 +188,7 @@ public class GenerateOffer {
             if (tile.getPriceListName().equals(parents.get(0).getPriceListName())) {
                 table.addCell(new Phrase(StringUtils.capitalize(tile.getName().replace('_', ' ').toLowerCase()), font10));
                 table.addCell(new Phrase(String.valueOf(tile.getQuantity()), font10));
-                table.addCell(new Phrase(String.valueOf(tile.getPriceDetalUnit()), font10));
+                table.addCell(new Phrase(String.valueOf(tile.getUnitDetalPrice()), font10));
                 table.addCell(new Phrase(String.valueOf(tile.getAllpricePurchase()), font10));
                 table.addCell(new Phrase(String.valueOf(tile.getAllpriceAfterDiscount()), font10));
                 table.addCell(new Phrase(String.valueOf(tile.getAllprofit()), font10));

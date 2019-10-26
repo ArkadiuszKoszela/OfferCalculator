@@ -63,8 +63,8 @@ public class AccesoriesPriceListView extends VerticalLayout {
         grid.setDataProvider(dataProvider);
 
         Grid.Column<EntityAccesories> nameColumn = grid.addColumn(EntityAccesories::getName).setHeader("Nazwa");
-        Grid.Column<EntityAccesories> purchaseColumn = grid.addColumn(EntityAccesories::getPurchasePrice).setHeader("Cena zakupu");
-        Grid.Column<EntityAccesories> detalPriceColumn = grid.addColumn(EntityAccesories::getDetalPrice).setHeader("Cena detal");
+        Grid.Column<EntityAccesories> purchaseColumn = grid.addColumn(EntityAccesories::getUnitPurchasePrice).setHeader("Cena zakupu");
+        Grid.Column<EntityAccesories> detalPriceColumn = grid.addColumn(EntityAccesories::getUnitDetalPrice).setHeader("Cena detal");
         Grid.Column<EntityAccesories> marginColumn = grid.addColumn(EntityAccesories::getMargin).setHeader("Narzut");
         Grid.Column<EntityAccesories> optionColumn = grid.addColumn(EntityAccesories::getOption).setHeader("Opcja");
         Grid.Column<EntityAccesories> dateColumn = grid.addColumn(EntityAccesories::getDate).setHeader("Data modyfikacji");
@@ -91,13 +91,13 @@ public class AccesoriesPriceListView extends VerticalLayout {
         binder.forField(purchase)
                 .withConverter(
                         new StringToDoubleConverter("Cena zakupu musi być liczbą"))
-                .bind("purchasePrice");
+                .bind("unitPurchasePrice");
         purchaseColumn.setEditorComponent(purchase);
         eventListener(detal);
         binder.forField(detal)
                 .withConverter(
                         new StringToDoubleConverter("Cena detaliczna musi być liczbą"))
-                .bind("detalPrice");
+                .bind("unitDetalPrice");
         detalPriceColumn.setEditorComponent(detal);
         eventListener(margin);
         binder.forField(margin)
@@ -136,9 +136,9 @@ public class AccesoriesPriceListView extends VerticalLayout {
         for (EntityAccesories accesories : allAccesoriesRepo) {
             BigDecimal constance = new BigDecimal(100);
             BigDecimal margin = BigDecimal.valueOf(accesories.getMargin());
-            BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getPurchasePrice());
+            BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getUnitPurchasePrice());
             BigDecimal priceDetal = pricePurchase.multiply(margin.divide(constance, 2, RoundingMode.HALF_UP)).add(pricePurchase).setScale(2, RoundingMode.HALF_UP);
-            accesories.setDetalPrice(priceDetal.doubleValue());
+            accesories.setUnitDetalPrice(priceDetal.doubleValue());
         }
         grid.getDataProvider().refreshAll();
     }
@@ -150,7 +150,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
             for (EntityAccesories old : all) {
                 for (EntityAccesories accesories : allAccesoriesRepo) {
                     if (old.getName().equals(accesories.getName())) {
-                        if (!old.getPurchasePrice().equals(accesories.getPurchasePrice())
+                        if (!old.getUnitPurchasePrice().equals(accesories.getUnitPurchasePrice())
                                 || !old.getMargin().equals(accesories.getMargin()) || !old.getOption().equals(accesories.getOption())) {
                             LocalDateTime dateTime = LocalDateTime.now();
                             DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

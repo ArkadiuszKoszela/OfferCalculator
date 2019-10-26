@@ -32,10 +32,10 @@ public class DaoGutter implements Dao {
                 EntityGutter gutter = new EntityGutter();
 
                 gutter.setName(data[1]);
-                gutter.setUnitPriceDetal(Double.valueOf(data[2]));
+                gutter.setUnitDetalPrice(Double.valueOf(data[2]));
                 gutter.setCategory(priceListName);
                 gutter.setDiscount(0);
-                gutter.setUnitPricePurchase(0d);
+                gutter.setUnitPurchasePrice(0d);
 
                 gutterRepository.save(gutter);
             }

@@ -7,11 +7,6 @@ import pl.koszela.spring.entities.*;
 import pl.koszela.spring.repositories.*;
 
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class ReadUser {
@@ -31,8 +26,9 @@ public class ReadUser {
         VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.getEntityWindows());
         VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.getEntityKolnierz());
         VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", find.getTiles());
-        VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getResultAccesories());
+        VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getAccesories());
         VaadinSession.getCurrent().getSession().setAttribute("allGutter", find.getEntityUserGutter());
+        VaadinSession.getCurrent().getSession().setAttribute("inputGutterData", find.getEntityUserGutter().get(0).getInputGutter());
 
         return find;
     }

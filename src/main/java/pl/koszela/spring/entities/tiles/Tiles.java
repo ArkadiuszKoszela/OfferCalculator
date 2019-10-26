@@ -1,5 +1,6 @@
 package pl.koszela.spring.entities.tiles;
 
+import pl.koszela.spring.entities.BaseEntity;
 import pl.koszela.spring.entities.EntityUser;
 
 import javax.persistence.*;
@@ -9,24 +10,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tiles")
-public class Tiles {
+public class Tiles extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String priceListName;
-    private String name;
-    private Double quantity;
-    private Integer discount;
     private Integer basicDiscount;
     private Integer promotionDiscount;
     private Integer additionalDiscount;
     private Integer skontoDiscount;
-    private Double priceFromRepo;
-    private BigDecimal priceDetalUnit;
-    private BigDecimal allpriceAfterDiscount;
-    private BigDecimal allpricePurchase;
-    private BigDecimal allprofit;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
     private String date;
@@ -38,76 +28,12 @@ public class Tiles {
     public Tiles() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public String getPriceListName() {
         return priceListName;
     }
 
     public void setPriceListName(String priceListName) {
         this.priceListName = priceListName;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
-    }
-
-    public BigDecimal getPriceDetalUnit() {
-        return priceDetalUnit;
-    }
-
-    public void setPriceDetalUnit(BigDecimal priceDetalUnit) {
-        this.priceDetalUnit = priceDetalUnit;
-    }
-
-    public BigDecimal getAllpriceAfterDiscount() {
-        return allpriceAfterDiscount;
-    }
-
-    public void setAllpriceAfterDiscount(BigDecimal allpriceAfterDiscount) {
-        this.allpriceAfterDiscount = allpriceAfterDiscount;
-    }
-
-    public BigDecimal getAllpricePurchase() {
-        return allpricePurchase;
-    }
-
-    public void setAllpricePurchase(BigDecimal allpricePurchase) {
-        this.allpricePurchase = allpricePurchase;
-    }
-
-    public BigDecimal getAllprofit() {
-        return allprofit;
-    }
-
-    public void setAllprofit(BigDecimal allprofit) {
-        this.allprofit = allprofit;
     }
 
     public BigDecimal getTotalPrice() {
@@ -181,14 +107,14 @@ public class Tiles {
     public void setSkontoDiscount(Integer skontoDiscount) {
         this.skontoDiscount = skontoDiscount;
     }
-
-    public Double getPriceFromRepo() {
-        return priceFromRepo;
-    }
-
-    public void setPriceFromRepo(Double priceFromRepo) {
-        this.priceFromRepo = priceFromRepo;
-    }
+//
+//    public Double getPriceFromRepo() {
+//        return priceFromRepo;
+//    }
+//
+//    public void setPriceFromRepo(Double priceFromRepo) {
+//        this.priceFromRepo = priceFromRepo;
+//    }
 
     public String getDate() {
         return date;

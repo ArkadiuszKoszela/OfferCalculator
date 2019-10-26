@@ -47,8 +47,8 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         Grid.Column<Tiles> nameColumn = treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
         treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
         Grid.Column<Tiles> discount = treeGrid.addColumn(Tiles::getDiscount).setHeader("Rabat");
-        treeGrid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
-        treeGrid.addColumn(Tiles::getPriceFromRepo).setHeader("Cena zakupu");
+        treeGrid.addColumn(Tiles::getUnitDetalPrice).setHeader("Cena detal");
+        treeGrid.addColumn(Tiles::getUnitPurchasePrice).setHeader("Cena zakupu");
         treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total klient");
         treeGrid.addColumn(Tiles::getTotalProfit).setHeader("Total zysk");
         treeGrid.addColumn(Tiles::getAllpricePurchase).setHeader("Cena zakupu");
@@ -79,14 +79,6 @@ public class OfferView extends VerticalLayout implements GridInteraface {
     }
 
     @Override
-    public void addEnterEvent(TextField textField) {
-        textField.getElement()
-                .addEventListener("keydown",
-                        event -> treeGrid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
-    }
-
-    @Override
     public void itemClickListener(TextField textField) {
         treeGrid.addItemDoubleClickListener(event -> {
             treeGrid.getEditor().editItem(event.getItem());
@@ -99,9 +91,9 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         treeGrid.getEditor().addCloseListener(event -> {
             if (binder.getBean() != null) {
                 Tiles tiles = binder.getBean();
-                tiles.setAllpricePurchase((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-                tiles.setAllpriceAfterDiscount((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(tiles.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
-                tiles.setAllprofit(tiles.getAllpriceAfterDiscount().subtract(tiles.getAllpricePurchase()));
+                tiles.setAllpricePurchase(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                tiles.setAllpriceAfterDiscount(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * (100 - tiles.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                tiles.setAllprofit(BigDecimal.valueOf(tiles.getAllpriceAfterDiscount() - tiles.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 if (binder.getBean().getDiscount() <= 30) {
                     binder.setBean(tiles);
                 } else {
@@ -135,7 +127,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
     @Override
     public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         TextField textField = new TextField();
-        addEnterEvent(textField);
+        addEnterEvent(treeGrid, textField);
         binder.forField(textField)
                 .withConverter(stringToIntegerConverter)
                 .bind(Tiles::getDiscount, Tiles::setDiscount);
@@ -147,10 +139,11 @@ public class OfferView extends VerticalLayout implements GridInteraface {
             Set<Tiles> mainsInPriceList = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles tiles : mainsInPriceList) {
                 Set<Tiles> onePriceList = set.stream().filter(e -> e.getPriceListName().equals(tiles.getPriceListName())).collect(Collectors.toSet());
-                BigDecimal totalPrice = onePriceList.stream().map(Tiles::getAllpriceAfterDiscount).reduce(BigDecimal::add).get();
-                BigDecimal totalProfit = onePriceList.stream().map(Tiles::getAllprofit).reduce(BigDecimal::add).get();
-                tiles.setTotalPrice(totalPrice);
-                tiles.setTotalProfit(totalProfit);
+
+                Double totalPrice = onePriceList.stream().map(Tiles::getAllpriceAfterDiscount).reduce(Double::sum).get();
+                Double totalProfit = onePriceList.stream().map(Tiles::getAllprofit).reduce(Double::sum).get();
+                tiles.setTotalPrice(BigDecimal.valueOf(totalPrice).setScale(2, RoundingMode.HALF_UP));
+                tiles.setTotalProfit(BigDecimal.valueOf(totalProfit).setScale(2, RoundingMode.HALF_UP));
             }
             treeGrid.getDataProvider().refreshAll();
         });
@@ -179,9 +172,9 @@ public class OfferView extends VerticalLayout implements GridInteraface {
 
     private void readBeans(Binder<Tiles> binder) {
         for (Tiles tiles : set) {
-            tiles.setAllpricePurchase((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(70))).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-            tiles.setAllpriceAfterDiscount((tiles.getPriceDetalUnit().multiply(new BigDecimal(tiles.getQuantity())).multiply(new BigDecimal(100).subtract(new BigDecimal(tiles.getDiscount())))).divide((new BigDecimal(100)), 2, RoundingMode.HALF_UP));
-            tiles.setAllprofit(tiles.getAllpriceAfterDiscount().subtract(tiles.getAllpricePurchase()));
+            tiles.setAllpricePurchase(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            tiles.setAllpriceAfterDiscount(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * (100 - tiles.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            tiles.setAllprofit(BigDecimal.valueOf(tiles.getAllpriceAfterDiscount() - tiles.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             binder.setBean(tiles);
         }
     }

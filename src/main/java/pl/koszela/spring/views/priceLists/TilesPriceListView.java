@@ -57,12 +57,12 @@ public class TilesPriceListView extends VerticalLayout {
 
         Grid.Column<Tiles> priceListNameColumn = grid.addColumn(Tiles::getPriceListName).setHeader("Nazwa Cennika");
         Grid.Column<Tiles> nameColumn = grid.addColumn(Tiles::getName).setHeader("Nazwa");
-        Grid.Column<Tiles> priceColumn = grid.addColumn(Tiles::getPriceDetalUnit).setHeader("Cena detal");
+        Grid.Column<Tiles> priceColumn = grid.addColumn(Tiles::getUnitDetalPrice).setHeader("Cena detal");
         Grid.Column<Tiles> basicDiscountColumn = grid.addColumn(Tiles::getBasicDiscount).setHeader("Podstawowy rabat");
         Grid.Column<Tiles> promotionDiscountColumn = grid.addColumn(Tiles::getPromotionDiscount).setHeader("Promocja");
         Grid.Column<Tiles> additionalDiscountColumn = grid.addColumn(Tiles::getAdditionalDiscount).setHeader("Dodatkowy rabat");
         Grid.Column<Tiles> skontoDiscountColumn = grid.addColumn(Tiles::getSkontoDiscount).setHeader("Skonto");
-        Grid.Column<Tiles> priceFromRepoColumn = grid.addColumn(Tiles::getPriceFromRepo).setHeader("Cena zakupu(z ręki)");
+        Grid.Column<Tiles> priceFromRepoColumn = grid.addColumn(Tiles::getUnitPurchasePrice).setHeader("Cena zakupu(z ręki)");
         Grid.Column<Tiles> date = grid.addColumn(Tiles::getDate).setHeader("Data zmiany");
 
         HeaderRow filterRow = grid.appendHeaderRow();
@@ -125,13 +125,13 @@ public class TilesPriceListView extends VerticalLayout {
         refresh.addClickListener(event -> {
             for (Tiles tiles : allTilesRepo) {
                 BigDecimal constance = new BigDecimal(100);
-                BigDecimal pricePurchase = tiles.getPriceDetalUnit();
+                BigDecimal pricePurchase = BigDecimal.valueOf(tiles.getUnitDetalPrice());
                 BigDecimal firstDiscount = (constance.subtract(new BigDecimal(tiles.getBasicDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
                 BigDecimal secondDiscount = (constance.subtract(new BigDecimal(tiles.getPromotionDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
                 BigDecimal thirdDiscount = (constance.subtract(new BigDecimal(tiles.getAdditionalDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
                 BigDecimal fourthDiscount = (constance.subtract(new BigDecimal(tiles.getSkontoDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
                 BigDecimal result = pricePurchase.multiply(firstDiscount).multiply(secondDiscount).multiply(thirdDiscount).multiply(fourthDiscount).setScale(2, RoundingMode.HALF_UP);
-                tiles.setPriceFromRepo(result.doubleValue());
+                tiles.setUnitPurchasePrice(result.doubleValue());
             }
             grid.getDataProvider().refreshAll();
         });

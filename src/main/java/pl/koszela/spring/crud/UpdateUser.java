@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
 import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
@@ -23,14 +24,16 @@ public class UpdateUser {
     private InputDataTilesRepository inputDataTilesRepository;
     private TilesRepository tilesRepository;
     private AccesoriesRepository accesoriesRepository;
+    private GutterRepository gutterRepository;
 
     @Autowired
-    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository) {
+    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository, GutterRepository gutterRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
+        this.gutterRepository = Objects.requireNonNull(gutterRepository);
     }
 
     public void updateUser() {
@@ -44,12 +47,15 @@ public class UpdateUser {
             Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
             if (userFromRepo.isPresent()) {
                 Set<Tiles> allTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
+                List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
                 EntityUser userToUpdate = userFromRepo.get();
+                userToUpdate.setEntityUserGutter(list);
                 userToUpdate.setEntityInputDataTiles(entityInputDataTiles);
-                userToUpdate.setResultAccesories(resultAccesories);
+                userToUpdate.setAccesories(resultAccesories);
                 userToUpdate.getTiles().clear();
                 userToUpdate.setTiles(allTilesFromRepo);
 
+                gutterRepository.saveAll(list);
                 accesoriesRepository.saveAll(resultAccesories);
                 inputDataTilesRepository.save(entityInputDataTiles);
                 tilesRepository.saveAll(allTilesFromRepo);
@@ -62,12 +68,5 @@ public class UpdateUser {
         } else {
             getNotificationError("Coś poszło nie tak - nie ma takich danych");
         }
-
-//        VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
-//        VaadinSession.getCurrent().getSession().removeAttribute("tilesInputFromRepo");
-//        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInputFromRepo");
-//        VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
-//        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
-//        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
     }
 }

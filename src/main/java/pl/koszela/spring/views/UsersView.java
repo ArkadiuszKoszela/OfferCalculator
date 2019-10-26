@@ -18,6 +18,7 @@ import pl.koszela.spring.crud.ReadUser;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
 import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
+import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.crud.DeleteUsers;
 

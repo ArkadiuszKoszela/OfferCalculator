@@ -1,6 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
@@ -20,7 +19,6 @@ import pl.koszela.spring.entities.gutter.InputGutterData;
 import pl.koszela.spring.entities.tiles.CategoryTiles;
 import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
-import pl.koszela.spring.service.AvailablePriceList;
 import pl.koszela.spring.repositories.*;
 
 import java.math.BigDecimal;
@@ -34,7 +32,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
 
     private TilesRepository tilesRepository;
     private GutterRepository gutterRepository;
-    private AvailablePriceList availablePriceList;
 
     private NumberField numberField1 = new NumberField("Powierzchnia połaci");
     private NumberField numberField2 = new NumberField("Długość kalenic");
@@ -55,11 +52,8 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private NumberField numberField17 = new NumberField("Gąsior z podwójną mufą");
     private NumberField numberField18 = new NumberField("Dachówka dwufalowa");
     private NumberField numberField19 = new NumberField("Okno połaciowe");
-    private NumberField customerDiscount = new NumberField("Podaj rabat dla klienta:");
 
     private int liczbaSubLayout = 0;
-
-    private ComboBox<String> comboBoxInput = new ComboBox<>("Podaj nazwę cennika: ");
 
     private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
     private EntityInputDataTiles entityInputDataTilesFromRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
@@ -68,12 +62,11 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private VerticalLayout dane = new VerticalLayout();
     private Set<EntityAccesories> setAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
     private List<Binder<InputGutterData>> binders = new ArrayList<>();
-    private List<InputGutterData> inputGutterDataList = (List<InputGutterData>) VaadinSession.getCurrent().getSession().getAttribute("inputGutterData");
+    private List<InputGutterData> inputGutterDataList;
     private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
 
     @Autowired
-    public TilesView(AvailablePriceList availablePriceList, TilesRepository tilesRepository, GutterRepository gutterRepository) throws ValidationException {
-        this.availablePriceList = Objects.requireNonNull(availablePriceList);
+    public TilesView(TilesRepository tilesRepository, GutterRepository gutterRepository) {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
         if (list != null) {
@@ -82,12 +75,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
             inputGutterDataList = new ArrayList<>();
         }
         add(createInputFields());
-    }
-
-    private ComboBox<String> getAvailablePriceList() {
-        List<String> available = availablePriceList.getAvailablePriceList();
-        comboBoxInput.setItems(available);
-        return comboBoxInput;
     }
 
     private VerticalLayout createInputFields() {
@@ -99,7 +86,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         FormLayout gutterInput = new FormLayout();
         FormLayout.ResponsiveStep responsiveStep1 = new FormLayout.ResponsiveStep("5px", 12);
         gutterInput.setResponsiveSteps(responsiveStep1);
-        formLayout.add(getCustomerDiscount(), getAvailablePriceList());
         setDefaultValuesFromRepo();
         listOfNumberFields.forEach(formLayout::add);
         while (liczbaSubLayout < 12) {
@@ -136,30 +122,28 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 List<NumberField> fields = listOfNumberFields.stream().filter(e -> e.getPattern().equals(parent.getName())).collect(Collectors.toList());
                 parent.setQuantity(fields.get(0).getValue());
                 parent.setTotalProfit(new BigDecimal(0));
-                parent.setDiscount(0);
-                parent.setTotalPrice(new BigDecimal(0));
-                parent.setAllpriceAfterDiscount(new BigDecimal(0));
-                parent.setAllpricePurchase(new BigDecimal(0));
-                parent.setAllprofit(new BigDecimal(0));
-                parent.setOption(false);
-                parent.setMain(false);
+                clearTiles(parent);
 
                 listOfNumberFields.forEach(field -> childrens.forEach(children -> {
                     if (field.getPattern().equals(children.getName())) {
                         children.setQuantity(field.getValue());
                         children.setTotalProfit(new BigDecimal(0));
-                        children.setDiscount(0);
-                        children.setTotalPrice(new BigDecimal(0));
-                        children.setAllpriceAfterDiscount(new BigDecimal(0));
-                        children.setAllpricePurchase(new BigDecimal(0));
-                        children.setAllprofit(new BigDecimal(0));
-                        children.setOption(false);
-                        children.setMain(false);
+                        clearTiles(children);
                     }
                 }));
             }
         }
         return set;
+    }
+
+    private void clearTiles(Tiles tiles) {
+        tiles.setDiscount(0);
+        tiles.setTotalPrice(new BigDecimal(0));
+        tiles.setAllpriceAfterDiscount(0d);
+        tiles.setAllpricePurchase(0d);
+        tiles.setAllprofit(0d);
+        tiles.setOption(false);
+        tiles.setMain(false);
     }
 
     private EntityInputDataTiles saveInputData() {
@@ -197,16 +181,10 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         NumberField odcinek = new NumberField("Odcinek " + number);
         setValues(odcinek, "mb", 0d, "brak");
         gutter4mb.addValueChangeListener(e -> {
-            odcinek.setValue(e.getValue() + gutter3mb.getValue());
+            odcinek.setValue(e.getValue() * 4 + 3 * gutter3mb.getValue());
         });
         gutter3mb.addValueChangeListener(e -> {
-            odcinek.setValue(e.getValue() + gutter4mb.getValue());
-        });
-        if (entityInputDataTilesFromRepo != null) {
-            numberField9.setValue(entityInputDataTilesFromRepo.getDlugoscOkapu());
-        }
-        odcinek.addValueChangeListener(e -> {
-            numberField9.setValue(numberField9.getValue() + e.getValue() - e.getOldValue());
+            odcinek.setValue(e.getValue() * 3 + 4 * gutter4mb.getValue());
         });
 
         Binder<InputGutterData> binder = new Binder<>(InputGutterData.class);
@@ -224,18 +202,35 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         return formLayout;
     }
 
+    private List<NumberField> numberFieldListGutter;
+
     private FormLayout addSubLayoutt() {
         FormLayout formLayout = new FormLayout();
-        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 6);
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 5);
         formLayout.setResponsiveSteps(responsiveStep);
-        NumberField gutter1 = new NumberField("Rynna");
-        NumberField gutter2 = new NumberField("Sztucer");
-        NumberField gutter3 = new NumberField("Denko");
-        NumberField gutter4 = new NumberField("Złączka rynny");
-        NumberField gutter5 = new NumberField("Narożnik wew.");
-        NumberField gutter6 = new NumberField("Narożnik zew.");
-        formLayout.add(gutter1, gutter2, gutter3, gutter4, gutter5, gutter6);
+        NumberField gutter2 = new NumberField("sztucer");
+        setValues(gutter2, "szt", 10d, "brak");
+        NumberField gutter3 = new NumberField("denko");
+        setValues(gutter3, "szt", 9d, "brak");
+        NumberField gutter4 = new NumberField("łącznik rynny");
+        setValues(gutter4, "szt", 6d, "brak");
+        NumberField gutter5 = new NumberField("narożnik wew");
+        setValues(gutter5, "szt", 5d, "brak");
+        NumberField gutter6 = new NumberField("narożnik zew");
+        setValues(gutter6, "szt", 3d, "brak");
+        numberFieldListGutter = Arrays.asList(gutter2, gutter3, gutter4, gutter5, gutter6);
+        formLayout.add(gutter2, gutter3, gutter4, gutter5, gutter6);
         return formLayout;
+    }
+
+    private void addQuantityGutter(List<EntityGutter> list) {
+        for (EntityGutter gutter : list) {
+            for (NumberField numberField : numberFieldListGutter) {
+                if (gutter.getName().contains(numberField.getLabel())) {
+                    gutter.setQuantity(numberField.getValue());
+                }
+            }
+        }
     }
 
     private List<InputGutterData> inputGutterDataList() throws ValidationException {
@@ -271,6 +266,7 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 gutter.setQuantity(1d);
             }
         }
+        addQuantityGutter(gutterRepositoryAll);
         return gutterRepositoryAll;
     }
 
@@ -304,15 +300,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 numberField17, numberField18, numberField19);
     }
 
-    private NumberField getCustomerDiscount() {
-        customerDiscount.setValue(0d);
-        customerDiscount.setMin(0);
-        customerDiscount.setMax(30);
-        customerDiscount.setHasControls(true);
-        customerDiscount.setSuffixComponent(new Span("%"));
-        return customerDiscount;
-    }
-
     private void setValues(NumberField numberField, String unit, Double valueFromRepo, String pattern) {
         numberField.setValue(valueFromRepo);
         numberField.setPattern(pattern);
@@ -332,8 +319,6 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
         } catch (ValidationException e) {
             e.printStackTrace();
         }
-
         VaadinSession.getCurrent().getSession().setAttribute("allGutter", listWithQuantityGutter());
-
     }
 }

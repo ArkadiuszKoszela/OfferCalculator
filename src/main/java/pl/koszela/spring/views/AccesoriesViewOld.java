@@ -120,13 +120,13 @@ public class AccesoriesViewOld extends VerticalLayout implements BeforeLeaveObse
         Checkbox checkbox = new Checkbox(DODAC_DO_OFERTY);
 
         binder.bind(name, EntityAccesories::getName, EntityAccesories::setName);
-        binder.bind(pricePurchase, EntityAccesories::getPurchasePrice, EntityAccesories::setPurchasePrice);
-        binder.bind(priceRetail, EntityAccesories::getDetalPrice, EntityAccesories::setDetalPrice);
-        binder.bind(numberField, EntityAccesories::getQuantity, EntityAccesories::setQuantity);
-        binder.bind(allPriceRetail, EntityAccesories::getAllPriceRetail, EntityAccesories::setAllPriceRetail);
-        binder.bind(allPricePurchase, EntityAccesories::getAllPricePurchase, EntityAccesories::setAllPricePurchase);
-        binder.bind(profit, EntityAccesories::getProfit, EntityAccesories::setProfit);
-        binder.bind(checkbox, EntityAccesories::isOffer, (entityAccesories, offer) -> entityAccesories.setOffer(checkbox.getValue()));
+//        binder.bind(pricePurchase, EntityAccesories::getPurchasePrice, EntityAccesories::setPurchasePrice);
+//        binder.bind(priceRetail, EntityAccesories::getDetalPrice, EntityAccesories::setDetalPrice);
+//        binder.bind(numberField, EntityAccesories::getQuantity, EntityAccesories::setQuantity);
+//        binder.bind(allPriceRetail, EntityAccesories::getAllPriceRetail, EntityAccesories::setAllPriceRetail);
+//        binder.bind(allPricePurchase, EntityAccesories::getAllPricePurchase, EntityAccesories::setAllPricePurchase);
+//        binder.bind(profit, EntityAccesories::getProfit, EntityAccesories::setProfit);
+//        binder.bind(checkbox, EntityAccesories::isOffer, (entityAccesories, offer) -> entityAccesories.setOffer(checkbox.getValue()));
 
         binder.setStatusLabel(new Label(category));
 
@@ -175,9 +175,9 @@ public class AccesoriesViewOld extends VerticalLayout implements BeforeLeaveObse
             }
             for (EntityAccesories accesories : toChange) {
                 accesories.setQuantity(value(accesories.getCategory()));
-                accesories.setAllPricePurchase(accesories.getQuantity() * accesories.getPurchasePrice());
-                accesories.setAllPriceRetail(accesories.getQuantity() * accesories.getDetalPrice());
-                accesories.setProfit(accesories.getAllPriceRetail() - accesories.getAllPricePurchase());
+//                accesories.setAllPricePurchase(accesories.getQuantity() * accesories.getPurchasePrice());
+//                accesories.setAllPriceRetail(accesories.getQuantity() * accesories.getDetalPrice());
+//                accesories.setProfit(accesories.getAllPriceRetail() - accesories.getAllPricePurchase());
                 binder.setBean(accesories);
                 binder.setStatusLabel(new Label(accesories.getCategory()));
                 set.add(binder.getBean());
@@ -201,10 +201,10 @@ public class AccesoriesViewOld extends VerticalLayout implements BeforeLeaveObse
     private void comboBoxValueChangeListener(ComboBox<EntityAccesories> comboBox, Binder<EntityAccesories> binder) {
         comboBox.addValueChangeListener(event -> {
             EntityAccesories value = event.getValue();
-            value.setQuantity(value(value.getCategory()));
-            value.setAllPricePurchase(value.getQuantity() * value.getPurchasePrice());
-            value.setAllPriceRetail(value.getQuantity() * value.getDetalPrice());
-            value.setProfit(value.getAllPriceRetail() - value.getAllPricePurchase());
+//            value.setQuantity(value(value.getCategory()));
+//            value.setAllPricePurchase(value.getQuantity() * value.getPurchasePrice());
+//            value.setAllPriceRetail(value.getQuantity() * value.getDetalPrice());
+//            value.setProfit(value.getAllPriceRetail() - value.getAllPricePurchase());
             Set<EntityAccesories> collect = set.stream().filter(e -> e.getCategory().equals(value.getCategory())).collect(Collectors.toSet());
             collect.forEach(e -> set.remove(e));
             binder.setBean(value);

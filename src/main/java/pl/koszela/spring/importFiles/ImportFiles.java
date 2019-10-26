@@ -4,7 +4,6 @@ import com.vaadin.flow.component.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.DAOs.*;
-import pl.koszela.spring.service.AvailablePriceList;
 import pl.koszela.spring.repositories.*;
 
 import java.util.Objects;
@@ -45,7 +44,6 @@ public class ImportFiles {
     private DaoWindows daoWindows;
     private DaoGutter daoGutter;
     private UsersRepo usersRepo;
-    private AvailablePriceList availablePriceList;
 
     public ImportFiles() {
     }
@@ -79,11 +77,6 @@ public class ImportFiles {
     @Autowired
     public void setDaoTiles(DaoTiles daoTiles) {
         this.daoTiles = Objects.requireNonNull(daoTiles);
-    }
-
-    @Autowired
-    public void setAvailablePriceList(AvailablePriceList availablePriceList) {
-        this.availablePriceList = Objects.requireNonNull(availablePriceList);
     }
 
     @Autowired

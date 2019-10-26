@@ -20,7 +20,6 @@ public class EntityUser {
     @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String priceListName;
     @OneToOne
     private EntityPersonalData entityPersonalData;
     @OneToOne
@@ -30,11 +29,11 @@ public class EntityUser {
     @OneToOne
     private EntityKolnierz entityKolnierz;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_resultAccesories",
+    @JoinTable(name = "user_accesories",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "entityResultAccesories_id")
+            inverseJoinColumns = @JoinColumn(name = "accesories_id")
     )
-    private Set<EntityAccesories> resultAccesories;
+    private Set<EntityAccesories> accesories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",
@@ -69,14 +68,6 @@ public class EntityUser {
         this.entityPersonalData = entityPersonalData;
     }
 
-    public String getPriceListName() {
-        return priceListName;
-    }
-
-    public void setPriceListName(String priceListName) {
-        this.priceListName = priceListName;
-    }
-
     public EntityInputDataTiles getEntityInputDataTiles() {
         return entityInputDataTiles;
     }
@@ -109,12 +100,12 @@ public class EntityUser {
         this.entityUserTiles = tiles;
     }
 
-    public Set<EntityAccesories> getResultAccesories() {
-        return resultAccesories;
+    public Set<EntityAccesories> getAccesories() {
+        return accesories;
     }
 
-    public void setResultAccesories(Set<EntityAccesories> resultAccesories) {
-        this.resultAccesories = resultAccesories;
+    public void setAccesories(Set<EntityAccesories> accesories) {
+        this.accesories = accesories;
     }
 
     public List<EntityGutter> getEntityUserGutter() {

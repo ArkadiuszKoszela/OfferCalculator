@@ -33,8 +33,8 @@ public class DaoTiles implements Dao {
                 Tiles tiles = new Tiles();
                 tiles.setName(data[1]);
                 tiles.setDiscount(0);
-                tiles.setPriceDetalUnit(new BigDecimal(Double.parseDouble(data[2])));
-                tiles.setPriceFromRepo(Double.valueOf(data[3]));
+                tiles.setUnitDetalPrice(Double.parseDouble(data[2]));
+                tiles.setUnitPurchasePrice(Double.valueOf(data[3]));
                 tiles.setBasicDiscount(Integer.valueOf(data[4]));
                 tiles.setAdditionalDiscount(Integer.valueOf(data[5]));
                 tiles.setPromotionDiscount(Integer.valueOf(data[6]));

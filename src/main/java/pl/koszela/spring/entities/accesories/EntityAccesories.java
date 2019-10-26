@@ -1,5 +1,6 @@
 package pl.koszela.spring.entities.accesories;
 
+import pl.koszela.spring.entities.BaseEntity;
 import pl.koszela.spring.entities.EntityUser;
 
 import javax.persistence.*;
@@ -8,52 +9,17 @@ import java.util.Set;
 
 @Entity
 @Table(name = "accesories")
-public class EntityAccesories {
+public class EntityAccesories extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
     private String category;
-    private String name;
-    private Double purchasePrice;
-    private Double detalPrice;
     private Integer margin;
     private String option;
-    private Double allPricePurchase;
-    private Double allPriceRetail;
-    private Double profit;
     private boolean offer;
-    private Double quantity;
     private String date;
-    @ManyToMany(mappedBy = "resultAccesories")
+    @ManyToMany(mappedBy = "accesories")
     private Set<EntityUser> userResultAccesories = new HashSet<>();
-    private Integer discount;
 
     public EntityAccesories() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getPurchasePrice() {
-        return purchasePrice;
-    }
-
-    public void setPurchasePrice(Double purchasePrice) {
-        this.purchasePrice = purchasePrice;
     }
 
     public Integer getMargin() {
@@ -76,14 +42,6 @@ public class EntityAccesories {
         return new Builder();
     }
 
-    public Double getDetalPrice() {
-        return detalPrice;
-    }
-
-    public void setDetalPrice(Double detalPrice) {
-        this.detalPrice = detalPrice;
-    }
-
     public String getOption() {
         return option;
     }
@@ -92,44 +50,12 @@ public class EntityAccesories {
         this.option = option;
     }
 
-    public Double getAllPricePurchase() {
-        return allPricePurchase;
-    }
-
-    public void setAllPricePurchase(Double allPricePurchase) {
-        this.allPricePurchase = allPricePurchase;
-    }
-
-    public Double getAllPriceRetail() {
-        return allPriceRetail;
-    }
-
-    public void setAllPriceRetail(Double allPriceRetail) {
-        this.allPriceRetail = allPriceRetail;
-    }
-
-    public Double getProfit() {
-        return profit;
-    }
-
-    public void setProfit(Double profit) {
-        this.profit = profit;
-    }
-
     public boolean isOffer() {
         return offer;
     }
 
     public void setOffer(boolean offer) {
         this.offer = offer;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
     }
 
     public Set<EntityUser> getUserResultAccesories() {
@@ -148,40 +74,18 @@ public class EntityAccesories {
         this.date = date;
     }
 
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public static final class Builder {
+    public static final class Builder extends BaseEntity {
         private String category;
-        private String name;
-        private Double purchasePrice;
-        private Double detalPrice;
         private Integer margin;
         private String option;
-        private Double allPricePurchase;
-        private Double allPriceRetail;
-        private Double profit;
         private boolean offer;
-        private Double quantity;
 
         public EntityAccesories build() {
             EntityAccesories accesories = new EntityAccesories();
             accesories.category = this.category;
-            accesories.name = this.name;
-            accesories.purchasePrice = this.purchasePrice;
-            accesories.detalPrice = this.detalPrice;
             accesories.margin = this.margin;
             accesories.option = this.option;
-            accesories.allPricePurchase = this.allPricePurchase;
-            accesories.allPriceRetail = this.allPriceRetail;
-            accesories.profit = this.profit;
             accesories.offer = this.offer;
-            accesories.quantity = this.quantity;
             return accesories;
         }
 
@@ -190,20 +94,20 @@ public class EntityAccesories {
             return this;
         }
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder purchasePrice(Double purchasePrice) {
-            this.purchasePrice = purchasePrice;
-            return this;
-        }
-
-        public Builder detalPrice(Double detalPrice) {
-            this.detalPrice = detalPrice;
-            return this;
-        }
+//        public Builder name(String name) {
+//            this.name = name;
+//            return this;
+//        }
+//
+//        public Builder purchasePrice(Double purchasePrice) {
+//            this.purchasePrice = purchasePrice;
+//            return this;
+//        }
+//
+//        public Builder detalPrice(Double detalPrice) {
+//            this.detalPrice = detalPrice;
+//            return this;
+//        }
 
         public Builder margin(Integer margin) {
             this.margin = margin;
@@ -215,29 +119,29 @@ public class EntityAccesories {
             return this;
         }
 
-        public Builder allPricePurchase(Double allPricePurchase) {
-            this.allPricePurchase = allPricePurchase;
-            return this;
-        }
-
-        public Builder allPriceRetail(Double allPriceRetail) {
-            this.allPriceRetail = allPriceRetail;
-            return this;
-        }
-
-        public Builder profit(Double profit) {
-            this.profit = profit;
-            return this;
-        }
+//        public Builder allPricePurchase(Double allPricePurchase) {
+//            this.allPricePurchase = allPricePurchase;
+//            return this;
+//        }
+//
+//        public Builder allPriceRetail(Double allPriceRetail) {
+//            this.allPriceRetail = allPriceRetail;
+//            return this;
+//        }
+//
+//        public Builder profit(Double profit) {
+//            this.profit = profit;
+//            return this;
+//        }
 
         public Builder offer(boolean offer) {
             this.offer = offer;
             return this;
         }
 
-        public Builder quantity(Double quantity) {
-            this.quantity = quantity;
-            return this;
-        }
+//        public Builder quantity(Double quantity) {
+//            this.quantity = quantity;
+//            return this;
+//        }
     }
 }
