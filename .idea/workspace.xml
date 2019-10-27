@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="" />
+    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/Dao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/Dao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/SpringAppApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/SpringAppApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityKolnierz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityKolnierz.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityWindows.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityWindows.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/AccesoriesRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/AccesoriesRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/KolnierzRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/KolnierzRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/TilesRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/TilesRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/UsersRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/UsersRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/WindowsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/WindowsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,6 +156,31 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Heroku Deploy" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="heroku:deploy-war" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
     <configuration name="SpringAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="spring-app" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="pl.koszela.spring.SpringappApplication" />
@@ -146,6 +189,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.GenerateOffer" />
+      <item itemvalue="Maven.Heroku Deploy" />
+      <item itemvalue="Spring Boot.SpringAppApplication" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.GenerateOffer" />
@@ -479,7 +527,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572181517145</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="change version maven compiler plugin for heroku">
+      <created>1572181775401</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1572181775401</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -534,7 +589,8 @@
     <MESSAGE value="refactor code" />
     <MESSAGE value="correct tiles view" />
     <MESSAGE value="correct name colums for mySQL database" />
-    <option name="LAST_COMMIT_MESSAGE" value="correct name colums for mySQL database" />
+    <MESSAGE value="change version maven compiler plugin for heroku" />
+    <option name="LAST_COMMIT_MESSAGE" value="change version maven compiler plugin for heroku" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
