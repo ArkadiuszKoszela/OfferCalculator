@@ -19,7 +19,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.InputData;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
-import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NameNumberFields;
@@ -36,8 +35,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     static final String SELECT_ACCESORIES = "accesories";
 
     private TreeGrid<EntityAccesories> treeGrid = new TreeGrid<>();
-    //    private EntityInputDataTiles dataTilesRepo = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
-    private Set<InputData> setInput = (Set<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
+    private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
     private Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
     private AccesoriesRepository accesoriesRepository;
     private Binder<EntityAccesories> binder;
@@ -76,7 +74,6 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         itemClickListener(discountEditField);
         addEnterEvent(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
-
 
         closeListener();
 

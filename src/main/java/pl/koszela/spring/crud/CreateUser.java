@@ -7,7 +7,6 @@ import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.*;
 
@@ -20,38 +19,39 @@ public class CreateUser {
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
-    private InputDataTilesRepository inputDataTilesRepository;
+
     private TilesRepository tilesRepository;
     private AccesoriesRepository accesoriesRepository;
     private GutterRepository gutterRepository;
+    private InputRepository inputRepository;
 
     @Autowired
-    public CreateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository, GutterRepository gutterRepository) {
+    public CreateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository, GutterRepository gutterRepository, InputRepository inputRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
-        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
+        this.inputRepository = Objects.requireNonNull(inputRepository);
     }
 
     public void saveUser() {
         List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
         EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
-        EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
         Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
 
         EntityUser newUser = new EntityUser();
         newUser.setEntityPersonalData(entityPersonalData);
-        newUser.setEntityInputDataTiles(entityInputDataTiles);
-        newUser.setAccesories(resultAccesories);
+        newUser.setInputData(setInput);
+        newUser.setUserAccesories(resultAccesories);
         newUser.setTiles(allTiles);
         newUser.setEntityUserGutter(list);
 
         gutterRepository.saveAll(list);
         personalDataRepository.save(entityPersonalData);
-        inputDataTilesRepository.save(entityInputDataTiles);
+        inputRepository.saveAll(setInput);
         accesoriesRepository.saveAll(resultAccesories);
         tilesRepository.saveAll(allTiles);
 

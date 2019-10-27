@@ -9,11 +9,7 @@ public class InputData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
     private Double value;
-    @ManyToOne
-    private EntityUser user;
-
     public InputData() {
     }
 
@@ -36,14 +32,6 @@ public class InputData {
 
     public void setValue(Double value) {
         this.value = value;
-    }
-
-    public EntityUser getUser() {
-        return user;
-    }
-
-    public void setUser(EntityUser user) {
-        this.user = user;
     }
 
     public Long getId() {

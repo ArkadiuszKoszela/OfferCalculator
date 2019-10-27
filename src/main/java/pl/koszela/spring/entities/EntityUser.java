@@ -1,9 +1,10 @@
 package pl.koszela.spring.entities;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
 
 import javax.persistence.*;
@@ -20,8 +21,6 @@ public class EntityUser {
     @OneToOne
     private EntityPersonalData entityPersonalData;
     @OneToOne
-    private EntityInputDataTiles entityInputDataTiles;
-    @OneToOne
     private EntityWindows entityWindows;
     @OneToOne
     private EntityKolnierz entityKolnierz;
@@ -30,24 +29,29 @@ public class EntityUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "accesories_id")
     )
-    private Set<EntityAccesories> accesories;
+    private Set<EntityAccesories> userAccesories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tiles_id")
     )
-    private Set<Tiles> entityUserTiles = new HashSet<>();
+    private Set<Tiles> userTiles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany
     @JoinTable(name = "user_gutters",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "gutter_id")
     )
     private List<EntityGutter> entityUserGutter = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<InputData> inputData = new LinkedHashSet<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany
+    @JoinTable(name = "user_input_data",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "input_data_id"))
+    private List<InputData> inputData = new ArrayList<>();
 
     public EntityUser() {
     }
@@ -68,14 +72,6 @@ public class EntityUser {
         this.entityPersonalData = entityPersonalData;
     }
 
-    public EntityInputDataTiles getEntityInputDataTiles() {
-        return entityInputDataTiles;
-    }
-
-    public void setEntityInputDataTiles(EntityInputDataTiles entityInputDataTiles) {
-        this.entityInputDataTiles = entityInputDataTiles;
-    }
-
     public EntityWindows getEntityWindows() {
         return entityWindows;
     }
@@ -93,19 +89,19 @@ public class EntityUser {
     }
 
     public Set<Tiles> getTiles() {
-        return entityUserTiles;
+        return userTiles;
     }
 
     public void setTiles(Set<Tiles> tiles) {
-        this.entityUserTiles = tiles;
+        this.userTiles = tiles;
     }
 
-    public Set<EntityAccesories> getAccesories() {
-        return accesories;
+    public Set<EntityAccesories> getUserAccesories() {
+        return userAccesories;
     }
 
-    public void setAccesories(Set<EntityAccesories> accesories) {
-        this.accesories = accesories;
+    public void setUserAccesories(Set<EntityAccesories> userAccesories) {
+        this.userAccesories = userAccesories;
     }
 
     public List<EntityGutter> getEntityUserGutter() {
@@ -116,11 +112,11 @@ public class EntityUser {
         this.entityUserGutter = entityUserGutter;
     }
 
-    public Set<InputData> getInputData() {
+    public List<InputData> getInputData() {
         return inputData;
     }
 
-    public void setInputData(Set<InputData> inputData) {
+    public void setInputData(List<InputData> inputData) {
         this.inputData = inputData;
     }
 }

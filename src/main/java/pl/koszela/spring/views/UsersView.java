@@ -17,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.crud.ReadUser;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
-import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.crud.DeleteUsers;
 
@@ -153,36 +151,11 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
         if(entityPersonalData == null){
             save();
-            VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", defaultValues());
             action.proceed();
         }
         VaadinSession.getCurrent().getSession().removeAttribute("personalData");
         VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
         VaadinSession.getCurrent().getSession().removeAttribute("resultTiles");
         action.proceed();
-    }
-
-    private EntityInputDataTiles defaultValues(){
-        return EntityInputDataTiles.builder()
-                .powierzchniaPolaci(300d)
-                .dlugoscKalenic(65d)
-                .dlugoscKalenicProstych(65d)
-                .dlugoscKalenicSkosnych(1d)
-                .dlugoscKoszy(8d)
-                .dlugoscKrawedziLewych(5d)
-                .dlugoscKrawedziPrawych(5d)
-                .obwodKomina(3d)
-                .dlugoscOkapu(0d)
-                .dachowkaWentylacyjna(1d)
-                .kompletKominkaWentylacyjnego(1d)
-                .gasiarPoczatkowyKalenicaProsta(1d)
-                .gasiarKoncowyKalenicaProsta(1d)
-                .gasiarZaokraglony(1d)
-                .trojnik(6d)
-                .czwornik(1d)
-                .gasiarZPodwojnaMufa(1d)
-                .dachowkaDwufalowa(1d)
-                .oknoPolaciowe(1d)
-                .build();
     }
 }

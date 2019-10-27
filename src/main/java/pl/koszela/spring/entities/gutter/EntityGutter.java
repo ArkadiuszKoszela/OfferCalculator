@@ -6,9 +6,7 @@ import pl.koszela.spring.entities.EntityUser;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "gutter")
@@ -21,13 +19,6 @@ public class EntityGutter extends BaseEntity {
     private boolean option;
     @ManyToMany(mappedBy = "entityUserGutter")
     private List<EntityUser> userGutters = new ArrayList<>();
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "INPUT_GUTTER",
-            joinColumns = @JoinColumn(name = "OWNER_ID")
-    )
-    private List<InputGutterData> inputGutter = new ArrayList<>();
 
     public EntityGutter() {
     }
@@ -78,13 +69,5 @@ public class EntityGutter extends BaseEntity {
 
     public void setUserGutters(List<EntityUser> userGutters) {
         this.userGutters = userGutters;
-    }
-
-    public List<InputGutterData> getInputGutter() {
-        return inputGutter;
-    }
-
-    public void setInputGutter(List<InputGutterData> inputGutter) {
-        this.inputGutter = inputGutter;
     }
 }

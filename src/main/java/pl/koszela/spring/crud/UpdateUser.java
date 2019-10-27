@@ -7,7 +7,6 @@ import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.EntityInputDataTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.*;
 
@@ -21,16 +20,16 @@ public class UpdateUser {
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
-    private InputDataTilesRepository inputDataTilesRepository;
+    private InputRepository inputRepository;
     private TilesRepository tilesRepository;
     private AccesoriesRepository accesoriesRepository;
     private GutterRepository gutterRepository;
 
     @Autowired
-    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository, GutterRepository gutterRepository) {
+    public UpdateUser(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputRepository inputRepository, TilesRepository tilesRepository, AccesoriesRepository accesoriesRepository, GutterRepository gutterRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
-        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
+        this.inputRepository = Objects.requireNonNull(inputRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
@@ -40,7 +39,7 @@ public class UpdateUser {
         EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
         Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
 
-        EntityInputDataTiles entityInputDataTiles = (EntityInputDataTiles) VaadinSession.getCurrent().getSession().getAttribute("tilesInputFromRepo");
+        List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
         Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         if (personalData.isPresent()) {
@@ -50,14 +49,14 @@ public class UpdateUser {
                 List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
                 EntityUser userToUpdate = userFromRepo.get();
                 userToUpdate.setEntityUserGutter(list);
-                userToUpdate.setEntityInputDataTiles(entityInputDataTiles);
-                userToUpdate.setAccesories(resultAccesories);
+                userToUpdate.setInputData(setInput);
+                userToUpdate.setUserAccesories(resultAccesories);
                 userToUpdate.getTiles().clear();
                 userToUpdate.setTiles(allTilesFromRepo);
 
                 gutterRepository.saveAll(list);
                 accesoriesRepository.saveAll(resultAccesories);
-                inputDataTilesRepository.save(entityInputDataTiles);
+                inputRepository.saveAll(setInput);
                 tilesRepository.saveAll(allTilesFromRepo);
 
                 usersRepo.save(userToUpdate);

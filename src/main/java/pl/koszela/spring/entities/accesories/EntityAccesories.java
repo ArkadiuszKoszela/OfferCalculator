@@ -16,8 +16,8 @@ public class EntityAccesories extends BaseEntity {
     private String option;
     private boolean offer;
     private String date;
-    @ManyToMany(mappedBy = "accesories")
-    private Set<EntityUser> userResultAccesories = new HashSet<>();
+    @ManyToMany(mappedBy = "userAccesories")
+    private Set<EntityUser> accesoriesUser = new HashSet<>();
 
     public EntityAccesories() {
     }
@@ -38,10 +38,6 @@ public class EntityAccesories extends BaseEntity {
         this.category = category;
     }
 
-    public static Builder builder(){
-        return new Builder();
-    }
-
     public String getOption() {
         return option;
     }
@@ -58,12 +54,12 @@ public class EntityAccesories extends BaseEntity {
         this.offer = offer;
     }
 
-    public Set<EntityUser> getUserResultAccesories() {
-        return userResultAccesories;
+    public Set<EntityUser> getAccesoriesUser() {
+        return accesoriesUser;
     }
 
-    public void setUserResultAccesories(Set<EntityUser> userResultAccesories) {
-        this.userResultAccesories = userResultAccesories;
+    public void setAccesoriesUser(Set<EntityUser> accesoriesUser) {
+        this.accesoriesUser = accesoriesUser;
     }
 
     public String getDate() {
@@ -72,76 +68,5 @@ public class EntityAccesories extends BaseEntity {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public static final class Builder extends BaseEntity {
-        private String category;
-        private Integer margin;
-        private String option;
-        private boolean offer;
-
-        public EntityAccesories build() {
-            EntityAccesories accesories = new EntityAccesories();
-            accesories.category = this.category;
-            accesories.margin = this.margin;
-            accesories.option = this.option;
-            accesories.offer = this.offer;
-            return accesories;
-        }
-
-        public Builder category(String category) {
-            this.category = category;
-            return this;
-        }
-
-//        public Builder name(String name) {
-//            this.name = name;
-//            return this;
-//        }
-//
-//        public Builder purchasePrice(Double purchasePrice) {
-//            this.purchasePrice = purchasePrice;
-//            return this;
-//        }
-//
-//        public Builder detalPrice(Double detalPrice) {
-//            this.detalPrice = detalPrice;
-//            return this;
-//        }
-
-        public Builder margin(Integer margin) {
-            this.margin = margin;
-            return this;
-        }
-
-        public Builder pption(String option) {
-            this.option = option;
-            return this;
-        }
-
-//        public Builder allPricePurchase(Double allPricePurchase) {
-//            this.allPricePurchase = allPricePurchase;
-//            return this;
-//        }
-//
-//        public Builder allPriceRetail(Double allPriceRetail) {
-//            this.allPriceRetail = allPriceRetail;
-//            return this;
-//        }
-//
-//        public Builder profit(Double profit) {
-//            this.profit = profit;
-//            return this;
-//        }
-
-        public Builder offer(boolean offer) {
-            this.offer = offer;
-            return this;
-        }
-
-//        public Builder quantity(Double quantity) {
-//            this.quantity = quantity;
-//            return this;
-//        }
     }
 }

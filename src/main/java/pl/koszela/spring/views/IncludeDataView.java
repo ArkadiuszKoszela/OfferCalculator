@@ -23,10 +23,10 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Route(value = TilesView.ENTER_TILES, layout = MainView.class)
-public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
+@Route(value = IncludeDataView.INCLUDE_DATA, layout = MainView.class)
+public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserver {
 
-    static final String ENTER_TILES = "tiles";
+    static final String INCLUDE_DATA = "includeData";
 
     private TilesRepository tilesRepository;
     private GutterRepository gutterRepository;
@@ -34,19 +34,19 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
     private List<NumberField> listOfNumberFields = new ArrayList<>();
     private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
     private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
-    private Set<InputData> setInput = (Set<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
+    private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
 
 
     @Autowired
-    public TilesView(TilesRepository tilesRepository, GutterRepository gutterRepository) {
+    public IncludeDataView(TilesRepository tilesRepository, GutterRepository gutterRepository) {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
         add(createNewSubLayout());
     }
 
     private VerticalLayout createNewSubLayout() {
-        if (setInput == null) {
-            setInput = new LinkedHashSet<>();
+        if (setInput == null || setInput.size() == 0) {
+            setInput = new ArrayList<>();
             for (NameNumberFields name : NameNumberFields.values()) {
                 setInput.add(new InputData(name.toString(), 5d));
             }
@@ -166,12 +166,15 @@ public class TilesView extends VerticalLayout implements BeforeLeaveObserver {
                 gutter.setQuantity(gutter3mb);
             } else if (gutter.getName().equals("rynna 4mb")) {
                 gutter.setQuantity(gutter4mb);
+            }else{
+                gutter.setQuantity(1.1d);
             }
             listOfNumberFields.forEach(numberField -> {
                 if (StringUtils.containsIgnoreCase(gutter.getName(), numberField.getLabel())) {
                     gutter.setQuantity(numberField.getValue());
                 }
             });
+
         }
         return list;
     }

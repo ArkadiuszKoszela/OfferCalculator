@@ -1,4 +1,4 @@
-package pl.koszela.spring.views;
+package pl.koszela.spring.views.priceLists;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,18 +13,14 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import pl.koszela.spring.entities.Competition;
 import pl.koszela.spring.entities.tiles.CategoryTiles;
-import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.service.GridInteraface;
+import pl.koszela.spring.views.MainView;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 @Route(value = PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION, layout = MainView.class)
 public class PriceListOfSalesCompetition extends VerticalLayout implements GridInteraface {

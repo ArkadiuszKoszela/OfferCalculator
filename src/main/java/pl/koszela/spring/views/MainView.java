@@ -33,8 +33,8 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
-import static pl.koszela.spring.views.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
-import static pl.koszela.spring.views.TilesView.ENTER_TILES;
+import static pl.koszela.spring.views.priceLists.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
+import static pl.koszela.spring.views.IncludeDataView.INCLUDE_DATA;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 import static pl.koszela.spring.views.priceLists.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
@@ -63,7 +63,7 @@ public class MainView extends AppLayout {
         menuBar.addThemeVariants(MenuBarVariant.LUMO_CONTRAST);
         addItemMenuBar(menuBar, "Strona Główna", "");
         addItemMenuBar(menuBar, "Klienci", INPUT_USER);
-        addItemMenuBar(menuBar, "Wprowadź Dane", ENTER_TILES);
+        addItemMenuBar(menuBar, "Wprowadź Dane", INCLUDE_DATA);
         addItemMenuBar(menuBar, "Akcesoria", SELECT_ACCESORIES);
         addItemMenuBar(menuBar, "Rynny", GUTTER_VIEW);
         addItemMenuBar(menuBar, "Okna", WINDOWS);

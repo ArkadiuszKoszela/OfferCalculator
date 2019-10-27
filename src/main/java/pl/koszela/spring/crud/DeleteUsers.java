@@ -4,7 +4,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.entities.personalData.EntityPersonalData;
 import pl.koszela.spring.repositories.*;
 
@@ -18,19 +17,15 @@ public class DeleteUsers {
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
-    private InputDataTilesRepository inputDataTilesRepository;
-    private WindowsRepository windowsRepository;
-    private KolnierzRepository kolnierzRepository;
+    private InputRepository inputRepository;
     private GutterRepository gutterRepository;
     private TilesRepository tilesRepository;
 
     @Autowired
-    public DeleteUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputDataTilesRepository inputDataTilesRepository, WindowsRepository windowsRepository, KolnierzRepository kolnierzRepository, GutterRepository gutterRepository, TilesRepository tilesRepository) {
+    public DeleteUsers(PersonalDataRepository personalDataRepository, UsersRepo usersRepo, InputRepository inputRepository, GutterRepository gutterRepository, TilesRepository tilesRepository) {
         this.personalDataRepository = Objects.requireNonNull(personalDataRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
-        this.inputDataTilesRepository = Objects.requireNonNull(inputDataTilesRepository);
-        this.windowsRepository = Objects.requireNonNull(windowsRepository);
-        this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
+        this.inputRepository = Objects.requireNonNull(inputRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
     }
@@ -48,12 +43,11 @@ public class DeleteUsers {
                 userToRemove.getEntityUserGutter().clear();
                 gutterRepository.flush();
                 userToRemove.getEntityUserGutter().clear();
-                inputDataTilesRepository.flush();
-//                windowsRepository.delete(userToRemove.getEntityWindows());
-//                kolnierzRepository.delete(userToRemove.getEntityKolnierz());
+                inputRepository.flush();
+                userToRemove.getInputData().clear();
                 userToRemove.getTiles().clear();
                 tilesRepository.flush();
-                usersRepo.deleteById(   userToRemove.getId());
+                usersRepo.deleteById(userToRemove.getId());
                 usersRepo.flush();
 
                 getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getEntityPersonalData().getName() + " " + userToRemove.getEntityPersonalData().getSurname() + "   papa  :(");

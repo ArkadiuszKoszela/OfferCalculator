@@ -20,8 +20,8 @@ public class Tiles extends BaseEntity {
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
     private String date;
-    @ManyToMany(mappedBy = "entityUserTiles")
-    private Set<EntityUser> userTiles = new HashSet<>();
+    @ManyToMany(mappedBy = "userTiles")
+    private Set<EntityUser> tilesUser = new HashSet<>();
     private boolean main;
     private boolean option;
 
@@ -52,12 +52,12 @@ public class Tiles extends BaseEntity {
         this.totalProfit = totalProfit;
     }
 
-    public Set<EntityUser> getUserTiles() {
-        return userTiles;
+    public Set<EntityUser> getTilesUser() {
+        return tilesUser;
     }
 
-    public void setUserTiles(Set<EntityUser> userTiles) {
-        this.userTiles = userTiles;
+    public void setTilesUser(Set<EntityUser> tilesUser) {
+        this.tilesUser = tilesUser;
     }
 
     public boolean isOption() {
@@ -107,14 +107,6 @@ public class Tiles extends BaseEntity {
     public void setSkontoDiscount(Integer skontoDiscount) {
         this.skontoDiscount = skontoDiscount;
     }
-//
-//    public Double getPriceFromRepo() {
-//        return priceFromRepo;
-//    }
-//
-//    public void setPriceFromRepo(Double priceFromRepo) {
-//        this.priceFromRepo = priceFromRepo;
-//    }
 
     public String getDate() {
         return date;

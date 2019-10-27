@@ -22,13 +22,12 @@ public class ReadUser {
         EntityUser find = usersRepo.findEntityUserByEntityPersonalDataNameAndEntityPersonalDataSurname(name, surname);
 
         VaadinSession.getCurrent().getSession().setAttribute("personalDataFromRepo", find.getEntityPersonalData());
-        VaadinSession.getCurrent().getSession().setAttribute("tilesInputFromRepo", find.getEntityInputDataTiles());
+        VaadinSession.getCurrent().getSession().setAttribute("inputData", find.getInputData());
         VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.getEntityWindows());
         VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.getEntityKolnierz());
         VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", find.getTiles());
-        VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getAccesories());
+        VaadinSession.getCurrent().getSession().setAttribute("accesories", find.getUserAccesories());
         VaadinSession.getCurrent().getSession().setAttribute("allGutter", find.getEntityUserGutter());
-        VaadinSession.getCurrent().getSession().setAttribute("inputGutterData", find.getEntityUserGutter().get(0).getInputGutter());
 
         return find;
     }
