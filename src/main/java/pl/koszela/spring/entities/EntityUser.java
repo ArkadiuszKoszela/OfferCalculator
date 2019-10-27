@@ -29,7 +29,7 @@ public class EntityUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "accesories_id")
     )
-    private Set<EntityAccesories> userAccesories;
+    private Set<EntityAccesories> userAccesories = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",

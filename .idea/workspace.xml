@@ -2,39 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/InputRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/DeleteUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/DeleteUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/ReadUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/ReadUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spring-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/SpringappApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/SpringappApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/EntityUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/InputData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/InputData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/accesories/EntityAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/accesories/EntityAccesories.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/gutter/EntityGutter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/gutter/EntityGutter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/gutter/InputGutterData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/personalData/EntityPersonalData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/personalData/EntityPersonalData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/tiles/EntityInputDataTiles.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/tiles/Tiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/tiles/Tiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/InputDataTilesRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/KolnierzRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/KolnierzRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/TilesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/TilesRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/UsersRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/UsersRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/WindowsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/WindowsRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/GridInteraface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/service/GridInteraface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesViewOld.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/PriceListOfSalesCompetition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/PriceListOfSalesCompetition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/TilesViewOld.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/entities/EntityUser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/InputDataTilesRepository.class" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -122,7 +101,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.editor" />
+    <property name="settings.editor.selected.configurable" value="coverage" />
   </component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">

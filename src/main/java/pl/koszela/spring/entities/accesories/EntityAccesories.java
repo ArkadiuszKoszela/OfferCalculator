@@ -13,7 +13,9 @@ public class EntityAccesories extends BaseEntity {
 
     private String category;
     private Integer margin;
+    @Column(name = "option_accesories")
     private String option;
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean offer;
     private String date;
     @ManyToMany(mappedBy = "userAccesories")

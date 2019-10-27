@@ -15,7 +15,9 @@ public class EntityGutter extends BaseEntity {
     private String category;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     private boolean main;
+    @Column(name = "option_gutter", nullable = false, columnDefinition = "TINYINT", length = 1)
     private boolean option;
     @ManyToMany(mappedBy = "entityUserGutter")
     private List<EntityUser> userGutters = new ArrayList<>();

@@ -22,7 +22,9 @@ public class Tiles extends BaseEntity {
     private String date;
     @ManyToMany(mappedBy = "userTiles")
     private Set<EntityUser> tilesUser = new HashSet<>();
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean main;
+    @Column(name = "option_tiles", nullable = false, columnDefinition = "TINYINT(1)")
     private boolean option;
 
     public Tiles() {
