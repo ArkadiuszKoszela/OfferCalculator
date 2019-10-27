@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Procfile.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -258,7 +259,7 @@
       <workItem from="1572022774445" duration="12925000" />
       <workItem from="1572078652937" duration="24337000" />
       <workItem from="1572171037550" duration="7055000" />
-      <workItem from="1572195818263" duration="1314000" />
+      <workItem from="1572195818263" duration="2234000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -526,7 +527,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572183417210</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="add proc file">
+      <created>1572198343374</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1572198343374</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -557,7 +565,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="add .gitignore" />
     <MESSAGE value="add new table in offerView" />
     <MESSAGE value="chenge table in offerView" />
     <MESSAGE value="adding button to download offer in pdf" />
@@ -582,7 +589,8 @@
     <MESSAGE value="correct name colums for mySQL database" />
     <MESSAGE value="change version maven compiler plugin for heroku" />
     <MESSAGE value="add new war" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new war" />
+    <MESSAGE value="add proc file" />
+    <option name="LAST_COMMIT_MESSAGE" value="add proc file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
