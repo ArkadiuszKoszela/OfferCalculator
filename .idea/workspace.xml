@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Procfile.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Procfile.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spring-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/UsersRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/UsersRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -260,6 +267,7 @@
       <workItem from="1572078652937" duration="24337000" />
       <workItem from="1572171037550" duration="7055000" />
       <workItem from="1572195818263" duration="2234000" />
+      <workItem from="1572280535350" duration="3634000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -596,11 +604,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java</url>
-          <line>98</line>
-          <option name="timeStamp" value="267" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/PriceListOfSalesCompetition.java</url>
           <line>86</line>
           <option name="timeStamp" value="273" />
@@ -609,16 +612,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
           <line>220</line>
           <option name="timeStamp" value="274" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java</url>
-          <line>158</line>
-          <option name="timeStamp" value="295" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="296" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/ReadUser.java</url>
@@ -631,11 +624,6 @@
           <option name="timeStamp" value="298" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java</url>
-          <line>47</line>
-          <option name="timeStamp" value="299" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java</url>
           <line>38</line>
           <option name="timeStamp" value="300" />
@@ -645,11 +633,16 @@
           <line>40</line>
           <option name="timeStamp" value="303" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java</url>
+          <line>169</line>
+          <option name="timeStamp" value="308" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
-        <watch expression="gutter.getQuantity();" language="JAVA" />
+        <watch expression="accesories.isOffer()" language="JAVA" />
         <watch expression="inputData.getValue()" language="JAVA" />
         <watch expression="inputData" language="JAVA" />
         <watch expression="inputData.getValue();" language="JAVA" />

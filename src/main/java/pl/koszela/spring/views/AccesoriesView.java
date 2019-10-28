@@ -3,6 +3,7 @@ package pl.koszela.spring.views;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,6 +20,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.InputData;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NameNumberFields;
@@ -41,12 +43,12 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     private Binder<EntityAccesories> binder;
     private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
 
-
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
         this.accesoriesRepository = accesoriesRepository;
         if (set == null) {
             List<EntityAccesories> all = accesoriesRepository.findAll();
-            set = new HashSet<>(addQuantityToList(all));
+            List<EntityAccesories> newValue = all.stream().filter(f -> f.getOption().equals("PODSTAWOWY")).collect(Collectors.toList());
+            set = new HashSet<>(addQuantityToList(newValue));
         }
         add(createCheckbox());
         add(createGrid());
@@ -70,10 +72,21 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
 
         checkbox();
 
-        TextField discountEditField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
-        itemClickListener(discountEditField);
+        TextField discountEditField = new TextField();
         addEnterEvent(treeGrid, discountEditField);
+        binder.forField(discountEditField)
+                .withConverter(new StringToIntegerConverter("Błąd"))
+                .bind(EntityAccesories::getDiscount, EntityAccesories::setDiscount);
+        itemClickListener(discountEditField);
         discountColumn.setEditorComponent(discountEditField);
+
+        TextField quantityField = new TextField();
+        binder.forField(quantityField)
+                .withConverter(new StringToDoubleConverter("Błąd"))
+                .bind(EntityAccesories::getQuantity, EntityAccesories::setQuantity);
+        addEnterEvent(treeGrid, quantityField);
+        itemClickListener(quantityField);
+        quantityColumn.setEditorComponent(quantityField);
 
         closeListener();
 
@@ -132,13 +145,12 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
 
     @Override
     public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        TextField textField = new TextField();
-        addEnterEvent(treeGrid, textField);
-        binder.forField(textField)
-                .withConverter(stringToIntegerConverter)
-                .bind(EntityAccesories::getDiscount, EntityAccesories::setDiscount);
-        return textField;
+        return null;
     }
+
+    public ComponentRenderer<Span, EntityAccesories> booleanRenderer =
+            new ComponentRenderer<>(accesories ->
+                    new Span(accesories.isOffer() ? "Tak" : "Nie"));
 
     @Override
     public ComponentRenderer<VerticalLayout, EntityAccesories> createCheckboxes() {
@@ -154,6 +166,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
 
     private List<EntityAccesories> addQuantityToList(List<EntityAccesories> list) {
         for (EntityAccesories accesories : list) {
+            accesories.setOffer(false);
             accesories.setDiscount(0);
             accesories.setQuantity(value(accesories.getCategory()));
             accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
@@ -181,7 +194,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
             case "kosz":
                 return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
             case "klamra do mocowania kosza":
-                return BigDecimal.valueOf((dlugoscKoszy.get().getValue()/ 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma samorozprezna":
                 return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 2).setScale(0, RoundingMode.UP).doubleValue();
             case "grzebien":
