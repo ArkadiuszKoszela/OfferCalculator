@@ -41,21 +41,25 @@ public class CreateUser {
         Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
         Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
         List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
+//        usersRepo.count() > 0
+//        if (userFromRepo.isPresent()) {
+//            getNotificationSucces("Użytkownik znajduje się juz w bazie danych");
+//        } else {
+            EntityUser newUser = new EntityUser();
+            newUser.setEntityPersonalData(entityPersonalData);
+            newUser.setInputData(setInput);
+            newUser.setUserAccesories(resultAccesories);
+            newUser.setTiles(allTiles);
+            newUser.setEntityUserGutter(list);
 
-        EntityUser newUser = new EntityUser();
-        newUser.setEntityPersonalData(entityPersonalData);
-        newUser.setInputData(setInput);
-        newUser.setUserAccesories(resultAccesories);
-        newUser.setTiles(allTiles);
-        newUser.setEntityUserGutter(list);
+            gutterRepository.saveAll(list);
+            personalDataRepository.save(entityPersonalData);
+            inputRepository.saveAll(setInput);
+            accesoriesRepository.saveAll(resultAccesories);
+            tilesRepository.saveAll(allTiles);
 
-        gutterRepository.saveAll(list);
-        personalDataRepository.save(entityPersonalData);
-        inputRepository.saveAll(setInput);
-        accesoriesRepository.saveAll(resultAccesories);
-        tilesRepository.saveAll(allTiles);
-
-        usersRepo.save(newUser);
-        getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
+            usersRepo.save(newUser);
+            getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
+//        }
     }
 }
