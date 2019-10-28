@@ -46,8 +46,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
 
     @Override
     public TreeGrid createGrid() {
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> nameColumn = treeGrid.addHierarchyColumn(EntityGutter::getName).setHeader("Nazwa");
-        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> categoryColumn = treeGrid.addColumn(EntityGutter::getCategory).setHeader("Kategoria");
+        com.vaadin.flow.component.grid.Grid.Column<EntityGutter> nameColumn = treeGrid.addHierarchyColumn(EntityGutter::getName).setResizable(true).setHeader("Nazwa");
         com.vaadin.flow.component.grid.Grid.Column<EntityGutter> quantityColumn = treeGrid.addColumn(EntityGutter::getQuantity).setHeader("Ilość");
         com.vaadin.flow.component.grid.Grid.Column<EntityGutter> discountColumn = treeGrid.addColumn(EntityGutter::getDiscount).setHeader("Rabat");
         treeGrid.addColumn(EntityGutter::getTotalPrice).setHeader("Total klient");
@@ -85,10 +84,9 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         footerRow.getCell(nameColumn).setComponent(calculate);
 
         closeListener();
-
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(list)));
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("750px");
+        treeGrid.setMinHeight("600px");
         return treeGrid;
     }
 

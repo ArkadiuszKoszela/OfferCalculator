@@ -67,13 +67,13 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
             }
             i++;
         }
-        verticalLayout.add(new Span("Dachówki"), tilesLayout, new Span("Rynny"), gutterLayout1, gutterLayout2);
+        verticalLayout.addAndExpand(new Span("Dachówki"), tilesLayout, new Span("Rynny"), gutterLayout1, gutterLayout2);
         return verticalLayout;
     }
 
     private FormLayout getFormLayout(int intColumn) {
         FormLayout formLayout = new FormLayout();
-        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", intColumn);
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("2px", intColumn);
         formLayout.setResponsiveSteps(responsiveStep);
         return formLayout;
     }
