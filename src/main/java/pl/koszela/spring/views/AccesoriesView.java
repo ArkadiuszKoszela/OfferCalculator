@@ -159,6 +159,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
             accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setOffer(false);
         }
         return list;
     }
