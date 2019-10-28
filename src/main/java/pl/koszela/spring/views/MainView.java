@@ -58,7 +58,6 @@ public class MainView extends AppLayout {
         img.setHeight("44px");
         addToNavbar(new DrawerToggle(), img);
 
-
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_CONTRAST);
         addItemMenuBar(menuBar, "Strona Główna", "");

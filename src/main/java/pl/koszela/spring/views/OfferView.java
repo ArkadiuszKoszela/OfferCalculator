@@ -43,8 +43,8 @@ public class OfferView extends VerticalLayout implements GridInteraface {
 
     @Override
     public TreeGrid createGrid() {
-        Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika").setAutoWidth(true);
-        Grid.Column<Tiles> nameColumn = treeGrid.addColumn(Tiles::getName).setHeader("Kategoria");
+        Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika");
+        Grid.Column<Tiles> nameColumn = treeGrid.addColumn(Tiles::getName).setResizable(true).setHeader("Kategoria");
         treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
         Grid.Column<Tiles> discount = treeGrid.addColumn(Tiles::getDiscount).setHeader("Rabat");
         treeGrid.addColumn(Tiles::getUnitDetalPrice).setHeader("Cena detal");
@@ -72,9 +72,9 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         readBeans(binder);
         footerRow.getCell(priceListName).setComponent(calculate);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
-
+        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         treeGrid.setMinHeight("850px");
-        nameColumn.setAutoWidth(true);
+//        nameColumn.setAutoWidth(true);
         return treeGrid;
     }
 
