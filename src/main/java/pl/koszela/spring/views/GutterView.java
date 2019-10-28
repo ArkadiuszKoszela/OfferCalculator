@@ -17,6 +17,7 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.service.GridInteraface;
 
@@ -60,13 +61,21 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
 
         binder = new Binder<>(EntityGutter.class);
         treeGrid.getEditor().setBinder(binder);
-        TextField discountField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
+
+        TextField discountField = new TextField();
         addEnterEvent(treeGrid, discountField);
-        itemClickListener( discountField);
+        binder.forField(discountField)
+                .withConverter(new StringToIntegerConverter("Błąd"))
+                .bind(EntityGutter::getDiscount, EntityGutter::setDiscount);
+        itemClickListener(discountField);
         discountColumn.setEditorComponent(discountField);
-        TextField quantityField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
+
+        TextField quantityField = new TextField();
+        binder.forField(quantityField)
+                .withConverter(new StringToDoubleConverter("Błąd"))
+                .bind(EntityGutter::getQuantity, EntityGutter::setQuantity);
         addEnterEvent(treeGrid, quantityField);
-        itemClickListener( quantityField);
+        itemClickListener(quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
         FooterRow footerRow = treeGrid.appendFooterRow();
@@ -141,16 +150,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
 
     @Override
     public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        TextField discountField = new TextField();
-        binder.forField(discountField)
-                .withConverter(stringToIntegerConverter)
-                .bind(EntityGutter::getDiscount, EntityGutter::setDiscount);
-
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(stringToDoubleConverter)
-                .bind(EntityGutter::getQuantity, EntityGutter::setQuantity);
-        return discountField;
+        return null;
     }
 
     @Override

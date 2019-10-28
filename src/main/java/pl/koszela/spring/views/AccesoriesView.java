@@ -86,6 +86,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
                 .bind(EntityAccesories::getQuantity, EntityAccesories::setQuantity);
         addEnterEvent(treeGrid, quantityField);
         itemClickListener(quantityField);
+
         quantityColumn.setEditorComponent(quantityField);
 
         closeListener();
