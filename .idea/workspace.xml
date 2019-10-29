@@ -2,18 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/applog.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/ReadUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/ReadUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/UsersView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/AccesoriesPriceListView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/AccesoriesPriceListView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/spring-app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoAccesories.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoGutter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoGutter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoKolnierz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoKolnierz.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoTiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoTiles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoWindows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoWindows.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/importFiles/ImportFiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/importFiles/ImportFiles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/Bogen Innovo 10 miedziano-brązowa angoba.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/Bogen Innovo 10 miedziano-brazowa angoba.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/Bryza 125x90.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/Bryza 12590.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/Bryza 150x100.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/Bryza 150100.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/Flamingo 125x100.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/Flamingo 125100.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/Flamingo 125x90.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/Flamingo 12590.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/KołnierzOkpolDakea.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/KolnierzOkpolDakea.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/assets/Bogen Innovo 10 miedziano-brązowa angoba.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/assets/KołnierzOkpolDakea.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/importFiles/ImportFiles.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -104,11 +119,12 @@
     <property name="settings.editor.selected.configurable" value="coverage" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Arkadiusz Koszela\Desktop\spring-app\src\main\resources\assets" />
+      <recent name="C:\Users\Arkadiusz Koszela\Desktop\demo\projekt_zaliczeniowy\springapp\src\main\resources\templates" />
+    </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="pl.koszela.spring.views" />
-    </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="pl.koszela.spring.entities" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Arkadiusz Koszela\Desktop\spring-app\src\main\resources\assets" />
@@ -120,9 +136,8 @@
       <recent name="pl.koszela.spring.entities" />
       <recent name="pl.koszela.spring.crud" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Arkadiusz Koszela\Desktop\spring-app\src\main\resources\assets" />
-      <recent name="C:\Users\Arkadiusz Koszela\Desktop\demo\projekt_zaliczeniowy\springapp\src\main\resources\templates" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="pl.koszela.spring.entities" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -271,7 +286,7 @@
       <workItem from="1572171037550" duration="7055000" />
       <workItem from="1572195818263" duration="2234000" />
       <workItem from="1572280535350" duration="3634000" />
-      <workItem from="1572341106673" duration="7301000" />
+      <workItem from="1572341106673" duration="10257000" />
     </task>
     <task id="LOCAL-00001" summary="organizing the pom">
       <created>1568923662094</created>
@@ -614,7 +629,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
-          <line>223</line>
+          <line>219</line>
           <option name="timeStamp" value="274" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -634,17 +649,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
-          <line>229</line>
+          <line>225</line>
           <option name="timeStamp" value="301" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
-          <line>144</line>
+          <line>140</line>
           <option name="timeStamp" value="302" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/GutterView.java</url>
-          <line>140</line>
+          <line>136</line>
           <option name="timeStamp" value="303" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

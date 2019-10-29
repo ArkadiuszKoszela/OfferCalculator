@@ -18,6 +18,8 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import pl.koszela.spring.GernateFile.GenerateOffer;
 import pl.koszela.spring.importFiles.ImportFiles;
 import pl.koszela.spring.crud.CreateUser;

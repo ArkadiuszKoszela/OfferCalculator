@@ -1,5 +1,6 @@
 package pl.koszela.spring.DAOs;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.gutter.EntityGutter;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 @Service
 public class DaoGutter implements Dao {
+    private final static Logger logger = Logger.getLogger(DaoGutter.class);
 
     private final GutterRepository gutterRepository;
 
@@ -41,11 +43,12 @@ public class DaoGutter implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Coś nie tak - save Gutter in GutterDao");
+            logger.debug("coś nie tak - nie zaimportowano rynny");
         } finally {
             if (br != null) {
                 try {
                     br.close();
+                    logger.info("succes - import gutters " + priceListName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

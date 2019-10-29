@@ -1,6 +1,7 @@
 package pl.koszela.spring.importFiles;
 
 import com.vaadin.flow.component.UI;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.DAOs.*;
@@ -12,20 +13,21 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 
 @Service
 public class ImportFiles {
+    private final static Logger logger = Logger.getLogger(ImportFiles.class);
 
     private static final String BOGEN_INNOVO_10_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 czerwona angoba.csv";
-    private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 miedziano-brązowa angoba.csv";
+    private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 miedziano-brazowa angoba.csv";
     private static final String BOGEN_INNOVO_12_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 12 czerwona angoba.csv";
     private static final String AKCESORIA = "src/main/resources/assets/akcesoria.csv";
     private static final String OKNA_OKPOL_DAKEA = "src/main/resources/assets/OknaOkpolDakea.csv";
-    private static final String KOLNIERZ_OKPOL_DAKEA = "src/main/resources/assets/KołnierzOkpolDakea.csv";
-    private static final String FLAMINGO_125x100 = "src/main/resources/assets/Flamingo 125x100.csv";
-    private static final String FLAMINGO_125x90 = "src/main/resources/assets/Flamingo 125x90.csv";
-    private static final String BRYZA_125x90 = "src/main/resources/assets/Bryza 125x90.csv";
-    private static final String BRYZA_150x100 = "src/main/resources/assets/Bryza 150x100.csv";
+    private static final String KOLNIERZ_OKPOL_DAKEA = "src/main/resources/assets/KolnierzOkpolDakea.csv";
+    private static final String FLAMINGO_125x100 = "src/main/resources/assets/Flamingo 125100.csv";
+    private static final String FLAMINGO_125x90 = "src/main/resources/assets/Flamingo 12590.csv";
+    private static final String BRYZA_125x90 = "src/main/resources/assets/Bryza 12590.csv";
+    private static final String BRYZA_150x100 = "src/main/resources/assets/Bryza 150100.csv";
 
     private static final String NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA = "Bogen Innovo 10 Czerwona Angoba";
-    private static final String NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "Bogen Innovo 10 Miedziano-brązowa Angoba";
+    private static final String NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "Bogen Innovo 10 Miedziano-brazowa Angoba";
     private static final String NAME_BOGEN_INNOVO_12_CZERWONA_ANGOBA = "Bogen Innovo 12 Czerwona Angoba";
     private static final String NAME_FLAMINGO_125x100 = "Flamingo 125x100";
     private static final String NAME_FLAMINGO_125x90 = "Flamingo 125x90";
@@ -86,11 +88,17 @@ public class ImportFiles {
 
     public void csv() {
         usersRepo.deleteAll();
+        logger.info("deleted all users");
         tilesRepository.deleteAll();
+        logger.info("deleted all tiles");
         accesoriesRepository.deleteAll();
+        logger.info("deleted all accesories");
         windowsRepository.deleteAll();
+        logger.info("deleted all windows");
         kolnierzRepository.deleteAll();
+        logger.info("deleted all kolnierz");
         gutterRepository.deleteAll();
+        logger.info("deleted all gutters");
 
         daoTiles.save(BOGEN_INNOVO_10_CZERWONA_ANGOBA, NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA);
         daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA, NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);

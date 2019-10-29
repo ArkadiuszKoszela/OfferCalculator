@@ -1,5 +1,6 @@
 package pl.koszela.spring.DAOs;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 @Service
 public class DaoAccesories implements Dao {
+    private final static Logger logger = Logger.getLogger(DaoAccesories.class);
 
     private final AccesoriesRepository accesoriesRepository;
 
@@ -41,11 +43,12 @@ public class DaoAccesories implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Coś nie tak - save AkcesroiaEntity in AkcesoriaDao");
+            logger.debug("coś nie tak - nie zaimortowano akcsesoriow");
         } finally {
             if (br != null) {
                 try {
                     br.close();
+                    logger.info("succes - import accesories");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

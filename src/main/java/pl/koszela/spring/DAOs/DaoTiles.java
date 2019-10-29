@@ -1,5 +1,6 @@
 package pl.koszela.spring.DAOs;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.tiles.Tiles;
@@ -13,6 +14,7 @@ import java.util.*;
 
 @Service
 public class DaoTiles implements Dao {
+    private final static Logger logger = Logger.getLogger(DaoTiles.class);
 
     private final TilesRepository tilesRepository;
 
@@ -44,11 +46,12 @@ public class DaoTiles implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("GeneratePdfReport nie tak save EntityTiles in ProductDAo");
+            logger.debug("coś nie tak - nie zaimportowano dachówek");
         } finally {
             if (br != null) {
                 try {
                     br.close();
+                    logger.info("succes - import tiles " + priceListName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
