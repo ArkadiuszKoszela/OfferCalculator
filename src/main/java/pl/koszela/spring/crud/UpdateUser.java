@@ -36,7 +36,7 @@ public class UpdateUser {
     }
 
     public void updateUser() {
-        EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
+        EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
         Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
 
         List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
@@ -45,8 +45,8 @@ public class UpdateUser {
         if (personalData.isPresent()) {
             Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
             if (userFromRepo.isPresent()) {
-                Set<Tiles> allTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-                List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
+                Set<Tiles> allTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
+                List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
                 EntityUser userToUpdate = userFromRepo.get();
                 userToUpdate.setEntityUserGutter(list);
                 userToUpdate.setInputData(setInput);

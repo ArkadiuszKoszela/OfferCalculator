@@ -32,7 +32,7 @@ public class GenerateOffer {
         Document document = new Document();
 
         try {
-            EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
+            EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
             PdfWriter.getInstance(document, new FileOutputStream(new File(FILE_NAME)));
 
             //open
@@ -76,7 +76,7 @@ public class GenerateOffer {
 
             PdfPTable table = new PdfPTable(6);
 
-            Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
+            Set<Tiles> resultSetTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
             List<Tiles> resultListTilesFromRepo = new ArrayList<>(resultSetTilesFromRepo);
 
             BaseColor baseColor = new BaseColor(224, 224, 224);
