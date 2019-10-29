@@ -1,5 +1,6 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
@@ -13,6 +14,9 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterListener;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.tiles.CategoryTiles;
@@ -34,7 +38,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
     static final String CREATE_OFFER = "createOffer";
 
     private TreeGrid<Tiles> treeGrid = new TreeGrid<>();
-    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
+    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
     private Binder<Tiles> binder;
 
     public OfferView() {
@@ -73,8 +77,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         footerRow.getCell(priceListName).setComponent(calculate);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("850px");
-//        nameColumn.setAutoWidth(true);
+        treeGrid.setMinHeight("600px");
         return treeGrid;
     }
 

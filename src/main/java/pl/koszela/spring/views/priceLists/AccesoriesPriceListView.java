@@ -2,6 +2,7 @@ package pl.koszela.spring.views.priceLists;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -9,7 +10,9 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
@@ -58,6 +61,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
     }
 
     private VerticalLayout createGrid() {
+        TextField filter = new TextField();
         allAccesoriesRepo = allTilesFromRespository();
         ListDataProvider<EntityAccesories> dataProvider = new ListDataProvider<>(allAccesoriesRepo);
         grid.setDataProvider(dataProvider);
@@ -69,12 +73,22 @@ public class AccesoriesPriceListView extends VerticalLayout {
         Grid.Column<EntityAccesories> optionColumn = grid.addColumn(EntityAccesories::getOption).setHeader("Opcja");
         Grid.Column<EntityAccesories> dateColumn = grid.addColumn(EntityAccesories::getDate).setHeader("Data modyfikacji");
         setPriceRetail();
-        grid.getColumns().forEach(column -> column.setAutoWidth(true));
+
+        HeaderRow filterRow = grid.appendHeaderRow();
+        filter.addValueChangeListener(event -> dataProvider.addFilter(
+                accesories -> StringUtils.containsIgnoreCase(accesories.getName(), filter.getValue())
+        ));
+
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filterRow.getCell(nameColumn).setComponent(filter);
+        filter.setSizeFull();
+        filter.setPlaceholder("Filter");
 
         getBinder(purchaseColumn, detalPriceColumn, marginColumn, optionColumn);
 
         grid.setMinHeight("500px");
-        grid.setMinWidth("1200px");
+        grid.getColumns().forEach(column -> column.setAutoWidth(true));
+//        grid.setMinWidth("1200px");
         cennik.add(grid);
         return cennik;
     }

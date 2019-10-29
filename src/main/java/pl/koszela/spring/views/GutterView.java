@@ -1,5 +1,6 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
@@ -13,29 +14,24 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.BeforeLeaveEvent;
-import com.vaadin.flow.router.BeforeLeaveObserver;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.gutter.EntityGutter;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 @Route(value = GutterView.GUTTER_VIEW, layout = MainView.class)
-public class GutterView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
+public class GutterView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver, BeforeEnterObserver {
 
     public static final String GUTTER_VIEW = "gutter";
     private TreeGrid<EntityGutter> treeGrid = new TreeGrid<>();
-    private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
+    private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
     private Binder<EntityGutter> binder;
 
     public GutterView() {
@@ -138,11 +134,16 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
     }
 
     private void addPriceToList(List<EntityGutter> list) {
-        for (EntityGutter gutter : list) {
-            gutter.setUnitPurchasePrice(new BigDecimal(gutter.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllpriceAfterDiscount(new BigDecimal(gutter.getQuantity() * gutter.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllpricePurchase(new BigDecimal(gutter.getQuantity() * gutter.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            gutter.setAllprofit(new BigDecimal(gutter.getAllpriceAfterDiscount() - gutter.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+        if (list == null) {
+            UI.getCurrent().navigate(IncludeDataView.class);
+            getNotificationError("Na początku proszę wprowadzić dane !!");
+        } else {
+            for (EntityGutter gutter : list) {
+                gutter.setUnitPurchasePrice(new BigDecimal(gutter.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllpriceAfterDiscount(new BigDecimal(gutter.getQuantity() * gutter.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllpricePurchase(new BigDecimal(gutter.getQuantity() * gutter.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                gutter.setAllprofit(new BigDecimal(gutter.getAllpriceAfterDiscount() - gutter.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            }
         }
     }
 
@@ -216,7 +217,14 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        VaadinSession.getCurrent().getSession().setAttribute("allGutter", list);
+        VaadinSession.getCurrent().getSession().setAttribute("gutter", list);
         action.proceed();
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (list == null) {
+            event.rerouteTo(IncludeDataView.class);
+        }
     }
 }

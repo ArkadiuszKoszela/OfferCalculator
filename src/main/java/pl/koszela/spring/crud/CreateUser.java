@@ -36,15 +36,11 @@ public class CreateUser {
     }
 
     public void saveUser() {
-        List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
-        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
-        Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
+        List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
+        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+        Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
         Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
         List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-//        usersRepo.count() > 0
-//        if (userFromRepo.isPresent()) {
-//            getNotificationSucces("Użytkownik znajduje się juz w bazie danych");
-//        } else {
             EntityUser newUser = new EntityUser();
             newUser.setEntityPersonalData(entityPersonalData);
             newUser.setInputData(setInput);
@@ -60,6 +56,5 @@ public class CreateUser {
 
             usersRepo.save(newUser);
             getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
-//        }
     }
 }

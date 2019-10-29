@@ -32,8 +32,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     private GutterRepository gutterRepository;
 
     private List<NumberField> listOfNumberFields = new ArrayList<>();
-    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("allTilesFromRepo");
-    private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("allGutter");
+    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
+    private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
     private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
 
 
@@ -192,8 +192,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
-        VaadinSession.getCurrent().getSession().setAttribute("allGutter", listWithQuantityGutter());
-        VaadinSession.getCurrent().getSession().setAttribute("allTilesFromRepo", listTiles());
+        VaadinSession.getCurrent().getSession().setAttribute("gutter", listWithQuantityGutter());
+        VaadinSession.getCurrent().getSession().setAttribute("tiles", listTiles());
         VaadinSession.getCurrent().getSession().setAttribute("inputData", setInput);
     }
 }

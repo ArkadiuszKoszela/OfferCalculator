@@ -117,46 +117,26 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
                 .telephoneNumber(telephoneNumber.getValue())
                 .email(email.getValue())
                 .build();
-        VaadinSession.getCurrent().getSession().setAttribute("personalDataFromRepo", personalData);
+        VaadinSession.getCurrent().getSession().setAttribute("personalData", personalData);
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        VaadinSession.getCurrent().getSession().removeAttribute("resultTiles");
-        VaadinSession.getCurrent().getSession().removeAttribute("resultTilesFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInputFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("accesories");
+        VaadinSession.getCurrent().getSession().removeAttribute("gutter");
         VaadinSession.getCurrent().getSession().removeAttribute("personalData");
-        VaadinSession.getCurrent().getSession().removeAttribute("personalDataFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("inputGutterData");
-        VaadinSession.getCurrent().getSession().removeAttribute("allGutter");
+        VaadinSession.getCurrent().getSession().removeAttribute("tiles");
         VaadinSession.getCurrent().getSession().removeAttribute("inputData");
-
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityWindows");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierz");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTiles");
-
-        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesInputFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityWindowsFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("entityKolnierzFromRepo");
-        VaadinSession.getCurrent().getSession().removeAttribute("allTilesFromRepo");
+        VaadinSession.getCurrent().getSession().removeAttribute("accesories");
     }
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalDataFromRepo");
-        if(entityPersonalData == null){
+        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+        if (entityPersonalData == null) {
             save();
             action.proceed();
         }
-        VaadinSession.getCurrent().getSession().removeAttribute("personalData");
-        VaadinSession.getCurrent().getSession().removeAttribute("tilesInput");
-        VaadinSession.getCurrent().getSession().removeAttribute("resultTiles");
         action.proceed();
     }
 }
