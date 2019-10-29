@@ -33,15 +33,6 @@ public class WindowsView extends VerticalLayout {
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
 
         add(addLayout());
-        UI.getCurrent().addBeforeLeaveListener(e -> {
-            Tabs tabs = (Tabs) VaadinSession.getCurrent().getAttribute("tabs");
-            if (tabs != null && !tabs.getSelectedTab().getLabel().equals("Akcesoria")) {
-                save();
-                ServiceNotification.getNotificationSucces("Windows/ Kolnierz save");
-            } else {
-                ServiceNotification.getNotificationError("Windows/ Kolnierz don't save");
-            }
-        });
     }
 
     private FormLayout addLayout() {
