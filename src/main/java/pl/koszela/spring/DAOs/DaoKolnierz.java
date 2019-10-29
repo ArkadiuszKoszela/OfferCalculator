@@ -1,5 +1,6 @@
 package pl.koszela.spring.DAOs;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.EntityKolnierz;
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @Service
 public class DaoKolnierz implements Dao {
+    private final static Logger logger = Logger.getLogger(DaoKolnierz.class);
 
     private final KolnierzRepository kolnierzRepository;
 
@@ -41,11 +43,12 @@ public class DaoKolnierz implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Coś nie tak - save EntityWinodws in WindowsDao");
+            logger.debug("coś nie tak - nie zaimportowano kolnierz");
         } finally {
             if (br != null) {
                 try {
                     br.close();
+                    logger.info("succes - import kolnierz");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

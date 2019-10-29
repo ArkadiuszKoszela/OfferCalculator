@@ -1,0 +1,48 @@
+INFO    2019-10-29 13:15:42,443 [http-nio-8080-exec-8] pl.koszela.spring.importFiles.ImportFiles  - usunięto użytkowników
+INFO    2019-10-29 13:15:42,526 [http-nio-8080-exec-8] pl.koszela.spring.importFiles.ImportFiles  - usunięto dachówki
+INFO    2019-10-29 13:15:42,566 [http-nio-8080-exec-8] pl.koszela.spring.importFiles.ImportFiles  - usunięto akcesoria
+INFO    2019-10-29 13:15:42,599 [http-nio-8080-exec-8] pl.koszela.spring.importFiles.ImportFiles  - usunięto okna
+INFO    2019-10-29 13:15:42,614 [http-nio-8080-exec-8] pl.koszela.spring.importFiles.ImportFiles  - usunięto kolnierz
+INFO    2019-10-29 13:15:42,664 [http-nio-8080-exec-8] pl.koszela.spring.importFiles.ImportFiles  - usunięto rynny
+INFO    2019-10-29 13:15:42,707 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoTiles  - zaimportowano dachówki
+INFO    2019-10-29 13:15:42,723 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoTiles  - zaimportowano dachówki
+INFO    2019-10-29 13:15:42,738 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoTiles  - zaimportowano dachówki
+INFO    2019-10-29 13:15:42,816 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoAccesories  - zaimportowano akcesoria
+INFO    2019-10-29 13:15:42,840 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoKolnierz  - zaimportowano kolnierz
+INFO    2019-10-29 13:15:42,879 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoWindows  - zaimportowano okna
+INFO    2019-10-29 13:15:42,911 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoGutter  - zaimportowano rynny
+INFO    2019-10-29 13:15:42,935 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoGutter  - zaimportowano rynny
+INFO    2019-10-29 13:15:42,953 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoGutter  - zaimportowano rynny
+INFO    2019-10-29 13:15:42,982 [http-nio-8080-exec-8] pl.koszela.spring.DAOs.DaoGutter  - zaimportowano rynny
+INFO    2019-10-29 13:21:14,334 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all users
+INFO    2019-10-29 13:21:14,447 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all tiles
+INFO    2019-10-29 13:21:14,507 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all accesories
+INFO    2019-10-29 13:21:14,544 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all windows
+INFO    2019-10-29 13:21:14,560 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all kolnierz
+INFO    2019-10-29 13:21:14,637 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all gutters
+INFO    2019-10-29 13:21:14,689 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoTiles  - succes - import tiles Bogen Innovo 10 Czerwona Angoba
+INFO    2019-10-29 13:21:14,718 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoTiles  - succes - import tiles Bogen Innovo 10 Miedziano-brazowa Angoba
+INFO    2019-10-29 13:21:14,749 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoTiles  - succes - import tiles Bogen Innovo 12 Czerwona Angoba
+INFO    2019-10-29 13:21:14,908 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoAccesories  - succes - import accesories
+INFO    2019-10-29 13:21:14,950 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoKolnierz  - succes - import kolnierz
+INFO    2019-10-29 13:21:15,004 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoWindows  - succes - import winodws 
+INFO    2019-10-29 13:21:15,055 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Flamingo 125x100
+INFO    2019-10-29 13:21:15,096 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Flamingo 125x90
+INFO    2019-10-29 13:21:15,122 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Bryza 125x90
+INFO    2019-10-29 13:21:15,165 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Bryza 150x100
+INFO    2019-10-29 13:28:21,608 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all users
+INFO    2019-10-29 13:28:21,744 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all tiles
+INFO    2019-10-29 13:28:21,796 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all accesories
+INFO    2019-10-29 13:28:21,831 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all windows
+INFO    2019-10-29 13:28:21,849 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all kolnierz
+INFO    2019-10-29 13:28:21,923 [http-nio-8080-exec-4] pl.koszela.spring.importFiles.ImportFiles  - deleted all gutters
+INFO    2019-10-29 13:28:21,988 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoTiles  - succes - import tiles Bogen Innovo 10 Czerwona Angoba
+INFO    2019-10-29 13:28:22,019 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoTiles  - succes - import tiles Bogen Innovo 10 Miedziano-brazowa Angoba
+INFO    2019-10-29 13:28:22,046 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoTiles  - succes - import tiles Bogen Innovo 12 Czerwona Angoba
+INFO    2019-10-29 13:28:22,177 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoAccesories  - succes - import accesories
+INFO    2019-10-29 13:28:22,212 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoKolnierz  - succes - import kolnierz
+INFO    2019-10-29 13:28:22,286 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoWindows  - succes - import winodws 
+INFO    2019-10-29 13:28:22,338 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Flamingo 125x100
+INFO    2019-10-29 13:28:22,371 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Flamingo 125x90
+INFO    2019-10-29 13:28:22,387 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Bryza 125x90
+INFO    2019-10-29 13:28:22,422 [http-nio-8080-exec-4] pl.koszela.spring.DAOs.DaoGutter  - succes - import gutters Bryza 150x100

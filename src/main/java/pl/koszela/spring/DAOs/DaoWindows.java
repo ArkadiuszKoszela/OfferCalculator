@@ -1,5 +1,6 @@
 package pl.koszela.spring.DAOs;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.EntityWindows;
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @Service
 public class DaoWindows implements Dao {
+    private final static Logger logger = Logger.getLogger(DaoWindows.class);
 
     private final WindowsRepository windowsRepository;
 
@@ -41,11 +43,12 @@ public class DaoWindows implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Coś nie tak - save EntityWinodws in WindowsDao");
+            logger.debug("cos poszlo nie tak - nie zaimportowano okna");
         } finally {
             if (br != null) {
                 try {
                     br.close();
+                    logger.info("succes - import winodws ");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
