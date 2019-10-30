@@ -43,7 +43,7 @@ public class DaoKolnierz implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("coś nie tak - nie zaimportowano kolnierz");
+            logger.debug("kolnierz cannot be imported");
         } finally {
             if (br != null) {
                 try {

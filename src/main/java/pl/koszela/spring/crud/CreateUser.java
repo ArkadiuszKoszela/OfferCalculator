@@ -1,8 +1,10 @@
 package pl.koszela.spring.crud;
 
 import com.vaadin.flow.server.VaadinSession;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.koszela.spring.DAOs.DaoAccesories;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.entities.gutter.EntityGutter;
@@ -16,6 +18,7 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 
 @Service
 public class CreateUser {
+    private final static Logger logger = Logger.getLogger(CreateUser.class);
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
@@ -41,20 +44,21 @@ public class CreateUser {
         Set<Tiles> allTiles = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
         Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
         List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-            EntityUser newUser = new EntityUser();
-            newUser.setEntityPersonalData(entityPersonalData);
-            newUser.setInputData(setInput);
-            newUser.setUserAccesories(resultAccesories);
-            newUser.setTiles(allTiles);
-            newUser.setEntityUserGutter(list);
+        EntityUser newUser = new EntityUser();
+        newUser.setEntityPersonalData(entityPersonalData);
+        newUser.setInputData(setInput);
+        newUser.setUserAccesories(resultAccesories);
+        newUser.setTiles(allTiles);
+        newUser.setEntityUserGutter(list);
 
-            gutterRepository.saveAll(list);
-            personalDataRepository.save(entityPersonalData);
-            inputRepository.saveAll(setInput);
-            accesoriesRepository.saveAll(resultAccesories);
-            tilesRepository.saveAll(allTiles);
+        gutterRepository.saveAll(list);
+        personalDataRepository.save(entityPersonalData);
+        inputRepository.saveAll(setInput);
+        accesoriesRepository.saveAll(resultAccesories);
+        tilesRepository.saveAll(allTiles);
 
-            usersRepo.save(newUser);
-            getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
+        usersRepo.save(newUser);
+        logger.info("Saved users - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname());
+        getNotificationSucces("Zapisałem użytkownika - " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + "    :)");
     }
 }

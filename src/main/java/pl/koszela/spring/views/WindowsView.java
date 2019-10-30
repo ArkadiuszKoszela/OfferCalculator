@@ -66,13 +66,4 @@ public class WindowsView extends VerticalLayout {
         allKolnierzFromRepository.forEach(e -> allKolnierz.add(e.getName()));
         return allKolnierz;
     }
-
-    private void save() {
-        EntityKolnierz entityKolnierz = new EntityKolnierz();
-        entityKolnierz.setName(comboboxKolnierz.getValue());
-        EntityWindows entityWindows = new EntityWindows();
-        entityWindows.setName(comboboxWindows.getValue());
-        VaadinSession.getCurrent().setAttribute("entityKolnierz", entityKolnierz);
-        VaadinSession.getCurrent().setAttribute("entityWindows", entityWindows);
-    }
 }

@@ -17,7 +17,7 @@ public class EntityAccesories extends BaseEntity {
     private String option;
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean offer;
-    private String date;
+    private String dateChange;
     @ManyToMany(mappedBy = "userAccesories")
     private Set<EntityUser> accesoriesUser = new HashSet<>();
 
@@ -64,11 +64,11 @@ public class EntityAccesories extends BaseEntity {
         this.accesoriesUser = accesoriesUser;
     }
 
-    public String getDate() {
-        return date;
+    public String getDateChange() {
+        return dateChange;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDateChange(String dateChange) {
+        this.dateChange = dateChange;
     }
 }

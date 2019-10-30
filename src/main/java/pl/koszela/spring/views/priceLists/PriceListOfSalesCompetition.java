@@ -12,7 +12,7 @@ import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import pl.koszela.spring.entities.Competition;
-import pl.koszela.spring.entities.tiles.CategoryTiles;
+import pl.koszela.spring.entities.tiles.CategoryOfTiles;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.views.MainView;
 
@@ -27,14 +27,13 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
 
     public static final String PRICE_LIST_OF_SALES_COMPETITION = "competition";
     private TreeGrid<Competition> treeGrid = new TreeGrid<>();
-    CategoryTiles[] categories = CategoryTiles.values();
-    List<CategoryTiles> ca = Arrays.asList(categories);
-    List<Competition> competitions = new ArrayList<>();
+    private List<Competition> competitions = new ArrayList<>();
     private Binder<Competition> binder;
 
     public PriceListOfSalesCompetition() {
-        for (int i = 0; i < ca.size(); i++) {
-            competitions.add(new Competition(ca.get(i).toString(), 0d));
+        CategoryOfTiles[] categories = CategoryOfTiles.values();
+        for (CategoryOfTiles category : categories) {
+            competitions.add(new Competition(category.toString(), 0d));
         }
         add(createGrid());
     }
@@ -81,7 +80,7 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
     public TreeData<Competition> addItems(List list) {
         TreeData<Competition> treeData = new TreeData<>();
         if (competitions != null) {
-            Set<Competition> parents = competitions.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Competition> parents = competitions.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Competition parent : parents) {
                 List<Competition> childrens = competitions.stream().filter(e -> !e.getName().equals(parent.getName())).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {

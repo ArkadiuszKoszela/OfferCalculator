@@ -46,7 +46,7 @@ public class DaoTiles implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("coś nie tak - nie zaimportowano dachówek");
+            logger.debug("tiles cannot be imported");
         } finally {
             if (br != null) {
                 try {

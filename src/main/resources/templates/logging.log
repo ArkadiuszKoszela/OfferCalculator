@@ -1,0 +1,30 @@
+2019-10-30 10:58:54 INFO  GenerateOffer:135 - Create offer for - Arek Koszela
+2019-10-30 10:59:56 INFO  GenerateOffer:135 - Create offer for - Robert Koszela
+2019-10-30 11:01:59 INFO  GenerateOffer:135 - Create offer for - Robert Koszela
+2019-10-30 11:33:58 DEBUG GenerateOffer:98 - the option has not been selected in the tile table
+2019-10-30 11:33:58 INFO  GenerateOffer:135 - Create offer for - Arek Koszela
+2019-10-30 12:12:42 INFO  GenerateOffer:158 - Create offer for - Arek Koszela
+2019-10-30 12:13:40 INFO  ImportFiles:91 - deleted all users
+2019-10-30 12:13:40 INFO  ImportFiles:93 - deleted all tiles
+2019-10-30 12:13:40 INFO  ImportFiles:95 - deleted all accesories
+2019-10-30 12:13:40 INFO  ImportFiles:97 - deleted all windows
+2019-10-30 12:13:40 INFO  ImportFiles:99 - deleted all kolnierz
+2019-10-30 12:13:40 INFO  ImportFiles:101 - deleted all gutters
+2019-10-30 12:13:40 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 Czerwona Angoba
+2019-10-30 12:13:40 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 Miedziano-brazowa Angoba
+2019-10-30 12:13:40 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 12 Czerwona Angoba
+2019-10-30 12:13:40 INFO  DaoAccesories:51 - succes - import accesories
+2019-10-30 12:13:40 INFO  DaoKolnierz:51 - succes - import kolnierz
+2019-10-30 12:13:41 INFO  DaoWindows:51 - succes - import winodws 
+2019-10-30 12:13:41 INFO  DaoGutter:51 - succes - import gutters Flamingo 125x100
+2019-10-30 12:13:41 INFO  DaoGutter:51 - succes - import gutters Flamingo 125x90
+2019-10-30 12:13:41 INFO  DaoGutter:51 - succes - import gutters Bryza 125x90
+2019-10-30 12:13:41 INFO  DaoGutter:51 - succes - import gutters Bryza 150x100
+2019-10-30 12:17:59 DEBUG GenerateOffer:100 - No option has been selected in the tile table
+2019-10-30 12:17:59 INFO  GenerateOffer:158 - Create offer for - Arek Koszela
+2019-10-30 13:03:27 INFO  GenerateOffer:158 - Create offer for - Arek Koszela
+2019-10-30 13:05:40 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
+2019-10-30 13:10:52 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
+2019-10-30 13:11:17 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
+2019-10-30 13:11:23 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
+2019-10-30 13:16:08 INFO  GenerateOffer:157 - Create offer for - Arek Koszela

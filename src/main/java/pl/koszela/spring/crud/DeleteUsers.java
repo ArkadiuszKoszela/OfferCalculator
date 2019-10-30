@@ -1,6 +1,7 @@
 package pl.koszela.spring.crud;
 
 import com.vaadin.flow.component.combobox.ComboBox;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
@@ -14,6 +15,7 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 
 @Service
 public class DeleteUsers {
+    private final static Logger logger = Logger.getLogger(DeleteUsers.class);
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
@@ -49,7 +51,7 @@ public class DeleteUsers {
                 tilesRepository.flush();
                 usersRepo.deleteById(userToRemove.getId());
                 usersRepo.flush();
-
+                logger.info("Deleted user - " + personalData.get().getName() + " " +personalData.get().getSurname());
                 getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getEntityPersonalData().getName() + " " + userToRemove.getEntityPersonalData().getSurname() + "   papa  :(");
             }
         } else {

@@ -43,7 +43,7 @@ public class DaoAccesories implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("coś nie tak - nie zaimortowano akcsesoriow");
+            logger.debug("accesories cannot be imported");
         } finally {
             if (br != null) {
                 try {
