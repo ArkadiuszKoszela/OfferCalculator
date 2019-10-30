@@ -6,5 +6,4 @@ import pl.koszela.spring.entities.EntityKolnierz;
 
 @Repository
 public interface KolnierzRepository extends CrudRepository<EntityKolnierz, Long> {
-    EntityKolnierz findByName (String name);
 }

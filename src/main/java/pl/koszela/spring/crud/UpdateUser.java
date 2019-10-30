@@ -1,6 +1,7 @@
 package pl.koszela.spring.crud;
 
 import com.vaadin.flow.server.VaadinSession;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
@@ -17,6 +18,7 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationSucce
 
 @Service
 public class UpdateUser {
+    private final static Logger logger = Logger.getLogger(UpdateUser.class);
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
@@ -60,6 +62,7 @@ public class UpdateUser {
                 tilesRepository.saveAll(allTilesFromRepo);
 
                 usersRepo.save(userToUpdate);
+                logger.info("Updated user - " + userFromRepo.get().getEntityPersonalData().getName() + " " + userFromRepo.get().getEntityPersonalData().getSurname());
                 getNotificationSucces("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getEntityPersonalData().getName() + " " + userToUpdate.getEntityPersonalData().getSurname() + "    :)");
             } else {
                 getNotificationError("Coś poszło nie tak");

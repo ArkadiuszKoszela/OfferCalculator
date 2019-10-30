@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.InputData;
 import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.tiles.CategoryTiles;
+import pl.koszela.spring.entities.tiles.CategoryOfTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.repositories.GutterRepository;
 import pl.koszela.spring.repositories.TilesRepository;
@@ -55,7 +55,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         FormLayout tilesLayout = getFormLayout(6);
         FormLayout gutterLayout1 = getFormLayout(12);
         FormLayout gutterLayout2 = getFormLayout(5);
-        CategoryTiles[] values = CategoryTiles.values();
+        CategoryOfTiles[] values = CategoryOfTiles.values();
         int i = 0;
         for (InputData inputData : setInput) {
             if (i <= 18) {

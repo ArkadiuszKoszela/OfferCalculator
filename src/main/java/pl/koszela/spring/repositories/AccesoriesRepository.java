@@ -8,6 +8,4 @@ import java.util.List;
 
 @Repository(value = "repo_accesories")
 public interface AccesoriesRepository extends JpaRepository<EntityAccesories, Long> {
-
-    List<EntityAccesories> findAllByCategoryEquals (String category);
 }

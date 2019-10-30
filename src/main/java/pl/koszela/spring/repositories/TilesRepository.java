@@ -10,7 +10,4 @@ import java.util.List;
 @Transactional
 @Repository(value = "tiles_repo")
 public interface TilesRepository extends JpaRepository<Tiles, Long> {
-
-    List<Tiles> findByNameEquals (String name);
-    List<Tiles> findByPriceListNameEquals (String priceListName);
 }

@@ -18,9 +18,7 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import pl.koszela.spring.GernateFile.GenerateOffer;
+import pl.koszela.spring.gernateFile.GenerateOffer;
 import pl.koszela.spring.importFiles.ImportFiles;
 import pl.koszela.spring.crud.CreateUser;
 import pl.koszela.spring.crud.UpdateUser;
@@ -81,11 +79,10 @@ public class MainView extends AppLayout {
             setDrawerOpened(false);
         }
 
-        File file = new File("src\\main\\resources\\templates\\itext.pdf");
+        File file = new File("src/main/resources/templates/offer.pdf");
 
         Anchor anchor = new Anchor(getStreamResource(file.getName(), file), file.getName());
         anchor.getElement().setAttribute("download", true);
-
         anchor.setHref(getStreamResource(file.getName(), file));
         anchor.setVisible(false);
         Button saveNewUser = new Button("Zapisz użytkownika");

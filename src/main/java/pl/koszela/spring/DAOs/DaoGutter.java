@@ -43,7 +43,7 @@ public class DaoGutter implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("coś nie tak - nie zaimportowano rynny");
+            logger.debug("gutters cannot be imported");
         } finally {
             if (br != null) {
                 try {

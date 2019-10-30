@@ -71,7 +71,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
         Grid.Column<EntityAccesories> detalPriceColumn = grid.addColumn(EntityAccesories::getUnitDetalPrice).setHeader("Cena detal");
         Grid.Column<EntityAccesories> marginColumn = grid.addColumn(EntityAccesories::getMargin).setHeader("Narzut");
         Grid.Column<EntityAccesories> optionColumn = grid.addColumn(EntityAccesories::getOption).setHeader("Opcja");
-        Grid.Column<EntityAccesories> dateColumn = grid.addColumn(EntityAccesories::getDate).setHeader("Data modyfikacji");
+        Grid.Column<EntityAccesories> dateColumn = grid.addColumn(EntityAccesories::getDateChange).setHeader("Data modyfikacji");
         setPriceRetail();
 
         HeaderRow filterRow = grid.appendHeaderRow();
@@ -88,7 +88,6 @@ public class AccesoriesPriceListView extends VerticalLayout {
 
         grid.setMinHeight("500px");
         grid.getColumns().forEach(column -> column.setAutoWidth(true));
-//        grid.setMinWidth("1200px");
         cennik.add(grid);
         return cennik;
     }
@@ -168,7 +167,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
                                 || !old.getMargin().equals(accesories.getMargin()) || !old.getOption().equals(accesories.getOption())) {
                             LocalDateTime dateTime = LocalDateTime.now();
                             DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                            accesories.setDate(dateTime.format(myDateFormat));
+                            accesories.setDateChange(dateTime.format(myDateFormat));
                         }
                     }
                 }

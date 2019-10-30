@@ -33,15 +33,6 @@ public class WindowsView extends VerticalLayout {
         this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
 
         add(addLayout());
-        UI.getCurrent().addBeforeLeaveListener(e -> {
-            Tabs tabs = (Tabs) VaadinSession.getCurrent().getAttribute("tabs");
-            if (tabs != null && !tabs.getSelectedTab().getLabel().equals("Akcesoria")) {
-                save();
-                ServiceNotification.getNotificationSucces("Windows/ Kolnierz save");
-            } else {
-                ServiceNotification.getNotificationError("Windows/ Kolnierz don't save");
-            }
-        });
     }
 
     private FormLayout addLayout() {
@@ -74,14 +65,5 @@ public class WindowsView extends VerticalLayout {
         List<String> allKolnierz = new ArrayList<>();
         allKolnierzFromRepository.forEach(e -> allKolnierz.add(e.getName()));
         return allKolnierz;
-    }
-
-    private void save() {
-        EntityKolnierz entityKolnierz = new EntityKolnierz();
-        entityKolnierz.setName(comboboxKolnierz.getValue());
-        EntityWindows entityWindows = new EntityWindows();
-        entityWindows.setName(comboboxWindows.getValue());
-        VaadinSession.getCurrent().setAttribute("entityKolnierz", entityKolnierz);
-        VaadinSession.getCurrent().setAttribute("entityWindows", entityWindows);
     }
 }

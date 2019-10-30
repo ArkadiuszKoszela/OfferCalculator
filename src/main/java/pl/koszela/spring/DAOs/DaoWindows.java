@@ -43,7 +43,7 @@ public class DaoWindows implements Dao {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("cos poszlo nie tak - nie zaimportowano okna");
+            logger.debug("windows cannot be imported");
         } finally {
             if (br != null) {
                 try {

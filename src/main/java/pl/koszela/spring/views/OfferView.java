@@ -1,6 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
@@ -14,12 +13,9 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterListener;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.tiles.CategoryTiles;
+import pl.koszela.spring.entities.tiles.CategoryOfTiles;
 import pl.koszela.spring.entities.tiles.Tiles;
 import pl.koszela.spring.service.GridInteraface;
 
@@ -112,13 +108,13 @@ public class OfferView extends VerticalLayout implements GridInteraface {
     public TreeData<Tiles> addItems(List list) {
         TreeData<Tiles> treeData = new TreeData<>();
         if (set != null) {
-            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
                 List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, parent);
-                    } else if (!childrens.get(i).getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())) {
+                    } else if (!childrens.get(i).getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())) {
                         treeData.addItem(parent, childrens.get(i));
                     }
                 }
@@ -139,7 +135,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
 
     private Button refreshButton(TreeGrid<Tiles> treeGrid) {
         return new Button("Refresh", buttonClickEvent -> {
-            Set<Tiles> mainsInPriceList = set.stream().filter(e -> e.getName().equals(CategoryTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            Set<Tiles> mainsInPriceList = set.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles tiles : mainsInPriceList) {
                 Set<Tiles> onePriceList = set.stream().filter(e -> e.getPriceListName().equals(tiles.getPriceListName())).collect(Collectors.toSet());
 
