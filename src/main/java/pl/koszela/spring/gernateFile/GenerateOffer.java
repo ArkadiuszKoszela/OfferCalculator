@@ -1,19 +1,22 @@
 package pl.koszela.spring.gernateFile;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
-import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.CategoryOfTiles;
-import pl.koszela.spring.entities.tiles.Tiles;
+import pl.koszela.spring.entities.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;

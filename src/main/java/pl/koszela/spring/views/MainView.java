@@ -1,7 +1,6 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.applayout.AppLayout;
-
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -18,10 +17,10 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.gernateFile.GenerateOffer;
-import pl.koszela.spring.importFiles.ImportFiles;
 import pl.koszela.spring.crud.CreateUser;
 import pl.koszela.spring.crud.UpdateUser;
+import pl.koszela.spring.gernateFile.GenerateOffer;
+import pl.koszela.spring.importFiles.ImportFiles;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,12 +31,12 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationError
 import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
-import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
-import static pl.koszela.spring.views.priceLists.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
 import static pl.koszela.spring.views.IncludeDataView.INCLUDE_DATA;
+import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 import static pl.koszela.spring.views.priceLists.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
+import static pl.koszela.spring.views.priceLists.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
 import static pl.koszela.spring.views.priceLists.TilesPriceListView.TILES_PRICE_LIST;
 
 @Route("")

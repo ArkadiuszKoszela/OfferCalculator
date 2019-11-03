@@ -1,14 +1,14 @@
 package pl.koszela.spring.crud;
 
-import com.vaadin.flow.component.combobox.ComboBox;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.EntityPersonalData;
+import pl.koszela.spring.entities.EntityUser;
 import pl.koszela.spring.repositories.*;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
@@ -32,10 +32,8 @@ public class DeleteUsers {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
     }
 
-    public void removeUser(ComboBox<String> comboBox) {
-        String[] nameAndSurname = comboBox.getValue().split(" ");
-
-        Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(nameAndSurname[0], nameAndSurname[1]);
+    public void removeUser(EntityPersonalData personalDataFromCombobox) {
+        Optional<EntityPersonalData> personalData = personalDataRepository.findById(personalDataFromCombobox.getId());
 
         if (personalData.isPresent()) {
             Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
@@ -55,7 +53,7 @@ public class DeleteUsers {
                 getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getEntityPersonalData().getName() + " " + userToRemove.getEntityPersonalData().getSurname() + "   papa  :(");
             }
         } else {
-            getNotificationError("Nie ma takiego użytkownika " + nameAndSurname[0] + " " + nameAndSurname[1] + " w bazie danych    :(");
+            getNotificationError("Nie ma takiego użytkownika " + personalData.get().getName() + " " + personalData.get().getSurname() + " w bazie danych    :(");
         }
     }
 }

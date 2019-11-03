@@ -3,7 +3,7 @@ package pl.koszela.spring.DAOs;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.gutter.EntityGutter;
+import pl.koszela.spring.entities.EntityGutter;
 import pl.koszela.spring.repositories.GutterRepository;
 
 import java.io.BufferedReader;

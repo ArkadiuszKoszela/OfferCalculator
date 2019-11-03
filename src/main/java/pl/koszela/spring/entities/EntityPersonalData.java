@@ -1,4 +1,4 @@
-package pl.koszela.spring.entities.personalData;
+package pl.koszela.spring.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;

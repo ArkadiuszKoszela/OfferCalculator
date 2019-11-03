@@ -2,13 +2,12 @@ package pl.koszela.spring.entities;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
-import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.Tiles;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")

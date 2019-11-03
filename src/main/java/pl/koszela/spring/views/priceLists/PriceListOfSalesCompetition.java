@@ -11,13 +11,12 @@ import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
+import pl.koszela.spring.entities.CategoryOfTiles;
 import pl.koszela.spring.entities.Competition;
-import pl.koszela.spring.entities.tiles.CategoryOfTiles;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.views.MainView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

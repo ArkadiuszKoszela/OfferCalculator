@@ -1,6 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,8 +18,8 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import pl.koszela.spring.entities.EntityAccesories;
 import pl.koszela.spring.entities.InputData;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NameNumberFields;

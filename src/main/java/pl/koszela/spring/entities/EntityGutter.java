@@ -1,9 +1,9 @@
-package pl.koszela.spring.entities.gutter;
+package pl.koszela.spring.entities;
 
-import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.entities.EntityUser;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,15 +1,11 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.EntityKolnierz;
 import pl.koszela.spring.entities.EntityWindows;
-import pl.koszela.spring.service.ServiceNotification;
 import pl.koszela.spring.repositories.KolnierzRepository;
 import pl.koszela.spring.repositories.WindowsRepository;
 
