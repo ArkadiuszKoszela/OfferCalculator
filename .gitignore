@@ -1,4 +1,5 @@
 HELP.md
+/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -14,6 +15,9 @@ db.trace.db
 app.log
 
 ### IntelliJ IDEA ###
+package.json
+Procfile.txt
+.mvn
 .idea
 *.iws
 *.iml
