@@ -9,30 +9,12 @@ import pl.koszela.spring.repositories.*;
 
 import java.util.Objects;
 
+import static pl.koszela.spring.importFiles.Endpoint.*;
 import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class ImportFiles {
     private final static Logger logger = Logger.getLogger(ImportFiles.class);
-
-    private static final String BOGEN_INNOVO_10_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 czerwona angoba.csv";
-    private static final String BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "src/main/resources/assets/Bogen Innovo 10 miedziano-brazowa angoba.csv";
-    private static final String BOGEN_INNOVO_12_CZERWONA_ANGOBA = "src/main/resources/assets/Bogen Innovo 12 czerwona angoba.csv";
-    private static final String AKCESORIA = "src/main/resources/assets/akcesoria.csv";
-    private static final String OKNA_OKPOL_DAKEA = "src/main/resources/assets/OknaOkpolDakea.csv";
-    private static final String KOLNIERZ_OKPOL_DAKEA = "src/main/resources/assets/KolnierzOkpolDakea.csv";
-    private static final String FLAMINGO_125x100 = "src/main/resources/assets/Flamingo 125100.csv";
-    private static final String FLAMINGO_125x90 = "src/main/resources/assets/Flamingo 12590.csv";
-    private static final String BRYZA_125x90 = "src/main/resources/assets/Bryza 12590.csv";
-    private static final String BRYZA_150x100 = "src/main/resources/assets/Bryza 150100.csv";
-
-    private static final String NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA = "Bogen Innovo 10 Czerwona Angoba";
-    private static final String NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA = "Bogen Innovo 10 Miedziano-brazowa Angoba";
-    private static final String NAME_BOGEN_INNOVO_12_CZERWONA_ANGOBA = "Bogen Innovo 12 Czerwona Angoba";
-    private static final String NAME_FLAMINGO_125x100 = "Flamingo 125x100";
-    private static final String NAME_FLAMINGO_125x90 = "Flamingo 125x90";
-    private static final String NAME_BRYZA_125x90 = "Bryza 125x90";
-    private static final String NAME_BRYZA_150x100 = "Bryza 150x100";
 
     private AccesoriesRepository accesoriesRepository;
     private WindowsRepository windowsRepository;
@@ -100,16 +82,16 @@ public class ImportFiles {
         gutterRepository.deleteAll();
         logger.info("deleted all gutters");
 
-        daoTiles.save(BOGEN_INNOVO_10_CZERWONA_ANGOBA, NAME_BOGEN_INNOVO_10_CZERWONA_ANGOBA);
-        daoTiles.save(BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA, NAME_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA);
-        daoTiles.save(BOGEN_INNOVO_12_CZERWONA_ANGOBA, NAME_BOGEN_INNOVO_12_CZERWONA_ANGOBA);
-        daoAccesories.save(AKCESORIA, "do usunięcia");
-        daoKolnierz.save(KOLNIERZ_OKPOL_DAKEA, "do usunięcia");
-        daoWindows.save(OKNA_OKPOL_DAKEA, "do usunięcia");
-        daoGutter.save(FLAMINGO_125x100, NAME_FLAMINGO_125x100);
-        daoGutter.save(FLAMINGO_125x90, NAME_FLAMINGO_125x90);
-        daoGutter.save(BRYZA_125x90, NAME_BRYZA_125x90);
-        daoGutter.save(BRYZA_150x100, NAME_BRYZA_150x100);
+        daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_10_CZERWONA_ANGOBA_URL.location());
+        daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA_URL.location());
+        daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_12_CZERWONA_ANGOBA_URL.location());
+        daoAccesories.readAndSaveToORM(FILE_AKCESORIA_URL.location());
+        daoKolnierz.readAndSaveToORM(FILE_KOLNIERZ_OKPOL_DAKEA_URL.location());
+        daoWindows.readAndSaveToORM(FILE_OKNA_OKPOL_DAKEA_URL.location());
+        daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x100_URL.location());
+        daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x90_URL.location());
+        daoGutter.readAndSaveToORM(FILE_BRYZA_125x90_URL.location());
+        daoGutter.readAndSaveToORM(FILE_BRYZA_150x100_URL.location());
         getNotificationSucces("Zaimportowano cenniki");
         UI.getCurrent().getPage().reload();
     }

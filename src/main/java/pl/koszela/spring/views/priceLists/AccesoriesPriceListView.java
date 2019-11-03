@@ -14,7 +14,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.views.MainView;
 
@@ -38,8 +38,8 @@ public class AccesoriesPriceListView extends VerticalLayout {
 
     private VerticalLayout cennik = new VerticalLayout();
 
-    private Grid<EntityAccesories> grid = new Grid<>();
-    private List<EntityAccesories> allAccesoriesRepo = new ArrayList<>();
+    private Grid<Accesories> grid = new Grid<>();
+    private List<Accesories> allAccesoriesRepo = new ArrayList<>();
 
     @Autowired
     public AccesoriesPriceListView(AccesoriesRepository accesoriesRepository) {
@@ -50,8 +50,8 @@ public class AccesoriesPriceListView extends VerticalLayout {
         add(saveToRepo());
     }
 
-    private List<EntityAccesories> allTilesFromRespository() {
-        List<EntityAccesories> all = accesoriesRepository.findAll();
+    private List<Accesories> allTilesFromRespository() {
+        List<Accesories> all = accesoriesRepository.findAll();
         all.forEach(e -> {
             if (e.getOption() == null) {
                 e.setOption("BRAK");
@@ -63,15 +63,15 @@ public class AccesoriesPriceListView extends VerticalLayout {
     private VerticalLayout createGrid() {
         TextField filter = new TextField();
         allAccesoriesRepo = allTilesFromRespository();
-        ListDataProvider<EntityAccesories> dataProvider = new ListDataProvider<>(allAccesoriesRepo);
+        ListDataProvider<Accesories> dataProvider = new ListDataProvider<>(allAccesoriesRepo);
         grid.setDataProvider(dataProvider);
 
-        Grid.Column<EntityAccesories> nameColumn = grid.addColumn(EntityAccesories::getName).setHeader("Nazwa");
-        Grid.Column<EntityAccesories> purchaseColumn = grid.addColumn(EntityAccesories::getUnitPurchasePrice).setHeader("Cena zakupu");
-        Grid.Column<EntityAccesories> detalPriceColumn = grid.addColumn(EntityAccesories::getUnitDetalPrice).setHeader("Cena detal");
-        Grid.Column<EntityAccesories> marginColumn = grid.addColumn(EntityAccesories::getMargin).setHeader("Narzut");
-        Grid.Column<EntityAccesories> optionColumn = grid.addColumn(EntityAccesories::getOption).setHeader("Opcja");
-        Grid.Column<EntityAccesories> dateColumn = grid.addColumn(EntityAccesories::getDateChange).setHeader("Data modyfikacji");
+        Grid.Column<Accesories> nameColumn = grid.addColumn(Accesories::getName).setHeader("Nazwa");
+        Grid.Column<Accesories> purchaseColumn = grid.addColumn(Accesories::getUnitPurchasePrice).setHeader("Cena zakupu");
+        Grid.Column<Accesories> detalPriceColumn = grid.addColumn(Accesories::getUnitDetalPrice).setHeader("Cena detal");
+        Grid.Column<Accesories> marginColumn = grid.addColumn(Accesories::getMargin).setHeader("Narzut");
+        Grid.Column<Accesories> optionColumn = grid.addColumn(Accesories::getOption).setHeader("Opcja");
+        Grid.Column<Accesories> dateColumn = grid.addColumn(Accesories::getDateChange).setHeader("Data modyfikacji");
         setPriceRetail();
 
         HeaderRow filterRow = grid.appendHeaderRow();
@@ -92,9 +92,9 @@ public class AccesoriesPriceListView extends VerticalLayout {
         return cennik;
     }
 
-    private void getBinder(Grid.Column<EntityAccesories> purchaseColumn, Grid.Column<EntityAccesories> detalPriceColumn
-            , Grid.Column<EntityAccesories> marginColumn, Grid.Column<EntityAccesories> optionColumn) {
-        Binder<EntityAccesories> binder = new Binder<>(EntityAccesories.class);
+    private void getBinder(Grid.Column<Accesories> purchaseColumn, Grid.Column<Accesories> detalPriceColumn
+            , Grid.Column<Accesories> marginColumn, Grid.Column<Accesories> optionColumn) {
+        Binder<Accesories> binder = new Binder<>(Accesories.class);
         grid.getEditor().setBinder(binder);
 
         TextField purchase = new TextField();
@@ -146,7 +146,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
     }
 
     private void setPriceRetail() {
-        for (EntityAccesories accesories : allAccesoriesRepo) {
+        for (Accesories accesories : allAccesoriesRepo) {
             BigDecimal constance = new BigDecimal(100);
             BigDecimal margin = BigDecimal.valueOf(accesories.getMargin());
             BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getUnitPurchasePrice());
@@ -159,9 +159,9 @@ public class AccesoriesPriceListView extends VerticalLayout {
     private Button saveToRepo() {
         Button save = new Button("Zapisz do bazy");
         save.addClickListener(event -> {
-            List<EntityAccesories> all = accesoriesRepository.findAll();
-            for (EntityAccesories old : all) {
-                for (EntityAccesories accesories : allAccesoriesRepo) {
+            List<Accesories> all = accesoriesRepository.findAll();
+            for (Accesories old : all) {
+                for (Accesories accesories : allAccesoriesRepo) {
                     if (old.getName().equals(accesories.getName())) {
                         if (!old.getUnitPurchasePrice().equals(accesories.getUnitPurchasePrice())
                                 || !old.getMargin().equals(accesories.getMargin()) || !old.getOption().equals(accesories.getOption())) {

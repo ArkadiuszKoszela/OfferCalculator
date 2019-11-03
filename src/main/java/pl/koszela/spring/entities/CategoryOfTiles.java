@@ -1,4 +1,4 @@
-package pl.koszela.spring.entities.tiles;
+package pl.koszela.spring.entities;
 
 public enum CategoryOfTiles {
 

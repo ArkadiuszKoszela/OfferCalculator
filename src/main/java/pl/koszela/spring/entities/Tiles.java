@@ -1,7 +1,7 @@
-package pl.koszela.spring.entities.tiles;
+package pl.koszela.spring.entities;
 
 import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.entities.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,7 +21,7 @@ public class Tiles extends BaseEntity {
     private BigDecimal totalProfit;
     private String date;
     @ManyToMany(mappedBy = "userTiles")
-    private Set<EntityUser> tilesUser = new HashSet<>();
+    private Set<User> tilesUser = new HashSet<>();
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean main;
     @Column(name = "option_tiles", nullable = false, columnDefinition = "TINYINT(1)")
@@ -54,11 +54,11 @@ public class Tiles extends BaseEntity {
         this.totalProfit = totalProfit;
     }
 
-    public Set<EntityUser> getTilesUser() {
+    public Set<User> getTilesUser() {
         return tilesUser;
     }
 
-    public void setTilesUser(Set<EntityUser> tilesUser) {
+    public void setTilesUser(Set<User> tilesUser) {
         this.tilesUser = tilesUser;
     }
 

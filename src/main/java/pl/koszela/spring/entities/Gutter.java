@@ -1,7 +1,7 @@
-package pl.koszela.spring.entities.gutter;
+package pl.koszela.spring.entities;
 
 import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.entities.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "gutter")
-public class EntityGutter extends BaseEntity {
+public class Gutter extends BaseEntity {
 
     private String category;
     private BigDecimal totalPrice;
@@ -20,9 +20,9 @@ public class EntityGutter extends BaseEntity {
     @Column(name = "option_gutter", nullable = false, columnDefinition = "TINYINT", length = 1)
     private boolean option;
     @ManyToMany(mappedBy = "entityUserGutter")
-    private List<EntityUser> userGutters = new ArrayList<>();
+    private List<User> userGutters = new ArrayList<>();
 
-    public EntityGutter() {
+    public Gutter() {
     }
 
     public void setCategory(String category) {
@@ -65,11 +65,11 @@ public class EntityGutter extends BaseEntity {
         this.option = option;
     }
 
-    public List<EntityUser> getUserGutters() {
+    public List<User> getUserGutters() {
         return userGutters;
     }
 
-    public void setUserGutters(List<EntityUser> userGutters) {
+    public void setUserGutters(List<User> userGutters) {
         this.userGutters = userGutters;
     }
 }

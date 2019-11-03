@@ -5,10 +5,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
-import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.Tiles;
+import pl.koszela.spring.entities.Accesories;
+import pl.koszela.spring.entities.Gutter;
+import pl.koszela.spring.entities.PersonalData;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.*;
 
 import java.util.*;
@@ -38,18 +38,18 @@ public class UpdateUser {
     }
 
     public void updateUser() {
-        EntityPersonalData data = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
-        Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
+        PersonalData data = (PersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+        Optional<PersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
 
         List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-        Set<EntityAccesories> resultAccesories = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        Set<Accesories> resultAccesories = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         if (personalData.isPresent()) {
-            Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
+            Optional<User> userFromRepo = usersRepo.findUserByPersonalDataEquals(personalData.get());
             if (userFromRepo.isPresent()) {
                 Set<Tiles> allTilesFromRepo = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
-                List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
-                EntityUser userToUpdate = userFromRepo.get();
+                List<Gutter> list = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
+                User userToUpdate = userFromRepo.get();
                 userToUpdate.setEntityUserGutter(list);
                 userToUpdate.setInputData(setInput);
                 userToUpdate.setUserAccesories(resultAccesories);
@@ -62,8 +62,8 @@ public class UpdateUser {
                 tilesRepository.saveAll(allTilesFromRepo);
 
                 usersRepo.save(userToUpdate);
-                logger.info("Updated user - " + userFromRepo.get().getEntityPersonalData().getName() + " " + userFromRepo.get().getEntityPersonalData().getSurname());
-                getNotificationSucces("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getEntityPersonalData().getName() + " " + userToUpdate.getEntityPersonalData().getSurname() + "    :)");
+                logger.info("Updated user - " + userFromRepo.get().getPersonalData().getName() + " " + userFromRepo.get().getPersonalData().getSurname());
+                getNotificationSucces("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getPersonalData().getName() + " " + userToUpdate.getPersonalData().getSurname() + "    :)");
             } else {
                 getNotificationError("Coś poszło nie tak");
             }

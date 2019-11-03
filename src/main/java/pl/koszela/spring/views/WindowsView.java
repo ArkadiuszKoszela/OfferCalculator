@@ -1,15 +1,11 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.EntityKolnierz;
-import pl.koszela.spring.entities.EntityWindows;
-import pl.koszela.spring.service.ServiceNotification;
+import pl.koszela.spring.entities.Kolnierz;
+import pl.koszela.spring.entities.Windows;
 import pl.koszela.spring.repositories.KolnierzRepository;
 import pl.koszela.spring.repositories.WindowsRepository;
 
@@ -54,14 +50,14 @@ public class WindowsView extends VerticalLayout {
     }
 
     private List<String> getAllNameWindows() {
-        Iterable<EntityWindows> allWindowsFromRepository = windowsRepository.findAll();
+        Iterable<Windows> allWindowsFromRepository = windowsRepository.findAll();
         List<String> allWindows = new ArrayList<>();
         allWindowsFromRepository.forEach(e -> allWindows.add(e.getName()));
         return allWindows;
     }
 
     private List<String> getAllNameKolnierz() {
-        Iterable<EntityKolnierz> allKolnierzFromRepository = kolnierzRepository.findAll();
+        Iterable<Kolnierz> allKolnierzFromRepository = kolnierzRepository.findAll();
         List<String> allKolnierz = new ArrayList<>();
         allKolnierzFromRepository.forEach(e -> allKolnierz.add(e.getName()));
         return allKolnierz;

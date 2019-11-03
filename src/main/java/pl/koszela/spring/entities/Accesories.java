@@ -1,7 +1,7 @@
-package pl.koszela.spring.entities.accesories;
+package pl.koszela.spring.entities;
 
 import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.entities.EntityUser;
+import pl.koszela.spring.entities.User;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "accesories")
-public class EntityAccesories extends BaseEntity {
+public class Accesories extends BaseEntity {
 
     private String category;
     private Integer margin;
@@ -19,9 +19,9 @@ public class EntityAccesories extends BaseEntity {
     private boolean offer;
     private String dateChange;
     @ManyToMany(mappedBy = "userAccesories")
-    private Set<EntityUser> accesoriesUser = new HashSet<>();
+    private Set<User> accesoriesUser = new HashSet<>();
 
-    public EntityAccesories() {
+    public Accesories() {
     }
 
     public Integer getMargin() {
@@ -56,11 +56,11 @@ public class EntityAccesories extends BaseEntity {
         this.offer = offer;
     }
 
-    public Set<EntityUser> getAccesoriesUser() {
+    public Set<User> getAccesoriesUser() {
         return accesoriesUser;
     }
 
-    public void setAccesoriesUser(Set<EntityUser> accesoriesUser) {
+    public void setAccesoriesUser(Set<User> accesoriesUser) {
         this.accesoriesUser = accesoriesUser;
     }
 

@@ -3,14 +3,13 @@ package pl.koszela.spring.DAOs;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.EntityKolnierz;
+import pl.koszela.spring.entities.Kolnierz;
 import pl.koszela.spring.repositories.KolnierzRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service
@@ -25,7 +24,7 @@ public class DaoKolnierz implements Dao {
     }
 
     @Override
-    public final void save(String filePath, String priceListName) {
+    public final void readAndSaveToORM(String filePath) {
         String line = "";
         BufferedReader br = null;
 
@@ -33,13 +32,13 @@ public class DaoKolnierz implements Dao {
             br = new BufferedReader(new FileReader(filePath/*, StandardCharsets.UTF_8*/));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                EntityKolnierz entityKolnierz = new EntityKolnierz();
+                Kolnierz kolnierz = new Kolnierz();
 
-                entityKolnierz.setName(data[0]);
-                entityKolnierz.setUnitRetailPrice(new BigDecimal(data[1]));
-                entityKolnierz.setDiscount(Double.valueOf(data[2]));
+                kolnierz.setName(data[0]);
+                kolnierz.setUnitRetailPrice(new BigDecimal(data[1]));
+                kolnierz.setDiscount(Double.valueOf(data[2]));
 
-                kolnierzRepository.save(entityKolnierz);
+                kolnierzRepository.save(kolnierz);
             }
         } catch (IOException e) {
             e.printStackTrace();

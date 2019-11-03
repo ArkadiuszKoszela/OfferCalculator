@@ -2,34 +2,30 @@ package pl.koszela.spring.entities;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
-import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.Tiles;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class EntityUser {
+public class User {
 
     @Id
     @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
-    private EntityPersonalData entityPersonalData;
+    private PersonalData personalData;
     @OneToOne
-    private EntityWindows entityWindows;
+    private Windows windows;
     @OneToOne
-    private EntityKolnierz entityKolnierz;
+    private Kolnierz kolnierz;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_accesories",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "accesories_id")
     )
-    private Set<EntityAccesories> userAccesories = new HashSet<>();
+    private Set<Accesories> userAccesories = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",
@@ -44,7 +40,7 @@ public class EntityUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "gutter_id")
     )
-    private List<EntityGutter> entityUserGutter = new ArrayList<>();
+    private List<Gutter> entityUserGutter = new ArrayList<>();
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany
@@ -53,7 +49,7 @@ public class EntityUser {
     inverseJoinColumns = @JoinColumn(name = "input_data_id"))
     private List<InputData> inputData = new ArrayList<>();
 
-    public EntityUser() {
+    public User() {
     }
 
     public Long getId() {
@@ -64,28 +60,28 @@ public class EntityUser {
         this.id = id;
     }
 
-    public EntityPersonalData getEntityPersonalData() {
-        return entityPersonalData;
+    public PersonalData getPersonalData() {
+        return personalData;
     }
 
-    public void setEntityPersonalData(EntityPersonalData entityPersonalData) {
-        this.entityPersonalData = entityPersonalData;
+    public void setPersonalData(PersonalData personalData) {
+        this.personalData = personalData;
     }
 
-    public EntityWindows getEntityWindows() {
-        return entityWindows;
+    public Windows getWindows() {
+        return windows;
     }
 
-    public void setEntityWindows(EntityWindows entityWindows) {
-        this.entityWindows = entityWindows;
+    public void setWindows(Windows windows) {
+        this.windows = windows;
     }
 
-    public EntityKolnierz getEntityKolnierz() {
-        return entityKolnierz;
+    public Kolnierz getKolnierz() {
+        return kolnierz;
     }
 
-    public void setEntityKolnierz(EntityKolnierz entityKolnierz) {
-        this.entityKolnierz = entityKolnierz;
+    public void setKolnierz(Kolnierz kolnierz) {
+        this.kolnierz = kolnierz;
     }
 
     public Set<Tiles> getTiles() {
@@ -96,19 +92,19 @@ public class EntityUser {
         this.userTiles = tiles;
     }
 
-    public Set<EntityAccesories> getUserAccesories() {
+    public Set<Accesories> getUserAccesories() {
         return userAccesories;
     }
 
-    public void setUserAccesories(Set<EntityAccesories> userAccesories) {
+    public void setUserAccesories(Set<Accesories> userAccesories) {
         this.userAccesories = userAccesories;
     }
 
-    public List<EntityGutter> getEntityUserGutter() {
+    public List<Gutter> getEntityUserGutter() {
         return entityUserGutter;
     }
 
-    public void setEntityUserGutter(List<EntityGutter> entityUserGutter) {
+    public void setEntityUserGutter(List<Gutter> entityUserGutter) {
         this.entityUserGutter = entityUserGutter;
     }
 

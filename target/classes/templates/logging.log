@@ -28,3 +28,162 @@
 2019-10-30 13:11:17 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
 2019-10-30 13:11:23 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
 2019-10-30 13:16:08 INFO  GenerateOffer:157 - Create offer for - Arek Koszela
+2019-11-03 13:33:42 INFO  CreateUser:61 - Saved users - Arkadiusz Koszela
+2019-11-03 13:33:46 INFO  UpdateUser:65 - Updated user - Arkadiusz Koszela
+2019-11-03 13:33:51 INFO  GenerateOffer:156 - Create offer for - Arkadiusz Koszela
+2019-11-03 13:34:25 INFO  DeleteUsers:52 - Deleted user - Arkadiusz Koszela
+2019-11-03 14:14:05 INFO  ImportFiles:92 - deleted all users
+2019-11-03 14:14:05 INFO  ImportFiles:94 - deleted all tiles
+2019-11-03 14:14:05 INFO  ImportFiles:96 - deleted all accesories
+2019-11-03 14:14:05 INFO  ImportFiles:98 - deleted all windows
+2019-11-03 14:14:05 INFO  ImportFiles:100 - deleted all kolnierz
+2019-11-03 14:14:05 INFO  ImportFiles:102 - deleted all gutters
+2019-11-03 14:14:05 DEBUG DaoTiles:49 - tiles cannot be imported
+2019-11-03 14:14:05 DEBUG DaoTiles:49 - tiles cannot be imported
+2019-11-03 14:14:05 DEBUG DaoTiles:49 - tiles cannot be imported
+2019-11-03 14:14:05 DEBUG DaoAccesories:46 - accesories cannot be imported
+2019-11-03 14:14:05 DEBUG DaoKolnierz:45 - kolnierz cannot be imported
+2019-11-03 14:14:05 DEBUG DaoWindows:45 - windows cannot be imported
+2019-11-03 14:14:05 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:05 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:05 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:05 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:57 INFO  ImportFiles:92 - deleted all users
+2019-11-03 14:14:57 INFO  ImportFiles:94 - deleted all tiles
+2019-11-03 14:14:57 INFO  ImportFiles:96 - deleted all accesories
+2019-11-03 14:14:57 INFO  ImportFiles:98 - deleted all windows
+2019-11-03 14:14:57 INFO  ImportFiles:100 - deleted all kolnierz
+2019-11-03 14:14:57 INFO  ImportFiles:102 - deleted all gutters
+2019-11-03 14:14:57 DEBUG DaoTiles:49 - tiles cannot be imported
+2019-11-03 14:14:57 DEBUG DaoTiles:49 - tiles cannot be imported
+2019-11-03 14:14:57 DEBUG DaoTiles:49 - tiles cannot be imported
+2019-11-03 14:14:57 DEBUG DaoAccesories:46 - accesories cannot be imported
+2019-11-03 14:14:57 DEBUG DaoKolnierz:45 - kolnierz cannot be imported
+2019-11-03 14:14:57 DEBUG DaoWindows:45 - windows cannot be imported
+2019-11-03 14:14:57 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:57 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:57 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:14:57 DEBUG DaoGutter:46 - gutters cannot be imported
+2019-11-03 14:19:36 INFO  ImportFiles:92 - deleted all users
+2019-11-03 14:19:36 INFO  ImportFiles:94 - deleted all tiles
+2019-11-03 14:19:36 INFO  ImportFiles:96 - deleted all accesories
+2019-11-03 14:19:36 INFO  ImportFiles:98 - deleted all windows
+2019-11-03 14:19:36 INFO  ImportFiles:100 - deleted all kolnierz
+2019-11-03 14:19:36 INFO  ImportFiles:102 - deleted all gutters
+2019-11-03 14:19:36 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 Czerwona Angoba
+2019-11-03 14:19:36 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 Miedziano-brazowa Angoba
+2019-11-03 14:19:36 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 12 Czerwona Angoba
+2019-11-03 14:19:37 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 14:19:37 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 14:19:37 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 14:19:37 INFO  DaoGutter:51 - succes - import gutters Flamingo 125x100
+2019-11-03 14:19:37 INFO  DaoGutter:51 - succes - import gutters Flamingo 125x90
+2019-11-03 14:19:37 INFO  DaoGutter:51 - succes - import gutters Bryza 125x90
+2019-11-03 14:19:37 INFO  DaoGutter:51 - succes - import gutters Bryza 150x100
+2019-11-03 14:22:38 INFO  ImportFiles:81 - deleted all users
+2019-11-03 14:22:38 INFO  ImportFiles:83 - deleted all tiles
+2019-11-03 14:22:38 INFO  ImportFiles:85 - deleted all accesories
+2019-11-03 14:22:38 INFO  ImportFiles:87 - deleted all windows
+2019-11-03 14:22:38 INFO  ImportFiles:89 - deleted all kolnierz
+2019-11-03 14:22:38 INFO  ImportFiles:91 - deleted all gutters
+2019-11-03 14:22:38 INFO  DaoTiles:53 - succes - import tiles Bogen Innovo 10 Czerwona Angoba
+2019-11-03 14:22:38 INFO  DaoTiles:53 - succes - import tiles Bogen Innovo 10 Miedziano-brazowa Angoba
+2019-11-03 14:22:38 INFO  DaoTiles:53 - succes - import tiles Bogen Innovo 12 Czerwona Angoba
+2019-11-03 14:22:39 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 14:22:39 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 14:22:39 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 14:22:39 INFO  DaoGutter:51 - succes - import gutters Flamingo 125x100
+2019-11-03 14:22:39 INFO  DaoGutter:51 - succes - import gutters Flamingo 125x90
+2019-11-03 14:22:39 INFO  DaoGutter:51 - succes - import gutters Bryza 125x90
+2019-11-03 14:22:39 INFO  DaoGutter:51 - succes - import gutters Bryza 150x100
+2019-11-03 14:32:26 INFO  ImportFiles:81 - deleted all users
+2019-11-03 14:32:26 INFO  ImportFiles:83 - deleted all tiles
+2019-11-03 14:32:26 INFO  ImportFiles:85 - deleted all accesories
+2019-11-03 14:32:26 INFO  ImportFiles:87 - deleted all windows
+2019-11-03 14:32:26 INFO  ImportFiles:89 - deleted all kolnierz
+2019-11-03 14:32:27 INFO  ImportFiles:91 - deleted all gutters
+2019-11-03 14:32:27 INFO  DaoTiles:54 - succes - import tiles /Bogen Innovo 10 czerwona angoba
+2019-11-03 14:32:27 INFO  DaoTiles:54 - succes - import tiles /Bogen Innovo 10 miedziano-brazowa angoba
+2019-11-03 14:32:27 INFO  DaoTiles:54 - succes - import tiles /Bogen Innovo 12 czerwona angoba
+2019-11-03 14:32:27 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 14:32:27 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 14:32:27 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 14:32:27 INFO  DaoGutter:53 - succes - import gutters /Flamingo 125100
+2019-11-03 14:32:27 INFO  DaoGutter:53 - succes - import gutters /Flamingo 12590
+2019-11-03 14:32:27 INFO  DaoGutter:53 - succes - import gutters /Bryza 12590
+2019-11-03 14:32:27 INFO  DaoGutter:53 - succes - import gutters /Bryza 150100
+2019-11-03 14:33:16 INFO  ImportFiles:81 - deleted all users
+2019-11-03 14:33:16 INFO  ImportFiles:83 - deleted all tiles
+2019-11-03 14:33:16 INFO  ImportFiles:85 - deleted all accesories
+2019-11-03 14:33:17 INFO  ImportFiles:87 - deleted all windows
+2019-11-03 14:33:17 INFO  ImportFiles:89 - deleted all kolnierz
+2019-11-03 14:33:17 INFO  ImportFiles:91 - deleted all gutters
+2019-11-03 14:33:17 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 czerwona angoba
+2019-11-03 14:33:17 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 miedziano-brazowa angoba
+2019-11-03 14:33:17 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 12 czerwona angoba
+2019-11-03 14:33:17 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 14:33:17 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 14:33:17 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 14:33:18 INFO  DaoGutter:53 - succes - import gutters Flamingo 125100
+2019-11-03 14:33:18 INFO  DaoGutter:53 - succes - import gutters Flamingo 12590
+2019-11-03 14:33:18 INFO  DaoGutter:53 - succes - import gutters Bryza 12590
+2019-11-03 14:33:18 INFO  DaoGutter:53 - succes - import gutters Bryza 150100
+2019-11-03 14:34:59 INFO  ImportFiles:73 - deleted all users
+2019-11-03 14:34:59 INFO  ImportFiles:75 - deleted all tiles
+2019-11-03 14:34:59 INFO  ImportFiles:77 - deleted all accesories
+2019-11-03 14:35:00 INFO  ImportFiles:79 - deleted all windows
+2019-11-03 14:35:00 INFO  ImportFiles:81 - deleted all kolnierz
+2019-11-03 14:35:00 INFO  ImportFiles:83 - deleted all gutters
+2019-11-03 14:35:00 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 czerwona angoba
+2019-11-03 14:35:00 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 10 miedziano-brazowa angoba
+2019-11-03 14:35:00 INFO  DaoTiles:54 - succes - import tiles Bogen Innovo 12 czerwona angoba
+2019-11-03 14:35:00 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 14:35:00 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 14:35:00 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 14:35:00 INFO  DaoGutter:53 - succes - import gutters Flamingo 125x100
+2019-11-03 14:35:00 INFO  DaoGutter:53 - succes - import gutters Flamingo 125x90
+2019-11-03 14:35:00 INFO  DaoGutter:53 - succes - import gutters Bryza 125x90
+2019-11-03 14:35:00 INFO  DaoGutter:53 - succes - import gutters Bryza 150x100
+2019-11-03 16:01:13 INFO  ImportFiles:73 - deleted all users
+2019-11-03 16:01:15 INFO  ImportFiles:75 - deleted all tiles
+2019-11-03 16:01:20 INFO  ImportFiles:77 - deleted all accesories
+2019-11-03 16:01:20 INFO  ImportFiles:79 - deleted all windows
+2019-11-03 16:01:20 INFO  ImportFiles:81 - deleted all kolnierz
+2019-11-03 16:01:28 INFO  ImportFiles:83 - deleted all gutters
+2019-11-03 16:01:34 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 10 czerwona angoba
+2019-11-03 16:01:39 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 10 miedziano-brazowa angoba
+2019-11-03 16:01:44 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 12 czerwona angoba
+2019-11-03 16:02:15 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 16:02:28 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 16:02:50 INFO  ImportFiles:73 - deleted all users
+2019-11-03 16:02:50 INFO  ImportFiles:75 - deleted all tiles
+2019-11-03 16:02:50 INFO  ImportFiles:77 - deleted all accesories
+2019-11-03 16:02:50 INFO  ImportFiles:79 - deleted all windows
+2019-11-03 16:02:50 INFO  ImportFiles:81 - deleted all kolnierz
+2019-11-03 16:02:50 INFO  ImportFiles:83 - deleted all gutters
+2019-11-03 16:02:50 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 10 czerwona angoba
+2019-11-03 16:02:50 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 10 miedziano-brazowa angoba
+2019-11-03 16:02:50 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 12 czerwona angoba
+2019-11-03 16:02:51 INFO  DaoAccesories:51 - succes - import accesories
+2019-11-03 16:02:51 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 16:02:51 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 16:02:51 INFO  DaoGutter:53 - succes - import gutters Flamingo 125x100
+2019-11-03 16:02:51 INFO  DaoGutter:53 - succes - import gutters Flamingo 125x90
+2019-11-03 16:02:51 INFO  DaoGutter:53 - succes - import gutters Bryza 125x90
+2019-11-03 16:02:51 INFO  DaoGutter:53 - succes - import gutters Bryza 150x100
+2019-11-03 16:06:10 INFO  ImportFiles:73 - deleted all users
+2019-11-03 16:06:10 INFO  ImportFiles:75 - deleted all tiles
+2019-11-03 16:06:10 INFO  ImportFiles:77 - deleted all accesories
+2019-11-03 16:06:10 INFO  ImportFiles:79 - deleted all windows
+2019-11-03 16:06:10 INFO  ImportFiles:81 - deleted all kolnierz
+2019-11-03 16:06:10 INFO  ImportFiles:83 - deleted all gutters
+2019-11-03 16:06:10 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 10 czerwona angoba
+2019-11-03 16:06:10 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 10 miedziano-brazowa angoba
+2019-11-03 16:06:10 INFO  DaoTiles:57 - succes - import tiles Bogen Innovo 12 czerwona angoba
+2019-11-03 16:06:10 INFO  DaoAccesories:54 - succes - import accesories
+2019-11-03 16:06:10 INFO  DaoKolnierz:50 - succes - import kolnierz
+2019-11-03 16:06:10 INFO  DaoWindows:50 - succes - import winodws 
+2019-11-03 16:06:10 INFO  DaoGutter:53 - succes - import gutters Flamingo 125x100
+2019-11-03 16:06:10 INFO  DaoGutter:53 - succes - import gutters Flamingo 125x90
+2019-11-03 16:06:11 INFO  DaoGutter:53 - succes - import gutters Bryza 125x90
+2019-11-03 16:06:11 INFO  DaoGutter:53 - succes - import gutters Bryza 150x100

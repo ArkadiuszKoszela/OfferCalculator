@@ -12,7 +12,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.tiles.Tiles;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.TilesRepository;
 import pl.koszela.spring.views.MainView;
 

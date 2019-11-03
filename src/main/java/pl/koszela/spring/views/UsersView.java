@@ -16,7 +16,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.crud.ReadUser;
 import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.crud.DeleteUsers;
 
@@ -36,7 +36,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
     private TextField adress = new TextField("Adres zamieszkania", "Szczecin", "Adres zamieszkania");
     private TextField telephoneNumber = new TextField("Numer kontaktowy", "12345678", "Numer kontaktowy");
     private EmailField email = new EmailField("E-mail");
-    private ComboBox<String> combobox = new ComboBox<>();
+    private ComboBox<PersonalData> combobox = new ComboBox<>();
     private Button loadUser = new Button("Wczytaj klienta");
     private Button removeUser = new Button(" Usuń użytkownika");
     private FormLayout board = new FormLayout();
@@ -75,7 +75,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
 
     private Button removeUser(UsersRepo usersRepo) {
         removeUser.addClickListener(buttonClickEvent -> {
-            deleteUsers.removeUser(combobox);
+            deleteUsers.removeUser(combobox.getValue()  );
             combobox.clear();
             loadUsers(usersRepo);
             combobox.getDataProvider().refreshAll();
@@ -86,31 +86,29 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
 
     private Button selectUser() {
         loadUser.addClickListener(buttonClickEvent -> {
-            String[] split = combobox.getValue().split(" ");
-            EntityUser find = readUser.getUser(split[0], split[1]);
+            User find = readUser.getUser(combobox.getValue());
 
-            name.setValue(find.getEntityPersonalData().getName());
-            surname.setValue(find.getEntityPersonalData().getSurname());
-            adress.setValue(find.getEntityPersonalData().getAdress());
-            telephoneNumber.setValue(find.getEntityPersonalData().getTelephoneNumber());
-            email.setValue(find.getEntityPersonalData().getEmail());
+            name.setValue(find.getPersonalData().getName());
+            surname.setValue(find.getPersonalData().getSurname());
+            adress.setValue(find.getPersonalData().getAdress());
+            telephoneNumber.setValue(find.getPersonalData().getTelephoneNumber());
+            email.setValue(find.getPersonalData().getEmail());
         });
         loadUser.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         return loadUser;
     }
 
-    private ComboBox<String> loadUsers(UsersRepo usersRepo) {
-        List<EntityUser> all = usersRepo.findEntityUserByEntityPersonalDataIsNotNull();
-        List<String> nameAndSurname = new ArrayList<>();
-        if (all.size() > 0) {
-            all.forEach(e -> nameAndSurname.add(e.getEntityPersonalData().getName() + " " + e.getEntityPersonalData().getSurname()));
-            combobox.setItems(nameAndSurname);
-        }
+    private ComboBox<PersonalData> loadUsers(UsersRepo usersRepo) {
+        List<User> all = usersRepo.findByPersonalDataIsNotNull();
+        List<PersonalData> nameAndSurname = new ArrayList<>();
+        all.forEach(e -> nameAndSurname.add(e.getPersonalData()));
+        combobox.setItems(nameAndSurname);
+        combobox.setItemLabelGenerator(entityPersonalData -> entityPersonalData.getName() + " " + entityPersonalData.getSurname());
         return combobox;
     }
 
     private void save() {
-        EntityPersonalData personalData = EntityPersonalData.builder()
+        PersonalData personalData = PersonalData.builder()
                 .name(name.getValue())
                 .surname(surname.getValue())
                 .adress(adress.getValue())
@@ -132,8 +130,8 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        EntityPersonalData entityPersonalData = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
-        if (entityPersonalData == null) {
+        PersonalData personalData = (PersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+        if (personalData == null) {
             save();
             action.proceed();
         }

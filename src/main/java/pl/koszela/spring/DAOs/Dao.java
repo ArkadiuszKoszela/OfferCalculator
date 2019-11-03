@@ -4,5 +4,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface Dao {
-    void save(String filePath, String priceListName);
+    void readAndSaveToORM(String filePath);
 }

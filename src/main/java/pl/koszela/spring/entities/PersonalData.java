@@ -1,11 +1,11 @@
-package pl.koszela.spring.entities.personalData;
+package pl.koszela.spring.entities;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "personal_data")
-public class EntityPersonalData {
+public class PersonalData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,11 +73,11 @@ public class EntityPersonalData {
         this.email = email;
     }
 
-    public EntityPersonalData() {
+    public PersonalData() {
     }
 
-    public static EntityPersonalData.Builder builder() {
-        return new EntityPersonalData.Builder();
+    public static PersonalData.Builder builder() {
+        return new PersonalData.Builder();
     }
 
 
@@ -89,15 +89,15 @@ public class EntityPersonalData {
         private LocalDate dateOfMeeting;
         private String email;
 
-        public EntityPersonalData build() {
-            EntityPersonalData entityPersonalData = new EntityPersonalData();
-            entityPersonalData.name = this.name;
-            entityPersonalData.surname = this.surname;
-            entityPersonalData.adress = this.adress;
-            entityPersonalData.email = this.email;
-            entityPersonalData.telephoneNumber = this.telephoneNumber;
-            entityPersonalData.dateOfMeeting = this.dateOfMeeting;
-            return entityPersonalData;
+        public PersonalData build() {
+            PersonalData personalData = new PersonalData();
+            personalData.name = this.name;
+            personalData.surname = this.surname;
+            personalData.adress = this.adress;
+            personalData.email = this.email;
+            personalData.telephoneNumber = this.telephoneNumber;
+            personalData.dateOfMeeting = this.dateOfMeeting;
+            return personalData;
         }
 
         public Builder name(String name) {

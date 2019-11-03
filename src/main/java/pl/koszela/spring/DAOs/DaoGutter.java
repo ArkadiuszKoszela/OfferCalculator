@@ -3,7 +3,7 @@ package pl.koszela.spring.DAOs;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.gutter.EntityGutter;
+import pl.koszela.spring.entities.Gutter;
 import pl.koszela.spring.repositories.GutterRepository;
 
 import java.io.BufferedReader;
@@ -22,8 +22,10 @@ public class DaoGutter implements Dao {
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
     }
 
+    private NameFromURL nameFromURL = new NameFromURL();
+
     @Override
-    public final void save(String filePath, String priceListName) {
+    public final void readAndSaveToORM(String filePath) {
         String line = "";
         BufferedReader br = null;
 
@@ -31,11 +33,11 @@ public class DaoGutter implements Dao {
             br = new BufferedReader(new FileReader(filePath/*, StandardCharsets.UTF_8*/));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                EntityGutter gutter = new EntityGutter();
+                Gutter gutter = new Gutter();
 
                 gutter.setName(data[1]);
                 gutter.setUnitDetalPrice(Double.valueOf(data[2]));
-                gutter.setCategory(priceListName);
+                gutter.setCategory(nameFromURL.getName(filePath));
                 gutter.setDiscount(0);
                 gutter.setUnitPurchasePrice(0d);
 
@@ -48,7 +50,7 @@ public class DaoGutter implements Dao {
             if (br != null) {
                 try {
                     br.close();
-                    logger.info("succes - import gutters " + priceListName);
+                    logger.info("succes - import gutters " + nameFromURL.getName(filePath));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

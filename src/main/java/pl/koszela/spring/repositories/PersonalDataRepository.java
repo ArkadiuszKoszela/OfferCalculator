@@ -2,11 +2,11 @@ package pl.koszela.spring.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.PersonalData;
 
 import java.util.Optional;
 
 @Repository
-public interface PersonalDataRepository extends CrudRepository<EntityPersonalData, Long> {
-    Optional<EntityPersonalData> findEntityPersonalDataByNameAndSurnameEquals(String name, String surname);
+public interface PersonalDataRepository extends CrudRepository<PersonalData, Long> {
+    Optional<PersonalData> findEntityPersonalDataByNameAndSurnameEquals(String name, String surname);
 }

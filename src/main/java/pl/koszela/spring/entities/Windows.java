@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
-public class EntityKolnierz {
+public class Windows {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,7 +16,7 @@ public class EntityKolnierz {
     private BigDecimal unitRetailPrice;
     private Double discount;
 
-    public EntityKolnierz() {
+    public Windows() {
     }
 
     public Long getId() {
