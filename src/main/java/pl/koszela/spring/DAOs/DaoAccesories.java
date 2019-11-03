@@ -3,12 +3,14 @@ package pl.koszela.spring.DAOs;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 @Service
@@ -23,7 +25,7 @@ public class DaoAccesories implements Dao {
     }
 
     @Override
-    public final void save(String filePath, String priceListName) {
+    public final void readAndSaveToORM(String filePath) {
         String line = "";
         BufferedReader br = null;
 
@@ -31,15 +33,16 @@ public class DaoAccesories implements Dao {
             br = new BufferedReader(new FileReader(filePath/*, StandardCharsets.UTF_8*/));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                EntityAccesories entityAccesories = new EntityAccesories();
+                Accesories accesories = new Accesories();
 
-                entityAccesories.setCategory(data[1]);
-                entityAccesories.setOption(data[2]);
-                entityAccesories.setName(data[3]);
-                entityAccesories.setUnitPurchasePrice(Double.valueOf(data[4]));
-                entityAccesories.setMargin(Integer.valueOf(data[5]));
+                accesories.setCategory(data[1]);
+                accesories.setOption(data[2]);
+                accesories.setName(data[3]);
+                accesories.setUnitPurchasePrice(Double.valueOf(data[4]));
+                accesories.setMargin(Integer.valueOf(data[5]));
+                accesories.setUnitDetalPrice(calculatePurchasePrice(accesories));
 
-                accesoriesRepository.save(entityAccesories);
+                accesoriesRepository.save(accesories);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,5 +57,13 @@ public class DaoAccesories implements Dao {
                 }
             }
         }
+    }
+
+    private Double calculatePurchasePrice(Accesories accesories) {
+        BigDecimal constance = new BigDecimal(100);
+        BigDecimal margin = BigDecimal.valueOf(accesories.getMargin());
+        BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getUnitPurchasePrice());
+        BigDecimal priceDetal = pricePurchase.multiply(margin.divide(constance, 2, RoundingMode.HALF_UP)).add(pricePurchase).setScale(2, RoundingMode.HALF_UP);
+        return priceDetal.doubleValue();
     }
 }

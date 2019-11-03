@@ -12,9 +12,9 @@ import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.InputData;
-import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.tiles.CategoryOfTiles;
-import pl.koszela.spring.entities.tiles.Tiles;
+import pl.koszela.spring.entities.Gutter;
+import pl.koszela.spring.entities.CategoryOfTiles;
+import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.GutterRepository;
 import pl.koszela.spring.repositories.TilesRepository;
 import pl.koszela.spring.service.NameNumberFields;
@@ -33,7 +33,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
 
     private List<NumberField> listOfNumberFields = new ArrayList<>();
     private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
-    private List<EntityGutter> list = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
+    private List<Gutter> list = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
     private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
 
 
@@ -48,7 +48,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         if (setInput == null || setInput.size() == 0) {
             setInput = new ArrayList<>();
             for (NameNumberFields name : NameNumberFields.values()) {
-                setInput.add(new InputData(name.toString(), 5d));
+                setInput.add(new InputData(name.toString(), 0d));
             }
         }
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -153,7 +153,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         return set;
     }
 
-    private List<EntityGutter> listWithQuantityGutter() {
+    private List<Gutter> listWithQuantityGutter() {
         Set<InputData> all3Mb = setInput.stream().filter(e -> e.getName().contains("Rynna 3mb")).collect(Collectors.toSet());
         Set<InputData> all4Mb = setInput.stream().filter(e -> e.getName().contains("Rynna 4mb")).collect(Collectors.toSet());
         Double gutter3mb = all3Mb.stream().map(InputData::getValue).reduce(Double::sum).get();
@@ -161,7 +161,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         if (list == null) {
             list = gutterRepository.findAll();
         }
-        for (EntityGutter gutter : list) {
+        for (Gutter gutter : list) {
             if (gutter.getName().equals("rynna 3mb")) {
                 gutter.setQuantity(gutter3mb);
             } else if (gutter.getName().equals("rynna 4mb")) {

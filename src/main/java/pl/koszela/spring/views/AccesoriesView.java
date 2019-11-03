@@ -1,6 +1,5 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -20,7 +19,7 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.InputData;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
+import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NameNumberFields;
@@ -36,18 +35,18 @@ import static pl.koszela.spring.service.ServiceNotification.getNotificationError
 public class AccesoriesView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
     static final String SELECT_ACCESORIES = "accesories";
 
-    private TreeGrid<EntityAccesories> treeGrid = new TreeGrid<>();
+    private TreeGrid<Accesories> treeGrid = new TreeGrid<>();
     private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-    private Set<EntityAccesories> set = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+    private Set<Accesories> set = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
     private AccesoriesRepository accesoriesRepository;
-    private Binder<EntityAccesories> binder;
+    private Binder<Accesories> binder;
     private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
 
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
         this.accesoriesRepository = accesoriesRepository;
         if (set == null) {
-            List<EntityAccesories> all = accesoriesRepository.findAll();
-            List<EntityAccesories> newValue = all.stream().filter(f -> f.getOption().equals("PODSTAWOWY")).collect(Collectors.toList());
+            List<Accesories> all = accesoriesRepository.findAll();
+            List<Accesories> newValue = all.stream().filter(f -> f.getOption().equals("PODSTAWOWY")).collect(Collectors.toList());
             set = new HashSet<>(addQuantityToList(newValue));
         }
         add(createCheckbox());
@@ -56,17 +55,17 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
 
     @Override
     public TreeGrid createGrid() {
-        Grid.Column<EntityAccesories> nameColumn = treeGrid.addHierarchyColumn(EntityAccesories::getName).setHeader("Nazwa");
-        Grid.Column<EntityAccesories> quantityColumn = treeGrid.addColumn(EntityAccesories::getQuantity).setHeader("Ilość");
-        Grid.Column<EntityAccesories> discountColumn = treeGrid.addColumn(EntityAccesories::getDiscount).setHeader("Rabat");
-        Grid.Column<EntityAccesories> detalPriceColumn = treeGrid.addColumn(EntityAccesories::getUnitDetalPrice).setHeader("Cena jedn. detal");
-        Grid.Column<EntityAccesories> purchasePriceColumn = treeGrid.addColumn(EntityAccesories::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
-        Grid.Column<EntityAccesories> allPricePurchaseColumn = treeGrid.addColumn(EntityAccesories::getAllpricePurchase).setHeader("Razem zakup");
-        Grid.Column<EntityAccesories> allPriceDetalColumn = treeGrid.addColumn(EntityAccesories::getAllpriceAfterDiscount).setHeader("Razem Detal");
-        Grid.Column<EntityAccesories> profitColumn = treeGrid.addColumn(EntityAccesories::getAllprofit).setHeader("Zysk");
+        Grid.Column<Accesories> nameColumn = treeGrid.addHierarchyColumn(Accesories::getName).setHeader("Nazwa");
+        Grid.Column<Accesories> quantityColumn = treeGrid.addColumn(Accesories::getQuantity).setHeader("Ilość");
+        Grid.Column<Accesories> discountColumn = treeGrid.addColumn(Accesories::getDiscount).setHeader("Rabat");
+        Grid.Column<Accesories> detalPriceColumn = treeGrid.addColumn(Accesories::getUnitDetalPrice).setHeader("Cena jedn. detal");
+        Grid.Column<Accesories> purchasePriceColumn = treeGrid.addColumn(Accesories::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
+        Grid.Column<Accesories> allPricePurchaseColumn = treeGrid.addColumn(Accesories::getAllpricePurchase).setHeader("Razem zakup");
+        Grid.Column<Accesories> allPriceDetalColumn = treeGrid.addColumn(Accesories::getAllpriceAfterDiscount).setHeader("Razem Detal");
+        Grid.Column<Accesories> profitColumn = treeGrid.addColumn(Accesories::getAllprofit).setHeader("Zysk");
         treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
 
-        binder = new Binder<>(EntityAccesories.class);
+        binder = new Binder<>(Accesories.class);
 
         treeGrid.getEditor().setBinder(binder);
 
@@ -76,14 +75,14 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         addEnterEvent(treeGrid, discountEditField);
         binder.forField(discountEditField)
                 .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(EntityAccesories::getDiscount, EntityAccesories::setDiscount);
+                .bind(Accesories::getDiscount, Accesories::setDiscount);
         itemClickListener(discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
         TextField quantityField = new TextField();
         binder.forField(quantityField)
                 .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(EntityAccesories::getQuantity, EntityAccesories::setQuantity);
+                .bind(Accesories::getQuantity, Accesories::setQuantity);
         addEnterEvent(treeGrid, quantityField);
         itemClickListener(quantityField);
 
@@ -109,7 +108,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     public void closeListener() {
         treeGrid.getEditor().addCloseListener(event -> {
             if (binder.getBean() != null) {
-                EntityAccesories accesories = binder.getBean();
+                Accesories accesories = binder.getBean();
                 accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice() * (100 - accesories.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
@@ -125,13 +124,13 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     }
 
     @Override
-    public TreeData<EntityAccesories> addItems(List list) {
-        TreeData<EntityAccesories> treeData = new TreeData<>();
+    public TreeData<Accesories> addItems(List list) {
+        TreeData<Accesories> treeData = new TreeData<>();
         if (set != null) {
             Set<String> parents = new HashSet<>();
-            Set<EntityAccesories> duplicates = set.stream().filter(e -> !parents.add(e.getCategory())).collect(Collectors.toSet());
+            Set<Accesories> duplicates = set.stream().filter(e -> !parents.add(e.getCategory())).collect(Collectors.toSet());
             for (String parent : parents) {
-                List<EntityAccesories> childrens = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
+                List<Accesories> childrens = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, childrens.stream().findFirst().get());
@@ -149,12 +148,12 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         return null;
     }
 
-    public ComponentRenderer<Span, EntityAccesories> booleanRenderer =
+    public ComponentRenderer<Span, Accesories> booleanRenderer =
             new ComponentRenderer<>(accesories ->
                     new Span(accesories.isOffer() ? "Tak" : "Nie"));
 
     @Override
-    public ComponentRenderer<VerticalLayout, EntityAccesories> createCheckboxes() {
+    public ComponentRenderer<VerticalLayout, Accesories> createCheckboxes() {
         return new ComponentRenderer<>(accesories -> {
             Checkbox mainCheckBox = new Checkbox("Dodać ?");
             mainCheckBox.setValue(accesories.isOffer());
@@ -165,14 +164,15 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         });
     }
 
-    private List<EntityAccesories> addQuantityToList(List<EntityAccesories> list) {
-        for (EntityAccesories accesories : list) {
+    private List<Accesories> addQuantityToList(List<Accesories> list) {
+        for (Accesories accesories : list) {
             accesories.setOffer(false);
             accesories.setDiscount(0);
             accesories.setQuantity(value(accesories.getCategory()));
             accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accesories.setOffer(false);
         }
         return list;
     }
@@ -201,7 +201,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
             case "grzebien":
                 return BigDecimal.valueOf(dlugoscOkapu.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
             case "pas":
-                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 1.95).setScale(0, RoundingMode.UP).doubleValue();
+                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 1.9).setScale(0, RoundingMode.UP).doubleValue();
             case "klamra do gasiora":
                 return BigDecimal.valueOf(dlugoscKalenic.get().getValue() * 2.5).setScale(0, RoundingMode.UP).doubleValue();
             case "spinka":
@@ -211,14 +211,14 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
             case "membrana":
                 return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() * 1.1).setScale(0, RoundingMode.UP).doubleValue();
             default:
-                return 1d;
+                return 0d;
         }
     }
 
     private void checkbox() {
         checkboxGroup.addValueChangeListener(e -> {
-            List<EntityAccesories> all = accesoriesRepository.findAll();
-            List<EntityAccesories> newValue = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toList());
+            List<Accesories> all = accesoriesRepository.findAll();
+            List<Accesories> newValue = all.stream().filter(f -> f.getOption().equals(e.getValue())).collect(Collectors.toList());
             set = new HashSet<>(addQuantityToList(newValue));
             treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList<>())));
             treeGrid.getDataProvider().refreshAll();

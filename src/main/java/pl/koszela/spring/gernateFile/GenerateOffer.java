@@ -5,11 +5,11 @@ import com.itextpdf.text.pdf.*;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import pl.koszela.spring.entities.accesories.EntityAccesories;
-import pl.koszela.spring.entities.gutter.EntityGutter;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
-import pl.koszela.spring.entities.tiles.CategoryOfTiles;
-import pl.koszela.spring.entities.tiles.Tiles;
+import pl.koszela.spring.entities.Accesories;
+import pl.koszela.spring.entities.Gutter;
+import pl.koszela.spring.entities.PersonalData;
+import pl.koszela.spring.entities.CategoryOfTiles;
+import pl.koszela.spring.entities.Tiles;
 
 import java.io.*;
 import java.util.*;
@@ -24,10 +24,10 @@ public class GenerateOffer {
     private static final String FILE_NAME = "src/main/resources/templates/offer.pdf";
 
     public static void writeUsingIText() {
-        EntityPersonalData userfromRepo = (EntityPersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
+        PersonalData userfromRepo = (PersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
         Set<Tiles> tilesSet = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
-        Set<EntityAccesories> accesoriesSet = (Set<EntityAccesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
-        List<EntityGutter> gutterList = (List<EntityGutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
+        Set<Accesories> accesoriesSet = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        List<Gutter> gutterList = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
 
         Document document = new Document();
 
@@ -117,7 +117,7 @@ public class GenerateOffer {
             cell(font12, tableAccesories, baseColor, "Cena razem zakup");
             cell(font12, tableAccesories, baseColor, "Zysk");
 
-            for (EntityAccesories accesories : accesoriesSet) {
+            for (Accesories accesories : accesoriesSet) {
                 if (accesories.isOffer()) {
                     tableAccesories.addCell(new Phrase(String.valueOf(accesories.getName()), font10));
                     tableAccesories.addCell(new Phrase(String.valueOf(accesories.getQuantity()), font10));
@@ -138,8 +138,8 @@ public class GenerateOffer {
             float[] widthToTableGutter = new float[]{320f, 85f, 85f, 85f, 85f, 85f};
             tableGutter.setWidths(widthToTableGutter);
 
-            Optional<EntityGutter> mainGutter = gutterList.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isMain()).findFirst();
-            Optional<EntityGutter> optionGutter = gutterList.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isOption()).findFirst();
+            Optional<Gutter> mainGutter = gutterList.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isMain()).findFirst();
+            Optional<Gutter> optionGutter = gutterList.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isOption()).findFirst();
 
             if (mainGutter.isPresent()) {
                 cell(font12, tableGutter, baseColor, mainGutter.get().getCategory());
@@ -160,10 +160,10 @@ public class GenerateOffer {
         }
     }
 
-    private static void createTableGutter(Document document, Font font, PdfPTable gutterTable, List<EntityGutter> listGutter) throws DocumentException {
-        List<EntityGutter> parent = listGutter.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isMain()).collect(Collectors.toList());
+    private static void createTableGutter(Document document, Font font, PdfPTable gutterTable, List<Gutter> listGutter) throws DocumentException {
+        List<Gutter> parent = listGutter.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isMain()).collect(Collectors.toList());
 
-        for (EntityGutter gutter : listGutter) {
+        for (Gutter gutter : listGutter) {
             if (gutter.getCategory().equals(parent.get(0).getCategory()) && gutter.getUnitDetalPrice() != 0) {
                 gutterTable.addCell(new Phrase(gutter.getName(), font));
                 gutterTable.addCell(new Phrase(String.valueOf(gutter.getQuantity()), font));

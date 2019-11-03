@@ -1,11 +1,10 @@
 package pl.koszela.spring.crud;
 
-import com.vaadin.flow.component.combobox.ComboBox;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.personalData.EntityPersonalData;
+import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.repositories.*;
 
 import java.util.*;
@@ -32,15 +31,13 @@ public class DeleteUsers {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
     }
 
-    public void removeUser(ComboBox<String> comboBox) {
-        String[] nameAndSurname = comboBox.getValue().split(" ");
-
-        Optional<EntityPersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(nameAndSurname[0], nameAndSurname[1]);
+    public void removeUser(PersonalData entityPersonalData) {
+        Optional<PersonalData> personalData = personalDataRepository.findById(entityPersonalData.getId());
 
         if (personalData.isPresent()) {
-            Optional<EntityUser> userFromRepo = usersRepo.findEntityUserByEntityPersonalDataEquals(personalData.get());
+            Optional<User> userFromRepo = usersRepo.findUserByPersonalDataEquals(personalData.get());
             if (userFromRepo.isPresent()) {
-                EntityUser userToRemove = userFromRepo.get();
+                User userToRemove = userFromRepo.get();
 
                 userToRemove.getEntityUserGutter().clear();
                 gutterRepository.flush();
@@ -51,11 +48,11 @@ public class DeleteUsers {
                 tilesRepository.flush();
                 usersRepo.deleteById(userToRemove.getId());
                 usersRepo.flush();
-                logger.info("Deleted user - " + personalData.get().getName() + " " +personalData.get().getSurname());
-                getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getEntityPersonalData().getName() + " " + userToRemove.getEntityPersonalData().getSurname() + "   papa  :(");
+                logger.info("Deleted user - " + personalData.get().getName() + " " + personalData.get().getSurname());
+                getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getPersonalData().getName() + " " + userToRemove.getPersonalData().getSurname() + "   papa  :(");
             }
         } else {
-            getNotificationError("Nie ma takiego użytkownika " + nameAndSurname[0] + " " + nameAndSurname[1] + " w bazie danych    :(");
+            getNotificationError("Nie ma takiego użytkownika " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + " w bazie danych    :(");
         }
     }
 }
