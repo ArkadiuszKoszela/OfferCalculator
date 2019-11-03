@@ -1,47 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d3ea2ba4-981c-42fd-b375-7213cb6b2a63" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/templates/logging.log" afterDir="false" />
+    <list default="true" id="b8deb25f-43de-4ef9-b6fb-1070c5067d45" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoAccesories.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoGutter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoGutter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoKolnierz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoKolnierz.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoTiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoTiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoWindows.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/DAOs/DaoWindows.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/GernateFile/GenerateOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/gernateFile/GenerateOffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/CreateUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/DeleteUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/DeleteUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/crud/UpdateUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/accesories/EntityAccesories.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/accesories/EntityAccesories.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/tiles/CategoryTiles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/entities/tiles/CategoryOfTiles.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/AccesoriesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/AccesoriesRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/KolnierzRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/KolnierzRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/PersonalDataRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/PersonalDataRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/TilesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/TilesRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/WindowsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/repositories/WindowsRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/AccesoriesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/IncludeDataView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/MainView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/OfferView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/WindowsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/WindowsView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/AccesoriesPriceListView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/AccesoriesPriceListView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/PriceListOfSalesCompetition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/pl/koszela/spring/views/priceLists/PriceListOfSalesCompetition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/Tabela.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/itext.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/offer.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/luxPlus.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/premium.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/standard.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoAccesories.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoKolnierz.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoTiles.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/DAOs/DaoWindows.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/AccesoriesRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/AccesoriesRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/KolnierzRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/KolnierzRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/TilesRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/TilesRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/WindowsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/repositories/WindowsRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/pl/koszela/spring/views/MainView.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
