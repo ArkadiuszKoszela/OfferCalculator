@@ -1,7 +1,6 @@
 package pl.koszela.spring.entities;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
