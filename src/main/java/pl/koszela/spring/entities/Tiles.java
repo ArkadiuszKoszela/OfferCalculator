@@ -20,6 +20,8 @@ public class Tiles extends BaseEntity {
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
     private String date;
+    @Column(columnDefinition = "TEXT")
+    private String imageUrl;
     @ManyToMany(mappedBy = "userTiles")
     private Set<User> tilesUser = new HashSet<>();
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
@@ -116,5 +118,13 @@ public class Tiles extends BaseEntity {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

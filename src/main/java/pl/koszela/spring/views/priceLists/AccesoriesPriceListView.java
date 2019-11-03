@@ -3,6 +3,7 @@ package pl.koszela.spring.views.priceLists;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
+import pl.koszela.spring.service.NotificationInterface;
 import pl.koszela.spring.views.MainView;
 
 import java.math.BigDecimal;
@@ -26,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Route(value = AccesoriesPriceListView.ACCESORIES_PRICE_LIST, layout = MainView.class)
 public class AccesoriesPriceListView extends VerticalLayout {
@@ -173,7 +173,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
                 }
             }
             accesoriesRepository.saveAll(new HashSet<>(allAccesoriesRepo));
-            getNotificationSucces("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "         :)");
+            NotificationInterface.notificationOpen("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")), NotificationVariant.LUMO_SUCCESS);
             grid.getDataProvider().refreshAll();
         });
         return save;

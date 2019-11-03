@@ -11,6 +11,7 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
@@ -22,14 +23,13 @@ import pl.koszela.spring.gernateFile.GenerateOffer;
 import pl.koszela.spring.importFiles.ImportFiles;
 import pl.koszela.spring.crud.CreateUser;
 import pl.koszela.spring.crud.UpdateUser;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
@@ -102,9 +102,9 @@ public class MainView extends AppLayout {
                 GenerateOffer.writeUsingIText();
                 formLayout.add(anchor);
                 anchor.setVisible(true);
-                getNotificationSucces("Oferta została wygenerowana");
+                NotificationInterface.notificationOpen("Oferta została wygenerowana", NotificationVariant.LUMO_SUCCESS);
             } catch (NotFoundException ignored) {
-                getNotificationError("Coś poszło nie tak. Proszę uzupełnić wszystkie pola");
+                NotificationInterface.notificationOpen("Coś poszło nie tak. Proszę uzupełnić wszystkie pola", NotificationVariant.LUMO_ERROR);
             }
         });
 

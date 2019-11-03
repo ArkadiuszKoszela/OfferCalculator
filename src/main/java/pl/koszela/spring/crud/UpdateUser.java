@@ -1,5 +1,6 @@
 package pl.koszela.spring.crud;
 
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,9 @@ import pl.koszela.spring.entities.Gutter;
 import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.*;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.*;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class UpdateUser {
@@ -63,12 +62,12 @@ public class UpdateUser {
 
                 usersRepo.save(userToUpdate);
                 logger.info("Updated user - " + userFromRepo.get().getPersonalData().getName() + " " + userFromRepo.get().getPersonalData().getSurname());
-                getNotificationSucces("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getPersonalData().getName() + " " + userToUpdate.getPersonalData().getSurname() + "    :)");
+                NotificationInterface.notificationOpen("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getPersonalData().getName() + " " + userToUpdate.getPersonalData().getSurname() + "    :)", NotificationVariant.LUMO_SUCCESS);
             } else {
-                getNotificationError("Coś poszło nie tak");
+                NotificationInterface.notificationOpen("Coś poszło nie tak", NotificationVariant.LUMO_ERROR);
             }
         } else {
-            getNotificationError("Coś poszło nie tak - nie ma takich danych");
+            NotificationInterface.notificationOpen("Coś poszło nie tak - nie ma takich danych", NotificationVariant.LUMO_ERROR);
         }
     }
 }

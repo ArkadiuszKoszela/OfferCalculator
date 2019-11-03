@@ -2,6 +2,7 @@ package pl.koszela.spring.gernateFile;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -10,13 +11,12 @@ import pl.koszela.spring.entities.Gutter;
 import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.entities.CategoryOfTiles;
 import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 public class GenerateOffer {
     private final static Logger logger = Logger.getLogger(GenerateOffer.class);
@@ -95,7 +95,7 @@ public class GenerateOffer {
 
                 getTableTiles(document, font10, tilesTable, allTiles);
             } else {
-                getNotificationError("Nie został wybrany główny dach");
+                NotificationInterface.notificationOpen("Nie został wybrany główny dach", NotificationVariant.LUMO_ERROR);
                 logger.debug("No option has been selected in the tile table");
             }
 

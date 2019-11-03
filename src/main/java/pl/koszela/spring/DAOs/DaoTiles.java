@@ -45,6 +45,7 @@ public class DaoTiles implements Dao {
                 tiles.setSkontoDiscount(Integer.valueOf(data[7]));
                 tiles.setPriceListName(nameFromURL.getName(filePath));
                 tiles.setUnitPurchasePrice(calculatePurchasePrice(tiles));
+                tiles.setImageUrl("");
                 tilesRepository.save(tiles);
             }
         } catch (IOException e) {

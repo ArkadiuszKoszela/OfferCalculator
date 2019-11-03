@@ -1,16 +1,17 @@
 package pl.koszela.spring.importFiles;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.DAOs.*;
 import pl.koszela.spring.repositories.*;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.Objects;
 
 import static pl.koszela.spring.importFiles.Endpoint.*;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class ImportFiles {
@@ -92,7 +93,7 @@ public class ImportFiles {
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x90_URL.location());
         daoGutter.readAndSaveToORM(FILE_BRYZA_125x90_URL.location());
         daoGutter.readAndSaveToORM(FILE_BRYZA_150x100_URL.location());
-        getNotificationSucces("Zaimportowano cenniki");
+        NotificationInterface.notificationOpen("Zaimportowano cenniki", NotificationVariant.LUMO_SUCCESS);
         UI.getCurrent().getPage().reload();
     }
 }

@@ -1,5 +1,6 @@
 package pl.koszela.spring.crud;
 
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,9 @@ import pl.koszela.spring.entities.Gutter;
 import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.*;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.*;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class CreateUser {
@@ -58,6 +58,6 @@ public class CreateUser {
 
         usersRepo.save(newUser);
         logger.info("Saved users - " + personalData.getName() + " " + personalData.getSurname());
-        getNotificationSucces("Zapisałem użytkownika - " + personalData.getName() + " " + personalData.getSurname() + "    :)");
+        NotificationInterface.notificationOpen("Zapisałem użytkownika - " + personalData.getName() + " " + personalData.getSurname() + "    :)", NotificationVariant.LUMO_SUCCESS);
     }
 }

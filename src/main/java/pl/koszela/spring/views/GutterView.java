@@ -4,6 +4,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
@@ -18,13 +19,12 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.Gutter;
 import pl.koszela.spring.service.GridInteraface;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 @Route(value = GutterView.GUTTER_VIEW, layout = MainView.class)
 public class GutterView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver, BeforeEnterObserver {
@@ -107,7 +107,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
                     binder.setBean(gutter);
                 } else {
                     gutter.setDiscount(30);
-                    getNotificationError("Maksymalny rabat to 30 %");
+                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
                     binder.setBean(gutter);
                 }
             }
@@ -136,7 +136,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
     private void addPriceToList(List<Gutter> list) {
         if (list == null) {
             UI.getCurrent().navigate(IncludeDataView.class);
-            getNotificationError("Na początku proszę wprowadzić dane !!");
+            NotificationInterface.notificationOpen("Na początku proszę wprowadzić dane !!", NotificationVariant.LUMO_ERROR);
         } else {
             for (Gutter gutter : list) {
                 gutter.setUnitPurchasePrice(new BigDecimal(gutter.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());

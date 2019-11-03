@@ -4,6 +4,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
@@ -23,13 +24,12 @@ import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NameNumberFields;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 @Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
 public class AccesoriesView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
@@ -116,7 +116,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
                     binder.setBean(accesories);
                 } else {
                     accesories.setDiscount(30);
-                    getNotificationError("Maksymalny rabat to 30 %");
+                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
                     binder.setBean(accesories);
                 }
             }

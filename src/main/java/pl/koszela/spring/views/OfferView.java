@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -18,6 +19,7 @@ import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.CategoryOfTiles;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.service.GridInteraface;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
 public class OfferView extends VerticalLayout implements GridInteraface {
@@ -97,7 +97,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
                     binder.setBean(tiles);
                 } else {
                     tiles.setDiscount(30);
-                    getNotificationError("Maksymalny rabat to 30 %");
+                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
                     binder.setBean(tiles);
                 }
             }

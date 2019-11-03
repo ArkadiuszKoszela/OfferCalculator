@@ -1,16 +1,15 @@
 package pl.koszela.spring.crud;
 
+import com.vaadin.flow.component.notification.NotificationVariant;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.repositories.*;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.*;
-
-import static pl.koszela.spring.service.ServiceNotification.getNotificationError;
-import static pl.koszela.spring.service.ServiceNotification.getNotificationSucces;
 
 @Service
 public class DeleteUsers {
@@ -49,10 +48,10 @@ public class DeleteUsers {
                 usersRepo.deleteById(userToRemove.getId());
                 usersRepo.flush();
                 logger.info("Deleted user - " + personalData.get().getName() + " " + personalData.get().getSurname());
-                getNotificationSucces("Usunąłem użytkownika: " + userToRemove.getPersonalData().getName() + " " + userToRemove.getPersonalData().getSurname() + "   papa  :(");
+                NotificationInterface.notificationOpen("Usunąłem użytkownika: " + userToRemove.getPersonalData().getName() + " " + userToRemove.getPersonalData().getSurname() + "   papa  :(", NotificationVariant.LUMO_SUCCESS);
             }
         } else {
-            getNotificationError("Nie ma takiego użytkownika " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + " w bazie danych    :(");
+            NotificationInterface.notificationOpen("Nie ma takiego użytkownika " + entityPersonalData.getName() + " " + entityPersonalData.getSurname() + " w bazie danych    :(", NotificationVariant.LUMO_ERROR);
         }
     }
 }
