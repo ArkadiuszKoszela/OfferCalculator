@@ -17,6 +17,7 @@ app.log
 ### IntelliJ IDEA ###
 package.json
 Procfile.txt
+/mvnw
 .mvn
 .idea
 *.iws
