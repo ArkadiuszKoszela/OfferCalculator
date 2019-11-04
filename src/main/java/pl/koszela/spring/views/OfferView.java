@@ -51,10 +51,10 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         treeGrid.addColumn(Tiles::getUnitPurchasePrice).setHeader("Cena zakupu");
         treeGrid.addColumn(Tiles::getTotalPrice).setHeader("Total klient");
         treeGrid.addColumn(Tiles::getTotalProfit).setHeader("Total zysk");
-        treeGrid.addColumn(Tiles::getAllpricePurchase).setHeader("Cena zakupu");
-        treeGrid.addColumn(Tiles::getAllpriceAfterDiscount).setHeader("Cena netto po rabacie");
+        treeGrid.addColumn(Tiles::getAllpriceAfterDiscount).setHeader("Cena razem detal");
+        treeGrid.addColumn(Tiles::getAllpricePurchase).setHeader("Cena razem zakup");
         treeGrid.addColumn(Tiles::getAllprofit).setHeader("Zysk");
-        treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
+        treeGrid.addColumn(createComponent()).setHeader("Opcje");
 
         binder = new Binder<>(Tiles.class);
         FooterRow footerRow = treeGrid.appendFooterRow();
@@ -149,7 +149,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
     }
 
     @Override
-    public ComponentRenderer<VerticalLayout, Tiles> createCheckboxes() {
+    public ComponentRenderer<VerticalLayout, Tiles> createComponent() {
         return new ComponentRenderer<>(tiles -> {
             Checkbox mainCheckBox = new Checkbox("Główna");
             Checkbox optionCheckbox = new Checkbox("Opcjonalna");

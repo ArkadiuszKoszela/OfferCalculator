@@ -14,6 +14,7 @@ import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.service.NotificationInterface;
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,6 +84,9 @@ public class GenerateOffer {
             if (mainParent.isPresent()) {
                 Paragraph mainOffer = new Paragraph("\n\n\t\t\t\tElementy dachówkowe dla dachu " + mainParent.get().getPriceListName() + " : " + mainParent.get().getTotalPrice() + "\n\n\n", font12);
                 document.add(mainOffer);
+                Image image = Image.getInstance(mainParent.get().getImageUrl());
+                image.scaleAbsolute(80f, 50f);
+                document.add(image);
 
                 cell(font12, tilesTable, baseColor, mainParent.get().getPriceListName());
                 cell(font12, tilesTable, baseColor, "Ilość");

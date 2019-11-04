@@ -23,6 +23,8 @@ import pl.koszela.spring.views.MainView;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -165,7 +167,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
                     if (old.getName().equals(accesories.getName())) {
                         if (!old.getUnitPurchasePrice().equals(accesories.getUnitPurchasePrice())
                                 || !old.getMargin().equals(accesories.getMargin()) || !old.getOption().equals(accesories.getOption())) {
-                            LocalDateTime dateTime = LocalDateTime.now();
+                            ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Poland"));
                             DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                             accesories.setDateChange(dateTime.format(myDateFormat));
                         }
@@ -173,7 +175,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
                 }
             }
             accesoriesRepository.saveAll(new HashSet<>(allAccesoriesRepo));
-            NotificationInterface.notificationOpen("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")), NotificationVariant.LUMO_SUCCESS);
+            NotificationInterface.notificationOpen("Zmodyfikowano cenniki dn.    " + ZonedDateTime.now(ZoneId.of("Poland")).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")), NotificationVariant.LUMO_SUCCESS);
             grid.getDataProvider().refreshAll();
         });
         return save;

@@ -88,7 +88,8 @@ public class ImportFiles {
         daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_12_CZERWONA_ANGOBA_URL.location());
         daoAccesories.readAndSaveToORM(FILE_AKCESORIA_URL.location());
         daoKolnierz.readAndSaveToORM(FILE_KOLNIERZ_OKPOL_DAKEA_URL.location());
-        daoWindows.readAndSaveToORM(FILE_OKNA_OKPOL_DAKEA_URL.location());
+        daoWindows.readAndSaveToORM(FILE_OKNA_FAKRO_DAKEA_URL.location());
+        daoWindows.readAndSaveToORM(FILE_OKNA_VELUX_URL.location());
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x100_URL.location());
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x90_URL.location());
         daoGutter.readAndSaveToORM(FILE_BRYZA_125x90_URL.location());

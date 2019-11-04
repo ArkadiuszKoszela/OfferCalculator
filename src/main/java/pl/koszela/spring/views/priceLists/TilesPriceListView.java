@@ -72,7 +72,10 @@ public class TilesPriceListView extends VerticalLayout {
         Grid.Column<Tiles> date = grid.addColumn(Tiles::getDate).setHeader("Data zmiany");
         Grid.Column<Tiles> imageUrlColumn = grid.addComponentColumn(i -> {
             if (i.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.name())) {
-                return new Image(i.getImageUrl(), "brak");
+                Image image = new Image(i.getImageUrl(), "");
+                image.setMaxWidth("110px");
+                image.setMaxHeight("50px");
+                return image;
             } else {
                 return new Image("", "");
             }

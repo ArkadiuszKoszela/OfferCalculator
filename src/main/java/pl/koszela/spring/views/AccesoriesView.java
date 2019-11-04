@@ -63,7 +63,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         Grid.Column<Accesories> allPricePurchaseColumn = treeGrid.addColumn(Accesories::getAllpricePurchase).setHeader("Razem zakup");
         Grid.Column<Accesories> allPriceDetalColumn = treeGrid.addColumn(Accesories::getAllpriceAfterDiscount).setHeader("Razem Detal");
         Grid.Column<Accesories> profitColumn = treeGrid.addColumn(Accesories::getAllprofit).setHeader("Zysk");
-        treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
+        treeGrid.addColumn(createComponent()).setHeader("Opcje");
 
         binder = new Binder<>(Accesories.class);
 
@@ -85,7 +85,6 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
                 .bind(Accesories::getQuantity, Accesories::setQuantity);
         addEnterEvent(treeGrid, quantityField);
         itemClickListener(quantityField);
-
         quantityColumn.setEditorComponent(quantityField);
 
         closeListener();
@@ -153,7 +152,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
                     new Span(accesories.isOffer() ? "Tak" : "Nie"));
 
     @Override
-    public ComponentRenderer<VerticalLayout, Accesories> createCheckboxes() {
+    public ComponentRenderer<VerticalLayout, Accesories> createComponent() {
         return new ComponentRenderer<>(accesories -> {
             Checkbox mainCheckBox = new Checkbox("Dodać ?");
             mainCheckBox.setValue(accesories.isOffer());

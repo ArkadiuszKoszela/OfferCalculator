@@ -105,7 +105,7 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
     }
 
     @Override
-    public ComponentRenderer createCheckboxes() {
+    public ComponentRenderer createComponent() {
         return null;
     }
 }

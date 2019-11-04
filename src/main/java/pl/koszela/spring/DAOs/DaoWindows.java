@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 @Service
@@ -17,6 +18,7 @@ public class DaoWindows implements Dao {
     private final static Logger logger = Logger.getLogger(DaoWindows.class);
 
     private final WindowsRepository windowsRepository;
+    private NameFromURL nameFromURL = new NameFromURL();
 
     @Autowired
     public DaoWindows(WindowsRepository windowsRepository) {
@@ -34,10 +36,13 @@ public class DaoWindows implements Dao {
                 String[] data = line.split(";");
                 Windows windows = new Windows();
 
-                windows.setName(data[0]);
-                windows.setUnitRetailPrice(new BigDecimal(data[1]));
-                windows.setDiscount(Double.valueOf(data[2]));
-
+                windows.setName(data[1]);
+                windows.setUnitDetalPrice(Double.valueOf(data[2]));
+                windows.setManufacturer(nameFromURL.getName(filePath));
+                windows.setSize(windowsSize(windows));
+                windows.setQuantity(0d);
+                windows.setDiscount(0);
+                windows.setUnitPurchasePrice(BigDecimal.valueOf(windows.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 windowsRepository.save(windows);
             }
         } catch (IOException e) {
@@ -47,11 +52,16 @@ public class DaoWindows implements Dao {
             if (br != null) {
                 try {
                     br.close();
-                    logger.info("succes - import winodws ");
+                    logger.info("succes - import windows " + nameFromURL.getName(filePath));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private String windowsSize(Windows windows) {
+        int name = windows.getName().lastIndexOf(" ");
+        return windows.getName().substring(name + 1);
     }
 }

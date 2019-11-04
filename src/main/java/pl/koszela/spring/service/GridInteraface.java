@@ -20,7 +20,7 @@ public interface GridInteraface {
 
     TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter);
 
-    ComponentRenderer createCheckboxes();
+    ComponentRenderer createComponent();
 
     default void addEnterEvent(TreeGrid treeGrid, TextField textField){
         textField.getElement()

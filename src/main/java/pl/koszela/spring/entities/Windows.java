@@ -7,14 +7,15 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
-public class Windows {
+public class Windows extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private BigDecimal unitRetailPrice;
-    private Double discount;
+    private String manufacturer;
+    private String size;
+    private boolean offer;
 
     public Windows() {
     }
@@ -35,19 +36,27 @@ public class Windows {
         this.name = name;
     }
 
-    public BigDecimal getUnitRetailPrice() {
-        return unitRetailPrice;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public void setUnitRetailPrice(BigDecimal unitRetailPrice) {
-        this.unitRetailPrice = unitRetailPrice;
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
-    public Double getDiscount() {
-        return discount;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public void setDiscount(Double profit) {
-        this.discount = profit;
+    public String getSize() {
+        return size;
+    }
+
+    public boolean isOffer() {
+        return offer;
+    }
+
+    public void setOffer(boolean offer) {
+        this.offer = offer;
     }
 }

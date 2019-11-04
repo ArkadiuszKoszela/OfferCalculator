@@ -52,7 +52,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         com.vaadin.flow.component.grid.Grid.Column<Gutter> allPurchaseColumn = treeGrid.addColumn(Gutter::getAllpricePurchase).setHeader("Razem cena netto");
         com.vaadin.flow.component.grid.Grid.Column<Gutter> allDetalColumn = treeGrid.addColumn(Gutter::getAllpriceAfterDiscount).setHeader("Razem cena detal");
         com.vaadin.flow.component.grid.Grid.Column<Gutter> protitColumn = treeGrid.addColumn(Gutter::getAllprofit).setHeader("Zysk");
-        treeGrid.addColumn(createCheckboxes()).setHeader("Opcje");
+        treeGrid.addColumn(createComponent()).setHeader("Opcje");
 
         binder = new Binder<>(Gutter.class);
         treeGrid.getEditor().setBinder(binder);
@@ -153,7 +153,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
     }
 
     @Override
-    public ComponentRenderer<VerticalLayout, Gutter> createCheckboxes() {
+    public ComponentRenderer<VerticalLayout, Gutter> createComponent() {
         return new ComponentRenderer<>(gutter -> {
             Checkbox mainCheckBox = new Checkbox("Główna");
             Checkbox optionCheckbox = new Checkbox("Opcjonalna");
