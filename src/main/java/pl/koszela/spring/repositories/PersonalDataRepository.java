@@ -6,7 +6,7 @@ import pl.koszela.spring.entities.PersonalData;
 
 import java.util.Optional;
 
-@Repository
+@Repository(value = "repo_personal_data")
 public interface PersonalDataRepository extends CrudRepository<PersonalData, Long> {
     Optional<PersonalData> findEntityPersonalDataByNameAndSurnameEquals(String name, String surname);
 }

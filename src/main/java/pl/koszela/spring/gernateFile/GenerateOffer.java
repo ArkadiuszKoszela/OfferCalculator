@@ -6,15 +6,10 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import pl.koszela.spring.entities.Accesories;
-import pl.koszela.spring.entities.Gutter;
-import pl.koszela.spring.entities.PersonalData;
-import pl.koszela.spring.entities.CategoryOfTiles;
-import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.entities.*;
 import pl.koszela.spring.service.NotificationInterface;
 
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +24,9 @@ public class GenerateOffer {
         Set<Tiles> tilesSet = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
         Set<Accesories> accesoriesSet = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
         List<Gutter> gutterList = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
+        Set<Collar> setCollars = (Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar");
+        Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose");
+        Set<AccesoriesWindows> setAccesoriesWindows = (Set<AccesoriesWindows>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesWindows");
 
         Document document = new Document();
 
@@ -155,6 +153,91 @@ public class GenerateOffer {
 
                 createTableGutter(document, font10, tableGutter, gutterList);
             }
+
+            PdfPTable tableWindows = new PdfPTable(7);
+            float[] widthToTableWindows = new float[]{320f, 85f, 85f, 85f, 85f, 85f, 85f};
+            tableWindows.setWidths(widthToTableWindows);
+
+            cell(font12, tableWindows, baseColor, "Nazwa");
+            cell(font12, tableWindows, baseColor, "Ilość");
+            cell(font12, tableWindows, baseColor, "Cena zakupu");
+            cell(font12, tableWindows, baseColor, "Cena detal");
+            cell(font12, tableWindows, baseColor, "Cena razem netto");
+            cell(font12, tableWindows, baseColor, "Cena razem zakup");
+            cell(font12, tableWindows, baseColor, "Zysk");
+
+            for (Windows windows : setWindows) {
+                if (windows.isOffer()) {
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getName()), font10));
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getQuantity()), font10));
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getUnitPurchasePrice()), font10));
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getUnitDetalPrice()), font10));
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getAllpriceAfterDiscount()), font10));
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getAllpricePurchase()), font10));
+                    tableWindows.addCell(new Phrase(String.valueOf(windows.getAllprofit()), font10));
+                }
+            }
+
+            Paragraph spaces2 = new Paragraph("\n\n\n\n");
+            document.add(spaces2);
+            document.add(tableWindows);
+
+            PdfPTable tableCollars = new PdfPTable(7);
+            float[] widthToTableCollars = new float[]{320f, 85f, 85f, 85f, 85f, 85f, 85f};
+            tableCollars.setWidths(widthToTableCollars);
+
+            cell(font12, tableCollars, baseColor, "Nazwa");
+            cell(font12, tableCollars, baseColor, "Ilość");
+            cell(font12, tableCollars, baseColor, "Cena zakupu");
+            cell(font12, tableCollars, baseColor, "Cena detal");
+            cell(font12, tableCollars, baseColor, "Cena razem netto");
+            cell(font12, tableCollars, baseColor, "Cena razem zakup");
+            cell(font12, tableCollars, baseColor, "Zysk");
+
+            for (Collar collar : setCollars) {
+                if (collar.isOffer()) {
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getName()), font10));
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getQuantity()), font10));
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getUnitPurchasePrice()), font10));
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getUnitDetalPrice()), font10));
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getAllpriceAfterDiscount()), font10));
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getAllpricePurchase()), font10));
+                    tableCollars.addCell(new Phrase(String.valueOf(collar.getAllprofit()), font10));
+                }
+            }
+
+            Paragraph spaces3 = new Paragraph("\n\n\n\n");
+            document.add(spaces3);
+            document.add(tableCollars);
+
+            PdfPTable tableAccesoriesWindows = new PdfPTable(7);
+            float[] widthToTableAccesoriesWindows = new float[]{320f, 85f, 85f, 85f, 85f, 85f, 85f};
+            tableAccesoriesWindows.setWidths(widthToTableAccesoriesWindows);
+
+            cell(font12, tableAccesoriesWindows, baseColor, "Nazwa");
+            cell(font12, tableAccesoriesWindows, baseColor, "Ilość");
+            cell(font12, tableAccesoriesWindows, baseColor, "Cena zakupu");
+            cell(font12, tableAccesoriesWindows, baseColor, "Cena detal");
+            cell(font12, tableAccesoriesWindows, baseColor, "Cena razem netto");
+            cell(font12, tableAccesoriesWindows, baseColor, "Cena razem zakup");
+            cell(font12, tableAccesoriesWindows, baseColor, "Zysk");
+
+            for (AccesoriesWindows accesoriesWindows : setAccesoriesWindows) {
+                if (accesoriesWindows.isOffer()) {
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getName()), font10));
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getQuantity()), font10));
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getUnitPurchasePrice()), font10));
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getUnitDetalPrice()), font10));
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getAllpriceAfterDiscount()), font10));
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getAllpricePurchase()), font10));
+                    tableAccesoriesWindows.addCell(new Phrase(String.valueOf(accesoriesWindows.getAllprofit()), font10));
+                }
+            }
+
+            Paragraph spaces4 = new Paragraph("\n\n\n\n");
+            document.add(spaces4);
+            document.add(tableAccesoriesWindows);
+
             document.close();
 
             logger.info("Create offer for - " + userfromRepo.getName() + " " + userfromRepo.getSurname());

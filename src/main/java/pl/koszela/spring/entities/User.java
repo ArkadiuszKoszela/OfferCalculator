@@ -19,7 +19,7 @@ public class User {
     @OneToOne
     private Windows windows;
     @OneToOne
-    private Kolnierz kolnierz;
+    private Collar collar;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_accesories",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -76,12 +76,12 @@ public class User {
         this.windows = windows;
     }
 
-    public Kolnierz getKolnierz() {
-        return kolnierz;
+    public Collar getCollar() {
+        return collar;
     }
 
-    public void setKolnierz(Kolnierz kolnierz) {
-        this.kolnierz = kolnierz;
+    public void setCollar(Collar collar) {
+        this.collar = collar;
     }
 
     public Set<Tiles> getTiles() {

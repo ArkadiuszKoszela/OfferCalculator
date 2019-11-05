@@ -125,6 +125,11 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("tiles");
         VaadinSession.getCurrent().getSession().removeAttribute("inputData");
         VaadinSession.getCurrent().getSession().removeAttribute("accesories");
+        VaadinSession.getCurrent().getSession().removeAttribute("collar");
+        VaadinSession.getCurrent().getSession().removeAttribute("windows");
+        VaadinSession.getCurrent().getSession().removeAttribute("windowsAfterChoose");
+        VaadinSession.getCurrent().getSession().removeAttribute("accesoriesWindows");
+
     }
 
     @Override

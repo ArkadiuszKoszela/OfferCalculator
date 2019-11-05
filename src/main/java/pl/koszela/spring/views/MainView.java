@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
+import static pl.koszela.spring.views.AccesoriesWindowsView.ACCESORIES_WINDOWS;
+import static pl.koszela.spring.views.CollarView.COLLAR;
 import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.priceLists.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
@@ -66,6 +68,8 @@ public class MainView extends AppLayout {
         addItemMenuBar(menuBar, "Akcesoria", SELECT_ACCESORIES);
         addItemMenuBar(menuBar, "Rynny", GUTTER_VIEW);
         addItemMenuBar(menuBar, "Okna", WINDOWS);
+        addItemMenuBar(menuBar, "Kołnierze", COLLAR);
+        addItemMenuBar(menuBar, "Akcesoria do okien", ACCESORIES_WINDOWS);
         addItemMenuBar(menuBar, "Oferta", CREATE_OFFER);
         MenuItem priceLists = menuBar.addItem("Cenniki");
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));

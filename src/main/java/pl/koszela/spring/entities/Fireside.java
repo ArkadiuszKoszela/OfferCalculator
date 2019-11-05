@@ -4,19 +4,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 
 @Entity
-public class Windows extends BaseEntity {
+public class Fireside extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String manufacturer;
-    private String size;
+    private String category;
     private boolean offer;
 
-    public Windows() {
+    public Fireside() {
     }
 
     public Long getId() {
@@ -35,12 +34,12 @@ public class Windows extends BaseEntity {
         this.manufacturer = manufacturer;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public String getCategory() {
+        return category;
     }
 
-    public String getSize() {
-        return size;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public boolean isOffer() {

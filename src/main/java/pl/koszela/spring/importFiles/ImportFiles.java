@@ -19,26 +19,28 @@ public class ImportFiles {
 
     private AccesoriesRepository accesoriesRepository;
     private WindowsRepository windowsRepository;
-    private KolnierzRepository kolnierzRepository;
+    private CollarRepository collarRepository;
     private TilesRepository tilesRepository;
     private GutterRepository gutterRepository;
 
     private DaoTiles daoTiles;
     private DaoAccesories daoAccesories;
-    private DaoKolnierz daoKolnierz;
+    private DaoCollar daoCollar;
     private DaoWindows daoWindows;
     private DaoGutter daoGutter;
+    private DaoAccesoriesWindows daoAccesoriesWindows;
     private UsersRepo usersRepo;
+    private DaoFireside daoFireSide;
 
     public ImportFiles() {
     }
 
     @Autowired
     public ImportFiles(AccesoriesRepository accesoriesRepository, WindowsRepository windowsRepository,
-                       KolnierzRepository kolnierzRepository, TilesRepository tilesRepository, GutterRepository gutterRepository, UsersRepo usersRepo) {
+                       CollarRepository collarRepository, TilesRepository tilesRepository, GutterRepository gutterRepository, UsersRepo usersRepo) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
-        this.kolnierzRepository = Objects.requireNonNull(kolnierzRepository);
+        this.collarRepository = Objects.requireNonNull(collarRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
         this.usersRepo = Objects.requireNonNull(usersRepo);
@@ -55,8 +57,8 @@ public class ImportFiles {
     }
 
     @Autowired
-    public void setDaoKolnierz(DaoKolnierz daoKolnierz) {
-        this.daoKolnierz = daoKolnierz;
+    public void setDaoCollar(DaoCollar daoCollar) {
+        this.daoCollar = daoCollar;
     }
 
     @Autowired
@@ -69,6 +71,16 @@ public class ImportFiles {
         this.daoAccesories = Objects.requireNonNull(daoAccesories);
     }
 
+    @Autowired
+    public void setDaoAccesoriesWindows(DaoAccesoriesWindows daoAccesoriesWindows) {
+        this.daoAccesoriesWindows = Objects.requireNonNull(daoAccesoriesWindows);
+    }
+
+    @Autowired
+    public void setDaoFireSide(DaoFireside daoFireSide) {
+        this.daoFireSide = daoFireSide;
+    }
+
     public void csv() {
         usersRepo.deleteAll();
         logger.info("deleted all users");
@@ -78,7 +90,7 @@ public class ImportFiles {
         logger.info("deleted all accesories");
         windowsRepository.deleteAll();
         logger.info("deleted all windows");
-        kolnierzRepository.deleteAll();
+        collarRepository.deleteAll();
         logger.info("deleted all kolnierz");
         gutterRepository.deleteAll();
         logger.info("deleted all gutters");
@@ -87,9 +99,13 @@ public class ImportFiles {
         daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA_URL.location());
         daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_12_CZERWONA_ANGOBA_URL.location());
         daoAccesories.readAndSaveToORM(FILE_AKCESORIA_URL.location());
-        daoKolnierz.readAndSaveToORM(FILE_KOLNIERZ_OKPOL_DAKEA_URL.location());
+        daoCollar.readAndSaveToORM(FILE_COLLAR_FAKRO_URL.location());
+        daoCollar.readAndSaveToORM(FILE_COLLAR_VELUX_URL.location());
         daoWindows.readAndSaveToORM(FILE_OKNA_FAKRO_DAKEA_URL.location());
         daoWindows.readAndSaveToORM(FILE_OKNA_VELUX_URL.location());
+        daoAccesoriesWindows.readAndSaveToORM(FILE_ACCESORIES_WINDOWS_FAKRO_URL.location());
+        daoAccesoriesWindows.readAndSaveToORM(FILE_ACCESORIES_WINDOWS_VELUX_URL.location());
+        daoFireSide.readAndSaveToORM(FILE_PLEWA_URL.location());
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x100_URL.location());
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x90_URL.location());
         daoGutter.readAndSaveToORM(FILE_BRYZA_125x90_URL.location());

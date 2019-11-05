@@ -3,7 +3,9 @@ package pl.koszela.spring.DAOs;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.koszela.spring.entities.Collar;
 import pl.koszela.spring.entities.Windows;
+import pl.koszela.spring.repositories.CollarRepository;
 import pl.koszela.spring.repositories.WindowsRepository;
 
 import java.io.BufferedReader;
@@ -14,15 +16,15 @@ import java.math.RoundingMode;
 import java.util.Objects;
 
 @Service
-public class DaoWindows implements Dao {
-    private final static Logger logger = Logger.getLogger(DaoWindows.class);
+public class DaoCollar implements Dao {
+    private final static Logger logger = Logger.getLogger(DaoCollar.class);
 
-    private final WindowsRepository windowsRepository;
+    private final CollarRepository collarRepository;
     private NameFromURL nameFromURL = new NameFromURL();
 
     @Autowired
-    public DaoWindows(WindowsRepository windowsRepository) {
-        this.windowsRepository = Objects.requireNonNull(windowsRepository);
+    public DaoCollar(CollarRepository collarRepository) {
+        this.collarRepository = Objects.requireNonNull(collarRepository);
     }
 
     @Override
@@ -34,25 +36,25 @@ public class DaoWindows implements Dao {
             br = new BufferedReader(new FileReader(filePath/*, StandardCharsets.UTF_8*/));
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                Windows windows = new Windows();
+                Collar collar = new Collar();
 
-                windows.setName(data[1]);
-                windows.setSize(data[2]);
-                windows.setUnitDetalPrice(Double.valueOf(data[3]));
-                windows.setManufacturer(nameFromURL.getName(filePath));
-                windows.setQuantity(0d);
-                windows.setDiscount(0);
-                windows.setUnitPurchasePrice(BigDecimal.valueOf(windows.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                windowsRepository.save(windows);
+                collar.setName(data[1]);
+                collar.setSize(data[2]);
+                collar.setUnitDetalPrice(Double.valueOf(data[3]));
+                collar.setManufacturer(nameFromURL.getName(filePath));
+                collar.setQuantity(0d);
+                collar.setDiscount(0);
+                collar.setUnitPurchasePrice(BigDecimal.valueOf(collar.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                collarRepository.save(collar);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            logger.debug("windows cannot be imported");
+            logger.debug("collar cannot be imported");
         } finally {
             if (br != null) {
                 try {
                     br.close();
-                    logger.info("succes - import windows " + nameFromURL.getName(filePath));
+                    logger.info("succes - import collar " + nameFromURL.getName(filePath));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

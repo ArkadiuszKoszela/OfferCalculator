@@ -1,8 +1,6 @@
 package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,14 +12,12 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accesories;
-import pl.koszela.spring.entities.Kolnierz;
-import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.entities.Windows;
-import pl.koszela.spring.repositories.KolnierzRepository;
 import pl.koszela.spring.repositories.WindowsRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NotificationInterface;
@@ -32,13 +28,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Route(value = WindowsView.WINDOWS, layout = MainView.class)
-public class WindowsView extends VerticalLayout implements GridInteraface {
+public class WindowsView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
 
     static final String WINDOWS = "windows";
 
     private WindowsRepository windowsRepository;
 
-    private Set<Windows> set = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows");
+    private Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows");
 
     private TreeGrid<Windows> treeGrid = new TreeGrid<>();
     private Binder<Windows> binder;
@@ -47,18 +43,15 @@ public class WindowsView extends VerticalLayout implements GridInteraface {
     public WindowsView(WindowsRepository windowsRepository) {
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
 
-        if(set == null){
-            set = allWindows();
+        if (setWindows == null) {
+            setWindows = allWindows();
         }
         add(createGrid());
     }
 
     @Override
     public TreeGrid<Windows> createGrid() {
-        treeGrid.addHierarchyColumn(windows -> {
-            int i = windows.getName().lastIndexOf(" ");
-            return windows.getName().substring(0, i);
-        }).setHeader("Nazwa");
+        treeGrid.addHierarchyColumn(Windows::getName).setHeader("Nazwa");
         treeGrid.addColumn(Windows::getSize).setHeader("Rozmiar");
         treeGrid.addColumn(Windows::getManufacturer).setHeader("Producent");
         Grid.Column<Windows> quantityColumn = treeGrid.addColumn(Windows::getQuantity).setHeader("Ilość");
@@ -128,14 +121,13 @@ public class WindowsView extends VerticalLayout implements GridInteraface {
     @Override
     public TreeData<Windows> addItems(List list) {
         TreeData<Windows> treeData = new TreeData<>();
-        Set<Windows> collect = set.stream().filter(e -> e.getName().equals("Okno FTP-V U3 55x78") || e.getName().equals("Okno GZL 1059  55x78")).collect(Collectors.toSet());
-        set.removeAll(collect);
+        Set<Windows> collect = setWindows.stream().filter(e -> e.getSize().equals("55x78")).collect(Collectors.toSet());
         for (Windows parent : collect) {
-            List<Windows> childrens = new ArrayList<>(set);
+            List<Windows> childrens = setWindows.stream().filter(e -> !e.getSize().equals("55x78")).collect(Collectors.toList());
             for (int i = 0; i < childrens.size(); i++) {
                 if (i == 0) {
                     treeData.addItem(null, parent);
-                } else if (childrens.get(i).getManufacturer().equals(parent.getManufacturer())) {
+                } else if (childrens.get(i).getName().equals(parent.getName())) {
                     treeData.addItem(parent, childrens.get(i));
                 }
             }
@@ -160,16 +152,30 @@ public class WindowsView extends VerticalLayout implements GridInteraface {
         });
     }
 
-    private Set<Windows> allWindows(){
+    private Set<Windows> allWindows() {
         return new HashSet<>(windowsRepository.findAll());
     }
 
     private void readBeans(Binder<Windows> binder) {
-        for (Windows windows : set) {
+        for (Windows windows : setWindows) {
             windows.setAllpricePurchase(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
             windows.setAllpriceAfterDiscount(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * (100 - windows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
             windows.setAllprofit(BigDecimal.valueOf(windows.getAllpriceAfterDiscount() - windows.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             binder.setBean(windows);
         }
+    }
+
+    @Override
+    public void beforeLeave(BeforeLeaveEvent event) {
+        BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
+        Set<Windows> trueOffer = new HashSet<>();
+        for (Windows windows : setWindows) {
+            if (windows.isOffer()) {
+                trueOffer.add(windows);
+            }
+        }
+        VaadinSession.getCurrent().getSession().setAttribute("windows", setWindows);
+        VaadinSession.getCurrent().getSession().setAttribute("windowsAfterChoose", trueOffer);
+        action.proceed();
     }
 }
