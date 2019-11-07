@@ -2,7 +2,6 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -22,7 +21,6 @@ import pl.koszela.spring.entities.Collar;
 import pl.koszela.spring.entities.Windows;
 import pl.koszela.spring.repositories.CollarRepository;
 import pl.koszela.spring.service.GridInteraface;
-import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,7 +32,7 @@ public class CollarView extends VerticalLayout implements GridInteraface, Before
 
     private CollarRepository collarRepository;
 
-    private Grid<Collar> treeGrid = new Grid<>();
+    private Grid<Collar> grid = new Grid<>();
     private Set<Collar> setCollars = (Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar");
     private Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose");
     private Binder<Collar> binder;
@@ -58,80 +56,53 @@ public class CollarView extends VerticalLayout implements GridInteraface, Before
     }
 
     private Grid createGridd() {
-        Grid.Column<Collar> nameColumn = treeGrid.addColumn(Collar::getName).setHeader("Nazwa");
-        treeGrid.addColumn(Collar::getSize).setHeader("Rozmiar").setSortable(true);
-        treeGrid.addColumn(Collar::getManufacturer).setHeader("Producent");
-        Grid.Column<Collar> quantityColumn = treeGrid.addColumn(Collar::getQuantity).setHeader("Ilość");
-        Grid.Column<Collar> discountColumn = treeGrid.addColumn(Collar::getDiscount).setHeader("Rabat");
-        Grid.Column<Collar> detalPriceColumn = treeGrid.addColumn(Collar::getUnitDetalPrice).setHeader("Cena jedn. detal");
-        Grid.Column<Collar> purchasePriceColumn = treeGrid.addColumn(Collar::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
-        Grid.Column<Collar> allPriceDetalColumn = treeGrid.addColumn(Collar::getAllpriceAfterDiscount).setHeader("Razem Detal");
-        Grid.Column<Collar> allPricePurchaseColumn = treeGrid.addColumn(Collar::getAllpricePurchase).setHeader("Razem zakup");
-        Grid.Column<Collar> profitColumn = treeGrid.addColumn(Collar::getAllprofit).setHeader("Zysk");
-        treeGrid.addColumn(createComponent()).setHeader("Opcje");
+        Grid.Column<Collar> nameColumn = grid.addColumn(Collar::getName).setHeader("Nazwa");
+        grid.addColumn(Collar::getSize).setHeader("Rozmiar").setSortable(true);
+        grid.addColumn(Collar::getManufacturer).setHeader("Producent");
+        Grid.Column<Collar> quantityColumn = grid.addColumn(Collar::getQuantity).setHeader("Ilość");
+        Grid.Column<Collar> discountColumn = grid.addColumn(Collar::getDiscount).setHeader("Rabat");
+        Grid.Column<Collar> detalPriceColumn = grid.addColumn(Collar::getUnitDetalPrice).setHeader("Cena jedn. detal");
+        Grid.Column<Collar> purchasePriceColumn = grid.addColumn(Collar::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
+        Grid.Column<Collar> allPriceDetalColumn = grid.addColumn(Collar::getAllpriceAfterDiscount).setHeader("Razem Detal");
+        Grid.Column<Collar> allPricePurchaseColumn = grid.addColumn(Collar::getAllpricePurchase).setHeader("Razem zakup");
+        Grid.Column<Collar> profitColumn = grid.addColumn(Collar::getAllprofit).setHeader("Zysk");
+        grid.addColumn(createComponent()).setHeader("Opcje");
 
         binder = new Binder<>(Collar.class);
 
-        treeGrid.getEditor().setBinder(binder);
+        grid.getEditor().setBinder(binder);
 
         TextField discountEditField = new TextField();
-//        addEnterEvent(treeGrid, discountEditField);
+        addEnterEvent(grid, discountEditField);
         binder.forField(discountEditField)
                 .withConverter(new StringToIntegerConverter("Błąd"))
                 .bind(Collar::getDiscount, Collar::setDiscount);
-        itemClickListener(discountEditField);
+        itemClickListener(grid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
         TextField quantityField = new TextField();
         binder.forField(quantityField)
                 .withConverter(new StringToDoubleConverter("Błąd"))
                 .bind(Collar::getQuantity, Collar::setQuantity);
-//        addEnterEvent(treeGrid, quantityField);
-        itemClickListener(quantityField);
+        addEnterEvent(grid, quantityField);
+        itemClickListener(grid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener();
+        closeListener(grid, binder, binder.getBean());
 
         readBeans(binder);
 
         if(setCollars != null) {
-            treeGrid.setDataProvider(new ListDataProvider<>(setCollars));
+            grid.setDataProvider(new ListDataProvider<>(setCollars));
         }
-        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("700px");
-        return treeGrid;
+        grid.getColumns().forEach(e -> e.setAutoWidth(true));
+        grid.setMinHeight("700px");
+        return grid;
     }
 
     @Override
     public TreeGrid createGrid() {
         return null;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(event -> {
-            treeGrid.getEditor().editItem(event.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                Collar collar = binder.getBean();
-                collar.setAllpricePurchase(BigDecimal.valueOf(collar.getQuantity() * collar.getUnitDetalPrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                collar.setAllpriceAfterDiscount(BigDecimal.valueOf(collar.getQuantity() * collar.getUnitDetalPrice() * (100 - collar.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                collar.setAllprofit(BigDecimal.valueOf(collar.getAllpriceAfterDiscount() - collar.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(collar);
-                } else {
-                    collar.setDiscount(30);
-                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
-                    binder.setBean(collar);
-                }
-            }
-        });
     }
 
     @Override

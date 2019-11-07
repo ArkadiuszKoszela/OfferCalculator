@@ -46,33 +46,14 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         treeGrid.getEditor().setBinder(binder);
 
         TextField priceField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
-        addEnterEvent(treeGrid, priceField);
+        itemClickListener(treeGrid, priceField);
         cena.setEditorComponent(priceField);
 
-        itemClickListener(priceField);
 
-        closeListener();
+//        closeListener(treeGrid, binder, binder.getBean());
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
         treeGrid.setMinHeight("750px");
         return treeGrid;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(e -> {
-            treeGrid.getEditor().editItem(e.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                Competition competition = binder.getBean();
-                binder.setBean(competition);
-            }
-        });
     }
 
     @Override

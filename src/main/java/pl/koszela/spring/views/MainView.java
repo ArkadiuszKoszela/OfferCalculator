@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
@@ -30,10 +31,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+import static pl.koszela.spring.importFiles.Endpoint.FILE_TO_GENERATE_OFFER_URL;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.AccesoriesWindowsView.ACCESORIES_WINDOWS;
 import static pl.koszela.spring.views.CollarView.COLLAR;
+import static pl.koszela.spring.views.FiresideView.FIRESIDE;
 import static pl.koszela.spring.views.GutterView.GUTTER_VIEW;
+import static pl.koszela.spring.views.LightningProtectionSystemView.PROTECTION_SYSTEM;
 import static pl.koszela.spring.views.OfferView.CREATE_OFFER;
 import static pl.koszela.spring.views.priceLists.PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION;
 import static pl.koszela.spring.views.IncludeDataView.INCLUDE_DATA;
@@ -70,6 +74,8 @@ public class MainView extends AppLayout {
         addItemMenuBar(menuBar, "Okna", WINDOWS);
         addItemMenuBar(menuBar, "Kołnierze", COLLAR);
         addItemMenuBar(menuBar, "Akcesoria do okien", ACCESORIES_WINDOWS);
+        addItemMenuBar(menuBar, "Kominki", FIRESIDE);
+        addItemMenuBar(menuBar, "System Odgromowy", PROTECTION_SYSTEM);
         addItemMenuBar(menuBar, "Oferta", CREATE_OFFER);
         MenuItem priceLists = menuBar.addItem("Cenniki");
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
@@ -103,8 +109,8 @@ public class MainView extends AppLayout {
         gereneteOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         gereneteOffer.addClickListener(buttonClickEvent -> {
             try {
-                GenerateOffer.writeUsingIText();
-                formLayout.add(anchor);
+                GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
+                formLayout.add(new Tab(anchor));
                 anchor.setVisible(true);
                 NotificationInterface.notificationOpen("Oferta została wygenerowana", NotificationVariant.LUMO_SUCCESS);
             } catch (NotFoundException ignored) {

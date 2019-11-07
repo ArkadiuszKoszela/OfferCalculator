@@ -22,6 +22,9 @@ public class ImportFiles {
     private CollarRepository collarRepository;
     private TilesRepository tilesRepository;
     private GutterRepository gutterRepository;
+    private FiresideRepository firesideRepository;
+    private AccesoriesWindowsRepository accesoriesWindowsRepository;
+    private LightningProtectionSystemRepository lightningProtectionSystemRepository;
 
     private DaoTiles daoTiles;
     private DaoAccesories daoAccesories;
@@ -31,19 +34,22 @@ public class ImportFiles {
     private DaoAccesoriesWindows daoAccesoriesWindows;
     private UsersRepo usersRepo;
     private DaoFireside daoFireSide;
+    private DaoLigtningProtectionSystem daoLigtningProtectionSystem;
 
-    public ImportFiles() {
-    }
 
     @Autowired
     public ImportFiles(AccesoriesRepository accesoriesRepository, WindowsRepository windowsRepository,
-                       CollarRepository collarRepository, TilesRepository tilesRepository, GutterRepository gutterRepository, UsersRepo usersRepo) {
+                       CollarRepository collarRepository, TilesRepository tilesRepository, GutterRepository gutterRepository, FiresideRepository firesideRepository, AccesoriesWindowsRepository accesoriesWindowsRepository, LightningProtectionSystemRepository lightningProtectionSystemRepository, UsersRepo usersRepo, DaoLigtningProtectionSystem daoLigtningProtectionSystem) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.collarRepository = Objects.requireNonNull(collarRepository);
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
-        this.usersRepo = Objects.requireNonNull(usersRepo);
+        this.firesideRepository = Objects.requireNonNull(firesideRepository);
+        this.accesoriesWindowsRepository = Objects.requireNonNull(accesoriesWindowsRepository);
+        this.lightningProtectionSystemRepository = Objects.requireNonNull(lightningProtectionSystemRepository);
+        this.usersRepo = Objects.requireNonNull(Objects.requireNonNull(usersRepo));
+        this.daoLigtningProtectionSystem = Objects.requireNonNull(daoLigtningProtectionSystem);
     }
 
     @Autowired
@@ -77,6 +83,11 @@ public class ImportFiles {
     }
 
     @Autowired
+    public void setDaoLigtningProtectionSystem(DaoLigtningProtectionSystem daoLigtningProtectionSystem) {
+        this.daoLigtningProtectionSystem = daoLigtningProtectionSystem;
+    }
+
+    @Autowired
     public void setDaoFireSide(DaoFireside daoFireSide) {
         this.daoFireSide = daoFireSide;
     }
@@ -94,6 +105,12 @@ public class ImportFiles {
         logger.info("deleted all kolnierz");
         gutterRepository.deleteAll();
         logger.info("deleted all gutters");
+        firesideRepository.deleteAll();
+        logger.info("deleted all firesides");
+        accesoriesWindowsRepository.deleteAll();
+        logger.info("deleted all accesories windows");
+        lightningProtectionSystemRepository.deleteAll();
+        logger.info("deleted all ligtning protection systems");
 
         daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_10_CZERWONA_ANGOBA_URL.location());
         daoTiles.readAndSaveToORM(FILE_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA_URL.location());
@@ -106,6 +123,7 @@ public class ImportFiles {
         daoAccesoriesWindows.readAndSaveToORM(FILE_ACCESORIES_WINDOWS_FAKRO_URL.location());
         daoAccesoriesWindows.readAndSaveToORM(FILE_ACCESORIES_WINDOWS_VELUX_URL.location());
         daoFireSide.readAndSaveToORM(FILE_PLEWA_URL.location());
+        daoLigtningProtectionSystem.readAndSaveToORM(FILE_SYSTEM_PROTECTION_URL.location());
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x100_URL.location());
         daoGutter.readAndSaveToORM(FILE_FLAMINGO_125x90_URL.location());
         daoGutter.readAndSaveToORM(FILE_BRYZA_125x90_URL.location());

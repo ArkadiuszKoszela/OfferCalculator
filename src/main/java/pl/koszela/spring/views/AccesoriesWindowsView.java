@@ -33,7 +33,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Route(value = AccesoriesWindowsView.ACCESORIES_WINDOWS, layout = MainView.class)
-public class AccesoriesWindowsView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
+public class AccesoriesWindowsView extends VerticalLayout implements GridInteraface<AccesoriesWindows>, BeforeLeaveObserver {
     static final String ACCESORIES_WINDOWS = "accesoriesWindows";
 
     private AccesoriesWindowsRepository accesoriesWindowsRepository;
@@ -58,10 +58,11 @@ public class AccesoriesWindowsView extends VerticalLayout implements GridInteraf
                 }
             }
         }
-        add(createGridd());
+        add(createGrid());
     }
 
-    private Grid createGridd() {
+    @Override
+    public Grid<AccesoriesWindows> createGrid() {
         Grid.Column<AccesoriesWindows> nameColumn = treeGrid.addColumn(AccesoriesWindows::getName).setHeader("Nazwa");
         treeGrid.addColumn(AccesoriesWindows::getSize).setHeader("Rozmiar").setSortable(true);
         treeGrid.addColumn(AccesoriesWindows::getManufacturer).setHeader("Producent");
@@ -79,63 +80,31 @@ public class AccesoriesWindowsView extends VerticalLayout implements GridInteraf
         treeGrid.getEditor().setBinder(binder);
 
         TextField discountEditField = new TextField();
-//        addEnterEvent(treeGrid, discountEditField);
+        addEnterEvent(treeGrid, discountEditField);
         binder.forField(discountEditField)
                 .withConverter(new StringToIntegerConverter("Błąd"))
                 .bind(AccesoriesWindows::getDiscount, AccesoriesWindows::setDiscount);
-        itemClickListener(discountEditField);
+        itemClickListener(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
         TextField quantityField = new TextField();
         binder.forField(quantityField)
                 .withConverter(new StringToDoubleConverter("Błąd"))
                 .bind(AccesoriesWindows::getQuantity, AccesoriesWindows::setQuantity);
-//        addEnterEvent(treeGrid, quantityField);
-        itemClickListener(quantityField);
+        addEnterEvent(treeGrid, quantityField);
+        itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener();
+        closeListener(treeGrid, binder, binder.getBean());
 
         readBeans(binder);
 
-        if(setAccesoriesWindows != null) {
+        if (setAccesoriesWindows != null) {
             treeGrid.setDataProvider(new ListDataProvider<>(setAccesoriesWindows));
         }
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         treeGrid.setMinHeight("700px");
         return treeGrid;
-    }
-
-    @Override
-    public TreeGrid createGrid() {
-        return null;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(event -> {
-            treeGrid.getEditor().editItem(event.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                AccesoriesWindows accesoriesWindows = binder.getBean();
-                accesoriesWindows.setAllpricePurchase(BigDecimal.valueOf(accesoriesWindows.getQuantity() * accesoriesWindows.getUnitDetalPrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                accesoriesWindows.setAllpriceAfterDiscount(BigDecimal.valueOf(accesoriesWindows.getQuantity() * accesoriesWindows.getUnitDetalPrice() * (100 - accesoriesWindows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                accesoriesWindows.setAllprofit(BigDecimal.valueOf(accesoriesWindows.getAllpriceAfterDiscount() - accesoriesWindows.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(accesoriesWindows);
-                } else {
-                    accesoriesWindows.setDiscount(30);
-                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
-                    binder.setBean(accesoriesWindows);
-                }
-            }
-        });
     }
 
     @Override
@@ -161,7 +130,7 @@ public class AccesoriesWindowsView extends VerticalLayout implements GridInteraf
     }
 
     private void readBeans(Binder<AccesoriesWindows> binder) {
-        if(setAccesoriesWindows != null) {
+        if (setAccesoriesWindows != null) {
             for (AccesoriesWindows accesoriesWindows : setAccesoriesWindows) {
                 accesoriesWindows.setAllpricePurchase(BigDecimal.valueOf(accesoriesWindows.getUnitDetalPrice() * accesoriesWindows.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 accesoriesWindows.setAllpriceAfterDiscount(BigDecimal.valueOf(accesoriesWindows.getUnitDetalPrice() * accesoriesWindows.getQuantity() * (100 - accesoriesWindows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());

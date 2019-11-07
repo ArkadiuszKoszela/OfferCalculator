@@ -62,7 +62,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         binder.forField(discountField)
                 .withConverter(new StringToIntegerConverter("Błąd"))
                 .bind(Gutter::getDiscount, Gutter::setDiscount);
-        itemClickListener(discountField);
+        itemClickListener(treeGrid, discountField);
         discountColumn.setEditorComponent(discountField);
 
         TextField quantityField = new TextField();
@@ -70,7 +70,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
                 .withConverter(new StringToDoubleConverter("Błąd"))
                 .bind(Gutter::getQuantity, Gutter::setQuantity);
         addEnterEvent(treeGrid, quantityField);
-        itemClickListener(quantityField);
+        itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
         FooterRow footerRow = treeGrid.appendFooterRow();
@@ -79,39 +79,11 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
 
         footerRow.getCell(nameColumn).setComponent(calculate);
 
-        closeListener();
+        closeListener(treeGrid, binder, binder.getBean());
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(list)));
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         treeGrid.setMinHeight("600px");
         return treeGrid;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(e -> {
-            treeGrid.getEditor().editItem(e.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                Gutter gutter = binder.getBean();
-                gutter.setUnitDetalPrice(new BigDecimal(gutter.getUnitDetalPrice() * (100 - gutter.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllpriceAfterDiscount(new BigDecimal(gutter.getUnitDetalPrice() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllpricePurchase(new BigDecimal(gutter.getUnitPurchasePrice() * gutter.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                gutter.setAllprofit(new BigDecimal(gutter.getAllpriceAfterDiscount() - gutter.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(gutter);
-                } else {
-                    gutter.setDiscount(30);
-                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
-                    binder.setBean(gutter);
-                }
-            }
-        });
     }
 
     @Override

@@ -107,7 +107,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         gutter3mb.forEach(gutter3mbField -> {
             odcinki.forEach(odcinekField -> {
                 gutter4mb.forEach(gutter4mbField -> {
-                    if (przedlastChar(gutter3mbField.getLabel()) == (przedlastChar(odcinekField.getLabel())) && przedlastChar(gutter3mbField.getLabel()) == przedlastChar(gutter4mbField.getLabel())
+                    if (beforeLastChar(gutter3mbField.getLabel()) == (beforeLastChar(odcinekField.getLabel())) && beforeLastChar(gutter3mbField.getLabel()) == beforeLastChar(gutter4mbField.getLabel())
                             && lastChar(gutter3mbField.getLabel()) == lastChar(odcinekField.getLabel()) && lastChar(gutter3mbField.getLabel()) == lastChar(gutter4mbField.getLabel())) {
                         gutter3mbField.addValueChangeListener(f -> {
                             odcinekField.setValue(f.getValue() * 3 + 4 * gutter4mbField.getValue());
@@ -125,7 +125,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         return a.charAt(a.length() - 1);
     }
 
-    private char przedlastChar(String a) {
+    private char beforeLastChar(String a) {
         return a.charAt(a.length() - 2);
     }
 
@@ -167,7 +167,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
             } else if (gutter.getName().equals("rynna 4mb")) {
                 gutter.setQuantity(gutter4mb);
             }else{
-                gutter.setQuantity(1.1d);
+                gutter.setQuantity(0d);
             }
             listOfNumberFields.forEach(numberField -> {
                 if (StringUtils.containsIgnoreCase(gutter.getName(), numberField.getLabel())) {

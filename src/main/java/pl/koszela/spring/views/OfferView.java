@@ -62,10 +62,10 @@ public class OfferView extends VerticalLayout implements GridInteraface {
 
         TextField discountEditField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
         discount.setEditorComponent(discountEditField);
+        addEnterEvent(treeGrid, discountEditField);
+        itemClickListener(treeGrid, discountEditField);
 
-        itemClickListener(discountEditField);
-
-        closeListener();
+        closeListener(treeGrid, binder, binder.getBean());
 
         Button calculate = refreshButton(treeGrid);
 
@@ -75,33 +75,6 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         treeGrid.setMinHeight("600px");
         return treeGrid;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(event -> {
-            treeGrid.getEditor().editItem(event.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                Tiles tiles = binder.getBean();
-                tiles.setAllpricePurchase(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                tiles.setAllpriceAfterDiscount(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * (100 - tiles.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                tiles.setAllprofit(BigDecimal.valueOf(tiles.getAllpriceAfterDiscount() - tiles.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(tiles);
-                } else {
-                    tiles.setDiscount(30);
-                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
-                    binder.setBean(tiles);
-                }
-            }
-        });
     }
 
     @Override

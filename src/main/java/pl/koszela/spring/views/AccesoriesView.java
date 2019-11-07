@@ -76,7 +76,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
         binder.forField(discountEditField)
                 .withConverter(new StringToIntegerConverter("Błąd"))
                 .bind(Accesories::getDiscount, Accesories::setDiscount);
-        itemClickListener(discountEditField);
+        itemClickListener(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
         TextField quantityField = new TextField();
@@ -84,42 +84,15 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
                 .withConverter(new StringToDoubleConverter("Błąd"))
                 .bind(Accesories::getQuantity, Accesories::setQuantity);
         addEnterEvent(treeGrid, quantityField);
-        itemClickListener(quantityField);
+        itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener();
+        closeListener(treeGrid, binder, binder.getBean());
 
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         treeGrid.setMinHeight("750px");
         return treeGrid;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(event -> {
-            treeGrid.getEditor().editItem(event.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                Accesories accesories = binder.getBean();
-                accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice() * (100 - accesories.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(accesories);
-                } else {
-                    accesories.setDiscount(30);
-                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
-                    binder.setBean(accesories);
-                }
-            }
-        });
     }
 
     @Override
@@ -146,10 +119,6 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface, Be
     public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         return null;
     }
-
-    public ComponentRenderer<Span, Accesories> booleanRenderer =
-            new ComponentRenderer<>(accesories ->
-                    new Span(accesories.isOffer() ? "Tak" : "Nie"));
 
     @Override
     public ComponentRenderer<VerticalLayout, Accesories> createComponent() {

@@ -1,8 +1,5 @@
 package pl.koszela.spring.entities;
 
-import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.entities.User;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;

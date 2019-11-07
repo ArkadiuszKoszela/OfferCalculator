@@ -17,12 +17,12 @@ import java.util.Objects;
 public class DaoFireside implements Dao {
     private final static Logger logger = Logger.getLogger(DaoFireside.class);
 
-    private final FiresideRepository fireSideRepository;
+    private final FiresideRepository firesideRepository;
     private NameFromURL nameFromURL = new NameFromURL();
 
     @Autowired
-    public DaoFireside(FiresideRepository fireSideRepository) {
-        this.fireSideRepository = Objects.requireNonNull(fireSideRepository);
+    public DaoFireside(FiresideRepository firesideRepository) {
+        this.firesideRepository = Objects.requireNonNull(firesideRepository);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DaoFireside implements Dao {
                 fireSide.setQuantity(0d);
                 fireSide.setDiscount(0);
                 fireSide.setUnitPurchasePrice(BigDecimal.valueOf(fireSide.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                fireSideRepository.save(fireSide);
+                firesideRepository.save(fireSide);
             }
         } catch (IOException e) {
             e.printStackTrace();

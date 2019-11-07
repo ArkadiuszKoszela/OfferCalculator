@@ -12,10 +12,12 @@ public enum Endpoint {
     FILE_ACCESORIES_WINDOWS_FAKRO_URL("src/main/resources/assets/accesoriesFromWindows/Fakro.csv"),
     FILE_ACCESORIES_WINDOWS_VELUX_URL("src/main/resources/assets/accesoriesFromWindows/Fakro.csv"),
     FILE_PLEWA_URL("src/main/resources/assets/Plewa.csv"),
+    FILE_SYSTEM_PROTECTION_URL("src/main/resources/assets/System odgromowy.csv"),
     FILE_FLAMINGO_125x100_URL("src/main/resources/assets/Flamingo 125x100.csv"),
     FILE_FLAMINGO_125x90_URL("src/main/resources/assets/Flamingo 125x90.csv"),
     FILE_BRYZA_125x90_URL("src/main/resources/assets/Bryza 125x90.csv"),
-    FILE_BRYZA_150x100_URL("src/main/resources/assets/Bryza 150x100.csv");
+    FILE_BRYZA_150x100_URL("src/main/resources/assets/Bryza 150x100.csv"),
+    FILE_TO_GENERATE_OFFER_URL("src/main/resources/templates/offer.pdf");
 
     private String location;
 

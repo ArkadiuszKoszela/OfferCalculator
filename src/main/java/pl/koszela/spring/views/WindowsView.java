@@ -72,7 +72,7 @@ public class WindowsView extends VerticalLayout implements GridInteraface, Befor
                 .withConverter(new StringToIntegerConverter("Błąd"))
                 .bind(Windows::getDiscount, Windows::setDiscount);
         addEnterEvent(treeGrid, discountEditField);
-        itemClickListener(discountEditField);
+        itemClickListener(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
         TextField quantityField = new TextField();
@@ -80,42 +80,15 @@ public class WindowsView extends VerticalLayout implements GridInteraface, Befor
                 .withConverter(new StringToDoubleConverter("Błąd"))
                 .bind(Windows::getQuantity, Windows::setQuantity);
         addEnterEvent(treeGrid, quantityField);
-        itemClickListener(quantityField);
+        itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener();
+        closeListener(treeGrid,binder, binder.getBean());
 
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
         treeGrid.setMinHeight("700px");
         treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         return treeGrid;
-    }
-
-    @Override
-    public void itemClickListener(TextField textField) {
-        treeGrid.addItemDoubleClickListener(event -> {
-            treeGrid.getEditor().editItem(event.getItem());
-            textField.focus();
-        });
-    }
-
-    @Override
-    public void closeListener() {
-        treeGrid.getEditor().addCloseListener(event -> {
-            if (binder.getBean() != null) {
-                Windows windows = binder.getBean();
-                windows.setAllpricePurchase(BigDecimal.valueOf(windows.getQuantity() * windows.getUnitDetalPrice() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                windows.setAllpriceAfterDiscount(BigDecimal.valueOf(windows.getQuantity() * windows.getUnitDetalPrice() * (100 - windows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                windows.setAllprofit(BigDecimal.valueOf(windows.getAllpriceAfterDiscount() - windows.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                if (binder.getBean().getDiscount() <= 30) {
-                    binder.setBean(windows);
-                } else {
-                    windows.setDiscount(30);
-                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
-                    binder.setBean(windows);
-                }
-            }
-        });
     }
 
     @Override
