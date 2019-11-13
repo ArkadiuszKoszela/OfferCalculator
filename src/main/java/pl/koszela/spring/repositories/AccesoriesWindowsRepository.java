@@ -6,5 +6,5 @@ import pl.koszela.spring.entities.AccesoriesWindows;
 import pl.koszela.spring.entities.Collar;
 
 @Repository(value = "repo_accesories_windows")
-public interface AccesoriesWindowsRepository extends JpaRepository<AccesoriesWindows, Long> {
+public interface AccesoriesWindowsRepository /*extends JpaRepository<AccesoriesWindows, Long>*/ extends BaseRepository<AccesoriesWindows> {
 }

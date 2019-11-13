@@ -11,7 +11,7 @@ public class AccesoriesWindows extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String manufacturer;
+//    private String manufacturer;
     private String size;
     private boolean offer;
 
@@ -26,13 +26,13 @@ public class AccesoriesWindows extends BaseEntity{
         this.id = id;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
+//    public String getManufacturer() {
+//        return manufacturer;
+//    }
+//
+//    public void setManufacturer(String manufacturer) {
+//        this.manufacturer = manufacturer;
+//    }
 
     public String getSize() {
         return size;

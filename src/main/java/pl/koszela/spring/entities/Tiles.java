@@ -12,16 +12,12 @@ import java.util.Set;
 @Table(name = "tiles")
 public class Tiles extends BaseEntity {
 
-    private String priceListName;
-    private Integer basicDiscount;
-    private Integer promotionDiscount;
-    private Integer additionalDiscount;
-    private Integer skontoDiscount;
+//    private String priceListName;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
     private String date;
     @Column(columnDefinition = "TEXT")
-    private String imageUrl;
+    private String imageUrl = "";
     @ManyToMany(mappedBy = "userTiles")
     private Set<User> tilesUser = new HashSet<>();
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
@@ -32,13 +28,13 @@ public class Tiles extends BaseEntity {
     public Tiles() {
     }
 
-    public String getPriceListName() {
-        return priceListName;
-    }
-
-    public void setPriceListName(String priceListName) {
-        this.priceListName = priceListName;
-    }
+//    public String getPriceListName() {
+//        return priceListName;
+//    }
+//
+//    public void setPriceListName(String priceListName) {
+//        this.priceListName = priceListName;
+//    }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -78,38 +74,6 @@ public class Tiles extends BaseEntity {
 
     public void setMain(boolean main) {
         this.main = main;
-    }
-
-    public Integer getBasicDiscount() {
-        return basicDiscount;
-    }
-
-    public void setBasicDiscount(Integer basicDiscount) {
-        this.basicDiscount = basicDiscount;
-    }
-
-    public Integer getPromotionDiscount() {
-        return promotionDiscount;
-    }
-
-    public void setPromotionDiscount(Integer promotionDiscount) {
-        this.promotionDiscount = promotionDiscount;
-    }
-
-    public Integer getAdditionalDiscount() {
-        return additionalDiscount;
-    }
-
-    public void setAdditionalDiscount(Integer additionalDiscount) {
-        this.additionalDiscount = additionalDiscount;
-    }
-
-    public Integer getSkontoDiscount() {
-        return skontoDiscount;
-    }
-
-    public void setSkontoDiscount(Integer skontoDiscount) {
-        this.skontoDiscount = skontoDiscount;
     }
 
     public String getDate() {

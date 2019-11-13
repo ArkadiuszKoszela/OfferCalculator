@@ -4,7 +4,6 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
@@ -27,7 +26,7 @@ import java.math.RoundingMode;
 import java.util.*;
 
 @Route(value = CollarView.COLLAR, layout = MainView.class)
-public class CollarView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
+public class CollarView extends VerticalLayout implements GridInteraface<Collar>, BeforeLeaveObserver {
     static final String COLLAR = "collar";
 
     private CollarRepository collarRepository;
@@ -41,21 +40,20 @@ public class CollarView extends VerticalLayout implements GridInteraface, Before
     public CollarView(CollarRepository collarRepository) {
         this.collarRepository = Objects.requireNonNull(collarRepository);
 
-        if (setCollars == null && setWindows != null) {
-            setCollars = new HashSet<>();
-            List<Collar> all = collarRepository.findAll();
-            for (Collar collar : all) {
-                for (Windows windows : setWindows) {
-                    if (windows.getSize().equals(collar.getSize()) && windows.getManufacturer().equals(collar.getManufacturer())) {
-                        setCollars.add(collar);
-                    }
+        setCollars = new HashSet<>();
+        List<Collar> all = collarRepository.findAll();
+        for (Collar collar : all) {
+            for (Windows windows : setWindows) {
+                if (windows.getSize().equals(collar.getSize()) && windows.getManufacturer().equals(collar.getManufacturer())) {
+                    setCollars.add(collar);
                 }
             }
         }
-        add(createGridd());
+        add(createGrid());
     }
 
-    private Grid createGridd() {
+    @Override
+    public Grid createGrid() {
         Grid.Column<Collar> nameColumn = grid.addColumn(Collar::getName).setHeader("Nazwa");
         grid.addColumn(Collar::getSize).setHeader("Rozmiar").setSortable(true);
         grid.addColumn(Collar::getManufacturer).setHeader("Producent");
@@ -69,49 +67,30 @@ public class CollarView extends VerticalLayout implements GridInteraface, Before
         grid.addColumn(createComponent()).setHeader("Opcje");
 
         binder = new Binder<>(Collar.class);
-
         grid.getEditor().setBinder(binder);
 
-        TextField discountEditField = new TextField();
-        addEnterEvent(grid, discountEditField);
-        binder.forField(discountEditField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(Collar::getDiscount, Collar::setDiscount);
+        TextField discountEditField = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Collar::getDiscount, Collar::setDiscount);
         itemClickListener(grid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(Collar::getQuantity, Collar::setQuantity);
-        addEnterEvent(grid, quantityField);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Collar::getQuantity, Collar::setQuantity);
         itemClickListener(grid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener(grid, binder, binder.getBean());
+        closeListener(grid, binder);
 
         readBeans(binder);
 
-        if(setCollars != null) {
+        if (setCollars != null) {
             grid.setDataProvider(new ListDataProvider<>(setCollars));
         }
-        grid.getColumns().forEach(e -> e.setAutoWidth(true));
-        grid.setMinHeight("700px");
+
+        settingsGrid(grid);
         return grid;
     }
 
     @Override
-    public TreeGrid createGrid() {
-        return null;
-    }
-
-    @Override
     public TreeData<Accesories> addItems(List list) {
-        return null;
-    }
-
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         return null;
     }
 
@@ -128,7 +107,7 @@ public class CollarView extends VerticalLayout implements GridInteraface, Before
     }
 
     private void readBeans(Binder<Collar> binder) {
-        if(setCollars != null) {
+        if (setCollars != null) {
             for (Collar collar : setCollars) {
                 collar.setAllpricePurchase(BigDecimal.valueOf(collar.getUnitDetalPrice() * collar.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 collar.setAllpriceAfterDiscount(BigDecimal.valueOf(collar.getUnitDetalPrice() * collar.getQuantity() * (100 - collar.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());

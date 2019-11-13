@@ -9,9 +9,9 @@ import pl.koszela.spring.repositories.AccesoriesRepository;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
+
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
 
 @Service
 public class DaoAccesories implements Dao {
@@ -36,11 +36,16 @@ public class DaoAccesories implements Dao {
                 Accesories accesories = new Accesories();
 
                 accesories.setCategory(data[1]);
-                accesories.setOption(data[2]);
+                accesories.setType(data[2]);
                 accesories.setName(data[3]);
-                accesories.setUnitPurchasePrice(Double.valueOf(data[4]));
+                accesories.setUnitDetalPrice(Double.valueOf(data[4]));
+                accesories.setDiscount(0);
+                accesories.setBasicDiscount(67);
+                accesories.setAdditionalDiscount(0);
+                accesories.setPromotionDiscount(0);
+                accesories.setSkontoDiscount(0);
                 accesories.setMargin(Integer.valueOf(data[5]));
-                accesories.setUnitDetalPrice(calculatePurchasePrice(accesories));
+                accesories.setUnitPurchasePrice(calculatePurchasePrice(accesories));
 
                 accesoriesRepository.save(accesories);
             }
@@ -57,13 +62,5 @@ public class DaoAccesories implements Dao {
                 }
             }
         }
-    }
-
-    private Double calculatePurchasePrice(Accesories accesories) {
-        BigDecimal constance = new BigDecimal(100);
-        BigDecimal margin = BigDecimal.valueOf(accesories.getMargin());
-        BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getUnitPurchasePrice());
-        BigDecimal priceDetal = pricePurchase.multiply(margin.divide(constance, 2, RoundingMode.HALF_UP)).add(pricePurchase).setScale(2, RoundingMode.HALF_UP);
-        return priceDetal.doubleValue();
     }
 }

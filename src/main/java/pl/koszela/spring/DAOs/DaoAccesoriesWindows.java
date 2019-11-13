@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
+
 @Service
 public class DaoAccesoriesWindows implements Dao {
     private final static Logger logger = Logger.getLogger(DaoAccesoriesWindows.class);
@@ -44,7 +46,11 @@ public class DaoAccesoriesWindows implements Dao {
                 accesoriesWindows.setManufacturer(nameFromURL.getName(filePath));
                 accesoriesWindows.setQuantity(0d);
                 accesoriesWindows.setDiscount(0);
-                accesoriesWindows.setUnitPurchasePrice(BigDecimal.valueOf(accesoriesWindows.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                accesoriesWindows.setBasicDiscount(30);
+                accesoriesWindows.setAdditionalDiscount(0);
+                accesoriesWindows.setPromotionDiscount(0);
+                accesoriesWindows.setSkontoDiscount(0);
+                accesoriesWindows.setUnitPurchasePrice(calculatePurchasePrice(accesoriesWindows));
                 accesoriesWindowsRepository.save(accesoriesWindows);
             }
         } catch (IOException e) {

@@ -6,5 +6,5 @@ import pl.koszela.spring.entities.Fireside;
 import pl.koszela.spring.entities.LightningProtectionSystem;
 
 @Repository(value = "repo_lightning_protection_system")
-public interface LightningProtectionSystemRepository extends JpaRepository<LightningProtectionSystem, Long> {
+public interface LightningProtectionSystemRepository/* extends JpaRepository<LightningProtectionSystem, Long> */  extends BaseRepository<LightningProtectionSystem>{
 }

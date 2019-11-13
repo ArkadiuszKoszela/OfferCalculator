@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import pl.koszela.spring.entities.Windows;
 
 @Repository(value = "repo_windows")
-public interface WindowsRepository extends JpaRepository<Windows, Long> {
+public interface WindowsRepository /*extends JpaRepository<Windows, Long>*/ extends BaseRepository<Windows> {
 }

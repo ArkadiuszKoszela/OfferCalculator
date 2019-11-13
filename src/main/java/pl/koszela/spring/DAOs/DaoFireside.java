@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
+
 @Service
 public class DaoFireside implements Dao {
     private final static Logger logger = Logger.getLogger(DaoFireside.class);
@@ -42,7 +44,11 @@ public class DaoFireside implements Dao {
                 fireSide.setManufacturer(nameFromURL.getName(filePath));
                 fireSide.setQuantity(0d);
                 fireSide.setDiscount(0);
-                fireSide.setUnitPurchasePrice(BigDecimal.valueOf(fireSide.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                fireSide.setBasicDiscount(30);
+                fireSide.setAdditionalDiscount(0);
+                fireSide.setPromotionDiscount(0);
+                fireSide.setSkontoDiscount(0);
+                fireSide.setUnitPurchasePrice(calculatePurchasePrice(fireSide));
                 firesideRepository.save(fireSide);
             }
         } catch (IOException e) {

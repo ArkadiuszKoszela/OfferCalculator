@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
+
 @Service
 public class DaoCollar implements Dao {
     private final static Logger logger = Logger.getLogger(DaoCollar.class);
@@ -44,7 +46,11 @@ public class DaoCollar implements Dao {
                 collar.setManufacturer(nameFromURL.getName(filePath));
                 collar.setQuantity(0d);
                 collar.setDiscount(0);
-                collar.setUnitPurchasePrice(BigDecimal.valueOf(collar.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                collar.setBasicDiscount(30);
+                collar.setAdditionalDiscount(0);
+                collar.setPromotionDiscount(0);
+                collar.setSkontoDiscount(0);
+                collar.setUnitPurchasePrice(calculatePurchasePrice(collar));
                 collarRepository.save(collar);
             }
         } catch (IOException e) {

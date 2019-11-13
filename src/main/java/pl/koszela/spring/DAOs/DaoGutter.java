@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
+
 @Service
 public class DaoGutter implements Dao {
     private final static Logger logger = Logger.getLogger(DaoGutter.class);
@@ -39,7 +41,11 @@ public class DaoGutter implements Dao {
                 gutter.setUnitDetalPrice(Double.valueOf(data[2]));
                 gutter.setCategory(nameFromURL.getName(filePath));
                 gutter.setDiscount(0);
-                gutter.setUnitPurchasePrice(0d);
+                gutter.setBasicDiscount(30);
+                gutter.setAdditionalDiscount(0);
+                gutter.setPromotionDiscount(0);
+                gutter.setSkontoDiscount(0);
+                gutter.setUnitPurchasePrice(calculatePurchasePrice(gutter));
 
                 gutterRepository.save(gutter);
             }

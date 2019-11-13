@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import pl.koszela.spring.entities.Collar;
 
 @Repository(value = "repo_collar")
-public interface CollarRepository extends JpaRepository<Collar, Long> {
+public interface CollarRepository /*extends JpaRepository<Collar, Long>*/ extends BaseRepository<Collar> {
 }

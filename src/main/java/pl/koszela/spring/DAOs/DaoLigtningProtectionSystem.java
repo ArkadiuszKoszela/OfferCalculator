@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
+
+
 @Service
 public class DaoLigtningProtectionSystem implements Dao {
     private final static Logger logger = Logger.getLogger(DaoLigtningProtectionSystem.class);
@@ -40,7 +43,11 @@ public class DaoLigtningProtectionSystem implements Dao {
                 ligtningProtectionSystem.setUnitDetalPrice(Double.valueOf(data[2]));
                 ligtningProtectionSystem.setQuantity(0d);
                 ligtningProtectionSystem.setDiscount(0);
-                ligtningProtectionSystem.setUnitPurchasePrice(BigDecimal.valueOf(ligtningProtectionSystem.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                ligtningProtectionSystem.setBasicDiscount(30);
+                ligtningProtectionSystem.setAdditionalDiscount(0);
+                ligtningProtectionSystem.setPromotionDiscount(0);
+                ligtningProtectionSystem.setSkontoDiscount(0);
+                ligtningProtectionSystem.setUnitPurchasePrice(calculatePurchasePrice(ligtningProtectionSystem));
                 lightningProtectionSystemRepository.save(ligtningProtectionSystem);
             }
         } catch (IOException e) {

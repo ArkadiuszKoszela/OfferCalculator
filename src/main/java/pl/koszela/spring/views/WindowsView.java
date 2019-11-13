@@ -2,7 +2,6 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -20,15 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.Windows;
 import pl.koszela.spring.repositories.WindowsRepository;
 import pl.koszela.spring.service.GridInteraface;
-import pl.koszela.spring.service.NotificationInterface;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Route(value = WindowsView.WINDOWS, layout = MainView.class)
-public class WindowsView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
+public class WindowsView extends VerticalLayout implements GridInteraface<Windows>, BeforeLeaveObserver {
 
     static final String WINDOWS = "windows";
 
@@ -65,29 +61,21 @@ public class WindowsView extends VerticalLayout implements GridInteraface, Befor
 
         binder = new Binder<>(Windows.class);
         treeGrid.getEditor().setBinder(binder);
-        readBeans(binder);
+        readBeans(setWindows);
 
-        TextField discountEditField = new TextField();
-        binder.forField(discountEditField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(Windows::getDiscount, Windows::setDiscount);
-        addEnterEvent(treeGrid, discountEditField);
+        TextField discountEditField = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Windows::getDiscount, Windows::setDiscount);
         itemClickListener(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(Windows::getQuantity, Windows::setQuantity);
-        addEnterEvent(treeGrid, quantityField);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Windows::getQuantity, Windows::setQuantity);
         itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener(treeGrid,binder, binder.getBean());
+        closeListener(treeGrid, binder);
 
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
-        treeGrid.setMinHeight("700px");
-        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
+
+        settingsGrid(treeGrid);
         return treeGrid;
     }
 
@@ -109,11 +97,6 @@ public class WindowsView extends VerticalLayout implements GridInteraface, Befor
     }
 
     @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        return null;
-    }
-
-    @Override
     public ComponentRenderer<VerticalLayout, Windows> createComponent() {
         return new ComponentRenderer<>(windows -> {
             Checkbox mainCheckBox = new Checkbox("Dodać ?");
@@ -129,14 +112,14 @@ public class WindowsView extends VerticalLayout implements GridInteraface, Befor
         return new HashSet<>(windowsRepository.findAll());
     }
 
-    private void readBeans(Binder<Windows> binder) {
-        for (Windows windows : setWindows) {
-            windows.setAllpricePurchase(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            windows.setAllpriceAfterDiscount(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * (100 - windows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            windows.setAllprofit(BigDecimal.valueOf(windows.getAllpriceAfterDiscount() - windows.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            binder.setBean(windows);
-        }
-    }
+//    private void readBeans(Binder<Windows> binder, Set<>) {
+//        for (Windows windows : setWindows) {
+//            windows.setAllpricePurchase(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//            windows.setAllpriceAfterDiscount(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * (100 - windows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//            windows.setAllprofit(BigDecimal.valueOf(windows.getAllpriceAfterDiscount() - windows.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//            binder.setBean(windows);
+//        }
+//    }
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {

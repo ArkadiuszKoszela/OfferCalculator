@@ -7,5 +7,5 @@ import pl.koszela.spring.entities.Tiles;
 
 @Transactional
 @Repository(value = "tiles_repo")
-public interface TilesRepository extends JpaRepository<Tiles, Long> {
+public interface TilesRepository /*extends JpaRepository<Tiles, Long> */ extends BaseRepository<Tiles>{
 }

@@ -2,10 +2,8 @@ package pl.koszela.spring.views;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
@@ -17,13 +15,10 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.entities.AccesoriesWindows;
-import pl.koszela.spring.entities.Collar;
 import pl.koszela.spring.entities.Windows;
 import pl.koszela.spring.repositories.AccesoriesWindowsRepository;
 import pl.koszela.spring.service.GridInteraface;
-import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -79,41 +74,28 @@ public class AccesoriesWindowsView extends VerticalLayout implements GridInteraf
 
         treeGrid.getEditor().setBinder(binder);
 
-        TextField discountEditField = new TextField();
-        addEnterEvent(treeGrid, discountEditField);
-        binder.forField(discountEditField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(AccesoriesWindows::getDiscount, AccesoriesWindows::setDiscount);
+        TextField discountEditField= bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), AccesoriesWindows::getDiscount, AccesoriesWindows::setDiscount);
         itemClickListener(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(AccesoriesWindows::getQuantity, AccesoriesWindows::setQuantity);
-        addEnterEvent(treeGrid, quantityField);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), AccesoriesWindows::getQuantity, AccesoriesWindows::setQuantity);
         itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener(treeGrid, binder, binder.getBean());
+        closeListener(treeGrid, binder);
 
         readBeans(binder);
 
         if (setAccesoriesWindows != null) {
             treeGrid.setDataProvider(new ListDataProvider<>(setAccesoriesWindows));
         }
-        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("700px");
+
+        settingsGrid(treeGrid);
         return treeGrid;
     }
 
     @Override
     public TreeData<AccesoriesWindows> addItems(List list) {
-        return null;
-    }
-
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         return null;
     }
 

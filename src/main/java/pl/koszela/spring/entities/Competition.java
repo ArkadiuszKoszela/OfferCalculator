@@ -1,6 +1,6 @@
 package pl.koszela.spring.entities;
 
-public class Competition {
+public class Competition extends BaseEntity {
 
     private String name;
     private Double price;

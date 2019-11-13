@@ -11,7 +11,7 @@ public class Accesories extends BaseEntity {
     private String category;
     private Integer margin;
     @Column(name = "option_accesories")
-    private String option;
+    private String type;
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean offer;
     private String dateChange;
@@ -37,12 +37,12 @@ public class Accesories extends BaseEntity {
         this.category = category;
     }
 
-    public String getOption() {
-        return option;
+    public String getType() {
+        return type;
     }
 
-    public void setOption(String option) {
-        this.option = option;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public boolean isOffer() {

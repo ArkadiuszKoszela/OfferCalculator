@@ -6,14 +6,11 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -29,7 +26,6 @@ import pl.koszela.spring.entities.FiresideDTO;
 import pl.koszela.spring.entities.Windows;
 import pl.koszela.spring.repositories.FiresideRepository;
 import pl.koszela.spring.service.GridInteraface;
-import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -38,7 +34,7 @@ import java.util.stream.Collectors;
 
 @PreserveOnRefresh
 @Route(value = FiresideView.FIRESIDE, layout = MainView.class)
-public class FiresideView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
+public class FiresideView extends VerticalLayout implements GridInteraface<FiresideDTO>, BeforeLeaveObserver {
     static final String FIRESIDE = "fireside";
 
     private FiresideRepository firesideRepository;
@@ -90,23 +86,15 @@ public class FiresideView extends VerticalLayout implements GridInteraface, Befo
 
         grid.getEditor().setBinder(binder);
 
-        TextField discountEditField = new TextField();
-        addEnterEvent(grid, discountEditField);
-        binder.forField(discountEditField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(FiresideDTO::getDiscount, FiresideDTO::setDiscount);
+        TextField discountEditField = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), FiresideDTO::getDiscount, FiresideDTO::setDiscount);
         itemClickListener(grid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(FiresideDTO::getQuantity, FiresideDTO::setQuantity);
-        addEnterEvent(grid, quantityField);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), FiresideDTO::getQuantity, FiresideDTO::setQuantity);
         itemClickListener(grid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
-        closeListener(grid, binder, binder.getBean());
+        closeListener(grid, binder);
 
         readBeans(binder);
 
@@ -119,8 +107,9 @@ public class FiresideView extends VerticalLayout implements GridInteraface, Befo
             grid.setDataProvider(new ListDataProvider<>(firesideInGrid));
             grid.getDataProvider().refreshAll();
         });
-        grid.getColumns().forEach(e -> e.setAutoWidth(true));
-        grid.setMinHeight("550px");
+//        grid.getColumns().forEach(e -> e.setAutoWidth(true));
+//        grid.setMinHeight("550px");
+        settingsGrid(grid);
         return grid;
     }
 
@@ -142,11 +131,6 @@ public class FiresideView extends VerticalLayout implements GridInteraface, Befo
 
     @Override
     public TreeData<Accesories> addItems(List list) {
-        return null;
-    }
-
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
         return null;
     }
 

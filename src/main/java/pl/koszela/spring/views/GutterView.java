@@ -4,6 +4,8 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -27,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Route(value = GutterView.GUTTER_VIEW, layout = MainView.class)
-public class GutterView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver, BeforeEnterObserver {
+public class GutterView extends VerticalLayout implements GridInteraface<Gutter>, BeforeLeaveObserver, BeforeEnterObserver {
 
     public static final String GUTTER_VIEW = "gutter";
     private TreeGrid<Gutter> treeGrid = new TreeGrid<>();
@@ -42,34 +44,26 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
 
     @Override
     public TreeGrid createGrid() {
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> nameColumn = treeGrid.addHierarchyColumn(Gutter::getName).setResizable(true).setHeader("Nazwa");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> quantityColumn = treeGrid.addColumn(Gutter::getQuantity).setHeader("Ilość");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> discountColumn = treeGrid.addColumn(Gutter::getDiscount).setHeader("Rabat");
+        Grid.Column<Gutter> nameColumn = treeGrid.addHierarchyColumn(Gutter::getName).setResizable(true).setHeader("Nazwa");
+        Grid.Column<Gutter> quantityColumn = treeGrid.addColumn(Gutter::getQuantity).setHeader("Ilość");
+        Grid.Column<Gutter> discountColumn = treeGrid.addColumn(Gutter::getDiscount).setHeader("Rabat");
         treeGrid.addColumn(Gutter::getTotalPrice).setHeader("Total klient");
         treeGrid.addColumn(Gutter::getTotalProfit).setHeader("Total zysk");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> unitPurchaseColumn = treeGrid.addColumn(Gutter::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> unitDetalColumn = treeGrid.addColumn(Gutter::getUnitDetalPrice).setHeader("Cena jedn. detal");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> allPurchaseColumn = treeGrid.addColumn(Gutter::getAllpricePurchase).setHeader("Razem cena netto");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> allDetalColumn = treeGrid.addColumn(Gutter::getAllpriceAfterDiscount).setHeader("Razem cena detal");
-        com.vaadin.flow.component.grid.Grid.Column<Gutter> protitColumn = treeGrid.addColumn(Gutter::getAllprofit).setHeader("Zysk");
+        Column<Gutter> unitPurchaseColumn = treeGrid.addColumn(Gutter::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
+        Column<Gutter> unitDetalColumn = treeGrid.addColumn(Gutter::getUnitDetalPrice).setHeader("Cena jedn. detal");
+        Grid.Column<Gutter> allPurchaseColumn = treeGrid.addColumn(Gutter::getAllpricePurchase).setHeader("Razem cena netto");
+        Grid.Column<Gutter> allDetalColumn = treeGrid.addColumn(Gutter::getAllpriceAfterDiscount).setHeader("Razem cena detal");
+        Grid.Column<Gutter> protitColumn = treeGrid.addColumn(Gutter::getAllprofit).setHeader("Zysk");
         treeGrid.addColumn(createComponent()).setHeader("Opcje");
 
         binder = new Binder<>(Gutter.class);
         treeGrid.getEditor().setBinder(binder);
 
-        TextField discountField = new TextField();
-        addEnterEvent(treeGrid, discountField);
-        binder.forField(discountField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(Gutter::getDiscount, Gutter::setDiscount);
+        TextField discountField= bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Gutter::getDiscount, Gutter::setDiscount);
         itemClickListener(treeGrid, discountField);
         discountColumn.setEditorComponent(discountField);
 
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(Gutter::getQuantity, Gutter::setQuantity);
-        addEnterEvent(treeGrid, quantityField);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Gutter::getQuantity, Gutter::setQuantity);
         itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
@@ -79,10 +73,9 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
 
         footerRow.getCell(nameColumn).setComponent(calculate);
 
-        closeListener(treeGrid, binder, binder.getBean());
+        closeListener(treeGrid, binder);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(list)));
-        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("600px");
+        settingsGrid(treeGrid);
         return treeGrid;
     }
 
@@ -92,7 +85,7 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
         if ((List<Gutter>) list != null) {
             List<Gutter> parents = ((List<Gutter>) list).stream().filter(gutter -> gutter.getName().equals("rynna 3mb")).collect(Collectors.toList());
             for (Gutter parent : parents) {
-                List<Gutter> childrens = ((List<Gutter>) list).stream().filter(gutter -> gutter.getCategory().equals(parent.getCategory()) && !gutter.getUnitDetalPrice().equals(0d)).collect(Collectors.toList());
+                List<Gutter> childrens = ((List<Gutter>) list).stream().filter(gutter -> gutter.getManufacturer().equals(parent.getManufacturer()) && !gutter.getUnitDetalPrice().equals(0d)).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, parent);
@@ -117,11 +110,6 @@ public class GutterView extends VerticalLayout implements GridInteraface, Before
                 gutter.setAllprofit(new BigDecimal(gutter.getAllpriceAfterDiscount() - gutter.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             }
         }
-    }
-
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        return null;
     }
 
     @Override

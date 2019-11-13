@@ -64,36 +64,35 @@ public class GenerateOffer {
             Optional<Tiles> optionParent = allTiles.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString()) && e.isOption()).findAny();
 
             if (mainParent.isPresent()) {
-                Paragraph mainOffer = new Paragraph("\n\n\t\t\t\tElementy dachówkowe dla dachu " + mainParent.get().getPriceListName() + " : " + mainParent.get().getTotalPrice() + "\n\n\n", font12);
+                Paragraph mainOffer = new Paragraph("\n\n\t\t\t\tElementy dachówkowe dla dachu " + mainParent.get().getManufacturer() + " : " + mainParent.get().getTotalPrice() + "\n\n\n", font12);
                 document.add(mainOffer);
+                Set<Tiles> childrens = allTiles.stream().filter(e -> e.getManufacturer().equals(mainParent.get().getManufacturer())).collect(Collectors.toSet());
+                childrens.add(mainParent.get());
 //                Image image = Image.getInstance(mainParent.get().getImageUrl());
 //                image.scaleAbsolute(80f, 50f);
 //                document.add(image);
 
-                columnHeader(baseColor, font12, tilesTable, mainParent.get().getPriceListName());
-                tilesTable.setHeaderRows(1);
-                Set<Tiles> parents = allTiles.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString()) && e.isMain()).collect(Collectors.toSet());
-                Set<Tiles> childrens = allTiles.stream().filter(e -> e.getPriceListName().equals(parents.iterator().next().getPriceListName())).collect(Collectors.toSet());
-                childrens.addAll(parents);
+                columnHeader(baseColor, font12, tilesTable, mainParent.get().getManufacturer());
                 table(childrens, font10, tilesTable);
                 document.add(tilesTable);
+                addSpacesAndTableToDocument(document, tilesTable);
             } else {
                 NotificationInterface.notificationOpen("Nie został wybrany główny dach", NotificationVariant.LUMO_ERROR);
                 logger.debug("No option has been selected in the tile table");
             }
 
             if (optionParent.isPresent()) {
-                String string = " \n" + optionParent.get().getPriceListName() + " z ceną: " + optionParent.get().getTotalPrice();
+                String string = " \n" + optionParent.get().getManufacturer() + " z ceną: " + optionParent.get().getTotalPrice();
                 Paragraph optionalOffers = new Paragraph("\n\n\t\t\t\tOferty Opcjonalne:" +
                         string, font12);
                 document.add(optionalOffers);
             }
 
-            PdfPTable tableAccesories = createTable();
-            columnHeader(baseColor, font12, tableAccesories, "Nazwa");
+            PdfPTable tableAccessories = createTable();
+            columnHeader(baseColor, font12, tableAccessories, "Nazwa");
             Set<Accesories> accesories = accesoriesSet.stream().filter(Accesories::isOffer).collect(Collectors.toSet());
-            table(accesories, font10, tableAccesories);
-            addSpacesAndTableToDocument(document, tableAccesories);
+            table(accesories, font10, tableAccessories);
+            addSpacesAndTableToDocument(document, tableAccessories);
 
             PdfPTable tableGutter = createTable();
             Optional<Gutter> mainGutter = gutterList.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isMain()).findFirst();
@@ -115,10 +114,10 @@ public class GenerateOffer {
             table(setCollars, font10, tableCollars);
             addSpacesAndTableToDocument(document, tableCollars);
 
-            PdfPTable tableAccesoriesWindows = createTable();
-            columnHeader(baseColor, font12, tableAccesoriesWindows, "Nazwa");
-            table(setAccesoriesWindows, font10, tableAccesoriesWindows);
-            addSpacesAndTableToDocument(document, tableAccesoriesWindows);
+            PdfPTable tableAccessoriesWindows = createTable();
+            columnHeader(baseColor, font12, tableAccessoriesWindows, "Nazwa");
+            table(setAccesoriesWindows, font10, tableAccessoriesWindows);
+            addSpacesAndTableToDocument(document, tableAccessoriesWindows);
 
             document.close();
 
@@ -142,33 +141,33 @@ public class GenerateOffer {
         return table;
     }
 
-    private static void columnHeader(BaseColor baseColor, Font font12, PdfPTable tableAccesories, String firstColumnHeader) {
-        cell(font12, tableAccesories, baseColor, firstColumnHeader);
-        cell(font12, tableAccesories, baseColor, "Ilość");
-        cell(font12, tableAccesories, baseColor, "Cena zakupu");
-        cell(font12, tableAccesories, baseColor, "Cena detal");
-        cell(font12, tableAccesories, baseColor, "Cena razem netto");
-        cell(font12, tableAccesories, baseColor, "Cena razem zakup");
-        cell(font12, tableAccesories, baseColor, "Zysk");
+    private static void columnHeader(BaseColor baseColor, Font font12, PdfPTable table, String firstColumnHeader) {
+        cell(font12, table, baseColor, firstColumnHeader);
+        cell(font12, table, baseColor, "Ilość");
+        cell(font12, table, baseColor, "Cena zakupu");
+        cell(font12, table, baseColor, "Cena detal");
+        cell(font12, table, baseColor, "Cena razem netto");
+        cell(font12, table, baseColor, "Cena razem zakup");
+        cell(font12, table, baseColor, "Zysk");
     }
 
-    private static void table(Set<? extends BaseEntity> accesoriesSet, Font font10, PdfPTable pdfPTable) {
-        for (BaseEntity baseEntity : accesoriesSet) {
+    private static void table(Set<? extends BaseEntity> accessoriesSet, Font font10, PdfPTable table) {
+        for (BaseEntity baseEntity : accessoriesSet) {
             if (!baseEntity.getUnitDetalPrice().equals(0d)) {
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getName()), font10));
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getQuantity()), font10));
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getUnitPurchasePrice()), font10));
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getUnitDetalPrice()), font10));
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getAllpriceAfterDiscount()), font10));
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getAllpricePurchase()), font10));
-                pdfPTable.addCell(new Phrase(String.valueOf(baseEntity.getAllprofit()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getName()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getQuantity()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getUnitPurchasePrice()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getUnitDetalPrice()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getAllpriceAfterDiscount()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getAllpricePurchase()), font10));
+                table.addCell(new Phrase(String.valueOf(baseEntity.getAllprofit()), font10));
             }
         }
     }
 
-    private static void cell(Font font, PdfPTable table, BaseColor baseColor, String priceListName) {
-        PdfPCell header1 = new PdfPCell(new Phrase(priceListName, font));
-        header1.setBackgroundColor(baseColor);
-        table.addCell(header1);
+    private static void cell(Font font, PdfPTable table, BaseColor baseColor, String header) {
+        PdfPCell cell = new PdfPCell(new Phrase(header, font));
+        cell.setBackgroundColor(baseColor);
+        table.addCell(cell);
     }
 }

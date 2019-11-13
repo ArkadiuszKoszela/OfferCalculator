@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Route(value = LightningProtectionSystemView.PROTECTION_SYSTEM, layout = MainView.class)
-public class LightningProtectionSystemView extends VerticalLayout implements GridInteraface, BeforeLeaveObserver {
+public class LightningProtectionSystemView extends VerticalLayout implements GridInteraface<LightningProtectionSystem>, BeforeLeaveObserver {
 
     public static final String PROTECTION_SYSTEM = "protection_system";
     private TreeGrid<LightningProtectionSystem> treeGrid = new TreeGrid<>();
@@ -61,28 +61,20 @@ public class LightningProtectionSystemView extends VerticalLayout implements Gri
         binder = new Binder<>(LightningProtectionSystem.class);
         treeGrid.getEditor().setBinder(binder);
 
-        TextField discountField = new TextField();
-        addEnterEvent(treeGrid, discountField);
-        binder.forField(discountField)
-                .withConverter(new StringToIntegerConverter("Błąd"))
-                .bind(LightningProtectionSystem::getDiscount, LightningProtectionSystem::setDiscount);
+        TextField discountField= bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), LightningProtectionSystem::getDiscount, LightningProtectionSystem::setDiscount);
         itemClickListener(treeGrid, discountField);
         discountColumn.setEditorComponent(discountField);
 
-        TextField quantityField = new TextField();
-        binder.forField(quantityField)
-                .withConverter(new StringToDoubleConverter("Błąd"))
-                .bind(LightningProtectionSystem::getQuantity, LightningProtectionSystem::setQuantity);
-        addEnterEvent(treeGrid, quantityField);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), LightningProtectionSystem::getQuantity, LightningProtectionSystem::setQuantity);
         itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
         FooterRow footerRow = treeGrid.appendFooterRow();
 
-        closeListener(treeGrid, binder, binder.getBean());
+        closeListener(treeGrid, binder);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(list)));
-        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("600px");
+
+        settingsGrid(treeGrid);
         return treeGrid;
     }
 
@@ -107,11 +99,6 @@ public class LightningProtectionSystemView extends VerticalLayout implements Gri
 
     private List<LightningProtectionSystem> allLightningSystem(){
         return lightningProtectionSystemRepository.findAll();
-    }
-
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        return null;
     }
 
     @Override

@@ -20,9 +20,6 @@ import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.NotificationInterface;
 import pl.koszela.spring.views.MainView;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -55,8 +52,8 @@ public class AccesoriesPriceListView extends VerticalLayout {
     private List<Accesories> allTilesFromRespository() {
         List<Accesories> all = accesoriesRepository.findAll();
         all.forEach(e -> {
-            if (e.getOption() == null) {
-                e.setOption("BRAK");
+            if (e.getType() == null) {
+                e.setType("BRAK");
             }
         });
         return all;
@@ -72,9 +69,9 @@ public class AccesoriesPriceListView extends VerticalLayout {
         Grid.Column<Accesories> purchaseColumn = grid.addColumn(Accesories::getUnitPurchasePrice).setHeader("Cena zakupu");
         Grid.Column<Accesories> detalPriceColumn = grid.addColumn(Accesories::getUnitDetalPrice).setHeader("Cena detal");
         Grid.Column<Accesories> marginColumn = grid.addColumn(Accesories::getMargin).setHeader("Narzut");
-        Grid.Column<Accesories> optionColumn = grid.addColumn(Accesories::getOption).setHeader("Opcja");
+        Grid.Column<Accesories> optionColumn = grid.addColumn(Accesories::getType).setHeader("Opcja");
         Grid.Column<Accesories> dateColumn = grid.addColumn(Accesories::getDateChange).setHeader("Data modyfikacji");
-        setPriceRetail();
+//        setPriceRetail();
 
         HeaderRow filterRow = grid.appendHeaderRow();
         filter.addValueChangeListener(event -> dataProvider.addFilter(
@@ -88,8 +85,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
 
         getBinder(purchaseColumn, detalPriceColumn, marginColumn, optionColumn);
 
-        grid.setMinHeight("500px");
-        grid.getColumns().forEach(column -> column.setAutoWidth(true));
+//        settingsGrid(grid);
         cennik.add(grid);
         return cennik;
     }
@@ -142,21 +138,21 @@ public class AccesoriesPriceListView extends VerticalLayout {
     private Button refresh() {
         Button refresh = new Button("Refresh");
         refresh.addClickListener(event -> {
-            setPriceRetail();
+//            setPriceRetail();
         });
         return refresh;
     }
 
-    private void setPriceRetail() {
-        for (Accesories accesories : allAccesoriesRepo) {
-            BigDecimal constance = new BigDecimal(100);
-            BigDecimal margin = BigDecimal.valueOf(accesories.getMargin());
-            BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getUnitPurchasePrice());
-            BigDecimal priceDetal = pricePurchase.multiply(margin.divide(constance, 2, RoundingMode.HALF_UP)).add(pricePurchase).setScale(2, RoundingMode.HALF_UP);
-            accesories.setUnitDetalPrice(priceDetal.doubleValue());
-        }
-        grid.getDataProvider().refreshAll();
-    }
+//    private void setPriceRetail() {
+//        for (Accesories accesories : allAccesoriesRepo) {
+//            BigDecimal constance = new BigDecimal(100);
+//            BigDecimal margin = BigDecimal.valueOf(accesories.getMargin());
+//            BigDecimal pricePurchase = BigDecimal.valueOf(accesories.getUnitPurchasePrice());
+//            BigDecimal priceDetal = pricePurchase.multiply(margin.divide(constance, 2, RoundingMode.HALF_UP)).add(pricePurchase).setScale(2, RoundingMode.HALF_UP);
+//            accesories.setUnitDetalPrice(priceDetal.doubleValue());
+//        }
+//        grid.getDataProvider().refreshAll();
+//    }
 
     private Button saveToRepo() {
         Button save = new Button("Zapisz do bazy");
@@ -166,7 +162,7 @@ public class AccesoriesPriceListView extends VerticalLayout {
                 for (Accesories accesories : allAccesoriesRepo) {
                     if (old.getName().equals(accesories.getName())) {
                         if (!old.getUnitPurchasePrice().equals(accesories.getUnitPurchasePrice())
-                                || !old.getMargin().equals(accesories.getMargin()) || !old.getOption().equals(accesories.getOption())) {
+                                || !old.getMargin().equals(accesories.getMargin()) || !old.getType().equals(accesories.getType())) {
                             ZonedDateTime dateTime = ZonedDateTime.now(ZoneId.of("Poland"));
                             DateTimeFormatter myDateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                             accesories.setDateChange(dateTime.format(myDateFormat));

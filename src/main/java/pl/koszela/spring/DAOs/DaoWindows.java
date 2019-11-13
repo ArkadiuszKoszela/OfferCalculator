@@ -9,9 +9,9 @@ import pl.koszela.spring.repositories.WindowsRepository;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
+
+import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
 
 @Service
 public class DaoWindows implements Dao {
@@ -42,7 +42,11 @@ public class DaoWindows implements Dao {
                 windows.setManufacturer(nameFromURL.getName(filePath));
                 windows.setQuantity(0d);
                 windows.setDiscount(0);
-                windows.setUnitPurchasePrice(BigDecimal.valueOf(windows.getUnitDetalPrice() * 0.7).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                windows.setBasicDiscount(36);
+                windows.setAdditionalDiscount(0);
+                windows.setPromotionDiscount(0);
+                windows.setSkontoDiscount(0);
+                windows.setUnitPurchasePrice(calculatePurchasePrice(windows));
                 windowsRepository.save(windows);
             }
         } catch (IOException e) {

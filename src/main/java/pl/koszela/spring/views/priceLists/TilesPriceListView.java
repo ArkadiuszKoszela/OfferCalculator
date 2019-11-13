@@ -10,9 +10,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
@@ -20,34 +20,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.CategoryOfTiles;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.TilesRepository;
+import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NotificationInterface;
 import pl.koszela.spring.views.MainView;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Route(value = TilesPriceListView.TILES_PRICE_LIST, layout = MainView.class)
-public class TilesPriceListView extends VerticalLayout {
+public class TilesPriceListView extends VerticalLayout implements GridInteraface<Tiles> {
 
     public static final String TILES_PRICE_LIST = "tilesPriceList";
 
     private TilesRepository tilesRepository;
 
-    private VerticalLayout mainLayout = new VerticalLayout();
-
     private TreeGrid<Tiles> grid = new TreeGrid<>();
     private List<Tiles> allTilesRepo = new ArrayList<>();
+    private Binder<Tiles> binder;
 
     @Autowired
     public TilesPriceListView(TilesRepository tilesRepository) {
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
 
+        allTilesRepo = allTilesFromRepository();
         add(createGrid());
-        add(refresh());
+//        add(refresh());
         add(saveToRepo());
     }
 
@@ -55,13 +54,13 @@ public class TilesPriceListView extends VerticalLayout {
         return tilesRepository.findAll();
     }
 
-    private VerticalLayout createGrid() {
+    @Override
+    public Grid<Tiles> createGrid() {
         TextField filter = new TextField();
-        allTilesRepo = allTilesFromRepository();
-        ListDataProvider<Tiles> dataProvider = new ListDataProvider<>(allTilesRepo);
-        grid.setDataProvider(new TreeDataProvider<>(addItems()));
+        TreeDataProvider<Tiles> treeDataProvider = new TreeDataProvider<>(addItems(allTilesRepo));
+        grid.setDataProvider(treeDataProvider);
 
-        Grid.Column<Tiles> priceListNameColumn = grid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa Cennika");
+        Grid.Column<Tiles> priceListNameColumn = grid.addHierarchyColumn(Tiles::getManufacturer).setHeader("Nazwa Cennika");
         Grid.Column<Tiles> nameColumn = grid.addColumn(Tiles::getName).setHeader("Nazwa");
         Grid.Column<Tiles> priceColumn = grid.addColumn(Tiles::getUnitDetalPrice).setHeader("Cena detal");
         Grid.Column<Tiles> basicDiscountColumn = grid.addColumn(Tiles::getBasicDiscount).setHeader("Podstawowy rabat");
@@ -81,9 +80,12 @@ public class TilesPriceListView extends VerticalLayout {
             }
         }).setHeader("Zdjęcie");
 
+        binder = new Binder<>(Tiles.class);
+        grid.getEditor().setBinder(binder);
+
         HeaderRow filterRow = grid.appendHeaderRow();
-        filter.addValueChangeListener(event -> dataProvider.addFilter(
-                tiles -> StringUtils.containsIgnoreCase(tiles.getPriceListName(), filter.getValue())
+        filter.addValueChangeListener(event -> treeDataProvider.addFilter(
+                tiles -> StringUtils.containsIgnoreCase(tiles.getManufacturer(), filter.getValue())
         ));
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -91,74 +93,49 @@ public class TilesPriceListView extends VerticalLayout {
         filter.setSizeFull();
         filter.setPlaceholder("Filter");
 
-        grid.getColumns().forEach(column -> column.setAutoWidth(true));
+        TextField basicDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Tiles::getBasicDiscount, Tiles::setBasicDiscount);
+        itemClickListener(grid, basicDiscount);
+        basicDiscountColumn.setEditorComponent(basicDiscount);
 
-        getBinder(basicDiscountColumn, promotionDiscountColumn, additionalDiscountColumn, skontoDiscountColumn, imageUrlColumn);
+        TextField promotionDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Tiles::getPromotionDiscount, Tiles::setPromotionDiscount);
+        itemClickListener(grid, promotionDiscount);
+        promotionDiscountColumn.setEditorComponent(promotionDiscount);
 
-        grid.setMinHeight("500px");
-        grid.setMinWidth("1200px");
-        mainLayout.add(grid);
-        return mainLayout;
+        TextField additionalDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Tiles::getAdditionalDiscount, Tiles::setAdditionalDiscount);
+        itemClickListener(grid, additionalDiscount);
+        additionalDiscountColumn.setEditorComponent(additionalDiscount);
+
+        TextField skontoDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Tiles::getSkontoDiscount, Tiles::setSkontoDiscount);
+        itemClickListener(grid, skontoDiscount);
+        skontoDiscountColumn.setEditorComponent(skontoDiscount);
+
+        closeListener(grid, binder);
+        settingsGrid(grid);
+        return grid;
     }
 
-    private void getBinder(Grid.Column<Tiles> basicDiscountColumn, Grid.Column<Tiles> promotionDiscountColumn, Grid.Column<Tiles> additionalDiscountColumn,
-                           Grid.Column<Tiles> skontoDiscountColumn, Grid.Column<Tiles> imageUrlColumn) {
-        Binder<Tiles> binder = new Binder<>(Tiles.class);
-        grid.getEditor().setBinder(binder);
-
-        TextField basicDiscount = new TextField();
-        TextField promotionDiscount = new TextField();
-        TextField additionalDiscount = new TextField();
-        TextField skontoDiscount = new TextField();
-        TextField imageUrl = new TextField();
-        binder(basicDiscountColumn, binder, basicDiscount, "basicDiscount");
-        binder(promotionDiscountColumn, binder, promotionDiscount, "promotionDiscount");
-        binder(additionalDiscountColumn, binder, additionalDiscount, "additionalDiscount");
-        binder(skontoDiscountColumn, binder, skontoDiscount, "skontoDiscount");
-
-        imageUrl.getElement()
-                .addEventListener("keydown",
-                        event -> grid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
-        binder.forField(imageUrl)
-                .bind("imageUrl");
-        imageUrlColumn.setEditorComponent(imageUrl);
-
-        grid.addItemDoubleClickListener(event -> {
-            grid.getEditor().editItem(event.getItem());
-            basicDiscount.focus();
-            promotionDiscount.focus();
-            additionalDiscount.focus();
-            skontoDiscount.focus();
-            imageUrl.focus();
-        });
-    }
-
-    private void binder(Grid.Column<Tiles> column, Binder<Tiles> binder, TextField ageField, String toBind) {
-        ageField.getElement()
-                .addEventListener("keydown",
-                        event -> grid.getEditor().cancel())
-                .setFilter("event.key === 'Enter'");
-        binder.forField(ageField)
-                .withConverter(new StringToIntegerConverter("Age must be a number."))
-                .bind(toBind);
-        column.setEditorComponent(ageField);
-    }
-
-    private Button refresh() {
-        return new Button("Refresh", event -> {
-            for (Tiles tiles : allTilesRepo) {
-                BigDecimal constance = new BigDecimal(100);
-                BigDecimal pricePurchase = BigDecimal.valueOf(tiles.getUnitDetalPrice());
-                BigDecimal firstDiscount = (constance.subtract(new BigDecimal(tiles.getBasicDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
-                BigDecimal secondDiscount = (constance.subtract(new BigDecimal(tiles.getPromotionDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
-                BigDecimal thirdDiscount = (constance.subtract(new BigDecimal(tiles.getAdditionalDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
-                BigDecimal fourthDiscount = (constance.subtract(new BigDecimal(tiles.getSkontoDiscount()))).divide(constance, 2, RoundingMode.HALF_UP);
-                BigDecimal result = pricePurchase.multiply(firstDiscount).multiply(secondDiscount).multiply(thirdDiscount).multiply(fourthDiscount).setScale(2, RoundingMode.HALF_UP);
-                tiles.setUnitPurchasePrice(result.doubleValue());
+    @Override
+    public TreeData<Tiles> addItems(List list) {
+        TreeData<Tiles> treeData = new TreeData<>();
+        if (allTilesRepo != null) {
+            Set<Tiles> parents = allTilesRepo.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
+            for (Tiles parent : parents) {
+                List<Tiles> childrens = allTilesRepo.stream().filter(e -> e.getManufacturer().equals(parent.getManufacturer())).collect(Collectors.toList());
+                for (int i = 0; i < childrens.size(); i++) {
+                    if (i == 0) {
+                        treeData.addItem(null, parent);
+                    } else if (!childrens.get(i).getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())) {
+                        treeData.addItem(parent, childrens.get(i));
+                    }
+                }
             }
-            grid.getDataProvider().refreshAll();
-        });
+        }
+        return treeData;
+    }
+
+    @Override
+    public ComponentRenderer createComponent() {
+        return null;
     }
 
     private Button saveToRepo() {
@@ -167,7 +144,7 @@ public class TilesPriceListView extends VerticalLayout {
 
             for (Tiles old : fromRepo) {
                 for (Tiles tiles : allTilesRepo) {
-                    if (old.getPriceListName().equals(tiles.getPriceListName()) && old.getName().equals(tiles.getName())) {
+                    if (old.getManufacturer().equals(tiles.getManufacturer()) && old.getName().equals(tiles.getName())) {
                         if (!old.getBasicDiscount().equals(tiles.getBasicDiscount()) || !old.getAdditionalDiscount().equals(tiles.getAdditionalDiscount())
                                 || !old.getPromotionDiscount().equals(tiles.getPromotionDiscount()) || !old.getSkontoDiscount().equals(tiles.getSkontoDiscount())
                                 || !old.getImageUrl().equals(tiles.getImageUrl())) {
@@ -183,23 +160,5 @@ public class TilesPriceListView extends VerticalLayout {
             NotificationInterface.notificationOpen("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")), NotificationVariant.LUMO_SUCCESS);
             grid.getDataProvider().refreshAll();
         });
-    }
-
-    private TreeData<Tiles> addItems() {
-        TreeData<Tiles> treeData = new TreeData<>();
-        if (allTilesRepo != null) {
-            Set<Tiles> parents = allTilesRepo.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
-            for (Tiles parent : parents) {
-                List<Tiles> childrens = allTilesRepo.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
-                for (int i = 0; i < childrens.size(); i++) {
-                    if (i == 0) {
-                        treeData.addItem(null, parent);
-                    } else if (!childrens.get(i).getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())) {
-                        treeData.addItem(parent, childrens.get(i));
-                    }
-                }
-            }
-        }
-        return treeData;
     }
 }

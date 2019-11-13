@@ -5,18 +5,21 @@ import java.math.BigDecimal;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class BaseEntity {
+public class BaseEntity extends Discounts {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
     private String name;
+    private String manufacturer;
     private Double quantity;
-    private Integer discount;
     private Double unitPurchasePrice;
     private Double unitDetalPrice;
     private Double allpriceAfterDiscount;
     private Double allpricePurchase;
     private Double allprofit;
+    private String category;
+    private String size;
+    private String type;
 
     public Long getId() {
         return id;
@@ -40,14 +43,6 @@ public class BaseEntity {
 
     public void setQuantity(Double quantity) {
         this.quantity = quantity;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
     }
 
     public Double getUnitPurchasePrice() {
@@ -88,5 +83,37 @@ public class BaseEntity {
 
     public void setAllprofit(Double allprofit) {
         this.allprofit = allprofit;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 }

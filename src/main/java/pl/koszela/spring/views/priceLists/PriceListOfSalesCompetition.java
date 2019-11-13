@@ -5,10 +5,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
-import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import pl.koszela.spring.entities.Competition;
@@ -22,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Route(value = PriceListOfSalesCompetition.PRICE_LIST_OF_SALES_COMPETITION, layout = MainView.class)
-public class PriceListOfSalesCompetition extends VerticalLayout implements GridInteraface {
+public class PriceListOfSalesCompetition extends VerticalLayout implements GridInteraface<Competition> {
 
     public static final String PRICE_LIST_OF_SALES_COMPETITION = "competition";
     private TreeGrid<Competition> treeGrid = new TreeGrid<>();
@@ -45,14 +43,12 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         binder = new Binder<>(Competition.class);
         treeGrid.getEditor().setBinder(binder);
 
-        TextField priceField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
+        TextField priceField = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Competition::getDiscount, Competition::setDiscount);
         itemClickListener(treeGrid, priceField);
         cena.setEditorComponent(priceField);
 
 
-//        closeListener(treeGrid, binder, binder.getBean());
-        treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
-        treeGrid.setMinHeight("750px");
+        settingsGrid(treeGrid);
         return treeGrid;
     }
 
@@ -73,16 +69,6 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
             }
         }
         return treeData;
-    }
-
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        TextField textField = new TextField();
-        addEnterEvent(treeGrid, textField);
-        binder.forField(textField)
-                .withConverter(stringToDoubleConverter)
-                .bind(Competition::getPrice, Competition::setPrice);
-        return textField;
     }
 
     @Override

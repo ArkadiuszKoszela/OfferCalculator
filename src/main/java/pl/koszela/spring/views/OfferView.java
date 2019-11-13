@@ -4,7 +4,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.FooterRow;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
@@ -19,7 +18,6 @@ import com.vaadin.flow.server.VaadinSession;
 import pl.koszela.spring.entities.CategoryOfTiles;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.service.GridInteraface;
-import pl.koszela.spring.service.NotificationInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,7 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
-public class OfferView extends VerticalLayout implements GridInteraface {
+public class OfferView extends VerticalLayout implements GridInteraface<Tiles> {
 
     static final String CREATE_OFFER = "createOffer";
 
@@ -43,9 +41,9 @@ public class OfferView extends VerticalLayout implements GridInteraface {
 
     @Override
     public TreeGrid createGrid() {
-        Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getPriceListName).setHeader("Nazwa cennika");
+        Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getManufacturer).setHeader("Nazwa cennika");
         Grid.Column<Tiles> nameColumn = treeGrid.addColumn(Tiles::getName).setResizable(true).setHeader("Kategoria");
-        treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
+        Grid.Column<Tiles> quantityColumn = treeGrid.addColumn(Tiles::getQuantity).setHeader("Ilość");
         Grid.Column<Tiles> discount = treeGrid.addColumn(Tiles::getDiscount).setHeader("Rabat");
         treeGrid.addColumn(Tiles::getUnitDetalPrice).setHeader("Cena detal");
         treeGrid.addColumn(Tiles::getUnitPurchasePrice).setHeader("Cena zakupu");
@@ -60,20 +58,23 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         FooterRow footerRow = treeGrid.appendFooterRow();
         treeGrid.getEditor().setBinder(binder);
 
-        TextField discountEditField = editField(new StringToIntegerConverter("Błąd"), new StringToDoubleConverter("Błąd"));
-        discount.setEditorComponent(discountEditField);
-        addEnterEvent(treeGrid, discountEditField);
+        TextField discountEditField = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Tiles::getDiscount, Tiles::setDiscount);
         itemClickListener(treeGrid, discountEditField);
+        discount.setEditorComponent(discountEditField);
 
-        closeListener(treeGrid, binder, binder.getBean());
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Tiles::getQuantity, Tiles::setQuantity);
+        itemClickListener(treeGrid, quantityField);
+        quantityColumn.setEditorComponent(quantityField);
+
+        closeListener(treeGrid, binder);
 
         Button calculate = refreshButton(treeGrid);
 
-        readBeans(binder);
+        readBeans(set);
         footerRow.getCell(priceListName).setComponent(calculate);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
-        treeGrid.getColumns().forEach(e -> e.setAutoWidth(true));
-        treeGrid.setMinHeight("600px");
+
+        settingsGrid(treeGrid);
         return treeGrid;
     }
 
@@ -83,7 +84,7 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         if (set != null) {
             Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
-                List<Tiles> childrens = set.stream().filter(e -> e.getPriceListName().equals(parent.getPriceListName())).collect(Collectors.toList());
+                List<Tiles> childrens = set.stream().filter(e -> e.getManufacturer().equals(parent.getManufacturer())).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, parent);
@@ -96,21 +97,11 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         return treeData;
     }
 
-    @Override
-    public TextField editField(StringToIntegerConverter stringToIntegerConverter, StringToDoubleConverter stringToDoubleConverter) {
-        TextField textField = new TextField();
-        addEnterEvent(treeGrid, textField);
-        binder.forField(textField)
-                .withConverter(stringToIntegerConverter)
-                .bind(Tiles::getDiscount, Tiles::setDiscount);
-        return textField;
-    }
-
     private Button refreshButton(TreeGrid<Tiles> treeGrid) {
         return new Button("Refresh", buttonClickEvent -> {
             Set<Tiles> mainsInPriceList = set.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles tiles : mainsInPriceList) {
-                Set<Tiles> onePriceList = set.stream().filter(e -> e.getPriceListName().equals(tiles.getPriceListName())).collect(Collectors.toSet());
+                Set<Tiles> onePriceList = set.stream().filter(e -> e.getManufacturer().equals(tiles.getManufacturer())).collect(Collectors.toSet());
 
                 Double totalPrice = onePriceList.stream().map(Tiles::getAllpriceAfterDiscount).reduce(Double::sum).get();
                 Double totalProfit = onePriceList.stream().map(Tiles::getAllprofit).reduce(Double::sum).get();
@@ -142,12 +133,12 @@ public class OfferView extends VerticalLayout implements GridInteraface {
         });
     }
 
-    private void readBeans(Binder<Tiles> binder) {
-        for (Tiles tiles : set) {
-            tiles.setAllpricePurchase(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            tiles.setAllpriceAfterDiscount(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * (100 - tiles.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            tiles.setAllprofit(BigDecimal.valueOf(tiles.getAllpriceAfterDiscount() - tiles.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            binder.setBean(tiles);
-        }
-    }
+//    private void readBeans(Binder<Tiles> binder) {
+//        for (Tiles tiles : set) {
+//            tiles.setAllpricePurchase(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//            tiles.setAllpriceAfterDiscount(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * (100 - tiles.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//            tiles.setAllprofit(BigDecimal.valueOf(tiles.getAllpriceAfterDiscount() - tiles.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//            binder.setBean(tiles);
+//        }
+//    }
 }
