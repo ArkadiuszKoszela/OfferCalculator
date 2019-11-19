@@ -8,20 +8,20 @@ import java.math.RoundingMode;
 public class CalculatePrices {
 
     public static Double calculatePurchasePrice(BaseEntity baseEntity) {
-        BigDecimal pricePurchase = BigDecimal.valueOf(baseEntity.getUnitDetalPrice());
-        BigDecimal result = BigDecimal.valueOf(4 - cos(baseEntity.getBasicDiscount()) - cos(baseEntity.getAdditionalDiscount()) - cos(baseEntity.getPromotionDiscount()) - cos(baseEntity.getSkontoDiscount()));
-        BigDecimal result1 = BigDecimal.valueOf(1).subtract(result).setScale(2, RoundingMode.HALF_UP);
-        return pricePurchase.multiply(result1).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        BigDecimal priceDetal = BigDecimal.valueOf(baseEntity.getUnitDetalPrice());
+        BigDecimal discounts = BigDecimal.valueOf(4 - discount(baseEntity.getBasicDiscount()) - discount(baseEntity.getAdditionalDiscount()) - discount(baseEntity.getPromotionDiscount()) - discount(baseEntity.getSkontoDiscount()));
+        BigDecimal result = BigDecimal.valueOf(1).subtract(discounts).setScale(2, RoundingMode.HALF_UP);
+        return priceDetal.multiply(result).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    private static Double cos(Integer value) {
+    private static Double discount(Integer value) {
         return BigDecimal.valueOf(100 - value).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public static Double calculateDetalPrice(BaseEntity baseEntity) {
+    static Double calculateDetalPrice(BaseEntity baseEntity) {
         BigDecimal pricePurchase = BigDecimal.valueOf(baseEntity.getUnitPurchasePrice());
-        BigDecimal result = BigDecimal.valueOf(4 - cos(baseEntity.getBasicDiscount()) - cos(baseEntity.getAdditionalDiscount()) - cos(baseEntity.getPromotionDiscount()) - cos(baseEntity.getSkontoDiscount()));
-        BigDecimal result1 = BigDecimal.valueOf(1).subtract(result).setScale(2, RoundingMode.HALF_UP);
-        return pricePurchase.divide(result1, 2, RoundingMode.HALF_UP).doubleValue();
+        BigDecimal discounts = BigDecimal.valueOf(4 - discount(baseEntity.getBasicDiscount()) - discount(baseEntity.getAdditionalDiscount()) - discount(baseEntity.getPromotionDiscount()) - discount(baseEntity.getSkontoDiscount()));
+        BigDecimal result = BigDecimal.valueOf(1).subtract(discounts).setScale(2, RoundingMode.HALF_UP);
+        return pricePurchase.divide(result, 2, RoundingMode.HALF_UP).doubleValue();
     }
 }

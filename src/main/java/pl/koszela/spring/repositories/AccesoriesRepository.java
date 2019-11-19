@@ -1,8 +1,8 @@
 package pl.koszela.spring.repositories;
 
 import org.springframework.stereotype.Repository;
-import pl.koszela.spring.entities.Accesories;
+import pl.koszela.spring.entities.Accessories;
 
 @Repository(value = "repo_accesories")
-public interface AccesoriesRepository extends BaseRepository<Accesories> {
+public interface AccesoriesRepository extends BaseRepository<Accessories> {
 }

@@ -17,11 +17,11 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import pl.koszela.spring.entities.Accessories;
 import pl.koszela.spring.entities.InputData;
-import pl.koszela.spring.entities.Accesories;
 import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
-import pl.koszela.spring.service.NameNumberFields;
+import staticField.TitleNumberFields;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -29,14 +29,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Route(value = AccesoriesView.SELECT_ACCESORIES, layout = MainView.class)
-public class AccesoriesView extends VerticalLayout implements GridInteraface<Accesories>, BeforeLeaveObserver {
+public class AccesoriesView extends VerticalLayout implements GridInteraface<Accessories>, BeforeLeaveObserver {
     static final String SELECT_ACCESORIES = "accesories";
 
-    private TreeGrid<Accesories> treeGrid = new TreeGrid<>();
+    private TreeGrid<Accessories> treeGrid = new TreeGrid<>();
     private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-    private Set<Accesories> set = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+    private Set<Accessories> set = (Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
     private AccesoriesRepository accesoriesRepository;
-    private Binder<Accesories> binder;
+    private Binder<Accessories> binder;
     private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
 
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
@@ -50,28 +50,27 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
         add(createGrid());
     }
 
-    @Override
     public Grid createGrid() {
-        Grid.Column<Accesories> nameColumn = treeGrid.addHierarchyColumn(Accesories::getName).setHeader("Nazwa");
-        Grid.Column<Accesories> quantityColumn = treeGrid.addColumn(Accesories::getQuantity).setHeader("Ilość");
-        Grid.Column<Accesories> discountColumn = treeGrid.addColumn(Accesories::getDiscount).setHeader("Rabat");
-        Grid.Column<Accesories> detalPriceColumn = treeGrid.addColumn(Accesories::getUnitDetalPrice).setHeader("Cena jedn. detal");
-        Grid.Column<Accesories> purchasePriceColumn = treeGrid.addColumn(Accesories::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
-        Grid.Column<Accesories> allPricePurchaseColumn = treeGrid.addColumn(Accesories::getAllpricePurchase).setHeader("Razem zakup");
-        Grid.Column<Accesories> allPriceDetalColumn = treeGrid.addColumn(Accesories::getAllpriceAfterDiscount).setHeader("Razem Detal");
-        Grid.Column<Accesories> profitColumn = treeGrid.addColumn(Accesories::getAllprofit).setHeader("Zysk");
+        Grid.Column<Accessories> nameColumn = treeGrid.addHierarchyColumn(Accessories::getName).setHeader("Nazwa");
+        Grid.Column<Accessories> quantityColumn = treeGrid.addColumn(Accessories::getQuantity).setHeader("Ilość");
+        Grid.Column<Accessories> discountColumn = treeGrid.addColumn(Accessories::getDiscount).setHeader("Rabat");
+        Grid.Column<Accessories> detalPriceColumn = treeGrid.addColumn(Accessories::getUnitDetalPrice).setHeader("Cena jedn. detal");
+        Grid.Column<Accessories> purchasePriceColumn = treeGrid.addColumn(Accessories::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
+        Grid.Column<Accessories> allPricePurchaseColumn = treeGrid.addColumn(Accessories::getAllpricePurchase).setHeader("Razem zakup");
+        Grid.Column<Accessories> allPriceDetalColumn = treeGrid.addColumn(Accessories::getAllpriceAfterDiscount).setHeader("Razem Detal");
+        Grid.Column<Accessories> profitColumn = treeGrid.addColumn(Accessories::getAllprofit).setHeader("Zysk");
         treeGrid.addColumn(createComponent()).setHeader("Opcje");
 
-        binder = new Binder<>(Accesories.class);
+        binder = new Binder<>(Accessories.class);
         treeGrid.getEditor().setBinder(binder);
 
         checkbox();
 
-        TextField discountEditField= bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Accesories::getDiscount, Accesories::setDiscount);
+        TextField discountEditField= bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Accessories::getDiscount, Accessories::setDiscount);
         itemClickListener(treeGrid, discountEditField);
         discountColumn.setEditorComponent(discountEditField);
 
-        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Accesories::getQuantity, Accesories::setQuantity);
+        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Accessories::getQuantity, Accessories::setQuantity);
         itemClickListener(treeGrid, quantityField);
         quantityColumn.setEditorComponent(quantityField);
 
@@ -82,13 +81,13 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
     }
 
     @Override
-    public TreeData<Accesories> addItems(List list) {
-        TreeData<Accesories> treeData = new TreeData<>();
+    public TreeData<Accessories> addItems(List list) {
+        TreeData<Accessories> treeData = new TreeData<>();
         if (set != null) {
 //            Set<String> parents = new HashSet<>();
-            Set<String> parents = set.stream().map(Accesories::getCategory).collect(Collectors.toSet());
+            Set<String> parents = set.stream().map(Accessories::getCategory).collect(Collectors.toSet());
             for (String parent : parents) {
-                List<Accesories> childrens = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
+                List<Accessories> childrens = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
                 for (int i = 0; i < childrens.size(); i++) {
                     if (i == 0) {
                         treeData.addItem(null, childrens.stream().findFirst().get());
@@ -102,7 +101,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
     }
 
     @Override
-    public ComponentRenderer<VerticalLayout, Accesories> createComponent() {
+    public ComponentRenderer<VerticalLayout, Accessories> createComponent() {
         return new ComponentRenderer<>(accesories -> {
             Checkbox mainCheckBox = new Checkbox("Dodać ?");
             mainCheckBox.setValue(accesories.isOffer());
@@ -113,24 +112,24 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
         });
     }
 
-    private List<Accesories> addQuantityToList(List<Accesories> list) {
-        for (Accesories accesories : list) {
-            accesories.setOffer(false);
-            accesories.setDiscount(0);
-            accesories.setQuantity(value(accesories.getCategory()));
-            accesories.setAllpricePurchase(new BigDecimal(accesories.getQuantity() * accesories.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            accesories.setAllpriceAfterDiscount(new BigDecimal(accesories.getQuantity() * accesories.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            accesories.setAllprofit(new BigDecimal(accesories.getAllpriceAfterDiscount() - accesories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+    private List<Accessories> addQuantityToList(List<Accessories> list) {
+        for (Accessories accessories : list) {
+            accessories.setOffer(false);
+            accessories.setDiscount(0);
+            accessories.setQuantity(value(accessories.getCategory()));
+            accessories.setAllpricePurchase(new BigDecimal(accessories.getQuantity() * accessories.getUnitPurchasePrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accessories.setAllpriceAfterDiscount(new BigDecimal(accessories.getQuantity() * accessories.getUnitDetalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            accessories.setAllprofit(new BigDecimal(accessories.getAllpriceAfterDiscount() - accessories.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
         }
         return list;
     }
 
     private Double value(String category) {
-        Optional<InputData> dlugoscKalenic = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.DLUGOSC_KALENIC.toString())).findFirst();
-        Optional<InputData> obwodOkapu = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.OBWOD_OKAPU.toString())).findFirst();
-        Optional<InputData> dlugoscOkapu = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.DLUGOSC_OKAPU.toString())).findFirst();
-        Optional<InputData> dlugoscKoszy = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.DLUGOSC_KOSZY.toString())).findFirst();
-        Optional<InputData> powierzchniaPolaci = setInput.stream().filter(e -> e.getName().equals(NameNumberFields.POWIERZCHNIA_POLACI.toString())).findFirst();
+        Optional<InputData> dlugoscKalenic = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.DLUGOSC_KALENIC.toString())).findFirst();
+        Optional<InputData> obwodOkapu = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.OBWOD_OKAPU.toString())).findFirst();
+        Optional<InputData> dlugoscOkapu = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.DLUGOSC_OKAPU.toString())).findFirst();
+        Optional<InputData> dlugoscKoszy = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.DLUGOSC_KOSZY.toString())).findFirst();
+        Optional<InputData> powierzchniaPolaci = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.POWIERZCHNIA_POLACI.toString())).findFirst();
         switch (category) {
             case "wspornik":
                 if(dlugoscKalenic.isPresent())
@@ -178,8 +177,8 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
 
     private void checkbox() {
         checkboxGroup.addValueChangeListener(e -> {
-            List<Accesories> all = accesoriesRepository.findAll();
-            List<Accesories> newValue = all.stream().filter(f -> f.getType().equals(e.getValue())).collect(Collectors.toList());
+            List<Accessories> all = accesoriesRepository.findAll();
+            List<Accessories> newValue = all.stream().filter(f -> f.getType().equals(e.getValue())).collect(Collectors.toList());
             set = new HashSet<>(addQuantityToList(newValue));
             treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList<>())));
             treeGrid.getDataProvider().refreshAll();

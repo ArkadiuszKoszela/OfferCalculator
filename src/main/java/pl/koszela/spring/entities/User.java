@@ -16,16 +16,24 @@ public class User {
     private Long id;
     @OneToOne
     private PersonalData personalData;
-    @OneToOne
-    private Windows windows;
-    @OneToOne
-    private Collar collar;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_windows",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "windows_id")
+    )
+    private Set<Windows> userWindows = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_collars",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "collars_id")
+    )
+    private Set<Collar> userCollars;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_accesories",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "accesories_id")
     )
-    private Set<Accesories> userAccesories = new HashSet<>();
+    private Set<Accessories> userAccesories = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_tiles",
@@ -45,9 +53,16 @@ public class User {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany
     @JoinTable(name = "user_input_data",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "input_data_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "input_data_id"))
     private List<InputData> inputData = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_accessories_windows",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "accessories_windows_id")
+    )
+    private Set<AccessoriesWindows> userAccesoriesWindows = new HashSet<>();
 
     public User() {
     }
@@ -68,20 +83,20 @@ public class User {
         this.personalData = personalData;
     }
 
-    public Windows getWindows() {
-        return windows;
+    public Set<Windows> getUserWindows() {
+        return userWindows;
     }
 
-    public void setWindows(Windows windows) {
-        this.windows = windows;
+    public void setUserWindows(Set<Windows> userWindows) {
+        this.userWindows = userWindows;
     }
 
-    public Collar getCollar() {
-        return collar;
+    public Set<Collar> getUserCollars() {
+        return userCollars;
     }
 
-    public void setCollar(Collar collar) {
-        this.collar = collar;
+    public void setUserCollars(Set<Collar> userCollars) {
+        this.userCollars = userCollars;
     }
 
     public Set<Tiles> getTiles() {
@@ -92,11 +107,11 @@ public class User {
         this.userTiles = tiles;
     }
 
-    public Set<Accesories> getUserAccesories() {
+    public Set<Accessories> getUserAccesories() {
         return userAccesories;
     }
 
-    public void setUserAccesories(Set<Accesories> userAccesories) {
+    public void setUserAccesories(Set<Accessories> userAccesories) {
         this.userAccesories = userAccesories;
     }
 
@@ -114,5 +129,13 @@ public class User {
 
     public void setInputData(List<InputData> inputData) {
         this.inputData = inputData;
+    }
+
+    public Set<AccessoriesWindows> getUserAccesoriesWindows() {
+        return userAccesoriesWindows;
+    }
+
+    public void setUserAccesoriesWindows(Set<AccessoriesWindows> userAccesoriesWindows) {
+        this.userAccesoriesWindows = userAccesoriesWindows;
     }
 }

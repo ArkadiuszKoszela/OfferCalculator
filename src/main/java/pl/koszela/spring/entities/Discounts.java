@@ -4,23 +4,13 @@ import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Discounts {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
+public class Discounts extends IDs{
+
     private Integer discount;
     private Integer basicDiscount;
     private Integer promotionDiscount;
     private Integer additionalDiscount;
     private Integer skontoDiscount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Integer getDiscount() {
         return discount;

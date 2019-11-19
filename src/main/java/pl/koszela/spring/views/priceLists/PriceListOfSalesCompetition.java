@@ -35,7 +35,6 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         add(createGrid());
     }
 
-    @Override
     public TreeGrid createGrid() {
         Grid.Column<Competition> nazwa = treeGrid.addHierarchyColumn(Competition::getName).setHeader("Nazwa");
         Grid.Column<Competition> cena = treeGrid.addColumn(Competition::getPrice).setHeader("Cena");

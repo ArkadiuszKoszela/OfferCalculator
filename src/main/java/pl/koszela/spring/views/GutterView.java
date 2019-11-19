@@ -42,7 +42,6 @@ public class GutterView extends VerticalLayout implements GridInteraface<Gutter>
         add(createGrid());
     }
 
-    @Override
     public TreeGrid createGrid() {
         Grid.Column<Gutter> nameColumn = treeGrid.addHierarchyColumn(Gutter::getName).setResizable(true).setHeader("Nazwa");
         Grid.Column<Gutter> quantityColumn = treeGrid.addColumn(Gutter::getQuantity).setHeader("Ilość");

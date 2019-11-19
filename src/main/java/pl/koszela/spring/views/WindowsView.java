@@ -45,7 +45,6 @@ public class WindowsView extends VerticalLayout implements GridInteraface<Window
         add(createGrid());
     }
 
-    @Override
     public TreeGrid<Windows> createGrid() {
         treeGrid.addHierarchyColumn(Windows::getName).setHeader("Nazwa");
         treeGrid.addColumn(Windows::getSize).setHeader("Rozmiar");

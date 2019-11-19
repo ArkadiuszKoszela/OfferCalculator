@@ -19,8 +19,9 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accesories;
+import pl.koszela.spring.entities.Accessories;
 import pl.koszela.spring.entities.Fireside;
 import pl.koszela.spring.entities.FiresideDTO;
 import pl.koszela.spring.entities.Windows;
@@ -40,7 +41,7 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
     private FiresideRepository firesideRepository;
 
     private Grid<FiresideDTO> grid = new Grid<>();
-    private Set<FiresideDTO> setFireside = (Set<FiresideDTO>) VaadinSession.getCurrent().getSession().getAttribute("fireside");
+    private List<Fireside> listFireside = (List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside");
     private Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose");
     private Binder<FiresideDTO> binder;
     private List<FiresideDTO> firesideInGrid = new ArrayList<>();
@@ -68,7 +69,6 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
         return formLayout;
     }
 
-    @Override
     public Grid createGrid() {
         Grid.Column<FiresideDTO> nameColumn = grid.addColumn(FiresideDTO::getName).setHeader("Nazwa");
         grid.addColumn(FiresideDTO::getCategory).setHeader("Kategoria");
@@ -96,7 +96,7 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
 
         closeListener(grid, binder);
 
-        readBeans(binder);
+//        readBeans(binder);
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -107,30 +107,19 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
             grid.setDataProvider(new ListDataProvider<>(firesideInGrid));
             grid.getDataProvider().refreshAll();
         });
-//        grid.getColumns().forEach(e -> e.setAutoWidth(true));
-//        grid.setMinHeight("550px");
+
         settingsGrid(grid);
         return grid;
     }
 
     private FiresideDTO change(Fireside fireside) {
         FiresideDTO firesideDTO = new FiresideDTO();
-        firesideDTO.setCategory(fireside.getCategory());
-        firesideDTO.setManufacturer(fireside.getManufacturer());
-        firesideDTO.setOffer(fireside.isOffer());
-        firesideDTO.setDiscount(fireside.getDiscount());
-        firesideDTO.setQuantity(fireside.getQuantity());
-        firesideDTO.setAllpriceAfterDiscount(fireside.getAllpriceAfterDiscount());
-        firesideDTO.setAllpricePurchase(fireside.getAllpricePurchase());
-        firesideDTO.setAllprofit(fireside.getAllprofit());
-        firesideDTO.setName(fireside.getName());
-        firesideDTO.setUnitDetalPrice(fireside.getUnitDetalPrice());
-        firesideDTO.setUnitPurchasePrice(fireside.getUnitPurchasePrice());
+        BeanUtils.copyProperties(fireside, firesideDTO);
         return firesideDTO;
     }
 
     @Override
-    public TreeData<Accesories> addItems(List list) {
+    public TreeData<Accessories> addItems(List list) {
         return null;
     }
 
@@ -146,16 +135,16 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
         });
     }
 
-    private void readBeans(Binder<FiresideDTO> binder) {
-        if (setFireside != null) {
-            for (FiresideDTO firesideDTO : setFireside) {
-                firesideDTO.setAllpricePurchase(BigDecimal.valueOf(firesideDTO.getUnitDetalPrice() * firesideDTO.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                firesideDTO.setAllpriceAfterDiscount(BigDecimal.valueOf(firesideDTO.getUnitDetalPrice() * firesideDTO.getQuantity() * (100 - firesideDTO.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                firesideDTO.setAllprofit(BigDecimal.valueOf(firesideDTO.getAllpriceAfterDiscount() - firesideDTO.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-                binder.setBean(firesideDTO);
-            }
-        }
-    }
+//    private void readBeans(Binder<FiresideDTO> binder) {
+//        if (listFireside != null) {
+//            for (Fireside fireside : listFireside) {
+//                fireside.setAllpricePurchase(BigDecimal.valueOf(fireside.getUnitDetalPrice() * fireside.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//                fireside.setAllpriceAfterDiscount(BigDecimal.valueOf(fireside.getUnitDetalPrice() * fireside.getQuantity() * (100 - fireside.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//                fireside.setAllprofit(BigDecimal.valueOf(fireside.getAllpriceAfterDiscount() - fireside.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+//                binder.setBean(fireside);
+//            }
+//        }
+//    }
 
     private ComboBox<String> createComboBoxManufacturer() {
         List<Fireside> firesideRepositoryAll = firesideRepository.findAll();
@@ -195,10 +184,25 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
         return comboBoxSearch;
     }
 
+    private List<Fireside> makeDTOtoEntity(List<FiresideDTO> list) {
+        listFireside = new ArrayList<>();
+        for (FiresideDTO firesideDTO : list) {
+            Fireside fireside = convertDTOtoEntity(firesideDTO);
+            listFireside.add(fireside);
+        }
+        return listFireside;
+    }
+
+    private Fireside convertDTOtoEntity(FiresideDTO firesideDTO) {
+        Fireside fireside = new Fireside();
+        BeanUtils.copyProperties(firesideDTO, fireside, "id");
+        return fireside;
+    }
+
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        VaadinSession.getCurrent().getSession().setAttribute("fireside", setFireside);
+        VaadinSession.getCurrent().getSession().setAttribute("fireside", makeDTOtoEntity(firesideInGrid));
         action.proceed();
     }
 }

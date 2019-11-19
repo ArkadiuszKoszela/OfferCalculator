@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.Accesories;
+import pl.koszela.spring.entities.Accessories;
 import pl.koszela.spring.entities.Gutter;
 import pl.koszela.spring.entities.PersonalData;
 import pl.koszela.spring.entities.Tiles;
@@ -41,7 +41,7 @@ public class UpdateUser {
         Optional<PersonalData> personalData = personalDataRepository.findEntityPersonalDataByNameAndSurnameEquals(data.getName(), data.getSurname());
 
         List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-        Set<Accesories> resultAccesories = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        Set<Accessories> resultAccesories = (Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
 
         if (personalData.isPresent()) {
             Optional<User> userFromRepo = usersRepo.findUserByPersonalDataEquals(personalData.get());

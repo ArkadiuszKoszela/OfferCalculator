@@ -1,4 +1,4 @@
-package pl.koszela.spring.importFiles;
+package staticField;
 
 public enum Endpoint {
     FILE_BOGEN_INNOVO_10_CZERWONA_ANGOBA_URL("src/main/resources/assets/Bogen Innovo 10 czerwona angoba.csv"),

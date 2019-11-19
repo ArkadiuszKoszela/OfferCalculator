@@ -17,7 +17,7 @@ import pl.koszela.spring.entities.CategoryOfTiles;
 import pl.koszela.spring.entities.Tiles;
 import pl.koszela.spring.repositories.GutterRepository;
 import pl.koszela.spring.repositories.TilesRepository;
-import pl.koszela.spring.service.NameNumberFields;
+import staticField.TitleNumberFields;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Route(value = IncludeDataView.INCLUDE_DATA, layout = MainView.class)
 public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserver {
 
-    static final String INCLUDE_DATA = "includeData";
+    public static final String INCLUDE_DATA = "includeData";
 
     private TilesRepository tilesRepository;
     private GutterRepository gutterRepository;
@@ -42,24 +42,28 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
         add(createNewSubLayout());
+        getStyle().set("background", "#f2f2f2");
     }
 
     private VerticalLayout createNewSubLayout() {
         if (setInput == null || setInput.size() == 0) {
             setInput = new ArrayList<>();
-            for (NameNumberFields name : NameNumberFields.values()) {
+            for (TitleNumberFields name : TitleNumberFields.values()) {
                 setInput.add(new InputData(name.toString(), 0d));
             }
         }
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout tilesLayout = getFormLayout(6);
+        tilesLayout.getStyle().set("background", "#e6e6e6");
         FormLayout gutterLayout1 = getFormLayout(12);
+        gutterLayout1.getStyle().set("background", "#d9d9d9");
         FormLayout gutterLayout2 = getFormLayout(5);
+        gutterLayout2.getStyle().set("background", "#cccccc");
         CategoryOfTiles[] values = CategoryOfTiles.values();
         int i = 0;
         for (InputData inputData : setInput) {
             if (i <= 18) {
-                tilesLayout.add(createNumberField(inputData, values[i].toString()));
+                tilesLayout.add(createNumberField(inputData, values[i].name()));
             } else if (i > 18 && i < 55) {
                 gutterLayout1.add(createNumberField(inputData, ""));
             } else {
@@ -67,6 +71,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
             }
             i++;
         }
+        addValueChangeListerr();
+        addValueChangeListener();
         verticalLayout.addAndExpand(new Span("Dachówki"), tilesLayout, new Span("Rynny"), gutterLayout1, gutterLayout2);
         return verticalLayout;
     }
@@ -94,9 +100,28 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
                 }
             }
         });
-        addValueChangeListener();
         listOfNumberFields.add(numberField);
         return numberField;
+    }
+
+    private void addValueChangeListerr() {
+        InputData collect = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.DLUGOSC_KALENIC_PROSTYCH.toString())).findFirst().orElse(new InputData());
+        InputData collect1 = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.DLUGOSC_KALENIC_SKOSNYCH.toString())).findFirst().orElse(new InputData());
+        InputData collect2 = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.DLUGOSC_KALENIC.toString())).findFirst().orElse(new InputData());
+
+        NumberField numberField = listOfNumberFields.stream().filter(e -> e.getLabel().equals(TitleNumberFields.DLUGOSC_KALENIC.toString())).findFirst().orElse(new NumberField());
+        NumberField numberField1 = listOfNumberFields.stream().filter(e -> e.getLabel().equals(TitleNumberFields.DLUGOSC_KALENIC_SKOSNYCH.toString())).findFirst().orElse(new NumberField());
+        NumberField numberField2 = listOfNumberFields.stream().filter(e -> e.getLabel().equals(TitleNumberFields.DLUGOSC_KALENIC_PROSTYCH.toString())).findFirst().orElse(new NumberField());
+
+        numberField1.addValueChangeListener(e ->{
+           collect2.setValue(collect.getValue() + e.getValue());
+           numberField.setValue(collect2.getValue());
+        });
+        numberField2.addValueChangeListener(e ->{
+            collect2.setValue(collect1.getValue() + e.getValue());
+            numberField.setValue(collect2.getValue());
+        });
+
     }
 
     private void addValueChangeListener() {
@@ -154,10 +179,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     }
 
     private List<Gutter> listWithQuantityGutter() {
-        Set<InputData> all3Mb = setInput.stream().filter(e -> e.getName().contains("Rynna 3mb")).collect(Collectors.toSet());
-        Set<InputData> all4Mb = setInput.stream().filter(e -> e.getName().contains("Rynna 4mb")).collect(Collectors.toSet());
-        Double gutter3mb = all3Mb.stream().map(InputData::getValue).reduce(Double::sum).get();
-        Double gutter4mb = all4Mb.stream().map(InputData::getValue).reduce(Double::sum).get();
+        Double gutter3mb = setInput.stream().filter(e -> e.getName().contains("Rynna 3mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
+        Double gutter4mb = setInput.stream().filter(e -> e.getName().contains("Rynna 4mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
         if (list == null) {
             list = gutterRepository.findAll();
         }
@@ -166,7 +189,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
                 gutter.setQuantity(gutter3mb);
             } else if (gutter.getName().equals("rynna 4mb")) {
                 gutter.setQuantity(gutter4mb);
-            }else{
+            } else {
                 gutter.setQuantity(0d);
             }
             listOfNumberFields.forEach(numberField -> {

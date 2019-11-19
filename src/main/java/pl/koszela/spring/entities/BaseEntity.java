@@ -6,9 +6,7 @@ import java.math.BigDecimal;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseEntity extends Discounts {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
+
     private String name;
     private String manufacturer;
     private Double quantity;
@@ -20,14 +18,7 @@ public class BaseEntity extends Discounts {
     private String category;
     private String size;
     private String type;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String date;
 
     public String getName() {
         return name;
@@ -115,5 +106,13 @@ public class BaseEntity extends Discounts {
 
     public String getType() {
         return type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

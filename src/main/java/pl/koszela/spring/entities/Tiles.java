@@ -12,10 +12,9 @@ import java.util.Set;
 @Table(name = "tiles")
 public class Tiles extends BaseEntity {
 
-//    private String priceListName;
     private BigDecimal totalPrice;
     private BigDecimal totalProfit;
-    private String date;
+//    private String date;
     @Column(columnDefinition = "TEXT")
     private String imageUrl = "";
     @ManyToMany(mappedBy = "userTiles")
@@ -27,14 +26,6 @@ public class Tiles extends BaseEntity {
 
     public Tiles() {
     }
-
-//    public String getPriceListName() {
-//        return priceListName;
-//    }
-//
-//    public void setPriceListName(String priceListName) {
-//        this.priceListName = priceListName;
-//    }
 
     public BigDecimal getTotalPrice() {
         return totalPrice;
@@ -76,13 +67,13 @@ public class Tiles extends BaseEntity {
         this.main = main;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(String date) {
+//        this.date = date;
+//    }
 
     public String getImageUrl() {
         return imageUrl;

@@ -4,7 +4,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import pl.koszela.spring.entities.*;
 import pl.koszela.spring.service.NotificationInterface;
@@ -20,11 +19,12 @@ public class GenerateOffer {
     public static void writeUsingIText(String location) {
         PersonalData userfromRepo = (PersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
         Set<Tiles> tilesSet = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
-        Set<Accesories> accesoriesSet = (Set<Accesories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+        Set<Accessories> accessoriesSet = (Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
         List<Gutter> gutterList = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
         Set<Collar> setCollars = (Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar");
         Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose");
-        Set<AccesoriesWindows> setAccesoriesWindows = (Set<AccesoriesWindows>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesWindows");
+        Set<AccessoriesWindows> setAccessoriesWindows = (Set<AccessoriesWindows>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesWindows");
+        List<Fireside> listFireside = (List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside");
 
         Document document = new Document();
 
@@ -73,7 +73,7 @@ public class GenerateOffer {
 //                document.add(image);
 
                 columnHeader(baseColor, font12, tilesTable, mainParent.get().getManufacturer());
-                table(childrens, font10, tilesTable);
+                table(new ArrayList<>(childrens), font10, tilesTable);
                 document.add(tilesTable);
                 addSpacesAndTableToDocument(document, tilesTable);
             } else {
@@ -90,8 +90,8 @@ public class GenerateOffer {
 
             PdfPTable tableAccessories = createTable();
             columnHeader(baseColor, font12, tableAccessories, "Nazwa");
-            Set<Accesories> accesories = accesoriesSet.stream().filter(Accesories::isOffer).collect(Collectors.toSet());
-            table(accesories, font10, tableAccessories);
+            Set<Accessories> accesories = accessoriesSet.stream().filter(Accessories::isOffer).collect(Collectors.toSet());
+            table(new ArrayList<>(accesories), font10, tableAccessories);
             addSpacesAndTableToDocument(document, tableAccessories);
 
             PdfPTable tableGutter = createTable();
@@ -100,24 +100,29 @@ public class GenerateOffer {
             if (mainGutter.isPresent()) {
                 columnHeader(baseColor, font12, tableGutter, mainGutter.get().getCategory());
                 Set<Gutter> parent = gutterList.stream().filter(e -> e.getName().equals("rynna 3mb") && e.isMain()).collect(Collectors.toSet());
-                table(parent, font10, tableGutter);
+                table(new ArrayList<>(parent), font10, tableGutter);
                 addSpacesAndTableToDocument(document, tableGutter);
             }
 
             PdfPTable tableWindows = createTable();
             columnHeader(baseColor, font12, tableWindows, "Nazwa");
-            table(setWindows, font10, tableWindows);
+            table(new ArrayList<>(setWindows), font10, tableWindows);
             addSpacesAndTableToDocument(document, tableWindows);
 
             PdfPTable tableCollars = createTable();
             columnHeader(baseColor, font12, tableCollars, "Nazwa");
-            table(setCollars, font10, tableCollars);
+            table(new ArrayList<>(setCollars), font10, tableCollars);
             addSpacesAndTableToDocument(document, tableCollars);
 
             PdfPTable tableAccessoriesWindows = createTable();
             columnHeader(baseColor, font12, tableAccessoriesWindows, "Nazwa");
-            table(setAccesoriesWindows, font10, tableAccessoriesWindows);
+            table(new ArrayList<>(setAccessoriesWindows), font10, tableAccessoriesWindows);
             addSpacesAndTableToDocument(document, tableAccessoriesWindows);
+
+            PdfPTable tableFireside = createTable();
+            columnHeader(baseColor, font12, tableFireside, "Nazwa");
+            table(listFireside, font10, tableFireside);
+            addSpacesAndTableToDocument(document, tableFireside);
 
             document.close();
 
@@ -128,10 +133,10 @@ public class GenerateOffer {
         }
     }
 
-    private static void addSpacesAndTableToDocument(Document document, PdfPTable tableAccesories) throws DocumentException {
+    private static void addSpacesAndTableToDocument(Document document, PdfPTable table) throws DocumentException {
         Paragraph spaces = new Paragraph("\n\n\n\n");
         document.add(spaces);
-        document.add(tableAccesories);
+        document.add(table);
     }
 
     private static PdfPTable createTable() throws DocumentException {
@@ -151,9 +156,9 @@ public class GenerateOffer {
         cell(font12, table, baseColor, "Zysk");
     }
 
-    private static void table(Set<? extends BaseEntity> accessoriesSet, Font font10, PdfPTable table) {
-        for (BaseEntity baseEntity : accessoriesSet) {
-            if (!baseEntity.getUnitDetalPrice().equals(0d)) {
+    private static void table(List<? extends BaseEntity> list, Font font10, PdfPTable table) {
+        for (BaseEntity baseEntity : list) {
+            if (!baseEntity.getUnitDetalPrice().equals(0d) || !baseEntity.getQuantity().equals(0d)) {
                 table.addCell(new Phrase(String.valueOf(baseEntity.getName()), font10));
                 table.addCell(new Phrase(String.valueOf(baseEntity.getQuantity()), font10));
                 table.addCell(new Phrase(String.valueOf(baseEntity.getUnitPurchasePrice()), font10));

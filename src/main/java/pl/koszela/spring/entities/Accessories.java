@@ -6,10 +6,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "accesories")
-public class Accesories extends BaseEntity {
+public class Accessories extends BaseEntity {
 
-    private String category;
-    private Integer margin;
     @Column(name = "option_accesories")
     private String type;
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
@@ -18,23 +16,7 @@ public class Accesories extends BaseEntity {
     @ManyToMany(mappedBy = "userAccesories")
     private Set<User> accesoriesUser = new HashSet<>();
 
-    public Accesories() {
-    }
-
-    public Integer getMargin() {
-        return margin;
-    }
-
-    public void setMargin(Integer margin) {
-        this.margin = margin;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public Accessories() {
     }
 
     public String getType() {

@@ -1,6 +1,6 @@
-package pl.koszela.spring.service;
+package staticField;
 
-public enum NameNumberFields {
+public enum TitleNumberFields {
     POWIERZCHNIA_POLACI("Powierzchnia połaci"),
     DLUGOSC_KALENIC("Długość kalenic"),
     DLUGOSC_KALENIC_SKOSNYCH("Długość kalenic skośnych"),
@@ -64,7 +64,7 @@ public enum NameNumberFields {
 
     String name;
 
-    NameNumberFields(String name) {
+    TitleNumberFields(String name) {
         this.name = name;
     }
 

@@ -1,30 +1,20 @@
 package pl.koszela.spring.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Collar extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String manufacturer;
     private String size;
     private boolean offer;
+    @ManyToMany(mappedBy = "userCollars")
+    private Set<User> collarsUser = new HashSet<>();
 
     public Collar() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getManufacturer() {
@@ -49,5 +39,13 @@ public class Collar extends BaseEntity{
 
     public void setOffer(boolean offer) {
         this.offer = offer;
+    }
+
+    public Set<User> getCollarsUser() {
+        return collarsUser;
+    }
+
+    public void setCollarsUser(Set<User> collarsUser) {
+        this.collarsUser = collarsUser;
     }
 }

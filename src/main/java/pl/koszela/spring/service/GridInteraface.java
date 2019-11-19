@@ -4,26 +4,20 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.function.ValueProvider;
 import pl.koszela.spring.entities.BaseEntity;
 
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static com.vaadin.flow.internal.ReflectTools.isGetter;
 import static pl.koszela.spring.service.CalculatePrices.calculateDetalPrice;
 
 public interface GridInteraface<E> {
@@ -57,9 +51,9 @@ public interface GridInteraface<E> {
         grid.setMinHeight("750px");
     }
 
-    Grid createGrid();
+//    Grid createGrid();
 
-    TreeData addItems(List list);
+    TreeData addItems(List<E> list);
 
     default TextField bindTextFieldToInteger(Binder<E> binder, StringToIntegerConverter stringToIntegerConverter, ValueProvider<E, Integer> valueProvider, Setter<E, Integer> setter) {
         TextField textField = new TextField();

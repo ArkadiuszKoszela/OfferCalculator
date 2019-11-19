@@ -39,7 +39,6 @@ public class OfferView extends VerticalLayout implements GridInteraface<Tiles> {
         add(createGrid());
     }
 
-    @Override
     public TreeGrid createGrid() {
         Grid.Column<Tiles> priceListName = treeGrid.addHierarchyColumn(Tiles::getManufacturer).setHeader("Nazwa cennika");
         Grid.Column<Tiles> nameColumn = treeGrid.addColumn(Tiles::getName).setResizable(true).setHeader("Kategoria");

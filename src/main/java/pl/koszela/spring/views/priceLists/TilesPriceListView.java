@@ -46,7 +46,6 @@ public class TilesPriceListView extends VerticalLayout implements GridInteraface
 
         allTilesRepo = allTilesFromRepository();
         add(createGrid());
-//        add(refresh());
         add(saveToRepo());
     }
 
@@ -54,7 +53,6 @@ public class TilesPriceListView extends VerticalLayout implements GridInteraface
         return tilesRepository.findAll();
     }
 
-    @Override
     public Grid<Tiles> createGrid() {
         TextField filter = new TextField();
         TreeDataProvider<Tiles> treeDataProvider = new TreeDataProvider<>(addItems(allTilesRepo));
@@ -70,7 +68,7 @@ public class TilesPriceListView extends VerticalLayout implements GridInteraface
         Grid.Column<Tiles> priceFromRepoColumn = grid.addColumn(Tiles::getUnitPurchasePrice).setHeader("Cena zakupu(z ręki)");
         Grid.Column<Tiles> date = grid.addColumn(Tiles::getDate).setHeader("Data zmiany");
         Grid.Column<Tiles> imageUrlColumn = grid.addComponentColumn(i -> {
-            if (i.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.name())) {
+            if (i.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())) {
                 Image image = new Image(i.getImageUrl(), "");
                 image.setMaxWidth("110px");
                 image.setMaxHeight("50px");

@@ -31,7 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import static pl.koszela.spring.importFiles.Endpoint.FILE_TO_GENERATE_OFFER_URL;
+import static pl.koszela.spring.views.priceLists.AccessoriesPriceListView.ACCESSORIES_PRICE;
+import static staticField.Endpoint.FILE_TO_GENERATE_OFFER_URL;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.AccesoriesWindowsView.ACCESORIES_WINDOWS;
 import static pl.koszela.spring.views.CollarView.COLLAR;
@@ -43,7 +44,6 @@ import static pl.koszela.spring.views.priceLists.PriceListOfSalesCompetition.PRI
 import static pl.koszela.spring.views.IncludeDataView.INCLUDE_DATA;
 import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
-import static pl.koszela.spring.views.priceLists.AccesoriesPriceListView.ACCESORIES_PRICE_LIST;
 import static pl.koszela.spring.views.priceLists.TilesPriceListView.TILES_PRICE_LIST;
 
 @Route("")
@@ -79,7 +79,7 @@ public class MainView extends AppLayout {
         addItemMenuBar(menuBar, "Oferta", CREATE_OFFER);
         MenuItem priceLists = menuBar.addItem("Cenniki");
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
-        priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESORIES_PRICE_LIST)));
+        priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESSORIES_PRICE)));
         priceLists.getSubMenu().addItem("Konkurencja", event -> getUI().ifPresent(ui -> ui.navigate(PRICE_LIST_OF_SALES_COMPETITION)));
 
         Button importFilesButton = new Button("Zaimportuj pliki");
@@ -89,7 +89,7 @@ public class MainView extends AppLayout {
             setDrawerOpened(false);
         }
 
-        File file = new File("src/main/resources/templates/offer.pdf");
+        File file = new File(FILE_TO_GENERATE_OFFER_URL.location());
 
         Anchor anchor = new Anchor(getStreamResource(file.getName(), file), file.getName());
         anchor.getElement().setAttribute("download", true);
@@ -105,9 +105,9 @@ public class MainView extends AppLayout {
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
         formLayout.setResponsiveSteps(responsiveStep);
 
-        Button gereneteOffer = new Button("Generuj ofertę");
-        gereneteOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-        gereneteOffer.addClickListener(buttonClickEvent -> {
+        Button generateOffer = new Button("Generuj ofertę");
+        generateOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        generateOffer.addClickListener(buttonClickEvent -> {
             try {
                 GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
                 formLayout.add(new Tab(anchor));
@@ -118,7 +118,7 @@ public class MainView extends AppLayout {
             }
         });
 
-        formLayout.add(importFilesButton, saveNewUser, update, gereneteOffer);
+        formLayout.add(importFilesButton, saveNewUser, update, generateOffer);
         addToNavbar(menuBar);
         addToDrawer(formLayout);
     }

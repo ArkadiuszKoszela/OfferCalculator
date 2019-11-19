@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Route(value = LightningProtectionSystemView.PROTECTION_SYSTEM, layout = MainView.class)
 public class LightningProtectionSystemView extends VerticalLayout implements GridInteraface<LightningProtectionSystem>, BeforeLeaveObserver {
 
-    public static final String PROTECTION_SYSTEM = "protection_system";
+    static final String PROTECTION_SYSTEM = "protection_system";
     private TreeGrid<LightningProtectionSystem> treeGrid = new TreeGrid<>();
     private List<Gutter> list = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
     private List<LightningProtectionSystem> listLightningProtectionSystem = (List<LightningProtectionSystem>) VaadinSession.getCurrent().getSession().getAttribute("lightningProtectionSystem");
@@ -45,7 +45,6 @@ public class LightningProtectionSystemView extends VerticalLayout implements Gri
         add(createGrid());
     }
 
-    @Override
     public TreeGrid createGrid() {
         Column<LightningProtectionSystem> nameColumn = treeGrid.addHierarchyColumn(LightningProtectionSystem::getName).setResizable(true).setHeader("Nazwa");
         Column<LightningProtectionSystem> categoryColumn = treeGrid.addColumn(LightningProtectionSystem::getCategory).setHeader("Kategoria");

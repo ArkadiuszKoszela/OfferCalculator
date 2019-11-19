@@ -15,7 +15,7 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accesories;
+import pl.koszela.spring.entities.Accessories;
 import pl.koszela.spring.entities.Collar;
 import pl.koszela.spring.entities.Windows;
 import pl.koszela.spring.repositories.CollarRepository;
@@ -52,7 +52,6 @@ public class CollarView extends VerticalLayout implements GridInteraface<Collar>
         add(createGrid());
     }
 
-    @Override
     public Grid createGrid() {
         Grid.Column<Collar> nameColumn = grid.addColumn(Collar::getName).setHeader("Nazwa");
         grid.addColumn(Collar::getSize).setHeader("Rozmiar").setSortable(true);
@@ -90,7 +89,7 @@ public class CollarView extends VerticalLayout implements GridInteraface<Collar>
     }
 
     @Override
-    public TreeData<Accesories> addItems(List list) {
+    public TreeData<Accessories> addItems(List list) {
         return null;
     }
 

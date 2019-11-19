@@ -2,7 +2,6 @@ package pl.koszela.spring.importFiles;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.DAOs.*;
@@ -12,11 +11,10 @@ import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.Objects;
 
-import static pl.koszela.spring.importFiles.Endpoint.*;
+import static staticField.Endpoint.*;
 
 @Service
-public class ImportFiles{
-    private final static Logger logger = Logger.getLogger(ImportFiles.class);
+public class ImportFiles<T extends BaseEntity>{
 
     private AccesoriesRepository accesoriesRepository;
     private WindowsRepository windowsRepository;
@@ -26,26 +24,15 @@ public class ImportFiles{
     private FiresideRepository firesideRepository;
     private AccesoriesWindowsRepository accesoriesWindowsRepository;
     private LightningProtectionSystemRepository lightningProtectionSystemRepository;
+    private BaseRepository<Accessories> baseRepository;
 
-    private BaseRepository<Accesories> baseRepository;
-
-
-    private DaoTest daoTest;
-
-    private DaoTiles daoTiles;
-    private DaoAccesories daoAccesories;
-    private DaoCollar daoCollar;
-    private DaoWindows daoWindows;
-    private DaoGutter daoGutter;
-    private DaoAccesoriesWindows daoAccesoriesWindows;
+    private Dao dao;
     private UsersRepo usersRepo;
-    private DaoFireside daoFireSide;
-    private DaoLigtningProtectionSystem daoLigtningProtectionSystem;
 
 
     @Autowired
     public ImportFiles(AccesoriesRepository accesoriesRepository, WindowsRepository windowsRepository,
-                       CollarRepository collarRepository, TilesRepository tilesRepository, GutterRepository gutterRepository, FiresideRepository firesideRepository, AccesoriesWindowsRepository accesoriesWindowsRepository, LightningProtectionSystemRepository lightningProtectionSystemRepository, BaseRepository<Accesories> baseRepository, UsersRepo usersRepo, DaoLigtningProtectionSystem daoLigtningProtectionSystem) {
+                       CollarRepository collarRepository, TilesRepository tilesRepository, GutterRepository gutterRepository, FiresideRepository firesideRepository, AccesoriesWindowsRepository accesoriesWindowsRepository, LightningProtectionSystemRepository lightningProtectionSystemRepository, BaseRepository<Accessories> baseRepository, UsersRepo usersRepo) {
         this.accesoriesRepository = Objects.requireNonNull(accesoriesRepository);
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
         this.collarRepository = Objects.requireNonNull(collarRepository);
@@ -56,91 +43,42 @@ public class ImportFiles{
         this.lightningProtectionSystemRepository = Objects.requireNonNull(lightningProtectionSystemRepository);
         this.baseRepository = Objects.requireNonNull(baseRepository);
         this.usersRepo = Objects.requireNonNull(Objects.requireNonNull(usersRepo));
-        this.daoLigtningProtectionSystem = Objects.requireNonNull(daoLigtningProtectionSystem);
     }
 
     @Autowired
-    public void setDaoGutter(DaoGutter daoGutter) {
-        this.daoGutter = daoGutter;
-    }
-
-    @Autowired
-    public void setDaoWindows(DaoWindows daoWindows) {
-        this.daoWindows = daoWindows;
-    }
-
-    @Autowired
-    public void setDaoCollar(DaoCollar daoCollar) {
-        this.daoCollar = daoCollar;
-    }
-
-    @Autowired
-    public void setDaoTiles(DaoTiles daoTiles) {
-        this.daoTiles = Objects.requireNonNull(daoTiles);
-    }
-
-    @Autowired
-    public void setDaoAccesories(DaoAccesories daoAccesories) {
-        this.daoAccesories = Objects.requireNonNull(daoAccesories);
-    }
-
-    @Autowired
-    public void setDaoAccesoriesWindows(DaoAccesoriesWindows daoAccesoriesWindows) {
-        this.daoAccesoriesWindows = Objects.requireNonNull(daoAccesoriesWindows);
-    }
-
-    @Autowired
-    public void setDaoLigtningProtectionSystem(DaoLigtningProtectionSystem daoLigtningProtectionSystem) {
-        this.daoLigtningProtectionSystem = daoLigtningProtectionSystem;
-    }
-
-    @Autowired
-    public void setDaoFireSide(DaoFireside daoFireSide) {
-        this.daoFireSide = daoFireSide;
+    public void setDao(Dao dao) {
+        this.dao = dao;
     }
 
     public void csv() {
-        usersRepo.deleteAll();
-        logger.info("deleted all users");
-        tilesRepository.deleteAll();
-        logger.info("deleted all tiles");
-        accesoriesRepository.deleteAll();
-        logger.info("deleted all accesories");
-        windowsRepository.deleteAll();
-        logger.info("deleted all windows");
-        collarRepository.deleteAll();
-        logger.info("deleted all kolnierz");
-        gutterRepository.deleteAll();
-        logger.info("deleted all gutters");
-        firesideRepository.deleteAll();
-        logger.info("deleted all firesides");
-        accesoriesWindowsRepository.deleteAll();
-        logger.info("deleted all accesories windows");
-        lightningProtectionSystemRepository.deleteAll();
-        logger.info("deleted all ligtning protection systems");
+        dao.deleteAllFromRepo(tilesRepository);
+        dao.deleteAllFromRepo(accesoriesRepository);
+        dao.deleteAllFromRepo(windowsRepository);
+        dao.deleteAllFromRepo(collarRepository);
+        dao.deleteAllFromRepo(gutterRepository);
+        dao.deleteAllFromRepo(firesideRepository);
+        dao.deleteAllFromRepo(accesoriesWindowsRepository);
+        dao.deleteAllFromRepo(lightningProtectionSystemRepository);
 
-        daoTest.readAndSaveToORMTest(FILE_BOGEN_INNOVO_10_CZERWONA_ANGOBA_URL.location(), Tiles.class, new Tiles(), tilesRepository);
-        daoTest.readAndSaveToORMTest(FILE_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA_URL.location(), Tiles.class, new Tiles(), tilesRepository);
-        daoTest.readAndSaveToORMTest(FILE_BOGEN_INNOVO_12_CZERWONA_ANGOBA_URL.location(), Tiles.class, new Tiles(), tilesRepository);
-        daoTest.<Accesories>readAndSaveToORMTest(FILE_AKCESORIA_URL.location(), Accesories.class, new Accesories(), baseRepository);
-        daoTest.readAndSaveToORMTest(FILE_COLLAR_FAKRO_URL.location(), Collar.class, new Collar(), collarRepository);
-        daoTest.readAndSaveToORMTest(FILE_COLLAR_VELUX_URL.location(), Collar.class, new Collar(), collarRepository);
-        daoTest.readAndSaveToORMTest(FILE_OKNA_FAKRO_DAKEA_URL.location(), Windows.class, new Windows(), windowsRepository);
-        daoTest.readAndSaveToORMTest(FILE_OKNA_VELUX_URL.location(), Windows.class, new Windows(), windowsRepository);
-        daoTest.readAndSaveToORMTest(FILE_ACCESORIES_WINDOWS_FAKRO_URL.location(), AccesoriesWindows.class, new AccesoriesWindows(), accesoriesWindowsRepository);
-        daoTest.readAndSaveToORMTest(FILE_ACCESORIES_WINDOWS_VELUX_URL.location(), AccesoriesWindows.class, new AccesoriesWindows(), accesoriesWindowsRepository);
-        daoTest.readAndSaveToORMTest(FILE_PLEWA_URL.location(), Fireside.class, new Fireside(), firesideRepository);
-        daoTest.readAndSaveToORMTest(FILE_SYSTEM_PROTECTION_URL.location(), LightningProtectionSystem.class, new LightningProtectionSystem(), lightningProtectionSystemRepository);
-        daoTest.readAndSaveToORMTest(FILE_FLAMINGO_125x100_URL.location(), Gutter.class, new Gutter(), gutterRepository);
-        daoTest.readAndSaveToORMTest(FILE_FLAMINGO_125x90_URL.location(), Gutter.class, new Gutter(), gutterRepository);
-        daoTest.readAndSaveToORMTest(FILE_BRYZA_125x90_URL.location(), Gutter.class, new Gutter(), gutterRepository);
-        daoTest.readAndSaveToORMTest(FILE_BRYZA_150x100_URL.location(), Gutter.class, new Gutter(), gutterRepository);
+        dao.readAndSaveToORMTest(FILE_BOGEN_INNOVO_10_CZERWONA_ANGOBA_URL.location(), Tiles.class, new Tiles(), tilesRepository);
+        dao.readAndSaveToORMTest(FILE_BOGEN_INNOVO_10_MIEDZIANO_BRAZOWA_ANGOBA_URL.location(), Tiles.class, new Tiles(), tilesRepository);
+        dao.readAndSaveToORMTest(FILE_BOGEN_INNOVO_12_CZERWONA_ANGOBA_URL.location(), Tiles.class, new Tiles(), tilesRepository);
+        dao.<Accessories>readAndSaveToORMTest(FILE_AKCESORIA_URL.location(), Accessories.class, new Accessories(), baseRepository);
+        dao.readAndSaveToORMTest(FILE_COLLAR_FAKRO_URL.location(), Collar.class, new Collar(), collarRepository);
+        dao.readAndSaveToORMTest(FILE_COLLAR_VELUX_URL.location(), Collar.class, new Collar(), collarRepository);
+        dao.readAndSaveToORMTest(FILE_OKNA_FAKRO_DAKEA_URL.location(), Windows.class, new Windows(), windowsRepository);
+        dao.readAndSaveToORMTest(FILE_OKNA_VELUX_URL.location(), Windows.class, new Windows(), windowsRepository);
+        dao.readAndSaveToORMTest(FILE_ACCESORIES_WINDOWS_FAKRO_URL.location(), AccessoriesWindows.class, new AccessoriesWindows(), accesoriesWindowsRepository);
+        dao.readAndSaveToORMTest(FILE_ACCESORIES_WINDOWS_VELUX_URL.location(), AccessoriesWindows.class, new AccessoriesWindows(), accesoriesWindowsRepository);
+        dao.readAndSaveToORMTest(FILE_PLEWA_URL.location(), Fireside.class, new Fireside(), firesideRepository);
+        dao.readAndSaveToORMTest(FILE_SYSTEM_PROTECTION_URL.location(), LightningProtectionSystem.class, new LightningProtectionSystem(), lightningProtectionSystemRepository);
+        dao.readAndSaveToORMTest(FILE_FLAMINGO_125x100_URL.location(), Gutter.class, new Gutter(), gutterRepository);
+        dao.readAndSaveToORMTest(FILE_FLAMINGO_125x90_URL.location(), Gutter.class, new Gutter(), gutterRepository);
+        dao.readAndSaveToORMTest(FILE_BRYZA_125x90_URL.location(), Gutter.class, new Gutter(), gutterRepository);
+        dao.readAndSaveToORMTest(FILE_BRYZA_150x100_URL.location(), Gutter.class, new Gutter(), gutterRepository);
         NotificationInterface.notificationOpen("Zaimportowano cenniki", NotificationVariant.LUMO_SUCCESS);
         UI.getCurrent().getPage().reload();
     }
 
-    @Autowired
-    public void setDaoTest(DaoTest daoTest) {
-        this.daoTest = daoTest;
-    }
+
 }

@@ -26,8 +26,8 @@ public class ReadUser {
         if (find.isPresent()) {
             VaadinSession.getCurrent().getSession().setAttribute("personalData", find.get().getPersonalData());
             VaadinSession.getCurrent().getSession().setAttribute("inputData", find.get().getInputData());
-            VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.get().getWindows());
-            VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.get().getCollar());
+            VaadinSession.getCurrent().getSession().setAttribute("entityWindowsFromRepo", find.get().getUserWindows());
+            VaadinSession.getCurrent().getSession().setAttribute("entityKolnierzFromRepo", find.get().getUserCollars());
             VaadinSession.getCurrent().getSession().setAttribute("tiles", find.get().getTiles());
             VaadinSession.getCurrent().getSession().setAttribute("accesories", find.get().getUserAccesories());
             VaadinSession.getCurrent().getSession().setAttribute("gutter", find.get().getEntityUserGutter());
