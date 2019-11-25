@@ -2,22 +2,18 @@ package pl.koszela.spring.crud;
 
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.Accessories;
-import pl.koszela.spring.entities.Gutter;
-import pl.koszela.spring.entities.PersonalData;
-import pl.koszela.spring.entities.Tiles;
-import pl.koszela.spring.repositories.*;
+import pl.koszela.spring.entities.main.*;
+import pl.koszela.spring.repositories.main.*;
+import pl.koszela.spring.service.HasLogger;
 import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.*;
 
 @Service
-public class UpdateUser {
-    private final static Logger logger = Logger.getLogger(UpdateUser.class);
+public class UpdateUser  implements HasLogger {
+//    private final static Logger logger = Logger.getLogger(UpdateUser.class);
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
@@ -61,7 +57,7 @@ public class UpdateUser {
                 tilesRepository.saveAll(allTilesFromRepo);
 
                 usersRepo.save(userToUpdate);
-                logger.info("Updated user - " + userFromRepo.get().getPersonalData().getName() + " " + userFromRepo.get().getPersonalData().getSurname());
+                getLogger().info("Updated user - " + userFromRepo.get().getPersonalData().getName() + " " + userFromRepo.get().getPersonalData().getSurname());
                 NotificationInterface.notificationOpen("Zaktualizowałem dane dla użytkownika: " + userToUpdate.getPersonalData().getName() + " " + userToUpdate.getPersonalData().getSurname() + "    :)", NotificationVariant.LUMO_SUCCESS);
             } else {
                 NotificationInterface.notificationOpen("Coś poszło nie tak", NotificationVariant.LUMO_ERROR);

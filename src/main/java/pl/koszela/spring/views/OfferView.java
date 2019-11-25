@@ -15,8 +15,8 @@ import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.CategoryOfTiles;
-import pl.koszela.spring.entities.Tiles;
+import pl.koszela.spring.entities.main.CategoryOfTiles;
+import pl.koszela.spring.entities.main.Tiles;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;

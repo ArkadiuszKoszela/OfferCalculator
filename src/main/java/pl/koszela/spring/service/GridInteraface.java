@@ -11,7 +11,7 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.ValueProvider;
-import pl.koszela.spring.entities.BaseEntity;
+import pl.koszela.spring.entities.main.BaseEntity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -48,10 +48,8 @@ public interface GridInteraface<E> {
     default void settingsGrid(Grid<E> grid) {
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         grid.getColumns().forEach(e -> e.setAutoWidth(true));
-        grid.setMinHeight("750px");
+        grid.setMinHeight("1050px");
     }
-
-//    Grid createGrid();
 
     TreeData addItems(List<E> list);
 

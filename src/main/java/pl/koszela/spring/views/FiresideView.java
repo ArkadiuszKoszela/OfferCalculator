@@ -21,15 +21,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accessories;
-import pl.koszela.spring.entities.Fireside;
-import pl.koszela.spring.entities.FiresideDTO;
-import pl.koszela.spring.entities.Windows;
-import pl.koszela.spring.repositories.FiresideRepository;
+import pl.koszela.spring.entities.main.Accessories;
+import pl.koszela.spring.entities.main.Fireside;
+import pl.koszela.spring.entities.main.FiresideDTO;
+import pl.koszela.spring.entities.main.Windows;
+import pl.koszela.spring.repositories.main.FiresideRepository;
 import pl.koszela.spring.service.GridInteraface;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -147,17 +145,13 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
 //    }
 
     private ComboBox<String> createComboBoxManufacturer() {
-        List<Fireside> firesideRepositoryAll = firesideRepository.findAll();
-        Set<String> collect = new HashSet<>();
-        firesideRepositoryAll.forEach(e -> collect.add(e.getManufacturer()));
+        Set<String> collect = firesideRepository.findAll().stream().map(Fireside::getManufacturer).collect(Collectors.toSet());
         comboBoxManufacturer.setItems(collect);
         return comboBoxManufacturer;
     }
 
     private ComboBox<String> createComboBoxCategory() {
-        List<Fireside> firesideRepositoryAll = firesideRepository.findAll();
-        Set<String> collect = new HashSet<>();
-        firesideRepositoryAll.forEach(fireside -> collect.add(fireside.getCategory()));
+        Set<String> collect = firesideRepository.findAll().stream().map(Fireside::getCategory).collect(Collectors.toSet());
         comboBoxCategory.setItems(collect);
         return comboBoxCategory;
     }
@@ -170,9 +164,9 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
             sizes.add(fireside.getName().substring(i - 2, i + 3));
         }
         comboBoxSize.addValueChangeListener(e -> {
-            Set<Fireside> search = firesideRepositoryAll.stream().filter(f -> f.getManufacturer().equals(comboBoxManufacturer.getValue())
-                    && f.getCategory().equals(comboBoxCategory.getValue())
-                    && f.getName().contains(comboBoxSize.getValue())).collect(Collectors.toSet());
+            Set<Fireside> search = firesideRepositoryAll.stream().filter(fireside -> fireside.getManufacturer().equals(comboBoxManufacturer.getValue())
+                    && fireside.getCategory().equals(comboBoxCategory.getValue())
+                    && fireside.getName().contains(comboBoxSize.getValue())).collect(Collectors.toSet());
             comboBoxSearch.setItems(search);
         });
         comboBoxSize.setItems(sizes);

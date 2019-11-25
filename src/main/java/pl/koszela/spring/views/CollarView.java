@@ -15,10 +15,10 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accessories;
-import pl.koszela.spring.entities.Collar;
-import pl.koszela.spring.entities.Windows;
-import pl.koszela.spring.repositories.CollarRepository;
+import pl.koszela.spring.entities.main.Accessories;
+import pl.koszela.spring.entities.main.Collar;
+import pl.koszela.spring.entities.main.Windows;
+import pl.koszela.spring.repositories.main.CollarRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;

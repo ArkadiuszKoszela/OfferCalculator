@@ -19,7 +19,7 @@ import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.Gutter;
+import pl.koszela.spring.entities.main.Gutter;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NotificationInterface;
 
@@ -139,13 +139,13 @@ public class GutterView extends VerticalLayout implements GridInteraface<Gutter>
             String value = e.getValue();
             switch (value) {
                 case "Stalowa": {
-                    List<Gutter> searchCategory = list.stream().filter(gutter -> gutter.getCategory().contains("Flamingo")/* && !gutter.getUnitDetalPrice().equals(0d)*/).collect(Collectors.toList());
+                    List<Gutter> searchCategory = list.stream().filter(gutter -> gutter.getCategory().contains("Flamingo")).collect(Collectors.toList());
                     treeGrid.setDataProvider(new TreeDataProvider<>(addItems(searchCategory)));
                     treeGrid.getDataProvider().refreshAll();
                     break;
                 }
                 case "PCV": {
-                    List<Gutter> searchCategory = list.stream().filter(gutter -> gutter.getCategory().contains("Bryza")/* && !gutter.getUnitDetalPrice().equals(0d)*/).collect(Collectors.toList());
+                    List<Gutter> searchCategory = list.stream().filter(gutter -> gutter.getCategory().contains("Bryza")).collect(Collectors.toList());
                     treeGrid.setDataProvider(new TreeDataProvider<>(addItems(searchCategory)));
                     treeGrid.getDataProvider().refreshAll();
                     break;
@@ -164,8 +164,8 @@ public class GutterView extends VerticalLayout implements GridInteraface<Gutter>
             List<Gutter> mainsInPriceList = list.stream().filter(e -> e.getName().equals("rynna 3mb")).collect(Collectors.toList());
             for (Gutter gutter : mainsInPriceList) {
                 List<Gutter> onePriceList = list.stream().filter(e -> e.getCategory().equals(gutter.getCategory())).collect(Collectors.toList());
-                Double totalPrice = onePriceList.stream().map(Gutter::getAllpriceAfterDiscount).reduce(Double::sum).get();
-                Double totalProfit = onePriceList.stream().map(Gutter::getAllprofit).reduce(Double::sum).get();
+                Double totalPrice = onePriceList.stream().map(Gutter::getAllpriceAfterDiscount).reduce(Double::sum).orElse(0d);
+                Double totalProfit = onePriceList.stream().map(Gutter::getAllprofit).reduce(Double::sum).orElse(0d);
                 gutter.setTotalPrice(BigDecimal.valueOf(totalPrice).setScale(2, RoundingMode.HALF_UP));
                 gutter.setTotalProfit(BigDecimal.valueOf(totalProfit).setScale(2, RoundingMode.HALF_UP));
             }

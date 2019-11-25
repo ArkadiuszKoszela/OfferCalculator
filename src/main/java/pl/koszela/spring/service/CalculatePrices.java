@@ -1,6 +1,6 @@
 package pl.koszela.spring.service;
 
-import pl.koszela.spring.entities.BaseEntity;
+import pl.koszela.spring.entities.main.BaseEntity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

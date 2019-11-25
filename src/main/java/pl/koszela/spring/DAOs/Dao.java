@@ -1,9 +1,10 @@
 package pl.koszela.spring.DAOs;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.repositories.BaseRepository;
+import org.springframework.transaction.annotation.Transactional;
+import pl.koszela.spring.entities.main.BaseEntity;
+import pl.koszela.spring.repositories.main.BaseRepository;
+import pl.koszela.spring.service.HasLogger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,8 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
 
 @Service
-public class Dao {
-    private Logger logger = Logger.getLogger(Dao.class);
+public class Dao  implements HasLogger {
+//    private Logger logger = Logger.getLogger(Dao.class);
 
     private NameFromURL nameFromURL = new NameFromURL();
 
@@ -45,14 +46,14 @@ public class Dao {
             }
         } catch (IOException f) {
             f.printStackTrace();
-            logger.debug(type.getName() + " cannot be imported");
+            getLogger().debug(type.getName() + " cannot be imported");
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         } finally {
             if (br != null) {
                 try {
                     br.close();
-                    logger.info("success - import " + type.getName());
+                    getLogger().info("success - import " + type.getName());
                 } catch (IOException f) {
                     f.printStackTrace();
                 }
@@ -60,9 +61,10 @@ public class Dao {
         }
     }
 
+//    @Transactional("mainTransactionManager")
     public <T extends BaseEntity> void deleteAllFromRepo(BaseRepository<T> baseRepository) {
         baseRepository.deleteAll();
-        logger.info("deleted all from " + BaseRepository.class.getName());
+        getLogger().info("deleted all from " + BaseRepository.class.getName());
     }
 
     private String string (String[] strings, int i){

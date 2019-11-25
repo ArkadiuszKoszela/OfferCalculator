@@ -15,9 +15,9 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Gutter;
-import pl.koszela.spring.entities.LightningProtectionSystem;
-import pl.koszela.spring.repositories.LightningProtectionSystemRepository;
+import pl.koszela.spring.entities.main.Gutter;
+import pl.koszela.spring.entities.main.LightningProtectionSystem;
+import pl.koszela.spring.repositories.main.LightningProtectionSystemRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.util.List;

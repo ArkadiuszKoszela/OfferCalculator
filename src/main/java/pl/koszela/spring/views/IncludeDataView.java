@@ -11,12 +11,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.InputData;
-import pl.koszela.spring.entities.Gutter;
-import pl.koszela.spring.entities.CategoryOfTiles;
-import pl.koszela.spring.entities.Tiles;
-import pl.koszela.spring.repositories.GutterRepository;
-import pl.koszela.spring.repositories.TilesRepository;
+import org.springframework.transaction.annotation.Transactional;
+import pl.koszela.spring.entities.main.InputData;
+import pl.koszela.spring.entities.main.Gutter;
+import pl.koszela.spring.entities.main.CategoryOfTiles;
+import pl.koszela.spring.entities.main.Tiles;
+import pl.koszela.spring.repositories.main.GutterRepository;
+import pl.koszela.spring.repositories.main.TilesRepository;
 import staticField.TitleNumberFields;
 
 import java.math.BigDecimal;
@@ -42,7 +43,6 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         this.tilesRepository = Objects.requireNonNull(tilesRepository);
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
         add(createNewSubLayout());
-        getStyle().set("background", "#f2f2f2");
     }
 
     private VerticalLayout createNewSubLayout() {
@@ -54,11 +54,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         }
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout tilesLayout = getFormLayout(6);
-        tilesLayout.getStyle().set("background", "#e6e6e6");
         FormLayout gutterLayout1 = getFormLayout(12);
-        gutterLayout1.getStyle().set("background", "#d9d9d9");
         FormLayout gutterLayout2 = getFormLayout(5);
-        gutterLayout2.getStyle().set("background", "#cccccc");
         CategoryOfTiles[] values = CategoryOfTiles.values();
         int i = 0;
         for (InputData inputData : setInput) {
@@ -178,7 +175,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         return set;
     }
 
-    private List<Gutter> listWithQuantityGutter() {
+//    @Transactional("mainTransactionManager")
+    List<Gutter> listWithQuantityGutter() {
         Double gutter3mb = setInput.stream().filter(e -> e.getName().contains("Rynna 3mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
         Double gutter4mb = setInput.stream().filter(e -> e.getName().contains("Rynna 4mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
         if (list == null) {

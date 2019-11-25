@@ -7,8 +7,8 @@ import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Accessories;
-import pl.koszela.spring.repositories.AccesoriesRepository;
+import pl.koszela.spring.entities.main.Accessories;
+import pl.koszela.spring.repositories.main.AccesoriesRepository;
 import pl.koszela.spring.service.PriceListInterface;
 import pl.koszela.spring.views.MainView;
 

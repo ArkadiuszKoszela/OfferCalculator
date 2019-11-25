@@ -2412,7 +2412,7 @@
 2019-11-13 12:48:15 INFO  DaoTiles:61 - succes - import tiles Bogen Innovo 10 czerwona angoba
 2019-11-13 12:48:15 INFO  DaoTiles:61 - succes - import tiles Bogen Innovo 10 miedziano-brazowa angoba
 2019-11-13 12:48:15 INFO  DaoTiles:61 - succes - import tiles Bogen Innovo 12 czerwona angoba
-2019-11-13 12:48:15 INFO  DaoTest:48 - succes - import pl.koszela.spring.entities.Accessories
+2019-11-13 12:48:15 INFO  DaoTest:48 - succes - import pl.koszela.spring.entities.main.Accessories
 2019-11-13 12:48:15 INFO  DaoCollar:63 - succes - import collar Fakro
 2019-11-13 12:48:15 INFO  DaoCollar:63 - succes - import collar Velux
 2019-11-13 12:48:15 INFO  DaoWindows:59 - succes - import windows Fakro
@@ -2434,7 +2434,7 @@
 2019-11-13 13:42:37 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 13:42:37 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 13:42:37 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 13:42:37 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 13:42:37 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 13:45:19 INFO  ImportFiles:104 - deleted all users
 2019-11-13 13:45:19 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 13:45:19 INFO  ImportFiles:108 - deleted all accessories
@@ -2444,7 +2444,7 @@
 2019-11-13 13:45:19 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 13:45:19 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 13:45:19 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 13:45:46 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 13:45:46 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:00:13 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:00:13 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:00:13 INFO  ImportFiles:108 - deleted all accessories
@@ -2454,7 +2454,7 @@
 2019-11-13 14:00:13 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:00:13 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:00:13 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:00:13 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:00:13 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:06:04 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:06:04 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:06:04 INFO  ImportFiles:108 - deleted all accessories
@@ -2464,7 +2464,7 @@
 2019-11-13 14:06:04 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:06:04 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:06:04 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:06:04 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:06:04 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:06:06 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:06:06 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:06:06 INFO  ImportFiles:108 - deleted all accessories
@@ -2474,7 +2474,7 @@
 2019-11-13 14:06:06 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:06:06 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:06:06 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:06:06 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:06:06 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:06:50 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:06:50 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:06:50 INFO  ImportFiles:108 - deleted all accessories
@@ -2484,7 +2484,7 @@
 2019-11-13 14:06:50 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:06:50 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:06:50 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:07:23 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:07:23 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:12:45 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:12:45 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:12:45 INFO  ImportFiles:108 - deleted all accessories
@@ -2494,7 +2494,7 @@
 2019-11-13 14:12:45 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:12:45 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:12:45 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:13:14 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:13:14 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:15:46 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:15:46 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:15:46 INFO  ImportFiles:108 - deleted all accessories
@@ -2504,7 +2504,7 @@
 2019-11-13 14:15:46 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:15:46 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:15:46 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:15:46 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:15:46 INFO  DaoTest:51 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:19:04 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:19:04 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:19:04 INFO  ImportFiles:108 - deleted all accessories
@@ -2514,7 +2514,7 @@
 2019-11-13 14:19:04 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:19:04 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:19:04 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:19:04 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:19:04 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:20:29 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:20:29 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:20:29 INFO  ImportFiles:108 - deleted all accessories
@@ -2524,7 +2524,7 @@
 2019-11-13 14:20:29 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:20:29 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:20:29 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:20:29 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:20:29 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:20:31 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:20:31 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:20:31 INFO  ImportFiles:108 - deleted all accessories
@@ -2534,7 +2534,7 @@
 2019-11-13 14:20:31 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:20:31 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:20:31 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:20:31 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:20:31 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:22:18 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:22:18 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:22:18 INFO  ImportFiles:108 - deleted all accessories
@@ -2544,7 +2544,7 @@
 2019-11-13 14:22:18 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:22:18 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:22:18 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:22:18 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:22:18 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:23:04 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:23:04 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:23:04 INFO  ImportFiles:108 - deleted all accessories
@@ -2554,7 +2554,7 @@
 2019-11-13 14:23:04 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:23:04 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:23:04 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:24:24 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
+2019-11-13 14:24:24 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
 2019-11-13 14:24:41 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:24:41 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:24:41 INFO  ImportFiles:108 - deleted all accessories
@@ -2564,22 +2564,22 @@
 2019-11-13 14:24:41 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:24:41 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:24:41 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:24:43 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:24:43 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:24:43 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.Gutter
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 14:24:42 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:24:43 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:24:43 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:24:43 INFO  DaoTest:52 - succes - import pl.koszela.spring.entities.main.Gutter
 2019-11-13 14:27:26 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:27:26 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:27:26 INFO  ImportFiles:108 - deleted all accessories
@@ -2589,22 +2589,22 @@
 2019-11-13 14:27:26 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:27:26 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:27:26 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:27:26 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:27:26 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.Gutter
+2019-11-13 14:27:26 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:27:26 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:27:27 INFO  DaoTest:53 - succes - import pl.koszela.spring.entities.main.Gutter
 2019-11-13 14:36:58 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:36:58 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:36:58 INFO  ImportFiles:108 - deleted all accessories
@@ -2614,22 +2614,22 @@
 2019-11-13 14:36:59 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:36:59 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:36:59 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:36:59 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
 2019-11-13 14:43:38 INFO  ImportFiles:104 - deleted all users
 2019-11-13 14:43:38 INFO  ImportFiles:106 - deleted all tiles
 2019-11-13 14:43:38 INFO  ImportFiles:108 - deleted all accessories
@@ -2639,22 +2639,22 @@
 2019-11-13 14:43:38 INFO  ImportFiles:116 - deleted all firesides
 2019-11-13 14:43:38 INFO  ImportFiles:118 - deleted all accessories windows
 2019-11-13 14:43:38 INFO  ImportFiles:120 - deleted all ligtning protection systems
-2019-11-13 14:43:38 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:43:38 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:43:38 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.Gutter
+2019-11-13 14:43:38 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:43:38 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:43:38 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 14:43:39 INFO  DaoTest:56 - succes - import pl.koszela.spring.entities.main.Gutter
 2019-11-13 18:00:35 DEBUG GenerateOffer:81 - No option has been selected in the tile table
 2019-11-13 18:00:35 INFO  GenerateOffer:124 - Create offer for - Arek Koszela
 2019-11-13 18:13:44 INFO  Dao:65 - deleted all from com.sun.proxy.$Proxy103
@@ -2665,235 +2665,235 @@
 2019-11-13 18:13:44 INFO  Dao:65 - deleted all from com.sun.proxy.$Proxy109
 2019-11-13 18:13:44 INFO  Dao:65 - deleted all from com.sun.proxy.$Proxy110
 2019-11-13 18:13:44 INFO  Dao:65 - deleted all from com.sun.proxy.$Proxy111
-2019-11-13 18:13:44 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:13:44 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:13:44 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:19:50 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:50 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:50 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Tiles
-2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Accessories
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Collar
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Windows
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Fireside
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.Accessories
-2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Fireside
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:10:10 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:11:07 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Accessories
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Fireside
-2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:17:43 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:17:43 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:17:43 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Accessories
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Fireside
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:29:35 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:35 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Accessories
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.Fireside
-2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
+2019-11-13 18:13:44 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:13:44 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:13:44 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:13:45 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:19:50 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:50 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:50 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:51 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 18:19:51 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:19:52 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 18:22:42 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Collar
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Windows
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 18:22:43 INFO  Dao:55 - succes - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:01:45 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:01:46 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:10:10 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:11:07 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:15:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:15:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:17:43 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:17:43 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:17:43 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:17:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:29:35 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:35 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Accessories
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-13 19:29:36 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Fireside
+2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-13 19:29:37 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
 2019-11-17 14:36:20 DEBUG GenerateOffer:80 - No option has been selected in the tile table
 2019-11-17 14:36:20 INFO  GenerateOffer:123 - Create offer for - Arek Koszela
 2019-11-17 14:37:14 INFO  GenerateOffer:123 - Create offer for - Arek Koszela
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Accessories
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Fireside
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:31 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:31 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:31 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.BaseRepository
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Tiles
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Accessories
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Collar
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Windows
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.AccessoriesWindows
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Fireside
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.LightningProtectionSystem
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
-2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.Gutter
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Accessories
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Fireside
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-17 14:39:30 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:31 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:31 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:31 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:65 - deleted all from pl.koszela.spring.repositories.main.BaseRepository
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Tiles
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Accessories
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Collar
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Windows
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.AccessoriesWindows
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Fireside
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.LightningProtectionSystem
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
+2019-11-17 14:39:44 INFO  Dao:55 - success - import pl.koszela.spring.entities.main.Gutter
 2019-11-18 11:50:12 INFO  GenerateOffer:129 - Create offer for - Arek Koszela
 2019-11-18 11:52:56 INFO  GenerateOffer:129 - Create offer for - Arek Koszela
 2019-11-18 11:52:59 INFO  GenerateOffer:129 - Create offer for - Arek Koszela

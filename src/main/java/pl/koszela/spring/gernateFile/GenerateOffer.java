@@ -5,7 +5,7 @@ import com.itextpdf.text.pdf.*;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.log4j.Logger;
-import pl.koszela.spring.entities.*;
+import pl.koszela.spring.entities.main.*;
 import pl.koszela.spring.service.NotificationInterface;
 
 import java.io.*;

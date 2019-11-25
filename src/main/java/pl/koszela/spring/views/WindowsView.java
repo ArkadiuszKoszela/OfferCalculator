@@ -16,8 +16,8 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.koszela.spring.entities.Windows;
-import pl.koszela.spring.repositories.WindowsRepository;
+import pl.koszela.spring.entities.main.Windows;
+import pl.koszela.spring.repositories.main.WindowsRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.util.*;

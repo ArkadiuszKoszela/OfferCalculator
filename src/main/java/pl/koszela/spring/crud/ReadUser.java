@@ -3,9 +3,9 @@ package pl.koszela.spring.crud;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.PersonalData;
-import pl.koszela.spring.repositories.*;
+import pl.koszela.spring.entities.main.PersonalData;
+import pl.koszela.spring.entities.main.User;
+import pl.koszela.spring.repositories.main.UsersRepo;
 
 import java.util.Objects;
 import java.util.Optional;

@@ -15,9 +15,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.crud.ReadUser;
-import pl.koszela.spring.entities.*;
-import pl.koszela.spring.entities.PersonalData;
-import pl.koszela.spring.repositories.UsersRepo;
+import pl.koszela.spring.entities.main.PersonalData;
+import pl.koszela.spring.entities.main.User;
+import pl.koszela.spring.repositories.main.UsersRepo;
 import pl.koszela.spring.crud.DeleteUsers;
 
 import java.util.*;

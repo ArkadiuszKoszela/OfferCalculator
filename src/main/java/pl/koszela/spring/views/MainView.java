@@ -32,6 +32,11 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static pl.koszela.spring.views.priceLists.AccessoriesPriceListView.ACCESSORIES_PRICE;
+import static pl.koszela.spring.views.priceLists.AccessoriesWindowsPriceListView.ACCESSORIES_WINDOWS_PRICE;
+import static pl.koszela.spring.views.priceLists.CollarsPriceListView.COLLARS_PRICE;
+import static pl.koszela.spring.views.priceLists.CustomerRecommendListView.CUSTOMER_RECOMMEND;
+import static pl.koszela.spring.views.priceLists.GutterPriceListView.GUTTERS_PRICE;
+import static pl.koszela.spring.views.priceLists.WindowsPriceListView.WINDOWS_PRICE;
 import static staticField.Endpoint.FILE_TO_GENERATE_OFFER_URL;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.AccesoriesWindowsView.ACCESORIES_WINDOWS;
@@ -46,7 +51,7 @@ import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 import static pl.koszela.spring.views.priceLists.TilesPriceListView.TILES_PRICE_LIST;
 
-@Route("")
+//@Route("")
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
 public class MainView extends AppLayout {
 
@@ -66,7 +71,6 @@ public class MainView extends AppLayout {
 
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_CONTRAST);
-        addItemMenuBar(menuBar, "Strona Główna", "");
         addItemMenuBar(menuBar, "Klienci", INPUT_USER);
         addItemMenuBar(menuBar, "Wprowadź Dane", INCLUDE_DATA);
         addItemMenuBar(menuBar, "Akcesoria", SELECT_ACCESORIES);
@@ -80,7 +84,12 @@ public class MainView extends AppLayout {
         MenuItem priceLists = menuBar.addItem("Cenniki");
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
         priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESSORIES_PRICE)));
+        priceLists.getSubMenu().addItem("Kołnierze", event -> getUI().ifPresent(ui -> ui.navigate(COLLARS_PRICE)));
+        priceLists.getSubMenu().addItem("Akcesoria okienne", event -> getUI().ifPresent(ui -> ui.navigate(ACCESSORIES_WINDOWS_PRICE)));
+        priceLists.getSubMenu().addItem("Rynny", event -> getUI().ifPresent(ui -> ui.navigate(GUTTERS_PRICE)));
+        priceLists.getSubMenu().addItem("Okna", event -> getUI().ifPresent(ui -> ui.navigate(WINDOWS_PRICE)));
         priceLists.getSubMenu().addItem("Konkurencja", event -> getUI().ifPresent(ui -> ui.navigate(PRICE_LIST_OF_SALES_COMPETITION)));
+        priceLists.getSubMenu().addItem("Rekomendacje", event -> getUI().ifPresent(ui -> ui.navigate(CUSTOMER_RECOMMEND)));
 
         Button importFilesButton = new Button("Zaimportuj pliki");
         importFilesButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -95,19 +104,15 @@ public class MainView extends AppLayout {
         anchor.getElement().setAttribute("download", true);
         anchor.setHref(getStreamResource(file.getName(), file));
         anchor.setVisible(false);
-        Button saveNewUser = new Button("Zapisz użytkownika");
+        Button saveNewUser = new Button("Zapisz użytkownika", event -> createUser.saveUser());
         saveNewUser.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-        saveNewUser.addClickListener(event -> createUser.saveUser());
-        Button update = new Button("Zaktualizuj użytkownika");
+        Button update = new Button("Zaktualizuj użytkownika", event -> updateUser.updateUser());
         update.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-        update.addClickListener(event -> updateUser.updateUser());
         FormLayout formLayout = new FormLayout();
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
         formLayout.setResponsiveSteps(responsiveStep);
 
-        Button generateOffer = new Button("Generuj ofertę");
-        generateOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-        generateOffer.addClickListener(buttonClickEvent -> {
+        Button generateOffer = new Button("Generuj ofertę", buttonClickEvent -> {
             try {
                 GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
                 formLayout.add(new Tab(anchor));
@@ -117,6 +122,7 @@ public class MainView extends AppLayout {
                 NotificationInterface.notificationOpen("Coś poszło nie tak. Proszę uzupełnić wszystkie pola", NotificationVariant.LUMO_ERROR);
             }
         });
+        generateOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         formLayout.add(importFilesButton, saveNewUser, update, generateOffer);
         addToNavbar(menuBar);

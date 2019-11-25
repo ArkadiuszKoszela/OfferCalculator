@@ -8,13 +8,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import org.apache.commons.lang3.StringUtils;
-import pl.koszela.spring.entities.Accessories;
-import pl.koszela.spring.entities.BaseEntity;
-import pl.koszela.spring.entities.Tiles;
-import pl.koszela.spring.repositories.BaseRepository;
+import pl.koszela.spring.entities.main.BaseEntity;
+import pl.koszela.spring.repositories.main.BaseRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +23,7 @@ public interface PriceListInterface<E extends BaseEntity> extends GridInteraface
     default Grid<E> createGrid(Grid<E> grid, Binder<E> binder, List<E> list) {
         TextField filter = new TextField();
         ListDataProvider<E> listDataProvider = new ListDataProvider<>(list);
-        grid.setDataProvider(new ListDataProvider<>(list));
+        grid.setDataProvider(listDataProvider);
 
         Grid.Column<E> priceListNameColumn = grid.addColumn(E::getManufacturer).setHeader("Nazwa Cennika");
         Grid.Column<E> nameColumn = grid.addColumn(E::getName).setHeader("Nazwa");
@@ -43,11 +40,11 @@ public interface PriceListInterface<E extends BaseEntity> extends GridInteraface
 
         HeaderRow filterRow = grid.appendHeaderRow();
         filter.addValueChangeListener(event -> listDataProvider.addFilter(
-                tiles -> StringUtils.containsIgnoreCase(tiles.getName(), filter.getValue())
+                baseEntity -> StringUtils.containsIgnoreCase(baseEntity.getName(), filter.getValue())
         ));
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filterRow.getCell(priceListNameColumn).setComponent(filter);
+        filterRow.getCell(nameColumn).setComponent(filter);
         filter.setSizeFull();
         filter.setPlaceholder("Filter");
 

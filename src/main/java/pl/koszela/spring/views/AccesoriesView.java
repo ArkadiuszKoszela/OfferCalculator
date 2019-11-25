@@ -17,9 +17,10 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import pl.koszela.spring.entities.Accessories;
-import pl.koszela.spring.entities.InputData;
-import pl.koszela.spring.repositories.AccesoriesRepository;
+import org.springframework.transaction.annotation.Transactional;
+import pl.koszela.spring.entities.main.Accessories;
+import pl.koszela.spring.entities.main.InputData;
+import pl.koszela.spring.repositories.main.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import staticField.TitleNumberFields;
 
@@ -41,11 +42,6 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
 
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
         this.accesoriesRepository = accesoriesRepository;
-//        if (set == null) {
-//            List<Accesories> all = accesoriesRepository.findAll();
-//            List<Accesories> newValue = all.stream().filter(f -> f.getOption().equals("PODSTAWOWY")).collect(Collectors.toList());
-//            set = new HashSet<>(addQuantityToList(newValue));
-//        }
         add(createCheckbox());
         add(createGrid());
     }
@@ -84,15 +80,14 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
     public TreeData<Accessories> addItems(List list) {
         TreeData<Accessories> treeData = new TreeData<>();
         if (set != null) {
-//            Set<String> parents = new HashSet<>();
             Set<String> parents = set.stream().map(Accessories::getCategory).collect(Collectors.toSet());
             for (String parent : parents) {
-                List<Accessories> childrens = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
-                for (int i = 0; i < childrens.size(); i++) {
+                List<Accessories> kids = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
+                for (int i = 0; i < kids.size(); i++) {
                     if (i == 0) {
-                        treeData.addItem(null, childrens.stream().findFirst().get());
+                        treeData.addItem(null, kids.stream().findFirst().get());
                     } else {
-                        treeData.addItem(childrens.stream().findFirst().get(), childrens.get(i));
+                        treeData.addItem(kids.stream().findFirst().get(), kids.get(i));
                     }
                 }
             }
@@ -174,8 +169,8 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
                 return 0d;
         }
     }
-
-    private void checkbox() {
+    @Transactional("mainTransactionManager")
+    void checkbox() {
         checkboxGroup.addValueChangeListener(e -> {
             List<Accessories> all = accesoriesRepository.findAll();
             List<Accessories> newValue = all.stream().filter(f -> f.getType().equals(e.getValue())).collect(Collectors.toList());

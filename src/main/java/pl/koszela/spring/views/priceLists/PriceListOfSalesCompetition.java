@@ -9,8 +9,8 @@ import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
-import pl.koszela.spring.entities.Competition;
-import pl.koszela.spring.entities.CategoryOfTiles;
+import pl.koszela.spring.entities.main.Competition;
+import pl.koszela.spring.entities.main.CategoryOfTiles;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.views.MainView;
 
