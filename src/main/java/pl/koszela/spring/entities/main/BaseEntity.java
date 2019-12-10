@@ -18,6 +18,7 @@ public class BaseEntity extends Discounts {
     private String size;
     private String type;
     private String date;
+    private String urlToDownloadFile;
 
     public String getName() {
         return name;
@@ -113,5 +114,13 @@ public class BaseEntity extends Discounts {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getUrlToDownloadFile() {
+        return urlToDownloadFile;
+    }
+
+    public void setUrlToDownloadFile(String urlToDownloadFile) {
+        this.urlToDownloadFile = urlToDownloadFile;
     }
 }

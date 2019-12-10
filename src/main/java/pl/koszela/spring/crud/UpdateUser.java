@@ -5,7 +5,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.main.*;
-import pl.koszela.spring.repositories.main.*;
+import pl.koszela.spring.repositories.*;
 import pl.koszela.spring.service.HasLogger;
 import pl.koszela.spring.service.NotificationInterface;
 
@@ -13,7 +13,6 @@ import java.util.*;
 
 @Service
 public class UpdateUser  implements HasLogger {
-//    private final static Logger logger = Logger.getLogger(UpdateUser.class);
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;

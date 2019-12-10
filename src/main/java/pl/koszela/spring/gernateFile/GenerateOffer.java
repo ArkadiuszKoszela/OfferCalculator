@@ -50,6 +50,18 @@ public class GenerateOffer {
             Paragraph tileManufacturer = new Paragraph("\n\n" + TileDescriptions.NELSKAMRUBP.description + "\n\n\n", font10);
 
             document.add(tileManufacturer);
+            Set<Accessories> accesories1 = accessoriesSet.stream().filter(Accessories::isOffer).collect(Collectors.toSet());
+            for (Accessories accessories : accesories1) {
+                if (!accessories.getUrlToDownloadFile().equals("")) {
+                    Phrase phrase = new Phrase();
+                    phrase.add("W celu pobrania instrukcji ");
+                    Font red = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.RED);
+                    Chunk chunk = new Chunk("kliknij tutaj", red);
+                    chunk.setAnchor(accessories.getUrlToDownloadFile());
+                    phrase.add(chunk);
+                    document.add(phrase);
+                }
+            }
 
             Image img = Image.getInstance("http://www.nowoczesnebudowanie.pl/wp-content/uploads/2016/10/logo-nowoczesne-budowanie-1200x857.png");
             img.scaleAbsolute(80f, 50f);

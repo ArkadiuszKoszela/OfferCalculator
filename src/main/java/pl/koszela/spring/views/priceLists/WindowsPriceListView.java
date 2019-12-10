@@ -6,9 +6,15 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
+import org.apache.catalina.Context;
+import org.apache.tomcat.util.http.LegacyCookieProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.context.annotation.Bean;
 import pl.koszela.spring.entities.main.Windows;
-import pl.koszela.spring.repositories.main.WindowsRepository;
+import pl.koszela.spring.repositories.WindowsRepository;
 import pl.koszela.spring.service.PriceListInterface;
 import pl.koszela.spring.views.MainView;
 
@@ -33,21 +39,28 @@ public class WindowsPriceListView extends VerticalLayout implements PriceListInt
 
         list = allGuttersFromRepository();
 
-        add(createGrid(grid, binder, list));
+        add(createGrid(grid, binder, list, windowsRepository));
         add(saveToRepo(grid, new ArrayList<>(allGuttersFromRepository()), list, windowsRepository));
+    }
+
+    @Bean
+    WebServerFactoryCustomizer<TomcatServletWebServerFactory> cookieProcessorCustomizer() {
+        return new WebServerFactoryCustomizer<TomcatServletWebServerFactory>() {
+
+            @Override
+            public void customize(TomcatServletWebServerFactory tomcatServletWebServerFactory) {
+                tomcatServletWebServerFactory.addContextCustomizers(new TomcatContextCustomizer() {
+                    @Override
+                    public void customize(Context context) {
+                        context.setCookieProcessor(new LegacyCookieProcessor());
+                    }
+                });
+            }
+        };
     }
 
     private List<Windows> allGuttersFromRepository() {
         return windowsRepository.findAll();
     }
 
-    @Override
-    public TreeData addItems(List<Windows> list) {
-        return null;
-    }
-
-    @Override
-    public ComponentRenderer createComponent() {
-        return null;
-    }
 }

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.koszela.spring.entities.main.*;
-import pl.koszela.spring.repositories.main.*;
+import pl.koszela.spring.repositories.*;
 import pl.koszela.spring.service.HasLogger;
 import pl.koszela.spring.service.NotificationInterface;
 
@@ -14,7 +14,6 @@ import java.util.*;
 
 @Service
 public class CreateUser implements HasLogger {
-//    private final static Logger logger = Logger.getLogger(CreateUser.class);
 
     private PersonalDataRepository personalDataRepository;
     private UsersRepo usersRepo;
@@ -39,7 +38,7 @@ public class CreateUser implements HasLogger {
         this.collarRepository = Objects.requireNonNull(collarRepository);
         this.accesoriesWindowsRepository = Objects.requireNonNull(accesoriesWindowsRepository);
     }
-    @Transactional("mainTransactionManager")
+
     public void saveUser() {
         List<Gutter> list = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
         PersonalData personalData = (PersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");

@@ -25,7 +25,7 @@ import pl.koszela.spring.entities.main.Accessories;
 import pl.koszela.spring.entities.main.Fireside;
 import pl.koszela.spring.entities.main.FiresideDTO;
 import pl.koszela.spring.entities.main.Windows;
-import pl.koszela.spring.repositories.main.FiresideRepository;
+import pl.koszela.spring.repositories.FiresideRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.util.*;
@@ -94,8 +94,6 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
 
         closeListener(grid, binder);
 
-//        readBeans(binder);
-
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
@@ -132,17 +130,6 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
             return new VerticalLayout(mainCheckBox);
         });
     }
-
-//    private void readBeans(Binder<FiresideDTO> binder) {
-//        if (listFireside != null) {
-//            for (Fireside fireside : listFireside) {
-//                fireside.setAllpricePurchase(BigDecimal.valueOf(fireside.getUnitDetalPrice() * fireside.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//                fireside.setAllpriceAfterDiscount(BigDecimal.valueOf(fireside.getUnitDetalPrice() * fireside.getQuantity() * (100 - fireside.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//                fireside.setAllprofit(BigDecimal.valueOf(fireside.getAllpriceAfterDiscount() - fireside.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//                binder.setBean(fireside);
-//            }
-//        }
-//    }
 
     private ComboBox<String> createComboBoxManufacturer() {
         Set<String> collect = firesideRepository.findAll().stream().map(Fireside::getManufacturer).collect(Collectors.toSet());

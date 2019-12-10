@@ -5,22 +5,11 @@ import javax.persistence.Entity;
 @Entity
 public class LightningProtectionSystem extends BaseEntity{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
     private String category;
     private boolean offer;
 
     public LightningProtectionSystem() {
     }
-
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
 
     public String getCategory() {
         return category;

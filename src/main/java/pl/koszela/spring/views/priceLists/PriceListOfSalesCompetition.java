@@ -46,7 +46,6 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         itemClickListener(treeGrid, priceField);
         cena.setEditorComponent(priceField);
 
-
         settingsGrid(treeGrid);
         return treeGrid;
     }

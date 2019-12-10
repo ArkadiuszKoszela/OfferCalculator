@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.entities.main.PersonalData;
 import pl.koszela.spring.entities.main.User;
-import pl.koszela.spring.repositories.main.UsersRepo;
+import pl.koszela.spring.repositories.UsersRepo;
 
 import java.util.Objects;
 import java.util.Optional;

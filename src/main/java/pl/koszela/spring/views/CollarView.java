@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.Accessories;
 import pl.koszela.spring.entities.main.Collar;
 import pl.koszela.spring.entities.main.Windows;
-import pl.koszela.spring.repositories.main.CollarRepository;
+import pl.koszela.spring.repositories.CollarRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;

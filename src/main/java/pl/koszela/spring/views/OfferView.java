@@ -131,13 +131,4 @@ public class OfferView extends VerticalLayout implements GridInteraface<Tiles> {
             return new VerticalLayout(mainCheckBox, optionCheckbox);
         });
     }
-
-//    private void readBeans(Binder<Tiles> binder) {
-//        for (Tiles tiles : set) {
-//            tiles.setAllpricePurchase(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            tiles.setAllpriceAfterDiscount(BigDecimal.valueOf(tiles.getUnitDetalPrice() * tiles.getQuantity() * (100 - tiles.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            tiles.setAllprofit(BigDecimal.valueOf(tiles.getAllpriceAfterDiscount() - tiles.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            binder.setBean(tiles);
-//        }
-//    }
 }

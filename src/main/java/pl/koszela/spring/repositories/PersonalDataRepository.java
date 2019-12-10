@@ -1,4 +1,4 @@
-package pl.koszela.spring.repositories.main;
+package pl.koszela.spring.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

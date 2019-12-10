@@ -1,39 +1,56 @@
 package pl.koszela.spring.service;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.server.VaadinService;
 import org.apache.commons.lang3.StringUtils;
+import pl.koszela.spring.entities.main.Accessories;
 import pl.koszela.spring.entities.main.BaseEntity;
-import pl.koszela.spring.repositories.main.BaseRepository;
+import pl.koszela.spring.repositories.BaseRepository;
 
+
+import javax.servlet.http.Cookie;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
-public interface PriceListInterface<E extends BaseEntity> extends GridInteraface<E> {
+import static pl.koszela.spring.service.CalculatePrices.calculateDetalPrice;
 
-    default Grid<E> createGrid(Grid<E> grid, Binder<E> binder, List<E> list) {
+public interface PriceListInterface<T extends BaseEntity> {
+
+    default Grid<T> createGrid(Grid<T> grid, Binder<T> binder, List<T> list, BaseRepository<T> repository) {
         TextField filter = new TextField();
-        ListDataProvider<E> listDataProvider = new ListDataProvider<>(list);
+        ListDataProvider<T> listDataProvider = new ListDataProvider<>(list);
         grid.setDataProvider(listDataProvider);
 
-        Grid.Column<E> priceListNameColumn = grid.addColumn(E::getManufacturer).setHeader("Nazwa Cennika");
-        Grid.Column<E> nameColumn = grid.addColumn(E::getName).setHeader("Nazwa");
-        Grid.Column<E> priceColumn = grid.addColumn(E::getUnitDetalPrice).setHeader("Cena detal");
-        Grid.Column<E> basicDiscountColumn = grid.addColumn(E::getBasicDiscount).setHeader("Podstawowy rabat");
-        Grid.Column<E> promotionDiscountColumn = grid.addColumn(E::getPromotionDiscount).setHeader("Promocja");
-        Grid.Column<E> additionalDiscountColumn = grid.addColumn(E::getAdditionalDiscount).setHeader("Dodatkowy rabat");
-        Grid.Column<E> skontoDiscountColumn = grid.addColumn(E::getSkontoDiscount).setHeader("Skonto");
-        Grid.Column<E> priceFromRepoColumn = grid.addColumn(E::getUnitPurchasePrice).setHeader("Cena zakupu(z ręki)");
-        Grid.Column<E> date = grid.addColumn(E::getDate).setHeader("Data zmiany");
+        Grid.Column<T> priceListNameColumn = grid.addColumn(T::getManufacturer).setHeader("Nazwa Cennika");
+        Grid.Column<T> nameColumn = grid.addColumn(T::getName).setHeader("Nazwa");
+        Grid.Column<T> priceColumn = grid.addColumn(T::getUnitDetalPrice).setHeader("Cena detal");
+        Grid.Column<T> basicDiscountColumn = grid.addColumn(T::getBasicDiscount).setHeader("Podstawowy rabat");
+        Grid.Column<T> promotionDiscountColumn = grid.addColumn(T::getPromotionDiscount).setHeader("Promocja");
+        Grid.Column<T> additionalDiscountColumn = grid.addColumn(T::getAdditionalDiscount).setHeader("Dodatkowy rabat");
+        Grid.Column<T> skontoDiscountColumn = grid.addColumn(T::getSkontoDiscount).setHeader("Skonto");
+        Grid.Column<T> priceFromRepoColumn = grid.addColumn(T::getUnitPurchasePrice).setHeader("Cena zakupu(z ręki)");
+        Grid.Column<T> date = grid.addColumn(T::getDate).setHeader("Data zmiany");
+        Grid.Column<T> fileUrl = grid.addColumn(T::getUrlToDownloadFile).setHeader("Cennik");
 
         binder = new Binder<>();
         grid.getEditor().setBinder(binder);
@@ -48,19 +65,19 @@ public interface PriceListInterface<E extends BaseEntity> extends GridInteraface
         filter.setSizeFull();
         filter.setPlaceholder("Filter");
 
-        TextField basicDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), E::getBasicDiscount, E::setBasicDiscount);
+        TextField basicDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), T::getBasicDiscount, T::setBasicDiscount);
         itemClickListener(grid, basicDiscount);
         basicDiscountColumn.setEditorComponent(basicDiscount);
 
-        TextField promotionDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), E::getPromotionDiscount, E::setPromotionDiscount);
+        TextField promotionDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), T::getPromotionDiscount, T::setPromotionDiscount);
         itemClickListener(grid, promotionDiscount);
         promotionDiscountColumn.setEditorComponent(promotionDiscount);
 
-        TextField additionalDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), E::getAdditionalDiscount, E::setAdditionalDiscount);
+        TextField additionalDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), T::getAdditionalDiscount, T::setAdditionalDiscount);
         itemClickListener(grid, additionalDiscount);
         additionalDiscountColumn.setEditorComponent(additionalDiscount);
 
-        TextField skontoDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), E::getSkontoDiscount, E::setSkontoDiscount);
+        TextField skontoDiscount = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), T::getSkontoDiscount, T::setSkontoDiscount);
         itemClickListener(grid, skontoDiscount);
         skontoDiscountColumn.setEditorComponent(skontoDiscount);
 
@@ -69,11 +86,26 @@ public interface PriceListInterface<E extends BaseEntity> extends GridInteraface
         return grid;
     }
 
-    default Button saveToRepo(Grid<E> grid, List<E> fromRepo, List<E> actuallyList, BaseRepository<E> repository) {
+    default Map<String, String> convert(T ex) {
+        Map<String, String> stringMap = new HashMap<>();
+        stringMap.put("name", ex.getName());
+        stringMap.put("manufacturer", ex.getManufacturer());
+        stringMap.put("date", ex.getDate());
+        stringMap.put("category", ex.getCategory());
+        stringMap.put("size", ex.getSize());
+        stringMap.put("type", ex.getType());
+        stringMap.put("quantity", String.valueOf(ex.getQuantity()));
+        stringMap.put("unitDetalPrice", String.valueOf(ex.getUnitDetalPrice()));
+        stringMap.put("discount", String.valueOf(ex.getDiscount()));
+        stringMap.put("unitPurchasePrice", String.valueOf(ex.getUnitPurchasePrice()));
+        return stringMap;
+    }
+
+    default Button saveToRepo(Grid<T> grid, List<T> fromRepo, List<T> actuallyList, BaseRepository<T> repository) {
         return new Button("Zapisz do bazy", event -> {
 
-            for (E old : fromRepo) {
-                for (E tiles : actuallyList) {
+            for (T old : fromRepo) {
+                for (T tiles : actuallyList) {
                     if (old.getManufacturer().equals(tiles.getManufacturer()) && old.getName().equals(tiles.getName())) {
                         if (!old.getBasicDiscount().equals(tiles.getBasicDiscount())
                                 || !old.getAdditionalDiscount().equals(tiles.getAdditionalDiscount())
@@ -88,6 +120,54 @@ public interface PriceListInterface<E extends BaseEntity> extends GridInteraface
             }
             repository.saveAll(new HashSet<>(actuallyList));
             NotificationInterface.notificationOpen("Zmodyfikowano cenniki dn.    " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")), NotificationVariant.LUMO_SUCCESS);
+            grid.getDataProvider().refreshAll();
+        });
+    }
+
+    default TextField bindTextFieldToInteger(Binder<T> binder, StringToIntegerConverter stringToIntegerConverter, ValueProvider<T, Integer> valueProvider, Setter<T, Integer> setter) {
+        TextField textField = new TextField();
+        binder.forField(textField)
+                .withConverter(stringToIntegerConverter)
+                .bind(valueProvider, setter);
+        return textField;
+    }
+
+    default void settingsGrid(Grid<T> grid) {
+        grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+        grid.getColumns().forEach(e -> e.setAutoWidth(true));
+        grid.setMinHeight("1050px");
+    }
+
+    default void itemClickListener(Grid<T> grid, TextField textField) {
+        textField.getElement()
+                .addEventListener("keydown",
+                        event -> grid.getEditor().cancel())
+                .setFilter("event.key === 'Enter'");
+        grid.addItemDoubleClickListener(event -> {
+            grid.getEditor().editItem(event.getItem());
+            textField.focus();
+        });
+    }
+
+    default void closeListener(Grid<T> grid, Binder<? extends BaseEntity> binder) {
+        grid.getEditor().addCloseListener(event -> {
+            if (binder.getBean() != null) {
+                BaseEntity bean = binder.getBean();
+                if (bean.getDiscount() == null || bean.getQuantity() == null) {
+                    bean.setDiscount(0);
+                    bean.setQuantity(0d);
+                }
+                if (bean.getDiscount() > 30) {
+                    bean.setDiscount(30);
+                    NotificationInterface.notificationOpen("Maksymalny rabat to 30 %", NotificationVariant.LUMO_ERROR);
+                }
+                bean.setUnitDetalPrice(0d);
+                bean.setUnitDetalPrice(calculateDetalPrice(bean));
+                bean.setUnitDetalPrice(BigDecimal.valueOf(bean.getUnitDetalPrice() * (100 - bean.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                bean.setAllpriceAfterDiscount(BigDecimal.valueOf(bean.getUnitDetalPrice() * bean.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                bean.setAllpricePurchase(BigDecimal.valueOf(bean.getUnitPurchasePrice() * bean.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                bean.setAllprofit(BigDecimal.valueOf(bean.getAllpriceAfterDiscount() - bean.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            }
             grid.getDataProvider().refreshAll();
         });
     }

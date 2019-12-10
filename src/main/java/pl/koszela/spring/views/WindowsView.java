@@ -17,7 +17,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.Windows;
-import pl.koszela.spring.repositories.main.WindowsRepository;
+import pl.koszela.spring.repositories.WindowsRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.util.*;
@@ -110,15 +110,6 @@ public class WindowsView extends VerticalLayout implements GridInteraface<Window
     private Set<Windows> allWindows() {
         return new HashSet<>(windowsRepository.findAll());
     }
-
-//    private void readBeans(Binder<Windows> binder, Set<>) {
-//        for (Windows windows : setWindows) {
-//            windows.setAllpricePurchase(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * 70 / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            windows.setAllpriceAfterDiscount(BigDecimal.valueOf(windows.getUnitDetalPrice() * windows.getQuantity() * (100 - windows.getDiscount()) / 100).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            windows.setAllprofit(BigDecimal.valueOf(windows.getAllpriceAfterDiscount() - windows.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            binder.setBean(windows);
-//        }
-//    }
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {

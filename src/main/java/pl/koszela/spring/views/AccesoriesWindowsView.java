@@ -17,7 +17,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.AccessoriesWindows;
 import pl.koszela.spring.entities.main.Windows;
-import pl.koszela.spring.repositories.main.AccesoriesWindowsRepository;
+import pl.koszela.spring.repositories.AccesoriesWindowsRepository;
 import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;

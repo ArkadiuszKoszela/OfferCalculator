@@ -1,4 +1,4 @@
-package staticField;
+package pl.koszela.spring.staticField;
 
 public enum TitleNumberFields {
     POWIERZCHNIA_POLACI("Powierzchnia połaci"),

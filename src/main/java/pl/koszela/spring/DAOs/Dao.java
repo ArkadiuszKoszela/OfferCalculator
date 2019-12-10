@@ -3,7 +3,7 @@ package pl.koszela.spring.DAOs;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.koszela.spring.entities.main.BaseEntity;
-import pl.koszela.spring.repositories.main.BaseRepository;
+import pl.koszela.spring.repositories.BaseRepository;
 import pl.koszela.spring.service.HasLogger;
 
 import java.io.BufferedReader;
@@ -15,7 +15,6 @@ import static pl.koszela.spring.service.CalculatePrices.calculatePurchasePrice;
 
 @Service
 public class Dao  implements HasLogger {
-//    private Logger logger = Logger.getLogger(Dao.class);
 
     private NameFromURL nameFromURL = new NameFromURL();
 
@@ -41,6 +40,7 @@ public class Dao  implements HasLogger {
                 entity.setSkontoDiscount(0);
                 entity.setManufacturer(nameFromURL.getName(filePath));
                 entity.setUnitPurchasePrice(calculatePurchasePrice(entity));
+                entity.setUrlToDownloadFile("");
 
                 repository.save(entity);
             }
@@ -61,7 +61,6 @@ public class Dao  implements HasLogger {
         }
     }
 
-//    @Transactional("mainTransactionManager")
     public <T extends BaseEntity> void deleteAllFromRepo(BaseRepository<T> baseRepository) {
         baseRepository.deleteAll();
         getLogger().info("deleted all from " + BaseRepository.class.getName());

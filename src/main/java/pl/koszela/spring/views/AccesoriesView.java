@@ -20,9 +20,9 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.transaction.annotation.Transactional;
 import pl.koszela.spring.entities.main.Accessories;
 import pl.koszela.spring.entities.main.InputData;
-import pl.koszela.spring.repositories.main.AccesoriesRepository;
+import pl.koszela.spring.repositories.AccesoriesRepository;
 import pl.koszela.spring.service.GridInteraface;
-import staticField.TitleNumberFields;
+import pl.koszela.spring.staticField.TitleNumberFields;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

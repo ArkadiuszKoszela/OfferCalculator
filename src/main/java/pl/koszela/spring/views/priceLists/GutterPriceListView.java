@@ -8,7 +8,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.Gutter;
-import pl.koszela.spring.repositories.main.GutterRepository;
+import pl.koszela.spring.repositories.GutterRepository;
 import pl.koszela.spring.service.PriceListInterface;
 import pl.koszela.spring.views.MainView;
 
@@ -33,7 +33,7 @@ public class GutterPriceListView extends VerticalLayout implements PriceListInte
 
         list = allGuttersFromRepository();
 
-        add(createGrid(grid, binder, list));
+        add(createGrid(grid, binder, list, gutterRepository));
         add(saveToRepo(grid, new ArrayList<>(allGuttersFromRepository()), list, gutterRepository));
     }
 
@@ -41,13 +41,5 @@ public class GutterPriceListView extends VerticalLayout implements PriceListInte
         return gutterRepository.findAll();
     }
 
-    @Override
-    public TreeData addItems(List<Gutter> list) {
-        return null;
-    }
 
-    @Override
-    public ComponentRenderer createComponent() {
-        return null;
-    }
 }

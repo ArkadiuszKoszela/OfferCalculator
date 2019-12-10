@@ -8,7 +8,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.AccessoriesWindows;
-import pl.koszela.spring.repositories.main.AccesoriesWindowsRepository;
+import pl.koszela.spring.repositories.AccesoriesWindowsRepository;
 import pl.koszela.spring.service.PriceListInterface;
 import pl.koszela.spring.views.MainView;
 
@@ -33,21 +33,11 @@ public class AccessoriesWindowsPriceListView extends VerticalLayout implements P
 
         list = allAccessoriesWindowsFromRepository();
 
-        add(createGrid(grid, binder, list));
+        add(createGrid(grid, binder, list, accesoriesWindowsRepository));
         add(saveToRepo(grid, new ArrayList<>(allAccessoriesWindowsFromRepository()), list, accesoriesWindowsRepository));
     }
 
     private List<AccessoriesWindows> allAccessoriesWindowsFromRepository() {
         return accesoriesWindowsRepository.findAll();
-    }
-
-    @Override
-    public TreeData addItems(List<AccessoriesWindows> list) {
-        return null;
-    }
-
-    @Override
-    public ComponentRenderer createComponent() {
-        return null;
     }
 }

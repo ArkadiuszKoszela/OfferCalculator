@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.CategoryOfTiles;
 import pl.koszela.spring.entities.main.Tiles;
-import pl.koszela.spring.repositories.main.TilesRepository;
+import pl.koszela.spring.repositories.TilesRepository;
 import pl.koszela.spring.service.GridInteraface;
 import pl.koszela.spring.service.NotificationInterface;
 import pl.koszela.spring.views.MainView;

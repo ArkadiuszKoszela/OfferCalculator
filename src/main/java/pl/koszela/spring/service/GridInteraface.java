@@ -90,7 +90,6 @@ public interface GridInteraface<E> {
             baseEntity.setAllpriceAfterDiscount(BigDecimal.valueOf(baseEntity.getUnitDetalPrice() * baseEntity.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             baseEntity.setAllpricePurchase(BigDecimal.valueOf(baseEntity.getUnitPurchasePrice() * baseEntity.getQuantity()).setScale(2, RoundingMode.HALF_UP).doubleValue());
             baseEntity.setAllprofit(BigDecimal.valueOf(baseEntity.getAllpriceAfterDiscount() - baseEntity.getAllpricePurchase()).setScale(2, RoundingMode.HALF_UP).doubleValue());
-//            binder.setBean(baseEntity);
         }
     }
 }

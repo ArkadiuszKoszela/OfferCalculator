@@ -14,7 +14,6 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.NotFoundException;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -37,7 +36,7 @@ import static pl.koszela.spring.views.priceLists.CollarsPriceListView.COLLARS_PR
 import static pl.koszela.spring.views.priceLists.CustomerRecommendListView.CUSTOMER_RECOMMEND;
 import static pl.koszela.spring.views.priceLists.GutterPriceListView.GUTTERS_PRICE;
 import static pl.koszela.spring.views.priceLists.WindowsPriceListView.WINDOWS_PRICE;
-import static staticField.Endpoint.FILE_TO_GENERATE_OFFER_URL;
+import static pl.koszela.spring.staticField.Endpoint.FILE_TO_GENERATE_OFFER_URL;
 import static pl.koszela.spring.views.AccesoriesView.SELECT_ACCESORIES;
 import static pl.koszela.spring.views.AccesoriesWindowsView.ACCESORIES_WINDOWS;
 import static pl.koszela.spring.views.CollarView.COLLAR;
@@ -51,7 +50,6 @@ import static pl.koszela.spring.views.UsersView.INPUT_USER;
 import static pl.koszela.spring.views.WindowsView.WINDOWS;
 import static pl.koszela.spring.views.priceLists.TilesPriceListView.TILES_PRICE_LIST;
 
-//@Route("")
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
 public class MainView extends AppLayout {
 

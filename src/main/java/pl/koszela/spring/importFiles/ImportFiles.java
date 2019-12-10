@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.koszela.spring.DAOs.*;
 import pl.koszela.spring.entities.main.*;
-import pl.koszela.spring.repositories.main.*;
+import pl.koszela.spring.repositories.*;
 import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.Objects;
 
-import static staticField.Endpoint.*;
+import static pl.koszela.spring.staticField.Endpoint.*;
 
 @Service
 public class ImportFiles<T extends BaseEntity>{

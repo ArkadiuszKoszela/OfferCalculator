@@ -11,14 +11,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import pl.koszela.spring.entities.main.InputData;
 import pl.koszela.spring.entities.main.Gutter;
 import pl.koszela.spring.entities.main.CategoryOfTiles;
 import pl.koszela.spring.entities.main.Tiles;
-import pl.koszela.spring.repositories.main.GutterRepository;
-import pl.koszela.spring.repositories.main.TilesRepository;
-import staticField.TitleNumberFields;
+import pl.koszela.spring.repositories.GutterRepository;
+import pl.koszela.spring.repositories.TilesRepository;
+import pl.koszela.spring.staticField.TitleNumberFields;
 
 import java.math.BigDecimal;
 import java.util.*;

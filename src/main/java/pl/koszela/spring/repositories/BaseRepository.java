@@ -1,4 +1,4 @@
-package pl.koszela.spring.repositories.main;
+package pl.koszela.spring.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.koszela.spring.entities.main.BaseEntity;
