@@ -8,6 +8,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
@@ -39,8 +40,10 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
     private FiresideRepository firesideRepository;
 
     private Grid<FiresideDTO> grid = new Grid<>();
-    private List<Fireside> listFireside = (List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside");
-    private Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose");
+    private Optional<List<Fireside>> optionalFiresides = Optional.ofNullable((List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside"));
+    private List<Fireside> listFireside = optionalFiresides.orElse(new ArrayList<>());
+    private Optional<Set<Windows>> optionalWindows = Optional.ofNullable((Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose"));
+    private Set<Windows> setWindows = optionalWindows.orElse(new HashSet<>());
     private Binder<FiresideDTO> binder;
     private List<FiresideDTO> firesideInGrid = new ArrayList<>();
 
@@ -112,23 +115,6 @@ public class FiresideView extends VerticalLayout implements GridInteraface<Fires
         FiresideDTO firesideDTO = new FiresideDTO();
         BeanUtils.copyProperties(fireside, firesideDTO);
         return firesideDTO;
-    }
-
-    @Override
-    public TreeData<Accessories> addItems(List list) {
-        return null;
-    }
-
-    @Override
-    public ComponentRenderer<VerticalLayout, FiresideDTO> createComponent() {
-        return new ComponentRenderer<>(firesideDTO -> {
-            Checkbox mainCheckBox = new Checkbox("Dodać ?");
-            mainCheckBox.setValue(firesideDTO.isOffer());
-            mainCheckBox.addValueChangeListener(event -> {
-                firesideDTO.setOffer(event.getValue());
-            });
-            return new VerticalLayout(mainCheckBox);
-        });
     }
 
     private ComboBox<String> createComboBoxManufacturer() {

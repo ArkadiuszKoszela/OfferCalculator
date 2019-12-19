@@ -55,6 +55,7 @@ public class AccessoriesPriceListView extends VerticalLayout implements PriceLis
 
     private Set<UploadFile> uploadFiles;
     private Dialog dialog = new Dialog();
+    private Button btnDiscounts;
 
     @Autowired
     public AccessoriesPriceListView(AccesoriesRepository accesoriesRepository, UploadFileRepository uploadFileRepository, ReadFile readFile, DeleteFile deleteFile, CreateFile createFile) throws IOException {
@@ -76,12 +77,10 @@ public class AccessoriesPriceListView extends VerticalLayout implements PriceLis
         add(createNewGrid(grid, binder, list, accesoriesRepository));
     }
 
-
     private Grid<UploadFile> uploadFileGrid = new Grid<>();
 
     private void createDialogGrid(UploadFileRepository uploadFileRepository, Accessories accessories) {
-        ListDataProvider<UploadFile> listDataProvider = new ListDataProvider<>(uploadFiles);
-        uploadFileGrid.setDataProvider(listDataProvider);
+        uploadFileGrid.setDataProvider(new ListDataProvider<>(uploadFiles));
         uploadFileGrid.addColumn(UploadFile::getNameFolder).setHeader("Nazwa Folderu").setFooter(new Button("Odśwież listę", e -> {
             try {
                 uploadFiles.clear();
@@ -95,25 +94,12 @@ public class AccessoriesPriceListView extends VerticalLayout implements PriceLis
         }));
         uploadFileGrid.addColumn(UploadFile::getNameFile).setHeader("Nazwa pliku").setFooter(createFileInServer(accessories));
         uploadFileGrid.addComponentColumn(uploadFile -> {
-//            HorizontalLayout horizontalLayout
             return buttonDeleteFile(uploadFileRepository, uploadFile);
         });
         uploadFileGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         dialog.add(uploadFileGrid);
         dialog.setWidth("600px");
     }
-
-//    private Button buttonUpdateFile(UploadFileRepository uploadFileRepository, UploadFile uploadFile) {
-//        return new Button("Zmień nazwy", event -> {
-//
-//            if (UpdateFile.updateFile(uploadFile, REMOTE_PATH, uploadFiles, uploadFileRepository)) {
-//                NotificationInterface.notificationOpen("Usunięto instrukcję z bazy", NotificationVariant.LUMO_SUCCESS);
-//            } else {
-//                NotificationInterface.notificationOpen("Nie możn usunąć instrukcji", NotificationVariant.LUMO_ERROR);
-//            }
-//            uploadFileGrid.getDataProvider().refreshAll();
-//        });
-//    }
 
     private Button buttonDeleteFile(UploadFileRepository uploadFileRepository, UploadFile uploadFile) {
         return new Button("Usuń", event -> {
@@ -212,7 +198,6 @@ public class AccessoriesPriceListView extends VerticalLayout implements PriceLis
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        Cookie[] cookies1 = VaadinService.getCurrentRequest().getCookies();
         VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
         Cookie[] cookies = httpServletRequest.getCookies();

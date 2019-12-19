@@ -1,18 +1,13 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
@@ -34,8 +29,11 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
     static final String SELECT_ACCESORIES = "accesories";
 
     private TreeGrid<Accessories> treeGrid = new TreeGrid<>();
-    private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
-    private Set<Accessories> set = (Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+    private Optional<List<InputData>> optionalInputData = Optional.ofNullable((List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData"));
+    private List<InputData> setInput = optionalInputData.orElse(new ArrayList<>());
+    private Optional<Set<Accessories>> optionalAccessories = Optional.ofNullable((Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories"));
+
+    private Set<Accessories> set = optionalAccessories.orElse(new HashSet<>());
     private AccesoriesRepository accesoriesRepository;
     private Binder<Accessories> binder;
     private RadioButtonGroup<String> checkboxGroup = new RadioButtonGroup<>();
@@ -43,68 +41,23 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
     public AccesoriesView(AccesoriesRepository accesoriesRepository) {
         this.accesoriesRepository = accesoriesRepository;
         add(createCheckbox());
-        add(createGrid());
+        add(createGrida());
     }
 
-    public Grid createGrid() {
-        Grid.Column<Accessories> nameColumn = treeGrid.addHierarchyColumn(Accessories::getName).setHeader("Nazwa");
-        Grid.Column<Accessories> quantityColumn = treeGrid.addColumn(Accessories::getQuantity).setHeader("Ilość");
-        Grid.Column<Accessories> discountColumn = treeGrid.addColumn(Accessories::getDiscount).setHeader("Rabat");
-        Grid.Column<Accessories> detalPriceColumn = treeGrid.addColumn(Accessories::getUnitDetalPrice).setHeader("Cena jedn. detal");
-        Grid.Column<Accessories> purchasePriceColumn = treeGrid.addColumn(Accessories::getUnitPurchasePrice).setHeader("Cena jedn. zakup");
-        Grid.Column<Accessories> allPricePurchaseColumn = treeGrid.addColumn(Accessories::getAllpricePurchase).setHeader("Razem zakup");
-        Grid.Column<Accessories> allPriceDetalColumn = treeGrid.addColumn(Accessories::getAllpriceAfterDiscount).setHeader("Razem Detal");
-        Grid.Column<Accessories> profitColumn = treeGrid.addColumn(Accessories::getAllprofit).setHeader("Zysk");
-        treeGrid.addColumn(createComponent()).setHeader("Opcje");
-
-        binder = new Binder<>(Accessories.class);
-        treeGrid.getEditor().setBinder(binder);
-
-        checkbox();
-
-        TextField discountEditField= bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Accessories::getDiscount, Accessories::setDiscount);
-        itemClickListener(treeGrid, discountEditField);
-        discountColumn.setEditorComponent(discountEditField);
-
-        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Accessories::getQuantity, Accessories::setQuantity);
-        itemClickListener(treeGrid, quantityField);
-        quantityColumn.setEditorComponent(quantityField);
-
-        closeListener(treeGrid, binder);
-
-        settingsGrid(treeGrid);
-        return treeGrid;
-    }
-
-    @Override
     public TreeData<Accessories> addItems(List list) {
         TreeData<Accessories> treeData = new TreeData<>();
-        if (set != null) {
-            Set<String> parents = set.stream().map(Accessories::getCategory).collect(Collectors.toSet());
-            for (String parent : parents) {
-                List<Accessories> kids = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
-                for (int i = 0; i < kids.size(); i++) {
-                    if (i == 0) {
-                        treeData.addItem(null, kids.stream().findFirst().get());
-                    } else {
-                        treeData.addItem(kids.stream().findFirst().get(), kids.get(i));
-                    }
+        Set<String> parents = set.stream().map(Accessories::getCategory).collect(Collectors.toSet());
+        for (String parent : parents) {
+            List<Accessories> kids = set.stream().filter(e -> e.getCategory().equals(parent)).collect(Collectors.toList());
+            for (int i = 0; i < kids.size(); i++) {
+                if (i == 0) {
+                    treeData.addItem(null, kids.stream().findFirst().get());
+                } else {
+                    treeData.addItem(kids.stream().findFirst().get(), kids.get(i));
                 }
             }
         }
         return treeData;
-    }
-
-    @Override
-    public ComponentRenderer<VerticalLayout, Accessories> createComponent() {
-        return new ComponentRenderer<>(accesories -> {
-            Checkbox mainCheckBox = new Checkbox("Dodać ?");
-            mainCheckBox.setValue(accesories.isOffer());
-            mainCheckBox.addValueChangeListener(event -> {
-                accesories.setOffer(event.getValue());
-            });
-            return new VerticalLayout(mainCheckBox);
-        });
     }
 
     private List<Accessories> addQuantityToList(List<Accessories> list) {
@@ -127,49 +80,58 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
         Optional<InputData> powierzchniaPolaci = setInput.stream().filter(e -> e.getName().equals(TitleNumberFields.POWIERZCHNIA_POLACI.toString())).findFirst();
         switch (category) {
             case "wspornik":
-                if(dlugoscKalenic.isPresent())
-                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 0.8).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKalenic.isPresent())
+                    return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 0.8).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma kalenicowa":
-                if(dlugoscKalenic.isPresent())
-                return BigDecimal.valueOf(dlugoscKalenic.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKalenic.isPresent())
+                    return BigDecimal.valueOf(dlugoscKalenic.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma do obrobki":
-                if(obwodOkapu.isPresent())
-                return BigDecimal.valueOf((obwodOkapu.get().getValue() + 1) * 2).setScale(0, RoundingMode.UP).doubleValue();
+                if (obwodOkapu.isPresent())
+                    return BigDecimal.valueOf((obwodOkapu.get().getValue() + 1) * 2).setScale(0, RoundingMode.UP).doubleValue();
             case "listwa":
-                if(obwodOkapu.isPresent())
-                return BigDecimal.valueOf((obwodOkapu.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
+                if (obwodOkapu.isPresent())
+                    return BigDecimal.valueOf((obwodOkapu.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
             case "kosz":
-                if(dlugoscKoszy.isPresent())
-                return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKoszy.isPresent())
+                    return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 1.95) + 1).setScale(0, RoundingMode.UP).doubleValue();
             case "klamra do mocowania kosza":
-                if(dlugoscKoszy.isPresent())
-                return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKoszy.isPresent())
+                    return BigDecimal.valueOf((dlugoscKoszy.get().getValue() / 2) * 6).setScale(0, RoundingMode.UP).doubleValue();
             case "tasma samorozprezna":
-                if(dlugoscKoszy.isPresent())
-                return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 2).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKoszy.isPresent())
+                    return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 2).setScale(0, RoundingMode.UP).doubleValue();
             case "grzebien":
-                if(dlugoscOkapu.isPresent())
-                return BigDecimal.valueOf(dlugoscOkapu.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscOkapu.isPresent())
+                    return BigDecimal.valueOf(dlugoscOkapu.get().getValue()).setScale(0, RoundingMode.UP).doubleValue();
             case "pas":
-                if(dlugoscKalenic.isPresent())
-                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 1.9).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKalenic.isPresent())
+                    return BigDecimal.valueOf(dlugoscKalenic.get().getValue() / 1.9).setScale(0, RoundingMode.UP).doubleValue();
             case "klamra do gasiora":
-                if(dlugoscKalenic.isPresent())
-                return BigDecimal.valueOf(dlugoscKalenic.get().getValue() * 2.5).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKalenic.isPresent())
+                    return BigDecimal.valueOf(dlugoscKalenic.get().getValue() * 2.5).setScale(0, RoundingMode.UP).doubleValue();
             case "spinka":
-                if(powierzchniaPolaci.isPresent())
-                return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() / 50).setScale(0, RoundingMode.UP).doubleValue();
+                if (powierzchniaPolaci.isPresent())
+                    return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() / 50).setScale(0, RoundingMode.UP).doubleValue();
             case "spinka cieta":
-                if(dlugoscKoszy.isPresent())
-                return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 0.6).setScale(0, RoundingMode.UP).doubleValue();
+                if (dlugoscKoszy.isPresent())
+                    return BigDecimal.valueOf(dlugoscKoszy.get().getValue() * 0.6).setScale(0, RoundingMode.UP).doubleValue();
             case "membrana":
-                if(powierzchniaPolaci.isPresent())
-                return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() * 1.1).setScale(0, RoundingMode.UP).doubleValue();
+                if (powierzchniaPolaci.isPresent())
+                    return BigDecimal.valueOf(powierzchniaPolaci.get().getValue() * 1.1).setScale(0, RoundingMode.UP).doubleValue();
             default:
                 return 0d;
         }
     }
-    @Transactional("mainTransactionManager")
+
+    public Grid<Accessories> createGrida() {
+        checkbox();
+        List<Accessories> all = accesoriesRepository.findAll();
+        set = new HashSet<>(addQuantityToList(all));
+        GridInteraface.super.createGridd(treeGrid, binder);
+        treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
+        return treeGrid;
+    }
+
     void checkbox() {
         checkboxGroup.addValueChangeListener(e -> {
             List<Accessories> all = accesoriesRepository.findAll();

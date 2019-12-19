@@ -32,9 +32,12 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     private GutterRepository gutterRepository;
 
     private List<NumberField> listOfNumberFields = new ArrayList<>();
-    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
-    private List<Gutter> list = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
-    private List<InputData> setInput = (List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData");
+    private Optional<Set<Tiles>> optionalTiles = Optional.ofNullable((Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles"));
+    private Set<Tiles> set = optionalTiles.orElse(new HashSet<>());
+    private Optional<List<Gutter>> optionalGutters = Optional.ofNullable((List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter"));
+    private List<Gutter> list = optionalGutters.orElse(new ArrayList<>());
+    private Optional<List<InputData>> optionalInputData = Optional.ofNullable((List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData"));
+    private List<InputData> setInput = optionalInputData.orElse(new ArrayList<>());
 
 
     @Autowired
@@ -45,11 +48,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     }
 
     private VerticalLayout createNewSubLayout() {
-        if (setInput == null || setInput.size() == 0) {
-            setInput = new ArrayList<>();
-            for (TitleNumberFields name : TitleNumberFields.values()) {
-                setInput.add(new InputData(name.toString(), 0d));
-            }
+        for (TitleNumberFields name : TitleNumberFields.values()) {
+            setInput.add(new InputData(name.toString(), 0d));
         }
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout tilesLayout = getFormLayout(6);
@@ -109,11 +109,11 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         NumberField numberField1 = listOfNumberFields.stream().filter(e -> e.getLabel().equals(TitleNumberFields.DLUGOSC_KALENIC_SKOSNYCH.toString())).findFirst().orElse(new NumberField());
         NumberField numberField2 = listOfNumberFields.stream().filter(e -> e.getLabel().equals(TitleNumberFields.DLUGOSC_KALENIC_PROSTYCH.toString())).findFirst().orElse(new NumberField());
 
-        numberField1.addValueChangeListener(e ->{
-           collect2.setValue(collect.getValue() + e.getValue());
-           numberField.setValue(collect2.getValue());
+        numberField1.addValueChangeListener(e -> {
+            collect2.setValue(collect.getValue() + e.getValue());
+            numberField.setValue(collect2.getValue());
         });
-        numberField2.addValueChangeListener(e ->{
+        numberField2.addValueChangeListener(e -> {
             collect2.setValue(collect1.getValue() + e.getValue());
             numberField.setValue(collect2.getValue());
         });
@@ -151,7 +151,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     }
 
     private Set<Tiles> listTiles() {
-        if (set != null) {
+        if (set.size() > 0) {
             for (Tiles tiles : set) {
                 listOfNumberFields.forEach(numberField -> {
                     if (numberField.getPattern().equals(tiles.getName())) {
@@ -174,13 +174,10 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         return set;
     }
 
-//    @Transactional("mainTransactionManager")
     List<Gutter> listWithQuantityGutter() {
         Double gutter3mb = setInput.stream().filter(e -> e.getName().contains("Rynna 3mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
         Double gutter4mb = setInput.stream().filter(e -> e.getName().contains("Rynna 4mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
-        if (list == null) {
-            list = gutterRepository.findAll();
-        }
+        list = gutterRepository.findAll();
         for (Gutter gutter : list) {
             if (gutter.getName().equals("rynna 3mb")) {
                 gutter.setQuantity(gutter3mb);

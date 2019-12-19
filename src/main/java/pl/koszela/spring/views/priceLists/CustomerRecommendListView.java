@@ -6,6 +6,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +88,16 @@ public class CustomerRecommendListView extends VerticalLayout {
             });
             horizontalLayout.add(select, button);
             return horizontalLayout;
+        });
+        grid.addComponentColumn(customerRecommend -> {
+            Button button = new Button("Zdjęcia", event -> {
+                Dialog dialog = new Dialog(new Image(customerRecommend.getUrlImage(), customerRecommend.getName()));
+                dialog.open();
+            });
+//            Dialog dialog = new Dialog(new Image(customerRecommend.getUrlImage(), customerRecommend.getName()));
+//            Image image = new Image(customerRecommend.getUrlImage(), customerRecommend.getName());
+            return button;
+
         });
 
 

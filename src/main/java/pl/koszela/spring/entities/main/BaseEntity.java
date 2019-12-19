@@ -19,6 +19,7 @@ public class BaseEntity extends Discounts {
     private String type;
     private String date;
     private String urlToDownloadFile;
+    private boolean offer;
 
     public String getName() {
         return name;
@@ -122,5 +123,13 @@ public class BaseEntity extends Discounts {
 
     public void setUrlToDownloadFile(String urlToDownloadFile) {
         this.urlToDownloadFile = urlToDownloadFile;
+    }
+
+    public boolean isOffer() {
+        return offer;
+    }
+
+    public void setOffer(boolean offer) {
+        this.offer = offer;
     }
 }

@@ -18,6 +18,8 @@ public class CustomerRecommend {
     private Boolean checked4;
     private Integer number;
     private String status;
+    @Column(name = "url_image")
+    private String urlImage;
 
     @ManyToOne
     @JoinColumn
@@ -112,5 +114,13 @@ public class CustomerRecommend {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
 }

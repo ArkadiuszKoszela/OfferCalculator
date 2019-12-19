@@ -3,11 +3,13 @@ package pl.koszela.spring.views.priceLists;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.Gutter;
+import pl.koszela.spring.entities.main.Windows;
 import pl.koszela.spring.repositories.GutterRepository;
 import pl.koszela.spring.service.PriceListInterface;
 import pl.koszela.spring.views.MainView;
@@ -32,7 +34,8 @@ public class GutterPriceListView extends VerticalLayout implements PriceListInte
         this.gutterRepository = Objects.requireNonNull(gutterRepository);
 
         list = allGuttersFromRepository();
-
+        grid.addColumn(Gutter::getManufacturer).setHeader("Nazwa Cennika");
+        grid.setDataProvider(new ListDataProvider<>(list));
         add(createGrid(grid, binder, list, gutterRepository));
         add(saveToRepo(grid, new ArrayList<>(allGuttersFromRepository()), list, gutterRepository));
     }

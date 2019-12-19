@@ -10,8 +10,8 @@ public class Accessories extends BaseEntity {
 
     @Column(name = "option_accesories")
     private String type;
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private boolean offer;
+//    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+//    private boolean offer;
     private String dateChange;
     @ManyToMany(mappedBy = "userAccesories")
     private Set<User> accesoriesUser = new HashSet<>();
@@ -27,13 +27,13 @@ public class Accessories extends BaseEntity {
         this.type = type;
     }
 
-    public boolean isOffer() {
-        return offer;
-    }
-
-    public void setOffer(boolean offer) {
-        this.offer = offer;
-    }
+//    public boolean isOffer() {
+//        return offer;
+//    }
+//
+//    public void setOffer(boolean offer) {
+//        this.offer = offer;
+//    }
 
     public Set<User> getAccesoriesUser() {
         return accesoriesUser;

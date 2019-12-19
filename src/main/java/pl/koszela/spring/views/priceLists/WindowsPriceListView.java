@@ -3,6 +3,7 @@ package pl.koszela.spring.views.priceLists;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
@@ -39,25 +40,12 @@ public class WindowsPriceListView extends VerticalLayout implements PriceListInt
 
         list = allGuttersFromRepository();
 
+        grid.addColumn(Windows::getManufacturer).setHeader("Nazwa Cennika");
+        grid.setDataProvider(new ListDataProvider<>(list));
         add(createGrid(grid, binder, list, windowsRepository));
         add(saveToRepo(grid, new ArrayList<>(allGuttersFromRepository()), list, windowsRepository));
     }
 
-    @Bean
-    WebServerFactoryCustomizer<TomcatServletWebServerFactory> cookieProcessorCustomizer() {
-        return new WebServerFactoryCustomizer<TomcatServletWebServerFactory>() {
-
-            @Override
-            public void customize(TomcatServletWebServerFactory tomcatServletWebServerFactory) {
-                tomcatServletWebServerFactory.addContextCustomizers(new TomcatContextCustomizer() {
-                    @Override
-                    public void customize(Context context) {
-                        context.setCookieProcessor(new LegacyCookieProcessor());
-                    }
-                });
-            }
-        };
-    }
 
     private List<Windows> allGuttersFromRepository() {
         return windowsRepository.findAll();

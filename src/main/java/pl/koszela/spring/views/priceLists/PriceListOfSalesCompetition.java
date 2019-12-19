@@ -50,7 +50,6 @@ public class PriceListOfSalesCompetition extends VerticalLayout implements GridI
         return treeGrid;
     }
 
-    @Override
     public TreeData<Competition> addItems(List list) {
         TreeData<Competition> treeData = new TreeData<>();
         if (competitions != null) {

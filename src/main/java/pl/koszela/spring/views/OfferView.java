@@ -21,9 +21,7 @@ import pl.koszela.spring.service.GridInteraface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Route(value = OfferView.CREATE_OFFER, layout = MainView.class)
@@ -32,7 +30,8 @@ public class OfferView extends VerticalLayout implements GridInteraface<Tiles> {
     static final String CREATE_OFFER = "createOffer";
 
     private TreeGrid<Tiles> treeGrid = new TreeGrid<>();
-    private Set<Tiles> set = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
+    private Optional<Set<Tiles>> optionalTiles = Optional.ofNullable((Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles"));
+    private Set<Tiles> set = optionalTiles.orElse(new HashSet<>());
     private Binder<Tiles> binder;
 
     public OfferView() {
@@ -77,10 +76,8 @@ public class OfferView extends VerticalLayout implements GridInteraface<Tiles> {
         return treeGrid;
     }
 
-    @Override
     public TreeData<Tiles> addItems(List list) {
         TreeData<Tiles> treeData = new TreeData<>();
-        if (set != null) {
             Set<Tiles> parents = set.stream().filter(e -> e.getName().equals(CategoryOfTiles.DACHOWKA_PODSTAWOWA.toString())).collect(Collectors.toSet());
             for (Tiles parent : parents) {
                 List<Tiles> childrens = set.stream().filter(e -> e.getManufacturer().equals(parent.getManufacturer())).collect(Collectors.toList());
@@ -92,7 +89,6 @@ public class OfferView extends VerticalLayout implements GridInteraface<Tiles> {
                     }
                 }
             }
-        }
         return treeData;
     }
 

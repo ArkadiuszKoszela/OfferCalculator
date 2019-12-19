@@ -3,8 +3,7 @@ package pl.koszela.spring.views.priceLists;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.provider.hierarchy.TreeData;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.koszela.spring.entities.main.Collar;
@@ -33,6 +32,8 @@ public class CollarsPriceListView extends VerticalLayout implements PriceListInt
 
         list = allCollarsFromRepository();
 
+        grid.addColumn(Collar::getManufacturer).setHeader("Nazwa Cennika");
+        grid.setDataProvider(new ListDataProvider<>(list));
         add(createGrid(grid, binder, list, collarRepository));
         add(saveToRepo(grid, new ArrayList<>(allCollarsFromRepository()), list, collarRepository));
     }

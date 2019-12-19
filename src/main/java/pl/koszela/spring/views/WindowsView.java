@@ -29,8 +29,8 @@ public class WindowsView extends VerticalLayout implements GridInteraface<Window
     static final String WINDOWS = "windows";
 
     private WindowsRepository windowsRepository;
-
-    private Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows");
+    private Optional<Set<Windows>> optionalWindows = Optional.ofNullable((Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows"));
+    private Set<Windows> setWindows = optionalWindows.orElse(new HashSet<>());
 
     private TreeGrid<Windows> treeGrid = new TreeGrid<>();
     private Binder<Windows> binder;
@@ -39,46 +39,17 @@ public class WindowsView extends VerticalLayout implements GridInteraface<Window
     public WindowsView(WindowsRepository windowsRepository) {
         this.windowsRepository = Objects.requireNonNull(windowsRepository);
 
-        if (setWindows == null) {
-            setWindows = allWindows();
-        }
-        add(createGrid());
+        setWindows = allWindows();
+        add(createGrida());
     }
 
-    public TreeGrid<Windows> createGrid() {
+    public TreeGrid<Windows> createGrida() {
         treeGrid.addHierarchyColumn(Windows::getName).setHeader("Nazwa");
-        treeGrid.addColumn(Windows::getSize).setHeader("Rozmiar");
-        treeGrid.addColumn(Windows::getManufacturer).setHeader("Producent");
-        Grid.Column<Windows> quantityColumn = treeGrid.addColumn(Windows::getQuantity).setHeader("Ilość");
-        Grid.Column<Windows> discountColumn = treeGrid.addColumn(Windows::getDiscount).setHeader("Rabat");
-        treeGrid.addColumn(Windows::getUnitDetalPrice).setHeader("Cena detal");
-        treeGrid.addColumn(Windows::getUnitPurchasePrice).setHeader("Cena zakupu");
-        treeGrid.addColumn(Windows::getAllpriceAfterDiscount).setHeader("Cena razem detal");
-        treeGrid.addColumn(Windows::getAllpricePurchase).setHeader("Cena razem zakup");
-        treeGrid.addColumn(Windows::getAllprofit).setHeader("Zysk");
-        treeGrid.addColumn(createComponent()).setHeader("Opcje");
-
-        binder = new Binder<>(Windows.class);
-        treeGrid.getEditor().setBinder(binder);
-        readBeans(setWindows);
-
-        TextField discountEditField = bindTextFieldToInteger(binder, new StringToIntegerConverter("Błąd"), Windows::getDiscount, Windows::setDiscount);
-        itemClickListener(treeGrid, discountEditField);
-        discountColumn.setEditorComponent(discountEditField);
-
-        TextField quantityField = bindTextFieldToDouble(binder, new StringToDoubleConverter("Błąd"), Windows::getQuantity, Windows::setQuantity);
-        itemClickListener(treeGrid, quantityField);
-        quantityColumn.setEditorComponent(quantityField);
-
-        closeListener(treeGrid, binder);
-
+        GridInteraface.super.createGridd(treeGrid, binder);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
-
-        settingsGrid(treeGrid);
         return treeGrid;
     }
 
-    @Override
     public TreeData<Windows> addItems(List list) {
         TreeData<Windows> treeData = new TreeData<>();
         Set<Windows> collect = setWindows.stream().filter(e -> e.getSize().equals("55x78")).collect(Collectors.toSet());
@@ -93,18 +64,6 @@ public class WindowsView extends VerticalLayout implements GridInteraface<Window
             }
         }
         return treeData;
-    }
-
-    @Override
-    public ComponentRenderer<VerticalLayout, Windows> createComponent() {
-        return new ComponentRenderer<>(windows -> {
-            Checkbox mainCheckBox = new Checkbox("Dodać ?");
-            mainCheckBox.setValue(windows.isOffer());
-            mainCheckBox.addValueChangeListener(event -> {
-                windows.setOffer(event.getValue());
-            });
-            return new VerticalLayout(mainCheckBox);
-        });
     }
 
     private Set<Windows> allWindows() {
