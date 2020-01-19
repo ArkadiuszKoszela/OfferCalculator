@@ -7,6 +7,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,6 +17,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.validator.RegexpValidator;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,9 +96,9 @@ public class CustomerRecommendListView extends VerticalLayout {
                 String password = environment.getProperty("spring.ftp.password");
                 String host = environment.getProperty("spring.ftp.host");
                 String url = "ftp://" + username + ":" + password + "@" + host + "/";
-                if(!customerRecommend.getUrlImage().isEmpty()){
+                if (!customerRecommend.getUrlImage().isEmpty()) {
                     getUI().get().getPage().open(url + customerRecommend.getUrlImage());
-                }else{
+                } else {
                     NotificationInterface.notificationOpen("Nie ma zdjęcia", NotificationVariant.LUMO_ERROR);
                 }
             });
@@ -182,7 +184,12 @@ public class CustomerRecommendListView extends VerticalLayout {
             userMobileApp.setName(tfName.getValue());
             userMobileApp.setSurname(tfSurname.getValue());
             userMobileApp.setEmail(tfEmail.getValue());
-            userMobileApp.setPhone(tfPhone.getValue());
+            String mobilePattern = "[0-9]{9}";
+            if(!tfPhone.getValue().matches(mobilePattern)){
+                NotificationInterface.notificationOpen("Popraw numer telefonu. Musi mieć 9 cyfr", NotificationVariant.LUMO_ERROR);
+                return;
+            }
+            userMobileApp.setPhone("+48" + tfPhone.getValue());
             userMobileApp.setUsername(tfLogin.getValue());
             userMobileApp.setPassword(tfPassword.getValue());
             userMobileApp.setPoints(0);
@@ -206,10 +213,14 @@ public class CustomerRecommendListView extends VerticalLayout {
     private VerticalLayout createVertical(UserMobileApp userMobileApp) {
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout formLayout = createFormLayout(3);
+        Binder<UserMobileApp> binder = new Binder<>();
         tfName = new TextField("Imię");
         tfSurname = new TextField("Nazwisko");
         tfEmail = new TextField("E-mail");
         tfPhone = new TextField("Telefon");
+        binder.forField(tfPhone)
+                .withValidator(new RegexpValidator("Numer musi zawierać 9 cyfr", "\\d{9}"))
+                .bind(UserMobileApp::getPhone, UserMobileApp::setPhone);
         tfLogin = new TextField("Login");
         tfPassword = new TextField("Hasło");
         formLayout.add(tfName, tfSurname, tfEmail);
