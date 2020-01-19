@@ -3,7 +3,7 @@ package pl.koszela.spring.entities.main;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "upload_files")
+@Table(name = "ak_upload_files")
 public class UploadFile {
 
     @Id

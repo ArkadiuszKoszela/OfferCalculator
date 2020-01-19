@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "ak_windows")
 public class Windows extends BaseEntity {
 
     private String manufacturer;

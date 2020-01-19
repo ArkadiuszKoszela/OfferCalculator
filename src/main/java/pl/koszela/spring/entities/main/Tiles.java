@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tiles")
+@Table(name = "ak_tiles")
 public class Tiles extends BaseEntity {
 
     private BigDecimal totalPrice;

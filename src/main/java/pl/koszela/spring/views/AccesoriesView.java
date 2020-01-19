@@ -127,6 +127,7 @@ public class AccesoriesView extends VerticalLayout implements GridInteraface<Acc
         checkbox();
         List<Accessories> all = accesoriesRepository.findAll();
         set = new HashSet<>(addQuantityToList(all));
+        treeGrid.addColumn(Accessories::getName).setHeader("Nazwa");
         GridInteraface.super.createGridd(treeGrid, binder);
         treeGrid.setDataProvider(new TreeDataProvider<>(addItems(new ArrayList())));
         return treeGrid;

@@ -7,7 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication/*(exclude = ErrorMvcAutoConfiguration.class)*/
+@SpringBootApplication
 public class SpringappApplication {
 
     public static void main(String[] args) {

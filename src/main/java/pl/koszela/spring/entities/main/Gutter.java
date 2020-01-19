@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "gutter")
+@Table(name = "ak_gutter")
 public class Gutter extends BaseEntity {
 
     private String category;

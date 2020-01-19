@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "accessories_windows")
+@Table(name = "ak_accessories_windows")
 public class AccessoriesWindows extends BaseEntity{
 
     private String size;

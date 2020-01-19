@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "ak_users")
 public class User {
 
     @Id
@@ -17,26 +17,26 @@ public class User {
     @OneToOne
     private PersonalData personalData;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_windows",
+    @JoinTable(name = "ak_user_windows",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "windows_id")
     )
     private Set<Windows> userWindows = new HashSet<>();
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_collars",
+    @JoinTable(name = "ak_user_collars",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "collars_id")
     )
     private Set<Collar> userCollars;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_accesories",
+    @JoinTable(name = "ak_user_accesories",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "accesories_id")
     )
     private Set<Accessories> userAccesories = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_tiles",
+    @JoinTable(name = "ak_user_tiles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "tiles_id")
     )
@@ -44,7 +44,7 @@ public class User {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany
-    @JoinTable(name = "user_gutters",
+    @JoinTable(name = "ak_user_gutters",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "gutter_id")
     )
@@ -52,13 +52,13 @@ public class User {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany
-    @JoinTable(name = "user_input_data",
+    @JoinTable(name = "ak_user_input_data",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "input_data_id"))
     private List<InputData> inputData = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_accessories_windows",
+    @JoinTable(name = "ak_user_accessories_windows",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "accessories_windows_id")
     )

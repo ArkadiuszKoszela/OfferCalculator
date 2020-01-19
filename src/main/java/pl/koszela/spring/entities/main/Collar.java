@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "ak_collar")
 public class Collar extends BaseEntity{
 
     private String manufacturer;

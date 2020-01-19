@@ -1,5 +1,6 @@
 package pl.koszela.spring.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -11,10 +12,11 @@ import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.NotFoundException;
-import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.*;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.apache.commons.io.FileUtils;
@@ -25,11 +27,13 @@ import pl.koszela.spring.crud.CreateUser;
 import pl.koszela.spring.crud.UpdateUser;
 import pl.koszela.spring.service.NotificationInterface;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+import static pl.koszela.spring.views.ProductsCartView.PRODUCTS_CART;
 import static pl.koszela.spring.views.priceLists.AccessoriesPriceListView.ACCESSORIES_PRICE;
 import static pl.koszela.spring.views.priceLists.AccessoriesWindowsPriceListView.ACCESSORIES_WINDOWS_PRICE;
 import static pl.koszela.spring.views.priceLists.CollarsPriceListView.COLLARS_PRICE;
@@ -79,6 +83,7 @@ public class MainView extends AppLayout {
         addItemMenuBar(menuBar, "Kominki", FIRESIDE);
         addItemMenuBar(menuBar, "System Odgromowy", PROTECTION_SYSTEM);
         addItemMenuBar(menuBar, "Oferta", CREATE_OFFER);
+        addItemMenuBar(menuBar, "Koszyk", PRODUCTS_CART);
         MenuItem priceLists = menuBar.addItem("Cenniki");
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
         priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESSORIES_PRICE)));
@@ -110,16 +115,31 @@ public class MainView extends AppLayout {
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
         formLayout.setResponsiveSteps(responsiveStep);
 
-        Button generateOffer = new Button("Generuj ofertę", buttonClickEvent -> {
-            try {
-                GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
-                formLayout.add(new Tab(anchor));
-                anchor.setVisible(true);
-                NotificationInterface.notificationOpen("Oferta została wygenerowana", NotificationVariant.LUMO_SUCCESS);
-            } catch (NotFoundException ignored) {
-                NotificationInterface.notificationOpen("Coś poszło nie tak. Proszę uzupełnić wszystkie pola", NotificationVariant.LUMO_ERROR);
+        Button generateOffer = new Button("Click me", event -> {
+            boolean isCheckPassed = true;
+            GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
+            if (!isCheckPassed) {
+                Notification.show("Unfortunately you can not download this file");
+            } else {
+                final StreamRegistration registration = VaadinSession.getCurrent().getResourceRegistry().registerResource(getStreamResource(file.getName(), file));
+                VaadinRequest vaadinRequest = VaadinRequest.getCurrent();
+                HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
+                String requestURL = httpServletRequest.getRequestURL().toString();
+                UI.getCurrent().getPage().open(requestURL + registration.getResourceUri());
+//                UI.getCurrent().getPage().setLocation(registration.getResourceUri());
             }
         });
+
+//        Button generateOffer = new Button("Generuj ofertę", buttonClickEvent -> {
+//            try {
+//                GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
+//                formLayout.add(new Tab(anchor));
+//                anchor.setVisible(true);
+//                NotificationInterface.notificationOpen("Oferta została wygenerowana", NotificationVariant.LUMO_SUCCESS);
+//            } catch (NotFoundException ignored) {
+//                NotificationInterface.notificationOpen("Coś poszło nie tak. Proszę uzupełnić wszystkie pola", NotificationVariant.LUMO_ERROR);
+//            }
+//        });
         generateOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         formLayout.add(importFilesButton, saveNewUser, update, generateOffer);

@@ -1,8 +1,10 @@
 package pl.koszela.spring.entities.main;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "ak_fireside")
 public class Fireside extends BaseEntity{
 
     private String manufacturer;

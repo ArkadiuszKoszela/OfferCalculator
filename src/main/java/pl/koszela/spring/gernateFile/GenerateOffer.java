@@ -17,14 +17,31 @@ public class GenerateOffer {
     private final static Logger logger = Logger.getLogger(GenerateOffer.class);
 
     public static void writeUsingIText(String location) {
+
+        Optional<List<Gutter>> optionalGutterSet = Optional.ofNullable((List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter"));
+        List<Gutter> gutterList = optionalGutterSet.orElse(new ArrayList<>());
+        Optional<Set<Tiles>> optionalTilesSet = Optional.ofNullable((Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles"));
+        Set<Tiles> tilesSet = optionalTilesSet.orElse(new HashSet<>());
+        Optional<Set<Accessories>> optionalAccessoriesSet = Optional.ofNullable((Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories"));
+        Set<Accessories> accessoriesSet = optionalAccessoriesSet.orElse(new HashSet<>());
+        Optional<Set<Collar>> optionalCollarSet = Optional.ofNullable((Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar"));
+        Set<Collar> setCollars = optionalCollarSet.orElse(new HashSet<>());
+        Optional<Set<Windows>> optionalWindowsSet = Optional.ofNullable((Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows"));
+        Set<Windows> setWindows = optionalWindowsSet.orElse(new HashSet<>());
+        Optional<Set<AccessoriesWindows>> optionalAccessoriesWindowsSet = Optional.ofNullable((Set<AccessoriesWindows>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesWindows"));
+        Set<AccessoriesWindows> setAccessoriesWindows = optionalAccessoriesWindowsSet.orElse(new HashSet<>());
+        Optional<List<Fireside>> optionalFiresideList = Optional.ofNullable((List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside"));
+        List<Fireside> listFireside = optionalFiresideList.orElse(new ArrayList<>());
+
+
         PersonalData userfromRepo = (PersonalData) VaadinSession.getCurrent().getSession().getAttribute("personalData");
-        Set<Tiles> tilesSet = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
-        Set<Accessories> accessoriesSet = (Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
-        List<Gutter> gutterList = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
-        Set<Collar> setCollars = (Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar");
-        Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose");
-        Set<AccessoriesWindows> setAccessoriesWindows = (Set<AccessoriesWindows>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesWindows");
-        List<Fireside> listFireside = (List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside");
+//        Set<Tiles> tilesSet = (Set<Tiles>) VaadinSession.getCurrent().getSession().getAttribute("tiles");
+//        Set<Accessories> accessoriesSet = (Set<Accessories>) VaadinSession.getCurrent().getSession().getAttribute("accesories");
+//        List<Gutter> gutterList = (List<Gutter>) VaadinSession.getCurrent().getSession().getAttribute("gutter");
+//        Set<Collar> setCollars = (Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar");
+//        Set<Windows> setWindows = (Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows");
+//        Set<AccessoriesWindows> setAccessoriesWindows = (Set<AccessoriesWindows>) VaadinSession.getCurrent().getSession().getAttribute("accesoriesWindows");
+//        List<Fireside> listFireside = (List<Fireside>) VaadinSession.getCurrent().getSession().getAttribute("fireside");
 
         Document document = new Document();
 
@@ -118,7 +135,13 @@ public class GenerateOffer {
 
             PdfPTable tableWindows = createTable();
             columnHeader(baseColor, font12, tableWindows, "Nazwa");
-            table(new ArrayList<>(setWindows), font10, tableWindows);
+            List<Windows> windowsList = new ArrayList<>();
+            for(Windows windows: setWindows){
+                if(windows.isOffer()){
+                    windowsList.add(windows);
+                }
+            }
+            table(new ArrayList<>(windowsList), font10, tableWindows);
             addSpacesAndTableToDocument(document, tableWindows);
 
             PdfPTable tableCollars = createTable();
@@ -171,13 +194,13 @@ public class GenerateOffer {
     private static void table(List<? extends BaseEntity> list, Font font10, PdfPTable table) {
         for (BaseEntity baseEntity : list) {
             if (!baseEntity.getUnitDetalPrice().equals(0d) || !baseEntity.getQuantity().equals(0d)) {
-                table.addCell(new Phrase(String.valueOf(baseEntity.getName()), font10));
-                table.addCell(new Phrase(String.valueOf(baseEntity.getQuantity()), font10));
-                table.addCell(new Phrase(String.valueOf(baseEntity.getUnitPurchasePrice()), font10));
-                table.addCell(new Phrase(String.valueOf(baseEntity.getUnitDetalPrice()), font10));
-                table.addCell(new Phrase(String.valueOf(baseEntity.getAllpriceAfterDiscount()), font10));
-                table.addCell(new Phrase(String.valueOf(baseEntity.getAllpricePurchase()), font10));
-                table.addCell(new Phrase(String.valueOf(baseEntity.getAllprofit()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getName()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getQuantity()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getUnitPurchasePrice()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getUnitDetalPrice()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getAllpriceAfterDiscount()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getAllpricePurchase()), font10));
+                    table.addCell(new Phrase(String.valueOf(baseEntity.getAllprofit()), font10));
             }
         }
     }

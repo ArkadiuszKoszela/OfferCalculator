@@ -1,8 +1,10 @@
 package pl.koszela.spring.entities.main;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "ak_lightning_protection_system")
 public class LightningProtectionSystem extends BaseEntity{
 
     private String category;

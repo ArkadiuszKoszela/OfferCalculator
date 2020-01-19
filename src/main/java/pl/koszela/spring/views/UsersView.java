@@ -5,7 +5,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.component.progressbar.ProgressBarVariant;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
@@ -19,6 +22,7 @@ import pl.koszela.spring.entities.main.PersonalData;
 import pl.koszela.spring.entities.main.User;
 import pl.koszela.spring.repositories.UsersRepo;
 import pl.koszela.spring.crud.DeleteUsers;
+import pl.koszela.spring.service.NotificationInterface;
 
 import java.util.*;
 
@@ -46,6 +50,23 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         this.usersRepo = Objects.requireNonNull(usersRepo);
         this.deleteUsers = Objects.requireNonNull(deleteUsers);
         this.readUser = Objects.requireNonNull(readUser);
+
+        ProgressBar progressBar = new ProgressBar(0, 100, 20);
+        Button button = new Button("sprawdz", e -> {
+            add(progressBar);
+            progressBar.addThemeVariants(ProgressBarVariant.LUMO_SUCCESS);
+            progressBar.setVisible(true);
+            try {
+                progressBar.setIndeterminate(true);
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            } finally {
+                NotificationInterface.notificationOpen("Udało się", NotificationVariant.LUMO_SUCCESS);
+                progressBar.setVisible(false);
+            }
+        });
+        add(button);
 
         email.setErrorMessage("Popraw E-mail");
         email.setAutoselect(true);
@@ -75,7 +96,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
 
     private Button removeUser(UsersRepo usersRepo) {
         removeUser.addClickListener(buttonClickEvent -> {
-            deleteUsers.removeUser(combobox.getValue()  );
+            deleteUsers.removeUser(combobox.getValue());
             combobox.clear();
             loadUsers(usersRepo);
             combobox.getDataProvider().refreshAll();
@@ -129,7 +150,7 @@ public class UsersView extends VerticalLayout implements BeforeLeaveObserver {
         VaadinSession.getCurrent().getSession().removeAttribute("windows");
         VaadinSession.getCurrent().getSession().removeAttribute("windowsAfterChoose");
         VaadinSession.getCurrent().getSession().removeAttribute("accesoriesWindows");
-
+        VaadinSession.getCurrent().getSession().removeAttribute("isDone");
     }
 
     @Override

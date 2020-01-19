@@ -11,18 +11,16 @@ public class CustomerRecommend {
     private Long id;
     private String name;
     private String phone;
+    @Column(name = "select_option")
     private String selectOption;
-    private Boolean checked1;
-    private Boolean checked2;
-    private Boolean checked3;
-    private Boolean checked4;
-    private Integer number;
+    private String place;
     private String status;
     @Column(name = "url_image")
     private String urlImage;
+    private String note;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "user_mobile_app_id")
     private UserMobileApp userMobileApp;
 
     public CustomerRecommend() {
@@ -60,44 +58,12 @@ public class CustomerRecommend {
         this.selectOption = selectOption;
     }
 
-    public boolean isChecked1() {
-        return checked1;
+    public String getPlace() {
+        return place;
     }
 
-    public void setChecked1(Boolean checked1) {
-        this.checked1 = checked1;
-    }
-
-    public boolean isChecked2() {
-        return checked2;
-    }
-
-    public void setChecked2(Boolean checked2) {
-        this.checked2 = checked2;
-    }
-
-    public boolean isChecked3() {
-        return checked3;
-    }
-
-    public void setChecked3(Boolean checked3) {
-        this.checked3 = checked3;
-    }
-
-    public boolean isChecked4() {
-        return checked4;
-    }
-
-    public void setChecked4(Boolean checked4) {
-        this.checked4 = checked4;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public UserMobileApp getUserMobileApp() {
@@ -122,5 +88,13 @@ public class CustomerRecommend {
 
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "accesories")
+@Table(name = "ak_accesories")
 public class Accessories extends BaseEntity {
 
     @Column(name = "option_accesories")

@@ -3,7 +3,8 @@ package pl.koszela.spring.entities.main;
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity (name = "user_recommend")
+@Entity
+@Table(name = "user_recommend")
 public class UserMobileApp {
 
     @Id

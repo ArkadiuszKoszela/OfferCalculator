@@ -35,7 +35,7 @@ public class CollarView extends VerticalLayout implements GridInteraface<Collar>
     private Grid<Collar> grid = new Grid<>();
     private Optional<Set<Collar>> optionalCollars = Optional.ofNullable((Set<Collar>) VaadinSession.getCurrent().getSession().getAttribute("collar"));
     private Set<Collar> setCollars = optionalCollars.orElse(new HashSet<>());
-    private Optional<Set<Windows>> optionalWindows = Optional.ofNullable((Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windowsAfterChoose"));
+    private Optional<Set<Windows>> optionalWindows = Optional.ofNullable((Set<Windows>) VaadinSession.getCurrent().getSession().getAttribute("windows"));
     private Set<Windows> setWindows = optionalWindows.orElse(new HashSet<>());
     private Binder<Collar> binder;
 
@@ -47,7 +47,9 @@ public class CollarView extends VerticalLayout implements GridInteraface<Collar>
         for (Collar collar : all) {
             for (Windows windows : setWindows) {
                 if (windows.getSize().equals(collar.getSize()) && windows.getManufacturer().equals(collar.getManufacturer())) {
-                    setCollars.add(collar);
+                    if(windows.isOffer()){
+                        setCollars.add(collar);
+                    }
                 }
             }
         }

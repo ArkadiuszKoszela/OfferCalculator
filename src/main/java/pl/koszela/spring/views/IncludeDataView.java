@@ -38,7 +38,8 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     private List<Gutter> list = optionalGutters.orElse(new ArrayList<>());
     private Optional<List<InputData>> optionalInputData = Optional.ofNullable((List<InputData>) VaadinSession.getCurrent().getSession().getAttribute("inputData"));
     private List<InputData> setInput = optionalInputData.orElse(new ArrayList<>());
-
+    private Optional<Boolean> booleanOptional = Optional.ofNullable((Boolean) VaadinSession.getCurrent().getSession().getAttribute("isDone"));
+    private boolean isDone = booleanOptional.orElse(Boolean.FALSE);
 
     @Autowired
     public IncludeDataView(TilesRepository tilesRepository, GutterRepository gutterRepository) {
@@ -48,8 +49,10 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
     }
 
     private VerticalLayout createNewSubLayout() {
-        for (TitleNumberFields name : TitleNumberFields.values()) {
-            setInput.add(new InputData(name.toString(), 0d));
+        if (setInput.size() == 0) {
+            for (TitleNumberFields name : TitleNumberFields.values()) {
+                setInput.add(new InputData(name.toString(), 0d));
+            }
         }
         VerticalLayout verticalLayout = new VerticalLayout();
         FormLayout tilesLayout = getFormLayout(6);
@@ -70,6 +73,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         addValueChangeListerr();
         addValueChangeListener();
         verticalLayout.addAndExpand(new Span("Dachówki"), tilesLayout, new Span("Rynny"), gutterLayout1, gutterLayout2);
+        isDone = true;
         return verticalLayout;
     }
 
@@ -174,7 +178,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         return set;
     }
 
-    List<Gutter> listWithQuantityGutter() {
+    private List<Gutter> listWithQuantityGutter() {
         Double gutter3mb = setInput.stream().filter(e -> e.getName().contains("Rynna 3mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
         Double gutter4mb = setInput.stream().filter(e -> e.getName().contains("Rynna 4mb")).map(InputData::getValue).reduce(Double::sum).orElse(0d);
         list = gutterRepository.findAll();
@@ -212,5 +216,7 @@ public class IncludeDataView extends VerticalLayout implements BeforeLeaveObserv
         VaadinSession.getCurrent().getSession().setAttribute("gutter", listWithQuantityGutter());
         VaadinSession.getCurrent().getSession().setAttribute("tiles", listTiles());
         VaadinSession.getCurrent().getSession().setAttribute("inputData", setInput);
+        VaadinSession.getCurrent().getSession().setAttribute("isDone", isDone);
+
     }
 }

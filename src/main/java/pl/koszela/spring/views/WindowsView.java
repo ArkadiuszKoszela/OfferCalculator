@@ -1,16 +1,10 @@
 package pl.koszela.spring.views;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.Route;
@@ -73,14 +67,14 @@ public class WindowsView extends VerticalLayout implements GridInteraface<Window
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
-        Set<Windows> trueOffer = new HashSet<>();
-        for (Windows windows : setWindows) {
-            if (windows.isOffer()) {
-                trueOffer.add(windows);
-            }
-        }
-        VaadinSession.getCurrent().getSession().setAttribute("windows", setWindows);
-        VaadinSession.getCurrent().getSession().setAttribute("windowsAfterChoose", trueOffer);
+//        Set<Windows> trueOffer = new HashSet<>();
+//        for (Windows windows : setWindows) {
+//            if (windows.isOffer()) {
+//                trueOffer.add(windows);
+//            }
+//        }
+            VaadinSession.getCurrent().getSession().setAttribute("windows", setWindows);
+//        VaadinSession.getCurrent().getSession().setAttribute("windowsAfterChoose", trueOffer);
         action.proceed();
     }
 }

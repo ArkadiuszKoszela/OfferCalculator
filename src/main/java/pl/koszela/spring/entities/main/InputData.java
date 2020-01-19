@@ -3,6 +3,7 @@ package pl.koszela.spring.entities.main;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "ak_input_data")
 public class InputData {
 
     @Id
