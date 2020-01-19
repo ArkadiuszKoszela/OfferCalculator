@@ -85,6 +85,7 @@ public class MainView extends AppLayout {
         addItemMenuBar(menuBar, "Oferta", CREATE_OFFER);
         addItemMenuBar(menuBar, "Koszyk", PRODUCTS_CART);
         MenuItem priceLists = menuBar.addItem("Cenniki");
+        addItemMenuBar(menuBar, "Aplikacja mobilna", CUSTOMER_RECOMMEND);
         priceLists.getSubMenu().addItem("Dachówki", event -> getUI().ifPresent(ui -> ui.navigate(TILES_PRICE_LIST)));
         priceLists.getSubMenu().addItem("Akcesoria", event -> getUI().ifPresent(ui -> ui.navigate(ACCESSORIES_PRICE)));
         priceLists.getSubMenu().addItem("Kołnierze", event -> getUI().ifPresent(ui -> ui.navigate(COLLARS_PRICE)));
@@ -92,7 +93,6 @@ public class MainView extends AppLayout {
         priceLists.getSubMenu().addItem("Rynny", event -> getUI().ifPresent(ui -> ui.navigate(GUTTERS_PRICE)));
         priceLists.getSubMenu().addItem("Okna", event -> getUI().ifPresent(ui -> ui.navigate(WINDOWS_PRICE)));
         priceLists.getSubMenu().addItem("Konkurencja", event -> getUI().ifPresent(ui -> ui.navigate(PRICE_LIST_OF_SALES_COMPETITION)));
-        priceLists.getSubMenu().addItem("Rekomendacje", event -> getUI().ifPresent(ui -> ui.navigate(CUSTOMER_RECOMMEND)));
 
         Button importFilesButton = new Button("Zaimportuj pliki");
         importFilesButton.addThemeVariants(ButtonVariant.LUMO_ERROR);

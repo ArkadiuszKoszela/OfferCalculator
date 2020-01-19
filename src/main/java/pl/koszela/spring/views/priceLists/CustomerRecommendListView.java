@@ -70,26 +70,33 @@ public class CustomerRecommendListView extends VerticalLayout {
         grid.addColumn(CustomerRecommend::getName).setHeader("Klient");
         grid.addColumn(CustomerRecommend::getPhone).setHeader("Telefon");
         grid.addComponentColumn(e -> {
-            return new Button("Pokaż szczegóły", event -> {
-                dialog.removeAll();
-                createDialog(e);
-                dialog.open();
-            });
-        });
-        grid.addComponentColumn(e -> {
             HorizontalLayout horizontalLayout = new HorizontalLayout();
+            Button removeBtn = new Button(VaadinIcon.TRASH.create(), event -> {
+                Dialog dialog = new Dialog();
+                dialog.open();
+                dialog.add(new Label("Czy napewno chcesz usunąć klienta ?"));
+                dialog.add(new Button(VaadinIcon.CHECK.create(), event1 -> {
+                    customerRecommendRepository.delete(e);
+                    ListDataProvider<CustomerRecommend> dataProvider = (ListDataProvider<CustomerRecommend>) grid.getDataProvider();
+                    dataProvider.getItems().remove(e);
+                    NotificationInterface.notificationOpen("Dane zostały zaktualizowane", NotificationVariant.LUMO_SUCCESS);
+                    dialog.close();
+                    dataProvider.refreshAll();
+                }));
+                dialog.add(new Button(VaadinIcon.CLOSE.create(), event1 -> dialog.close()));
+            });
             Select<String> select = new Select<>();
             select.setItems("Wysłany lead", "Lead sprawdzony i poprawny", "Negocjacje z klientem", "Umowa podpisana", "Umowa nie została podpisana");
             select.setValue(e.getStatus());
-            Button button = new Button(VaadinIcon.CHECK.create(), event -> {
+            Button changeBtn = new Button(VaadinIcon.CHECK.create(), event -> {
                 e.setStatus(select.getValue());
                 customerRecommendRepository.save(e);
                 givePoints(e);
                 NotificationInterface.notificationOpen("Status zaktualizowany", NotificationVariant.LUMO_SUCCESS);
             });
-            horizontalLayout.add(select, button);
+            horizontalLayout.add(select, changeBtn, removeBtn);
             return horizontalLayout;
-        });
+        }).setHeader("Status klienta");
         grid.addComponentColumn(customerRecommend -> {
             return new Button("Zdjęcia", event -> {
                 String username = environment.getProperty("spring.ftp.username");
@@ -101,6 +108,13 @@ public class CustomerRecommendListView extends VerticalLayout {
                 } else {
                     NotificationInterface.notificationOpen("Nie ma zdjęcia", NotificationVariant.LUMO_ERROR);
                 }
+            });
+        }).setHeader("Zdjęcia");
+        grid.addComponentColumn(e -> {
+            return new Button("Pokaż szczegóły", event -> {
+                dialog.removeAll();
+                createDialog(e);
+                dialog.open();
             });
         });
 
