@@ -18,6 +18,10 @@ public class CustomerRecommend {
     @Column(name = "url_image")
     private String urlImage;
     private String note;
+    private String silikon;
+    private String impregnat;
+    private String okno;
+    private String other;
 
     @ManyToOne
     @JoinColumn(name = "user_mobile_app_id")
@@ -96,5 +100,37 @@ public class CustomerRecommend {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getSilikon() {
+        return silikon;
+    }
+
+    public void setSilikon(String silikon) {
+        this.silikon = silikon;
+    }
+
+    public String getImpregnat() {
+        return impregnat;
+    }
+
+    public void setImpregnat(String impregnat) {
+        this.impregnat = impregnat;
+    }
+
+    public String getOkno() {
+        return okno;
+    }
+
+    public void setOkno(String okno) {
+        this.okno = okno;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
     }
 }

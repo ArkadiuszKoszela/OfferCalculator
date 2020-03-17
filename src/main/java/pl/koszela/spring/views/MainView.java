@@ -115,7 +115,7 @@ public class MainView extends AppLayout {
         FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 1);
         formLayout.setResponsiveSteps(responsiveStep);
 
-        Button generateOffer = new Button("Click me", event -> {
+        Button generateOffer = new Button("Generuj ofertę", event -> {
             boolean isCheckPassed = true;
             GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
             if (!isCheckPassed) {
@@ -126,20 +126,8 @@ public class MainView extends AppLayout {
                 HttpServletRequest httpServletRequest = ((VaadinServletRequest) vaadinRequest).getHttpServletRequest();
                 String requestURL = httpServletRequest.getRequestURL().toString();
                 UI.getCurrent().getPage().open(requestURL + registration.getResourceUri());
-//                UI.getCurrent().getPage().setLocation(registration.getResourceUri());
             }
         });
-
-//        Button generateOffer = new Button("Generuj ofertę", buttonClickEvent -> {
-//            try {
-//                GenerateOffer.writeUsingIText(FILE_TO_GENERATE_OFFER_URL.location());
-//                formLayout.add(new Tab(anchor));
-//                anchor.setVisible(true);
-//                NotificationInterface.notificationOpen("Oferta została wygenerowana", NotificationVariant.LUMO_SUCCESS);
-//            } catch (NotFoundException ignored) {
-//                NotificationInterface.notificationOpen("Coś poszło nie tak. Proszę uzupełnić wszystkie pola", NotificationVariant.LUMO_ERROR);
-//            }
-//        });
         generateOffer.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         formLayout.add(importFilesButton, saveNewUser, update, generateOffer);

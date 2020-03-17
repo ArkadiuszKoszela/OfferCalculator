@@ -1,6 +1,7 @@
 package pl.koszela.spring.views.priceLists;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -161,6 +162,13 @@ public class CustomerRecommendListView extends VerticalLayout {
             return horizontalLayout;
         });
         userMobileAppGrid.addColumn(UserMobileApp::getPoints).setHeader("Punkty");
+        userMobileAppGrid.addComponentColumn(e -> {
+            return new Button("Pokaż szczegóły", event -> {
+                dialog.removeAll();
+                showAcces(e);
+                dialog.open();
+            });
+        });
         userMobileAppGrid.setDataProvider(new ListDataProvider<>(userMobileAppList));
         userMobileAppGrid.getColumns().forEach(e -> e.setAutoWidth(true));
         userMobileAppGrid.setMinHeight("450px");
@@ -258,9 +266,13 @@ public class CustomerRecommendListView extends VerticalLayout {
         formLayout.setResponsiveSteps(responsiveStep);
         TextField tfName = new TextField("Imię", customerRecommend.getName(), "Imię");
         TextField tfPhone = new TextField("Nr telefonu", customerRecommend.getPhone(), "Nr telefonu");
-        TextField tfOption = new TextField("Opcja wybrana", customerRecommend.getSelectOption(), "Opcja wybrana");
-        NumberField numberField = new NumberField("Liczba");
-        TextField tfNote = new TextField("Notatka", customerRecommend.getNote(), "notatka");
+        ComboBox<String> tfOption = new ComboBox<>("Dachówka", "Creator", "Brass", "Roben");
+        tfOption.setValue(customerRecommend.getSelectOption());
+        TextField tfNote = new TextField("Informacje(pkt dodatkowe)", customerRecommend.getNote(), "notatka");
+        TextField tfSilikon = new TextField("Pkt silikon", customerRecommend.getSilikon(), "Pkt silikon");
+        TextField tfImpregnat = new TextField("Pkt impregnat", customerRecommend.getImpregnat(), "Pkt impregnat");
+        TextField tfOkno = new TextField("Pkt okna", customerRecommend.getOkno(), "Pkt okna");
+        TextField tfOther = new TextField("Pkt dodatkowe", customerRecommend.getOther(), "Pkt dodatkowe");
 
         Button button = new Button("Zmień dane", event -> {
             for (CustomerRecommend customerRecommend2 : all) {
@@ -268,6 +280,10 @@ public class CustomerRecommendListView extends VerticalLayout {
                     customerRecommend2.setName(tfName.getValue());
                     customerRecommend2.setPhone(tfPhone.getValue());
                     customerRecommend2.setSelectOption(tfOption.getValue());
+                    customerRecommend2.setSilikon(tfSilikon.getValue());
+                    customerRecommend2.setImpregnat(tfImpregnat.getValue());
+                    customerRecommend2.setOkno(tfOkno.getValue());
+                    customerRecommend2.setOther(tfOther.getValue());
                 }
             }
             customerRecommendRepository.save(customerRecommend);
@@ -277,9 +293,37 @@ public class CustomerRecommendListView extends VerticalLayout {
             dialog.close();
             NotificationInterface.notificationOpen("Klient zaktualizowany", NotificationVariant.LUMO_SUCCESS);
         });
-        formLayout.add(tfName, tfPhone, tfOption, numberField);
+        formLayout.add(tfName, tfPhone, tfOption);
+        formLayout.add(tfSilikon, tfSilikon, tfOkno, tfOther);
         dialog.add(formLayout);
         dialog.add(tfNote);
+        dialog.add(button);
+    }
+
+    private void showAcces(UserMobileApp userMobileApp) {
+        FormLayout formLayout = new FormLayout();
+        FormLayout.ResponsiveStep responsiveStep = new FormLayout.ResponsiveStep("5px", 4);
+        formLayout.setResponsiveSteps(responsiveStep);
+        TextField tfName = new TextField("Imię", userMobileApp.getName(), "Imię");
+        TextField tfPhone = new TextField("Nr telefonu", userMobileApp.getPhone(), "Nr telefonu");
+        TextField tfLogin = new TextField("Login", userMobileApp.getUsername(), "login");
+        TextField tfPassword = new TextField("Hasło", userMobileApp.getPassword(), "hasło");
+
+        Button button = new Button("Zmień dane", event -> {
+            for (UserMobileApp userMobileApp1 : userMobileAppList) {
+                if (userMobileApp1.getId().equals(userMobileApp.getId())) {
+                    userMobileApp1.setPhone(tfPhone.getValue());
+                }
+            }
+            userMobileAppRepository.save(userMobileApp);
+
+            userMobileAppGrid.getDataProvider().refreshAll();
+            dialog.removeAll();
+            dialog.close();
+            NotificationInterface.notificationOpen("Dane zaktualizowane", NotificationVariant.LUMO_SUCCESS);
+        });
+        formLayout.add(tfName, tfPhone, tfLogin, tfPassword);
+        dialog.add(formLayout);
         dialog.add(button);
     }
 
